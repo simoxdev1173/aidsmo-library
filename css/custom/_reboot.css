@@ -1,0 +1,106 @@
+/* _reboot.css */
+
+
+html {
+  @apply relative scroll-smooth;
+}
+
+body {
+  font-size: 15px;
+  @apply overflow-x-hidden font-normal text-default-700 antialiased dark:bg-default-100;
+}
+
+* {
+  @apply lg:[&::-webkit-scrollbar-thumb]:rounded-full lg:[&::-webkit-scrollbar-thumb]:bg-primary/60 lg:hover:[&::-webkit-scrollbar-thumb]:bg-primary lg:[&::-webkit-scrollbar-track]:bg-default-200 lg:dark:[&::-webkit-scrollbar-track]:bg-default-50 lg:[&::-webkit-scrollbar]:w-1.5 lg:[&::-webkit-scrollbar]:transition-all lg:[&::-webkit-scrollbar]:duration-1000;
+}
+
+::selection {
+  @apply bg-primary text-white;
+}
+
+::marker {
+  @apply opacity-40;
+}
+
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-semibold;
+}
+
+@keyframes spin-reverse {
+  to {
+    transform: rotate(-1turn);
+  }
+}
+
+.animate-spin-reverse-slower {
+  animation: spin-reverse 6s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.animate-spin-slower {
+  animation: spin 6s linear infinite;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/*  */
+.marquee__group {
+  animation: scroll 60s linear infinite;
+}
+
+.marquee--reverse .marquee__group {
+  animation-direction: reverse;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-100% - 2rem));
+  }
+}
+
+/*  */
+.marquee-hero {
+  animation: hero 60s linear infinite;
+}
+
+.marquee-reverse .marquee-hero {
+  animation-direction: reverse;
+}
+
+@keyframes hero {
+  0% {
+    transform: translatey(0);
+  }
+
+  100% {
+    transform: translatey(calc(-100% - 2rem));
+  }
+}

@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Manrope';
+  src: url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+  
+  /* Fonts */
+  --font-primary: 'Manrope', sans-serif;
+  --font-secondary: 'Syne', sans-serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+ 
+  
+  --font-manrope: 'Manrope', sans-serif;
+  --font-syne: 'Syne', sans-serif;
+  
+  
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Marquee Animation */
+@keyframes marquee-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes marquee-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.marquee-hero {
+  animation: marquee-up 20s linear infinite;
+}
+
+.marquee-reverse .marquee-hero {
+  animation: marquee-down 20s linear infinite;
+}
+
+.marquee:hover .marquee-hero {
+  animation-play-state: paused;
 }

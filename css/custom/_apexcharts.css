@@ -1,0 +1,77 @@
+/* _apexcharts.scss */
+
+.apex-charts {
+  min-height: 10px !important;
+}
+
+.apexcharts-canvas {
+  margin: 0 auto;
+}
+
+.apexcharts-canvas .apexcharts-text.apexcharts-xaxis-label,
+.apexcharts-canvas .apexcharts-text.apexcharts-yaxis-label,
+.apexcharts-canvas .apexcharts-title-text {
+  @apply bg-default-50 fill-default-900;
+}
+
+.apexcharts-canvas .apexcharts-tooltip.apexcharts-theme-light,
+.apexcharts-canvas .apexcharts-xaxistooltip.apexcharts-theme-light {
+  @apply border border-default-200 bg-default-50/10 shadow-none backdrop-blur-[100px];
+}
+
+.apexcharts-canvas .apexcharts-xaxistooltip-bottom:after,
+.apexcharts-canvas .apexcharts-xaxistooltip-bottom:before {
+  @apply border-dashed border-b-default-200;
+}
+
+.apexcharts-canvas .apexcharts-tooltip-series-group.apexcharts-active {
+  @apply text-default-50;
+}
+
+.apexcharts-canvas
+  .apexcharts-tooltip.apexcharts-theme-light
+  .apexcharts-tooltip-title {
+  @apply border-dashed border-default-300 bg-default-200/10 backdrop-blur-[100px];
+}
+
+.apexcharts-gridline {
+  @apply stroke-default-200;
+}
+
+.apexcharts-legend-series {
+  @apply font-semibold;
+}
+
+.apexcharts-legend-text {
+  @apply text-default-300;
+  font-size: 13px !important;
+  vertical-align: middle;
+}
+
+.apexcharts-legend-marker {
+  vertical-align: middle;
+  margin-right: 5px !important;
+}
+
+.apexcharts-pie-label {
+  @apply fill-white;
+}
+
+.apexcharts-text.apexcharts-yaxis-title-text {
+  @apply fill-default-600;
+}
+
+.apex-charts text,
+.apexcharts-tooltip-title,
+.apexcharts-tooltip-text,
+.apexcharts-xaxistooltip-text,
+.apexcharts-yaxis .text,
+.apexcharts-xaxis .text,
+.apexcharts-datalabels text,
+.apexcharts-title-text,
+.apexcharts-legend-text,
+.apexcharts-subtitle-text,
+.apexcharts-tooltip {
+  font-family: var(--tw-body-font-family) !important;
+  @apply !font-medium !text-default-900;
+}

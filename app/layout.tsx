@@ -1,17 +1,18 @@
 import type { Metadata } from 'next'
-import { Manrope, Tajawal } from 'next/font/google'
+import { Manrope, Noto_Sans_Arabic } from 'next/font/google'
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader';
+
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
   display: 'swap',
 })
 
-const tajawal = Tajawal({
+const notoSansArabic = Noto_Sans_Arabic({
   subsets: ['arabic'],
-  weight: ['400', '500', '700', '800'],
-  variable: '--font-tajawal',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-noto-arabic',
   display: 'swap',
 })
 
@@ -27,9 +28,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${manrope.variable} ${tajawal.variable}`}>
-      <NextTopLoader color="#ea580c" showSpinner={false} /> 
-       <div>
+      <body className={`${manrope.variable} ${notoSansArabic.variable} font-arabic`}>
+        <NextTopLoader color="#0369a1" showSpinner={false} /> 
+        <div>
           {children}
         </div>
       </body>

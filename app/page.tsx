@@ -19,10 +19,10 @@ export default function Home() {
         <section id="projects">
           <Benefits />
         </section>
-        
+{/*         
         <section id="about">
           <About />
-        </section>
+        </section> */}
         
         <section id="contact">
           <Courses />

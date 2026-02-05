@@ -3,13 +3,13 @@ import TextFormInput from '@/components/form/TextFormInput';
 import Image from 'next/image';
 import { FormEvent, useState } from 'react';
 
-import ebook6 from '@/images/landing/ebook/img-6.jpg';
-import ebook7 from '@/images/landing/ebook/img-7.jpg';
-import ebook8 from '@/images/landing/ebook/img-8.jpg';
-import ebook9 from '@/images/landing/ebook/img-9.jpg';
-import ebook10 from '@/images/landing/ebook/img-10.jpg';
-
-const bookImages = [ebook6, ebook7, ebook8, ebook9, ebook10];
+const bookImages = [
+  '/trendingSection/t-1.png',
+  '/trendingSection/t-11.png',
+  '/trendingSection/t-7.png',
+  '/trendingSection/t-5.png',
+  '/trendingSection/t-3.png',
+];
 
 const SubscribeToMail = () => {
   const [email, setEmail] = useState('');
@@ -39,7 +39,6 @@ const SubscribeToMail = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsSuccess(true);
       setEmail('');
@@ -52,13 +51,14 @@ const SubscribeToMail = () => {
 
   return (
     <section className="bg-[#F0F7FC]" dir="rtl">
-      <div className="container py-16">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           {/* Text Content */}
           <div className="order-2 lg:order-1">
             <h2 className="text-3xl font-bold leading-tight text-[#1e293b] md:text-4xl">
               ارتقِ بحياتك مع كتب إلكترونية من تأليف خبراء متخصصين
             </h2>
+
             <p className="mt-4 text-base leading-relaxed text-[#475569]">
               اكتشف مجموعة واسعة من الكتب الإلكترونية التي تغطي مختلف المجالات
               والتخصصات. احصل على المعرفة التي تحتاجها لتطوير مهاراتك وتحقيق
@@ -69,9 +69,7 @@ const SubscribeToMail = () => {
             <div className="mt-8 max-w-xl">
               {isSuccess ? (
                 <div className="rounded-lg bg-green-50 p-4 text-center">
-                  <p className="text-green-700">
-                    ✓ تم الاشتراك بنجاح! شكراً لك.
-                  </p>
+                  <p className="text-green-700">✓ تم الاشتراك بنجاح! شكراً لك.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
@@ -91,6 +89,7 @@ const SubscribeToMail = () => {
                         error={error}
                       />
                     </div>
+
                     <button
                       type="submit"
                       disabled={isSubmitting}
@@ -98,10 +97,7 @@ const SubscribeToMail = () => {
                     >
                       {isSubmitting ? (
                         <span className="flex items-center justify-center gap-2">
-                          <svg
-                            className="h-5 w-5 animate-spin"
-                            viewBox="0 0 24 24"
-                          >
+                          <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
                             <circle
                               className="opacity-25"
                               cx="12"
@@ -130,116 +126,94 @@ const SubscribeToMail = () => {
 
             {/* Features */}
             <div className="mt-8 flex flex-wrap gap-6">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0369a1]/10">
-                  <svg
-                    className="h-4 w-4 text-[#0369a1]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+              {['محتوى حصري', 'تحديثات مستمرة', 'مجاني 100%'].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0369a1]/10">
+                    <svg
+                      className="h-4 w-4 text-[#0369a1]"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-sm text-[#475569]">{item}</span>
                 </div>
-                <span className="text-sm text-[#475569]">محتوى حصري</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0369a1]/10">
-                  <svg
-                    className="h-4 w-4 text-[#0369a1]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <span className="text-sm text-[#475569]">تحديثات مستمرة</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0369a1]/10">
-                  <svg
-                    className="h-4 w-4 text-[#0369a1]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <span className="text-sm text-[#475569]">مجاني 100%</span>
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Book Images Marquee */}
-          <div className="order-1 lg:order-2">
-            <div className="mx-auto h-[495px] overflow-hidden rounded-2xl">
-              <div className="marquee grid grid-cols-2 gap-4">
-                {/* Column 1 - Scrolling Up */}
-                <div className="relative m-auto flex flex-col gap-6 overflow-hidden">
-                  <div className="marquee-hero flex h-full min-h-full flex-shrink-0 flex-col items-center justify-around gap-6">
+          <div className="order-1 lg:order-2 flex justify-center">
+            <div className="h-[495px] overflow-hidden rounded-2xl">
+              <div className="marquee grid grid-cols-2 gap-4 place-items-center">
+                {/* Column 1 */}
+                <div className="flex flex-col gap-6 overflow-hidden">
+                  <div className="marquee-hero flex flex-col items-center gap-6">
                     {bookImages.map((image, idx) => (
                       <Image
-                        alt="صورة كتاب"
                         key={idx}
-                        className="aspect-1 h-full w-60 rounded-lg object-cover shadow-md"
+                        alt="صورة كتاب"
                         src={image}
+                        width={240}
+                        height={240}
+                        sizes="240px"
+                        className="w-60 rounded-lg object-cover shadow-md"
                       />
                     ))}
                   </div>
                   <div
-                    aria-hidden="true"
-                    className="marquee-hero flex min-h-full flex-shrink-0 flex-col items-center justify-around gap-6"
+                    aria-hidden
+                    className="marquee-hero flex flex-col items-center gap-6"
                   >
                     {bookImages.map((image, idx) => (
                       <Image
-                        alt="صورة كتاب"
                         key={idx}
-                        className="aspect-1 h-full w-60 rounded-lg object-cover shadow-md"
+                        alt="صورة كتاب"
                         src={image}
+                        width={240}
+                        height={240}
+                        sizes="240px"
+                        className="w-60 rounded-lg object-cover shadow-md"
                       />
                     ))}
                   </div>
                 </div>
 
-                {/* Column 2 - Scrolling Down (Reverse) */}
-                <div className="marquee-reverse m-auto flex flex-col gap-6 overflow-hidden">
-                  <div className="marquee-hero flex min-h-full flex-shrink-0 flex-col items-center justify-around gap-6">
+                {/* Column 2 */}
+                <div className="marquee-reverse flex flex-col gap-6 overflow-hidden">
+                  <div className="marquee-hero flex flex-col items-center gap-6">
                     {bookImages.map((image, idx) => (
                       <Image
-                        alt="صورة كتاب"
                         key={idx}
-                        className="aspect-1 h-full w-60 rounded-lg object-cover shadow-md"
+                        alt="صورة كتاب"
                         src={image}
+                        width={240}
+                        height={240}
+                        sizes="240px"
+                        className="w-60 rounded-lg object-cover shadow-md"
                       />
                     ))}
                   </div>
                   <div
-                    aria-hidden="true"
-                    className="marquee-hero flex min-h-full flex-shrink-0 flex-col items-center justify-around gap-6"
+                    aria-hidden
+                    className="marquee-hero flex flex-col items-center gap-6"
                   >
                     {bookImages.map((image, idx) => (
                       <Image
-                        alt="صورة كتاب"
                         key={idx}
-                        className="aspect-1 h-full w-60 rounded-lg object-cover shadow-md"
+                        alt="صورة كتاب"
                         src={image}
+                        width={240}
+                        height={240}
+                        sizes="240px"
+                        className="w-60 rounded-lg object-cover shadow-md"
                       />
                     ))}
                   </div>

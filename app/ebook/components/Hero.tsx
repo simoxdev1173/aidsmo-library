@@ -4,9 +4,9 @@ import { useState, FormEvent } from 'react';
 import { LuSearch } from 'react-icons/lu';
 
 const stats = [
-  { number: '+10,000', label: 'مورد رقمي' },
-  { number: '+50,000', label: 'زائر شهرياً' },
-  { number: '+5,000', label: 'كتاب إلكتروني' },
+  { number: '+1000', label: 'اصدار' },
+  { number: '+50', label: 'مجلة' },
+  { number: '+3000', label: 'كتاب إلكتروني' },
   { number: '+100,000', label: 'تحميل سنوياً' },
 ];
 
@@ -35,10 +35,10 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-4">
+      <div className="relative z-10 flex h-full flex-col  items-center justify-center px-4">
         <div className="mx-auto w-full max-w-4xl text-center">
           {/* Title */}
-          <h1 className="mb-4 text-xl font-bold text-white md:text-2xl lg:text-3xl">
+          <h1 className="mb-4 mt-4 text-xl font-bold text-white md:text-2xl lg:text-3xl">
             المكتبة الرقمية للمنظمة العربية للتنمية الصناعية والتقييس والتعدين
           </h1>
 
@@ -49,7 +49,7 @@ const Hero = () => {
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="ابحث عن الكتب، المقالات، المعايير..."
+                placeholder="ابحث عن الكتب، الدراسات  ..."
                 className="h-12 w-full rounded-lg bg-white py-3 pe-12 ps-4 text-sm text-[#334155] placeholder:text-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
                 dir="rtl"
               />
@@ -70,7 +70,7 @@ const Hero = () => {
                 <p className="text-lg font-bold text-white md:text-xl">
                   {stat.number}
                 </p>
-                <p className="text-xs text-white/70 md:text-sm">{stat.label}</p>
+                <p className="text-xs text-white/70 md:text-lg">{stat.label}</p>
               </div>
             ))}
           </div>

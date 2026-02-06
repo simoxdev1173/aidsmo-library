@@ -21,7 +21,8 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" className="relative h-[60vh] min-h-[400px] w-full flex items-center">
+    // FIX 1: Changed h-[60vh] to min-h-[650px] for laptops and added flex-col to handle layout flow
+    <section id="home" className="relative min-h-[650px] lg:h-[80vh] w-full flex items-center justify-center overflow-hidden">
       {/* Reverted Background Image & Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -35,55 +36,55 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-full px-4">
+      {/* FIX 2: Added pt-24 to push content below the header on laptops/desktops */}
+      <div className="relative z-10 w-full px-4 pt-24 pb-12">
         <div className="mx-auto max-w-4xl text-center">
           
-          {/* Two-Row Title: Large main title + elegant subtitle */}
+          {/* Two-Row Title */}
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold text-white md:text-5xl lg:text-6xl mb-2">
+            <h1 className="text-4xl font-extrabold text-white md:text-5xl lg:text-7xl mb-4">
               المكتبة الرقمية
             </h1>
-            <p className="text-lg font-medium text-white/90 md:text-2xl">
+            <p className="text-lg font-medium text-white/90 md:text-2xl lg:text-3xl">
               للمنظمة العربية للتنمية الصناعية والتقييس والتعدين
             </p>
           </div>
 
-          {/* Original Search Bar Styling */}
-          <form onSubmit={handleSearch} className="mx-auto mb-10 max-w-xl">
+          {/* Search Bar */}
+          <form onSubmit={handleSearch} className="mx-auto mb-12 max-w-2xl">
             <div className="relative">
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ابحث عن الكتب، الدراسات  ..."
-                className="h-12 w-full rounded-lg bg-white py-3 pe-12 ps-4 text-sm text-[#334155] placeholder:text-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
+                className="h-14 w-full rounded-xl bg-white py-3 pe-14 ps-4 text-base text-[#334155] placeholder:text-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#0369a1] shadow-2xl"
                 dir="rtl"
               />
               <button
                 type="submit"
-                className="absolute left-1.5 top-1.5 flex h-9 w-9 items-center justify-center rounded-md bg-[#0369a1] text-white transition-all hover:bg-[#075985]"
+                className="absolute left-2 top-2 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0369a1] text-white transition-all hover:bg-[#075985]"
                 aria-label="بحث"
               >
-                <LuSearch className="h-4 w-4" />
+                <LuSearch className="h-5 w-5" />
               </button>
             </div>
           </form>
 
-          {/* Modern Stats: No icons, clean typography, visual separators */}
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-0">
+          {/* Modern Stats */}
+          <div className="flex flex-wrap items-center justify-center gap-y-8 gap-x-4 md:gap-0">
             {stats.map((stat, index) => (
               <div key={index} className="flex items-center">
-                <div className="px-6 text-center">
+                <div className="px-4 md:px-8 text-center">
                   <p className="text-2xl font-black text-white md:text-3xl lg:text-4xl">
                     {stat.number}
                   </p>
-                  <p className="text-xs font-medium uppercase tracking-wide text-white/70 md:text-sm">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-white/70 md:text-xs">
                     {stat.label}
                   </p>
                 </div>
-                {/* Vertical Divider between stats on desktop */}
                 {index !== stats.length - 1 && (
-                  <div className="hidden h-10 w-[1px] bg-white/20 md:block" />
+                  <div className="hidden h-12 w-[1px] bg-white/20 md:block" />
                 )}
               </div>
             ))}

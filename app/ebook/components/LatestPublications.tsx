@@ -9,6 +9,7 @@ const latestBooks = [
     id: 1,
     title: "تقرير التنمية الصناعية 2025",
     category: "الصناعة",
+    images : ["/bookCovers/i-1.png" , "/bookCovers/i-2.png" ,"/bookCovers/i-3.png"],
     spineColor: "#003652",
     coverOverlay: "bg-[#003652]/80",
   },
@@ -16,6 +17,7 @@ const latestBooks = [
     id: 2,
     title: "دليل المواصفات القياسية",
     category: "التقييس",
+    images : ["/bookCovers/i-1-1.png" , "/bookCovers/i-1-2.png" ,"/bookCovers/i-1-3.png"],
     spineColor: "#0369a1",
     coverOverlay: "bg-[#0369a1]/80",
   },
@@ -23,6 +25,7 @@ const latestBooks = [
     id: 3,
     title: "نشرة الثروات المعدنية العربية",
     category: "التعدين",
+    images : ["/bookCovers/i-2-1.png" , "/bookCovers/i-2-2.png" ,"/bookCovers/i-2-3.png"],
     spineColor: "#003652",
     coverOverlay: "bg-[#003652]/80",
   },
@@ -51,21 +54,21 @@ const LatestPublications = () => {
                             className="shadow-2xl" 
                             cover={
                                 <img
-                                    src="/bookCovers/i-1.png"
+                                    src={book.images[0]}
                                     alt={book.title}
                                     className="w-full h-full object-cover rounded-sm"
                                 />
                             }
                             backOfCover={
                                 <img
-                                    src="/bookCovers/i-2.png"
+                                    src={book.images[1]}
                                     alt="Internal page"
                                     className="w-full h-full object-cover opacity-90"
                                 />
                             }
                             content={
                                 <img
-                                    src="/bookCovers/i-3.png"
+                                    src={book.images[2]}
                                     alt="Content"
                                     className="w-full h-full object-cover"
                                 />

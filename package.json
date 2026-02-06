@@ -13,7 +13,7 @@
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
     "motion": "^12.33.0",
-    "next": "15.1.0",
+    "next": "^16.1.6",
     "nextjs-toploader": "^3.9.17",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -28,6 +28,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
     "tailwindcss": "^4.0.0",
     "typescript": "^5"
   }

@@ -42,7 +42,7 @@ const LibraryNews = () => {
   return (
     <section
       id="library-news"
-      className="bg-white py-10 lg:py-16"
+      className="bg-[#F0F7FC] py-10 lg:py-16"
       aria-label="أخبار المكتبة"
     >
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">

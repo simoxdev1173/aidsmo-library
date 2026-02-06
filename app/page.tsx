@@ -5,6 +5,7 @@ import Courses from "./ebook/components/Courses"
 import TestimonialSlider from "./ebook/components/TestimonialSlider"
 import SubscribeToMail from "./ebook/components/SubscribeToMail"
 import BrowseBySubject from "./ebook/components/BrowseCategory"
+import LatestPublications from "./ebook/components/LatestPublications"
 
 export default function Home() {
   return (
@@ -26,6 +27,9 @@ export default function Home() {
         
         <section id="contact">
           <Courses />
+        </section>
+         <section id="latest-pub">
+          <LatestPublications />
         </section>
         
         <section id="newsletter">

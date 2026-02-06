@@ -68,7 +68,7 @@ const BrowseBySubject = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-[#003652]">{sector.title}</h3>
-                  <span className="text-xs text-gray-400 uppercase tracking-widest">{sector.subtitle}</span>
+                  {/* <span className="text-xs text-gray-400 uppercase tracking-widest">{sector.subtitle}</span> */}
                 </div>
               </div>
 

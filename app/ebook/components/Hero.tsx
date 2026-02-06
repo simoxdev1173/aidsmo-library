@@ -21,29 +21,35 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" className="relative h-[50vh] min-h-[280px] w-full">
-      {/* Background Image */}
+    <section id="home" className="relative h-[60vh] min-h-[400px] w-full flex items-center">
+      {/* Reverted Background Image & Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/bg-cover-1.png"
+          src="/bg-cover-2.png"
           alt="خلفية المكتبة"
           fill
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/50" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex h-full flex-col  items-center justify-center px-4">
-        <div className="mx-auto w-full max-w-4xl text-center">
-          {/* Title */}
-          <h1 className="mb-4 mt-4 text-xl font-bold text-white md:text-2xl lg:text-3xl">
-            المكتبة الرقمية للمنظمة العربية للتنمية الصناعية والتقييس والتعدين
-          </h1>
+      <div className="relative z-10 w-full px-4">
+        <div className="mx-auto max-w-4xl text-center">
+          
+          {/* Two-Row Title: Large main title + elegant subtitle */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-extrabold text-white md:text-5xl lg:text-6xl mb-2">
+              المكتبة الرقمية
+            </h1>
+            <p className="text-lg font-medium text-white/90 md:text-2xl">
+              للمنظمة العربية للتنمية الصناعية والتقييس والتعدين
+            </p>
+          </div>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="mx-auto mb-6 max-w-xl">
+          {/* Original Search Bar Styling */}
+          <form onSubmit={handleSearch} className="mx-auto mb-10 max-w-xl">
             <div className="relative">
               <input
                 type="search"
@@ -63,14 +69,22 @@ const Hero = () => {
             </div>
           </form>
 
-          {/* Stats */}
-          <div className="flex items-center justify-center gap-6 md:gap-12">
+          {/* Modern Stats: No icons, clean typography, visual separators */}
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-0">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <p className="text-lg font-bold text-white md:text-xl">
-                  {stat.number}
-                </p>
-                <p className="text-xs text-white/70 md:text-lg">{stat.label}</p>
+              <div key={index} className="flex items-center">
+                <div className="px-6 text-center">
+                  <p className="text-2xl font-black text-white md:text-3xl lg:text-4xl">
+                    {stat.number}
+                  </p>
+                  <p className="text-xs font-medium uppercase tracking-wide text-white/70 md:text-sm">
+                    {stat.label}
+                  </p>
+                </div>
+                {/* Vertical Divider between stats on desktop */}
+                {index !== stats.length - 1 && (
+                  <div className="hidden h-10 w-[1px] bg-white/20 md:block" />
+                )}
               </div>
             ))}
           </div>

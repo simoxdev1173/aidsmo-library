@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Manrope, Noto_Sans_Arabic } from 'next/font/google'
+import { Manrope, Readex_Pro } from 'next/font/google' // Changed here
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader';
 
@@ -9,16 +9,16 @@ const manrope = Manrope({
   display: 'swap',
 })
 
-const notoSansArabic = Noto_Sans_Arabic({
-  subsets: ['arabic'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-noto-arabic',
+const readexPro = Readex_Pro({
+  subsets: ['arabic', 'latin'],
+  weight: ['300', '400', '500', '600', '700'], // Added a wider range of weights
+  variable: '--font-readex',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: 'المكتبة الرقمية | خدمات رقمية متكاملة',
-  description: 'نقدم أفضل الخدمات الرقمية للمكتبات والمؤسسات الثقافية - تطوير المواقع، التسويق الرقمي، التصميم الجرافيكي',
+  description: 'نقدم أفضل الخدمات الرقمية للمكتبات والمؤسسات الثقافية',
 }
 
 export default function RootLayout({
@@ -28,7 +28,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${manrope.variable} ${notoSansArabic.variable} font-arabic`}>
+      {/* Updated the variable name to readexPro.variable */}
+      <body className={`${manrope.variable} ${readexPro.variable} font-arabic`}>
         <NextTopLoader color="#0369a1" showSpinner={false} /> 
         <div>
           {children}

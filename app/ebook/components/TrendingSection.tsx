@@ -2,15 +2,18 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useRef } from 'react';
-import { LuChevronLeft, LuChevronRight, LuFlame } from 'react-icons/lu';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import { LayoutGroup, motion } from "motion/react";
+
+import TextRotate from "./subComponents/text-rotate";
 
 type Book = {
   id: string;
   title: string;
   author?: string;
   year?: string;
-  cover: string; // public path: /covers/xxx.jpg
+  cover: string;
   href: string;
 };
 
@@ -30,12 +33,12 @@ const SectionRow = ({ sector }: { sector: Sector }) => {
 
   const onPrev = () => {
     if (!scrollerRef.current) return;
-    scrollByAmount(scrollerRef.current, 520);
+    scrollByAmount(scrollerRef.current, 720);
   };
 
   const onNext = () => {
     if (!scrollerRef.current) return;
-    scrollByAmount(scrollerRef.current, -520);
+    scrollByAmount(scrollerRef.current, -720);
   };
 
   return (
@@ -73,17 +76,17 @@ const SectionRow = ({ sector }: { sector: Sector }) => {
       {/* Carousel */}
       <div
         ref={scrollerRef}
-        className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-5 overflow-x-auto pb-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         style={{ scrollSnapType: 'x mandatory' }}
       >
         {sector.books.map((book) => (
           <Link
             key={book.id}
             href={book.href}
-            className="min-w-[180px] max-w-[180px] flex-shrink-0 scroll-mx-2 scroll-snap-align-start"
+            className="min-w-[240px] max-w-[240px] sm:min-w-[280px] sm:max-w-[280px] flex-shrink-0 scroll-mx-2"
             style={{ scrollSnapAlign: 'start' }}
           >
-            <div className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+            <div className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
               <div className="relative aspect-[3/4] w-full">
                 <Image
                   src={book.cover}
@@ -92,11 +95,11 @@ const SectionRow = ({ sector }: { sector: Sector }) => {
                   className="object-cover transition duration-300 group-hover:scale-[1.02]"
                 />
               </div>
-              <div className="p-3">
-                <p className="line-clamp-2 text-sm font-semibold text-slate-900">
+              <div className="p-4">
+                <p className="line-clamp-2 text-base font-semibold text-slate-900 sm:text-[15px]">
                   {book.title}
                 </p>
-                <div className="mt-1 flex items-center justify-between text-xs text-slate-600">
+                <div className="mt-2 flex items-center justify-between text-sm text-slate-600">
                   <span className="truncate">{book.author ?? '—'}</span>
                   <span className="shrink-0">{book.year ?? ''}</span>
                 </div>
@@ -119,8 +122,13 @@ const SectionRow = ({ sector }: { sector: Sector }) => {
 };
 
 const TrendingBooks = () => {
-  // Replace these with your real data (from DB/API later)
-  const sectors = useMemo<Sector[]>(
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+const sectors = useMemo<Sector[]>(
     () => [
       {
         key: 'industry',
@@ -271,17 +279,58 @@ const TrendingBooks = () => {
     <section id="projects" className="py-10 bg-[#F0F7FC] lg:py-16">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 text-center">
-          {/* <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
-            <LuFlame className="h-4 w-4 text-[#0369a1]" />
-            كتب رائجة
-          </div> */}
-          <h2 className="mt-4 text-2xl font-extrabold text-slate-900 sm:text-3xl">
-            الأكثر رواجاً حسب القطاع
+        <div className="mb-8 flex flex-col items-center justify-center text-center">
+          <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+            كنوز المكتبة الرقمية: المجموعات الرائجة
           </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
-            استكشف الكتب ضمن قطاعات الصناعة والتعدين والتقييس.
-          </p>
+
+          {/* Render the animated line only after mount to prevent hydration mismatch */}
+          <div className="mt-3">
+            {mounted ? (
+              <LayoutGroup>
+                <motion.p
+                  className="flex flex-wrap items-center justify-center gap-2"
+                  layout
+                  dir="rtl"
+                  lang="ar"
+                >
+                  <motion.span
+                    className="pt-0.5 sm:pt-1"
+                    layout
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                  >
+                    بوابتك إلى
+                  </motion.span>
+
+                  <TextRotate
+                    texts={[
+                      "مجلات علمية",
+                      "دراسات متخصصة",
+                      "أوراق علمية",
+                      "بحوث صناعية",
+                      "تقارير تقنية",
+                      "مواصفات قياسية",
+                    ]}
+                    splitBy="words"
+                    mainClassName="text-white px-2 sm:px-3 bg-[#075985] overflow-hidden py-0.5 sm:py-1 justify-center rounded-lg"
+                    staggerFrom="last"
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-120%" }}
+                    staggerDuration={0.04}
+                    splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1"
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                    rotationInterval={2000}
+                  />
+                </motion.p>
+              </LayoutGroup>
+            ) : (
+              // stable SSR fallback (same text every time)
+              <p className="text-sm sm:text-base text-slate-700" dir="rtl" lang="ar">
+                بوابتك إلى <span className="rounded-lg bg-[#075985] px-2 py-1 text-white">مجلات علمية</span>
+              </p>
+            )}
+          </div>
         </div>
 
         {/* 3 Rows */}

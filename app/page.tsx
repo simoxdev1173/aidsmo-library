@@ -1,10 +1,10 @@
 import TopNavBar from "@/components/TopNavBar"
 import Hero from "./ebook/components/Hero"
-import About from "./ebook/components/About"
-import Benefits from "./ebook/components/Benefits"
+import Benefits from "./ebook/components/TrendingSection"
 import Courses from "./ebook/components/Courses"
 import TestimonialSlider from "./ebook/components/TestimonialSlider"
 import SubscribeToMail from "./ebook/components/SubscribeToMail"
+import BrowseBySubject from "./ebook/components/BrowseCategory"
 
 export default function Home() {
   return (
@@ -19,10 +19,10 @@ export default function Home() {
         <section id="projects">
           <Benefits />
         </section>
-{/*         
+        
         <section id="about">
-          <About />
-        </section> */}
+          <BrowseBySubject />
+        </section>
         
         <section id="contact">
           <Courses />

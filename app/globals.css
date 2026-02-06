@@ -3,17 +3,18 @@
 :root {
   /* Fonts */
   --font-primary: 'Manrope', sans-serif;
-  --font-arabic: 'Noto Sans Arabic', sans-serif;
+  --font-arabic: 'Readex Pro', sans-serif;
 }
 
 @theme inline {
   --font-manrope: var(--font-manrope);
-  --font-arabic: var(--font-noto-arabic);
+  /* Maps the Next.js variable to the Tailwind font utility */
+  --font-arabic: var(--font-readex); 
 }
 
 /* Base font for Arabic */
 body {
-  font-family: var(--font-noto-arabic), 'Noto Sans Arabic', sans-serif;
+  font-family: var(--font-readex), 'Readex Pro', sans-serif;
 }
 
 /* Use Manrope for English/numbers if needed */
@@ -23,7 +24,7 @@ body {
 
 /* Arabic font utility class */
 .font-arabic {
-  font-family: var(--font-noto-arabic), 'Noto Sans Arabic', sans-serif;
+  font-family: var(--font-readex), 'Readex Pro', sans-serif;
 }
 
 /* Marquee Animation */

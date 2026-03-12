@@ -10,7 +10,7 @@ import LatestPublications from "./ebook/components/LatestPublications"
 export default function Home() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
-      <TopNavBar position="fixed" />
+      <TopNavBar  />
       
       <main className="pt-20">
         <section id="home">

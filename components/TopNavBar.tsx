@@ -2,289 +2,151 @@
 import { cn } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { LuChevronDown, LuMenu, LuX } from 'react-icons/lu';
+import { useEffect, useState } from 'react';
+import { LuChevronDown, LuMenu, LuX, LuSearch } from 'react-icons/lu';
 
-// Arabic menu items with their IDs and labels
 const menuItemsData = [
   { id: 'home', label: 'الرئيسية' },
   { id: 'projects', label: 'المشاريع' },
   { id: 'about', label: 'عن المكتبة' },
   { id: 'contact', label: 'اتصل بنا' },
-  { id: 'newsletter', label: 'النشرة البريدية' },
 ];
 
-// فهرس المكتبة dropdown items
-const catalogItems = [
-  { id: 'industry', label: 'الصناعة', link: '/catalog/industry' },
-  { id: 'standardization', label: 'التقييس', link: '/catalog/standardization' },
-  { id: 'mining', label: 'التعدين', link: '/catalog/mining' },
-];
-
-const TopNavBar = ({
-  position = 'fixed',
-}: {
-  position?: 'sticky' | 'fixed';
-}) => {
-  const navbarRef = useRef<HTMLDivElement>(null);
+const TopNavBar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [catalogOpen, setCatalogOpen] = useState(false);
-  const pathname = usePathname();
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
-      if (navbarRef.current) {
-        if (window.scrollY >= 80) {
-          navbarRef.current.classList.add('nav-sticky');
-        } else {
-          navbarRef.current.classList.remove('nav-sticky');
+      setIsScrolled(window.scrollY > 20);
+      const sections = menuItemsData.map(item => document.getElementById(item.id));
+      const scrollPosition = window.scrollY + 100;
+
+      sections.forEach((section) => {
+        if (section && section.offsetTop <= scrollPosition && (section.offsetTop + section.offsetHeight) > scrollPosition) {
+          setActiveSection(section.id);
         }
-      }
-      activeSection();
+      });
     };
 
-    document.addEventListener('scroll', handleScroll);
-
-    return () => {
-      document.removeEventListener('scroll', handleScroll);
-    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const [activation, setActivation] = useState<string>('home');
-
-  const activeSection = () => {
-    const scrollY = window.scrollY;
-
-    for (let i = menuItemsData.length - 1; i >= 0; i--) {
-      const section = menuItemsData[i].id;
-      const el: HTMLElement | null = document.getElementById(section);
-      if (el && el.offsetTop <= scrollY + 100) {
-        setActivation(section);
-        return;
-      }
-    }
-  };
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
 
   return (
     <>
-      <header
-        ref={navbarRef}
-        id="navbar"
-        className={cn(
-          position,
-          'inset-x-0 top-0 z-[60] w-full border-b border-[#e2e8f0] bg-white shadow-sm transition-all duration-300'
-        )}
-      >
-        <div className="flex h-full items-center py-3">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <nav className="flex items-center justify-between">
-              {/* Logo */}
+      <header className={cn(
+        'fixed inset-x-0 top-0 z-[60] transition-all duration-500',
+        isScrolled ? 'top-2 px-4 md:px-8' : 'top-0 px-0'
+      )}>
+        <nav className={cn(
+          'mx-auto max-w-7xl transition-all duration-500',
+          isScrolled 
+            ? 'rounded-2xl border border-white/20 bg-white/90 shadow-2xl backdrop-blur-md py-2' 
+            : 'border-b border-transparent bg-transparent py-5'
+        )}>
+          <div className="px-6 lg:px-8">
+            <div className="flex items-center justify-between gap-8">
+              
+              {/* Logo Area */}
               <div className="flex-shrink-0">
-                <Link href="/">
+                <Link href="/" className="flex items-center gap-3">
                   <Image
                     src="/lib-logo.svg"
-                    alt="شعار المكتبة"
-                    height={100}
-                    width={120}
-                    className="h-32 w-auto"
+                    alt="Logo"
+                    height={50}
+                    width={60}
+                    className={cn("transition-all duration-500", isScrolled ? "h-22 w-auto" : "h-24 w-auto")}
                   />
                 </Link>
               </div>
 
               {/* Desktop Menu - Centered */}
-              <ul className="hidden items-center justify-center gap-1 lg:flex">
+              <ul className="hidden flex-1 items-center justify-center gap-1 lg:flex">
                 {menuItemsData.map((item) => (
-                  <li key={item.id}>
+                  <li key={item.id} className="relative">
                     <Link
-                      className={cn(
-                        'rounded-lg px-4 py-2 text-base font-medium text-[#334155] transition-all duration-300 hover:bg-[#F0F7FC] hover:text-[#0369a1]',
-                        activation === item.id && 'bg-[#F0F7FC] text-[#0369a1]'
-                      )}
                       href={`#${item.id}`}
+                      className={cn(
+                        'relative px-4 py-2 text-sm font-bold transition-all duration-300',
+                        activeSection === item.id ? 'text-[#0369a1]' : 'text-slate-600 hover:text-[#0369a1]'
+                      )}
                     >
                       {item.label}
+                      {/* {activeSection === item.id && (
+                        <span className="absolute -bottom-1 left-1/2 h-1 w-5 -translate-x-1/2 rounded-full bg-[#0369a1]" />
+                      )} */}
                     </Link>
                   </li>
                 ))}
-
-                {/* فهرس المكتبة Dropdown */}
-                <li className="group relative">
-                  <button
-                    className="flex items-center gap-1 rounded-lg px-4 py-2 text-base font-medium text-[#334155] transition-all duration-300 hover:bg-[#F0F7FC] hover:text-[#0369a1]"
-                    onMouseEnter={() => setCatalogOpen(true)}
-                    onMouseLeave={() => setCatalogOpen(false)}
-                  >
-                    فهرس المكتبة
-                    <LuChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
-                  </button>
-                  <div
-                    className={cn(
-                      'absolute right-0 top-full z-50 mt-2 min-w-[200px] rounded-lg border border-[#e2e8f0] bg-white p-2 shadow-lg transition-all duration-200',
-                      catalogOpen
-                        ? 'visible translate-y-0 opacity-100'
-                        : 'invisible -translate-y-2 opacity-0'
-                    )}
-                    onMouseEnter={() => setCatalogOpen(true)}
-                    onMouseLeave={() => setCatalogOpen(false)}
-                  >
-                    <ul className="flex flex-col gap-1">
-                      {catalogItems.map((item) => (
-                        <li key={item.id}>
-                          <Link
-                            className={cn(
-                              'block rounded-md px-4 py-2.5 text-sm font-medium text-[#475569] transition-all hover:bg-[#F0F7FC] hover:text-[#0369a1]',
-                              pathname === item.link && 'bg-[#F0F7FC] text-[#0369a1]'
-                            )}
-                            href={item.link}
-                          >
-                            {item.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </li>
               </ul>
 
-              {/* Login Button - Desktop */}
-              <div className="hidden lg:block">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center gap-2 rounded-lg bg-[#0369a1] px-6 py-2.5 text-base font-medium text-white transition-all hover:bg-[#075985]"
-                >
-                  تسجيل الدخول
-                </Link>
+              {/* Search Bar - Replacing Login */}
+              <div className="hidden items-center lg:flex">
+                <div className="relative group">
+                  <input
+                    type="text"
+                    placeholder="ابحث عن الكتب، المقالات..."
+                    className="h-11 w-64 rounded-full border border-slate-200 bg-slate-100/50 pr-11 pl-4 text-sm font-medium text-slate-700 outline-none transition-all duration-300 focus:w-80 focus:border-[#0369a1] focus:bg-white focus:ring-4 focus:ring-blue-50"
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0369a1]">
+                    <LuSearch size={18} />
+                  </div>
+                </div>
               </div>
 
               {/* Mobile Menu Button */}
               <button
-                className="inline-flex items-center justify-center rounded-lg p-2 text-[#334155] hover:bg-[#F0F7FC] hover:text-[#0369a1] lg:hidden"
-                onClick={toggleMobileMenu}
-                aria-label="فتح القائمة"
+                className="rounded-xl bg-slate-100 p-2.5 text-slate-700 hover:bg-[#0369a1] hover:text-white lg:hidden"
+                onClick={() => setMobileMenuOpen(true)}
               >
-                <LuMenu className="h-7 w-7" />
+                <LuMenu size={24} />
               </button>
-            </nav>
+            </div>
           </div>
-        </div>
+        </nav>
       </header>
 
-      {/* Mobile Menu Overlay */}
-      <div
-        className={cn(
-          'fixed inset-0 z-[70] bg-black/50 transition-opacity duration-300 lg:hidden',
-          mobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
-        )}
-        onClick={closeMobileMenu}
-      />
-
-      {/* Mobile Menu Sidebar */}
-      <div
-        className={cn(
-          'fixed bottom-0 right-0 top-0 z-[80] h-screen w-full max-w-[300px] transform border-l border-[#e2e8f0] bg-white transition-transform duration-300 lg:hidden',
-          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        )}
-      >
-        {/* Mobile Menu Header */}
-        <div className="flex h-[72px] items-center justify-between border-b border-[#e2e8f0] px-4">
-          <Link href="/" onClick={closeMobileMenu}>
-            <Image
-              src="/logo-lib.png"
-              alt="شعار المكتبة"
-              height={40}
-              width={100}
-              className="h-10 w-auto"
-            />
-          </Link>
-          <button
-            onClick={closeMobileMenu}
-            className="rounded-lg p-2 text-[#334155] hover:bg-[#F0F7FC] hover:text-[#0369a1]"
-            aria-label="إغلاق القائمة"
-          >
-            <LuX size={24} />
-          </button>
+      {/* Mobile Sidebar */}
+      <div className={cn(
+        "fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm lg:hidden",
+        mobileMenuOpen ? "opacity-100" : "pointer-events-none opacity-0 transition-opacity"
+      )} onClick={() => setMobileMenuOpen(false)} />
+      
+      <div className={cn(
+        "fixed bottom-0 right-0 top-0 z-[110] w-[85%] max-w-xs bg-white p-6 transition-transform duration-500 lg:hidden",
+        mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+      )}>
+        <div className="mb-8 flex items-center justify-between border-b pb-4">
+          <Image src="/lib-logo.svg" alt="Logo" height={40} width={40} />
+          <button onClick={() => setMobileMenuOpen(false)} className="rounded-full bg-slate-100 p-2"><LuX size={20} /></button>
+        </div>
+        
+        <div className="mb-6 relative">
+           <input
+            type="text"
+            placeholder="بحث..."
+            className="w-full rounded-xl border border-slate-100 bg-slate-50 py-3 pr-10 pl-4 text-sm"
+          />
+          <LuSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
         </div>
 
-        {/* Mobile Menu Content */}
-        <div className="h-[calc(100%-72px)] overflow-y-auto p-4">
-          <nav>
-            <ul className="space-y-1">
-              {menuItemsData.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    className={cn(
-                      'block rounded-lg px-4 py-3 text-base font-medium text-[#334155] transition-all duration-300 hover:bg-[#F0F7FC] hover:text-[#0369a1]',
-                      activation === item.id && 'bg-[#F0F7FC] text-[#0369a1]'
-                    )}
-                    href={`#${item.id}`}
-                    onClick={closeMobileMenu}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-
-              {/* فهرس المكتبة Accordion */}
-              <li>
-                <button
-                  className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-base font-medium text-[#334155] transition-all duration-300 hover:bg-[#F0F7FC] hover:text-[#0369a1]"
-                  onClick={() => setCatalogOpen(!catalogOpen)}
-                >
-                  فهرس المكتبة
-                  <LuChevronDown
-                    className={cn(
-                      'h-5 w-5 transition-transform duration-200',
-                      catalogOpen && 'rotate-180'
-                    )}
-                  />
-                </button>
-                <div
-                  className={cn(
-                    'overflow-hidden transition-all duration-300',
-                    catalogOpen ? 'max-h-96' : 'max-h-0'
-                  )}
-                >
-                  <ul className="mt-1 space-y-1 pr-4">
-                    {catalogItems.map((item) => (
-                      <li key={item.id}>
-                        <Link
-                          className={cn(
-                            'block rounded-lg px-4 py-2.5 text-sm font-medium text-[#475569] transition-all hover:bg-[#F0F7FC] hover:text-[#0369a1]',
-                            pathname === item.link && 'bg-[#F0F7FC] text-[#0369a1]'
-                          )}
-                          href={item.link}
-                          onClick={closeMobileMenu}
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            </ul>
-
-            {/* Mobile Login Button */}
-            <div className="mt-6 border-t border-[#e2e8f0] pt-6">
-              <Link
-                href="/login"
-                className="block w-full rounded-lg bg-[#0369a1] px-6 py-3 text-center text-base font-medium text-white transition-all hover:bg-[#075985]"
-                onClick={closeMobileMenu}
-              >
-                تسجيل الدخول
-              </Link>
-            </div>
-          </nav>
-        </div>
+        <nav className="flex flex-col gap-2">
+          {menuItemsData.map((item) => (
+            <Link
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "rounded-xl px-4 py-4 text-lg font-bold",
+                activeSection === item.id ? "bg-blue-50 text-[#0369a1]" : "text-slate-600"
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </>
   );

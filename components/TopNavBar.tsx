@@ -271,7 +271,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
 /* ------------------------------------------------------------------ */
 const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
   const [open, setOpen] = useState(false);
-  const timeout = useRef();
+const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hasDropdown = item.children || item.groups;
 
   const enter = () => {

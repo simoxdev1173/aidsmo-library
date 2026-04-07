@@ -17,8 +17,8 @@ const readexPro = Readex_Pro({
 })
 
 export const metadata: Metadata = {
-  title: 'المكتبة الرقمية | خدمات رقمية متكاملة',
-  description: 'نقدم أفضل الخدمات الرقمية للمكتبات والمؤسسات الثقافية',
+  title: 'المكتبة الرقمية الذكية',
+  description: 'المكتبة الرقمية الذكية',
 }
 
 export default function RootLayout({

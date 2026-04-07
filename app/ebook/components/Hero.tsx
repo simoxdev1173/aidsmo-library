@@ -8,7 +8,7 @@ import Autoplay from 'embla-carousel-autoplay';
 const slides = [
   {
     image: '/hero-image.png',
-    title: 'المكتبة الرقمية',
+    title: 'المكتبة الرقمية الذكية',
     subtitle: 'للمنظمة العربية للتنمية الصناعية والتقييس والتعدين',
   },
 

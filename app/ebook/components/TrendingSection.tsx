@@ -177,106 +177,14 @@ const sectors = useMemo<Sector[]>(
           },
         ],
       },
-      {
-        key: 'mining',
-        title: 'الأكثر رواجاً في التعدين',
-        description: 'كتب وتقارير أساسية حول الاستكشاف والمعالجة والاستدامة.',
-        books: [
-          {
-            id: 'min-1',
-            title: 'مدخل إلى جيولوجيا التعدين',
-            author: '—',
-            year: '2023',
-            cover: '/trendingSection/t-5.png',
-            href: '/book/min-1',
-          },
-          {
-            id: 'min-2',
-            title: 'تقنيات الاستكشاف المعدني الحديثة',
-            author: '—',
-            year: '2024',
-            cover: '/trendingSection/t-6.png',
-            href: '/book/min-2',
-          },
-          {
-            id: 'min-3',
-            title: 'معالجة الخامات والتعويم',
-            author: '—',
-            year: '2022',
-            cover: '/trendingSection/t-9.png',
-            href: '/book/min-3',
-          },
-          {
-            id: 'min-4',
-            title: 'التعدين المستدام وإدارة المخلفات',
-            author: '—',
-            year: '2025',
-            cover: '/trendingSection/t-11.png',
-            href: '/book/min-4',
-          },
-          {
-            id: 'min-5',
-            title: 'اقتصاديات التعدين وسلاسل القيمة',
-            author: '—',
-            year: '2021',
-            cover: '/trendingSection/t-10.png',
-            href: '/book/min-5',
-          },
-        ],
-      },
-      {
-        key: 'standardization',
-        title: 'الأكثر رواجاً في التقييس',
-        description: 'أدلة ومعايير ومراجع داعمة للامتثال والتحسين المستمر.',
-        books: [
-          {
-            id: 'std-1',
-            title: 'أساسيات المواصفات القياسية',
-            author: '—',
-            year: '2022',
-            cover: '/trendingSection/t-1.png',
-            href: '/book/std-1',
-          },
-          {
-            id: 'std-2',
-            title: 'نظم إدارة الجودة (ISO) – دليل عملي',
-            author: '—',
-            year: '2024',
-            cover: '/trendingSection/t-1.png',
-            href: '/book/std-2',
-          },
-          {
-            id: 'std-3',
-            title: 'تقييم المطابقة وإجراءات الاعتماد',
-            author: '—',
-            year: '2023',
-            cover: '/trendingSection/t-1.png',
-            href: '/book/std-3',
-          },
-          {
-            id: 'std-4',
-            title: 'السلامة والامتثال في المنتجات',
-            author: '—',
-            year: '2025',
-            cover: '/trendingSection/t-1.png',
-            href: '/book/std-4',
-          },
-          {
-            id: 'std-5',
-            title: 'القياس والمعايرة والجودة',
-            author: '—',
-            year: '2021',
-            cover: '/trendingSection/t-1.png',
-            href: '/book/std-5',
-          },
-        ],
-      },
+   
+   
     ],
     []
   );
 
   return (
-    <section id="projects" className="py-10 bg-[#F0F7FC] lg:py-16">
+    <section id="projects" className="py-10  lg:py-16">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8 flex flex-col items-center justify-center text-center">

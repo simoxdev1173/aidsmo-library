@@ -6,6 +6,7 @@ import TestimonialSlider from "./ebook/components/TestimonialSlider"
 import SubscribeToMail from "./ebook/components/SubscribeToMail"
 import BrowseBySubject from "./ebook/components/BrowseCategory"
 import LatestPublications from "./ebook/components/LatestPublications"
+import LibraryStats from "./ebook/components/LibraryStats"
 
 export default function Home() {
   return (
@@ -17,6 +18,9 @@ export default function Home() {
           <Hero />
         </section>
         
+        <section className="bg-[#F0F7FC]">
+          <LibraryStats />
+        </section>
         <section id="projects">
           <Benefits />
         </section>

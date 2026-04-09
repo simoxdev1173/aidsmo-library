@@ -3,8 +3,8 @@
 import React from "react";
 import { Book } from "./subComponents/Book";
 
-const latestBooks = [ 
-   {
+const latestBooks = [
+  {
     id: 1,
     title: "التنمية الصناعية العربية",
     category: "الصناعة",
@@ -18,14 +18,13 @@ const latestBooks = [
     images: ["/bookCovers/i-2-1.png", "/bookCovers/i-2-2.png", "/bookCovers/i-2-3.png"],
     spineColor: "#003652",
   },
- {
-    id:3,
+  {
+    id: 3,
     title: "إعـادة تأهيـل الـمناجم والـمحاجر القديمة",
     category: "التعدين",
     images: ["/latest-cover/b-1.png", "/latest-cover/b-2.png", "/latest-cover/b-3.png"],
     spineColor: "#003652",
   },
- 
 ];
 
 const LatestPublications = () => {
@@ -35,9 +34,23 @@ const LatestPublications = () => {
 
         {/* Heading */}
         <div className="text-center mb-20">
-          <h2 className="text-4xl font-black text-[#003652] mb-4">
+          <h2 className="text-4xl font-black text-[#003652] mb-3">
             أحدث الإصدارات
           </h2>
+
+          {/* All categories as subtitle */}
+          <p className="flex items-center justify-center gap-2 text-sm font-semibold text-slate-400 tracking-widest">
+            {latestBooks.map((book, idx) => (
+              <React.Fragment key={book.id}>
+                <span style={{ color: "#2369A1" }}>{book.category}</span>
+                {idx < latestBooks.length - 1 && (
+                  <span className="text-[#C29C41]">—</span>
+                )}
+              </React.Fragment>
+            ))}
+          </p>
+
+          {/* Dual-color rule */}
          
         </div>
 
@@ -72,12 +85,9 @@ const LatestPublications = () => {
                 }
               />
 
-              {/* Label */}
+              {/* Label — title only */}
               <div className="mt-12 text-center">
-                <span className="text-xs font-bold text-[#C29C41] uppercase tracking-widest">
-                  {book.category}
-                </span>
-                <h3 className="text-sm text-nowrap text-[#003652] mt-1 font-semibold">
+                <h3 className="text-sm text-nowrap text-[#003652] font-semibold">
                   {book.title}
                 </h3>
               </div>

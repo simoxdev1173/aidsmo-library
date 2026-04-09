@@ -7,24 +7,24 @@ import { Book } from "./subComponents/Book"; // Assuming Book.tsx is in the same
 const latestBooks = [
   {
     id: 1,
-    title: "تقرير التنمية الصناعية 2025",
-    category: "الصناعة",
-    images : ["/bookCovers/i-1.png" , "/bookCovers/i-2.png" ,"/bookCovers/i-3.png"],
+    title: "إعـادة تأهيـل الـمناجم والـمحاجر القديمة   ",
+    category: "التعدين",
+    images : ["/latest-cover/b-1.png" , "/latest-cover/b-2.png" ,"/latest-cover/b-3.png"],
     spineColor: "#003652",
     coverOverlay: "bg-[#003652]/80",
   },
   {
     id: 2,
-    title: "دليل المواصفات القياسية",
-    category: "التقييس",
-    images : ["/bookCovers/i-1-1.png" , "/bookCovers/i-1-2.png" ,"/bookCovers/i-1-3.png"],
+    title: 'التنمية الصناعية العربية',
+    category: "الصناعة",
+    images : ["/industry-covers/b-3.jpg" , "/industry-covers/b-3-1.jpg" ,"/industry-covers/b-3-2.jpg"],
     spineColor: "#0369a1",
     coverOverlay: "bg-[#0369a1]/80",
   },
   {
     id: 3,
-    title: "نشرة الثروات المعدنية العربية",
-    category: "التعدين",
+    title: 'التنمية الصناعية العربية',
+    category: "الصناعة",
     images : ["/bookCovers/i-2-1.png" , "/bookCovers/i-2-2.png" ,"/bookCovers/i-2-3.png"],
     spineColor: "#003652",
     coverOverlay: "bg-[#003652]/80",
@@ -80,7 +80,7 @@ const LatestPublications = () => {
                 <span className="text-xs font-bold text-[#0369a1] uppercase tracking-widest">
                   {book.category}
                 </span>
-                <h3 className="text-lg font-bold text-[#003652] mt-1 group-hover:text-[#0369a1] transition-colors">
+                <h3 className="text-md text-right text-nowrap text-[#003652] mt-1 group-hover:text-[#0369a1] transition-colors">
                   {book.title}
                 </h3>
               </div>

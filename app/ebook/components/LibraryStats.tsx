@@ -64,8 +64,8 @@ const stats = [
     ar: 'كتاب رقمي',
     en: 'Digital Books',
     Icon: LuBookOpen,
- accent: '#0369A1',
-    accentLight: '#e0f2fe',
+    accent: '#C29C41',
+    accentLight: '#fdf6e3',
   },
   {
     num: 140,
@@ -73,7 +73,7 @@ const stats = [
     ar: 'بحث ودراسة',
     en: 'Research & Studies',
     Icon: LuFlaskConical,
-   accent: '#0369A1',
+    accent: '#0369A1',
     accentLight: '#e0f2fe',
   },
   {
@@ -82,10 +82,9 @@ const stats = [
     ar: 'تقرير صناعي',
     en: 'Industrial Reports',
     Icon: LuFileText,
-  accent: '#0369A1',
-    accentLight: '#e0f2fe',
+    accent: '#C29C41',
+    accentLight: '#fdf6e3',
   },
-
 ];
 
 /* ------------------------------------------------------------------ */
@@ -174,9 +173,9 @@ const LibraryStats = () => {
           <h2 className="mb-5 text-3xl font-extrabold leading-snug text-slate-900 md:text-4xl lg:text-[2.75rem]">
             أرقام تعكس{' '}
             <span className="relative inline-block">
-              <span className="relative z-10 text-[#0369a1] clip-text">
-                ثراء مكتبتنا
-              </span>
+             <span className="relative z-10 text-[#C29C41] clip-text">
+  ثراء مكتبتنا
+</span>
               {/* Highlight swoosh behind text */}
             </span>
           </h2>

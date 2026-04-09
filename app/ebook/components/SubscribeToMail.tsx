@@ -55,11 +55,11 @@ const SubscribeToMail = () => {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           {/* Text Content */}
           <div className="order-2 lg:order-1">
-            <h2 className="text-3xl font-bold leading-tight text-[#1e293b] md:text-4xl">
+            <h2 className="text-xl font-bold leading-tight text-[#1e293b] ">
              ابقَ على اتصال بآخر مستجدات المكتبة الرقمية
             </h2>
 
-            <p className="mt-4 text-base leading-relaxed text-[#475569]">
+            <p className="mt-4 text-md leading-relaxed text-[#475569]">
              انضم إلى نشرتنا البريدية لتصلك أحدث مجلات  ، تقارير التعدين، و اصدارات المنظمة فور صدورها.
             </p>
 

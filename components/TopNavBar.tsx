@@ -503,7 +503,7 @@ const TopNavBar = () => {
               <div className="flex-shrink-0">
                 <Link href="/" className="flex items-center gap-3">
                   <Image
-                    src="/logo-1.png"
+                    src="/logo-2.png"
                     alt="Logo"
                     height={200}
                     width={220}

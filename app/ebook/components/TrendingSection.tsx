@@ -159,14 +159,14 @@ const SectionRow = ({ sector, accent }: { sector: Sector; accent: string }) => {
               </div>
 
               {/* Meta */}
-              <div className="mt-3 px-0.5">
+              {/* <div className="mt-3 px-0.5">
                 <p className="line-clamp-2 text-[0.8rem] font-semibold leading-snug text-slate-800 group-hover:text-[var(--accent)] transition-colors duration-200">
                   {book.title}
                 </p>
                 {book.author && (
                   <p className="mt-1 truncate text-[0.72rem] text-slate-400">{book.author}</p>
                 )}
-              </div>
+              </div> */}
             </Link>
           ))}
         </div>
@@ -212,7 +212,7 @@ const TrendingBooks = () => {
       title: 'الأكثر رواجاً في الصناعة',
       description: 'مختارات حديثة ومرتفعة التحميل ضمن قطاع الصناعة.',
       books: [
-        { id: 'ind-1', title: 'المٍؤشرات الإقتصادية و الصناعية في الدول العربية', author: '', year: '2023', cover: '/industry-covers/b-1.jpg', href: '/book/ind-1' },
+        { id: 'ind-1', title: 'المٍؤشرات الإقتصادية و الصناعية في الدول العربية', author: '', year: '2024', cover: '/industry-covers/b-1.jpg', href: '/book/ind-1' },
         { id: 'ind-2', title: 'التجارب العربية في مجال ربط الأكاديميا بالصناعة', author: '', year: '2024', cover: '/industry-covers/b-2.jpg', href: '/book/ind-2' },
         { id: 'ind-3', title: 'التنمية الصناعية العربية', author: '', year: '2013', cover: '/trendingSection/t-3.png', href: '/book/ind-3' },
         { id: 'ind-4', title: 'التنمية الصناعية العربية', author: '', year: '2025', cover: '/industry-covers/b-3.jpg', href: '/book/ind-4' },

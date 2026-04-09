@@ -15,7 +15,7 @@ const latestBooks = [
     id: 2,
     title: "التنمية الصناعية العربية",
     category: "التقييس",
-    images: ["/bookCovers/i-2-1.png", "/bookCovers/i-2-2.png", "/bookCovers/i-2-3.png"],
+    images: ["/latest-cover/b-4.png", "/bookCovers/i-2-2.png", "/bookCovers/i-2-3.png"],
     spineColor: "#003652",
   },
   {
@@ -86,11 +86,7 @@ const LatestPublications = () => {
               />
 
               {/* Label — title only */}
-              <div className="mt-12 text-center">
-                <h3 className="text-sm text-nowrap text-[#003652] font-semibold">
-                  {book.title}
-                </h3>
-              </div>
+             
             </div>
           ))}
         </div>

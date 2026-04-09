@@ -150,7 +150,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   );
 };
 
-/* ---- Mega dropdown (Archive) ---- */
+/* ---- Mega dropdown ---- */
 const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
   return (
@@ -218,13 +218,13 @@ const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
       <Link
         href={item.href ?? `#${item.id}`}
         className={cn(
-          'relative flex items-center gap-1 px-4 py-2 text-sm font-bold text-nowrap transition-all duration-300',
-          isActive ? 'text-[#C29C41]' : 'text-slate-600 hover:text-[#0369A1]',
+          'relative flex items-center gap-1 px-3 py-2 text-base font-bold text-nowrap transition-all duration-300',
+          isActive ? 'text-[#C29C41]' : 'text-slate-700 hover:text-[#0369A1]',
         )}
       >
         {item.label}
         {hasDropdown && (
-          <LuChevronDown size={14} className={cn('transition-transform duration-300', open && 'rotate-180')} />
+          <LuChevronDown size={15} className={cn('transition-transform duration-300', open && 'rotate-180')} />
         )}
       </Link>
 
@@ -338,56 +338,109 @@ const TopNavBar = () => {
 
   return (
     <>
-      <header className={cn('fixed inset-x-0 top-0 z-[60] transition-all duration-500', isScrolled ? 'top-2 px-4 md:px-8' : 'top-0 px-0')}>
+      <header className={cn(
+        'fixed inset-x-0 top-0 z-[60] transition-all duration-500',
+        isScrolled ? 'top-2 px-4 md:px-8' : 'top-0 px-0',
+      )}>
         <nav className={cn(
           'mx-auto max-w-7xl transition-all duration-500',
-          isScrolled ? 'rounded-2xl border border-white/20 bg-white/90 shadow-2xl backdrop-blur-md py-2' : 'border-b border-transparent bg-transparent py-5',
+          isScrolled
+            ? 'rounded-2xl border border-white/20 bg-white/95 shadow-2xl backdrop-blur-md py-1'
+            : 'border-b border-transparent bg-transparent py-3',
         )}>
-          <div className="px-6 lg:px-8">
-            <div className="flex items-center justify-between gap-4">
+          <div className="px-4 lg:px-6">
+            <div className="flex items-center gap-3">
 
-              {/* Logo */}
-              <div className="flex-shrink-0">
-                <Link href="/">
-                  <Image
-                    src="/logo-2.png"
-                    alt="Logo"
-                    height={200}
-                    width={220}
-                    className={cn('transition-all duration-500', isScrolled ? 'h-12 w-auto' : 'h-16 w-auto')}
-                  />
-                </Link>
-              </div>
+              {/* LEFT — Main library logo */}
+              <Link href="/" className="flex-shrink-0">
+                <Image
+                  src="/logo-2.png"
+                  alt="Logo"
+                  height={240}
+                  width={260}
+                  className={cn(
+                    'object-contain transition-all duration-500',
+                    isScrolled ? 'h-14 w-auto' : 'h-20 w-auto',
+                  )}
+                />
+              </Link>
 
-              {/* Desktop Menu */}
-              <ul className="hidden flex-1 items-center justify-center gap-1 lg:flex">
+              {/* Gold divider */}
+              <div
+                className="hidden lg:block flex-shrink-0 w-px self-stretch my-2"
+                style={{ backgroundColor: 'rgba(194,156,65,0.35)' }}
+              />
+
+              {/* CENTER — Desktop nav */}
+              <ul className="hidden flex-1 items-center justify-center gap-0 lg:flex">
                 {menuItemsData.map((item) => (
                   <NavItem key={item.id} item={item} isActive={activeSection === item.id} />
                 ))}
               </ul>
 
-              {/* Search bar — gold bordered, contained */}
-              <div className="hidden items-center lg:flex">
-                <div className="relative group">
-                  <input
-                    type="text"
-                    placeholder="بحث..."
-                    dir="rtl"
-                    className="h-10 w-44 rounded-full border-2 border-[#C29C41]/40 bg-white pr-10 pl-4 text-sm font-medium text-slate-700 outline-none transition-all duration-300 focus:w-52 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20 placeholder:text-[#C29C41]/70 placeholder:font-semibold"
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C29C41]/60 transition-colors duration-200 group-focus-within:text-[#C29C41]">
-                    <LuSearch size={16} />
+              {/* RIGHT — Search + AIDSMO logo + mobile button */}
+              <div className="flex items-center gap-3 flex-shrink-0 mr-auto lg:mr-0">
+
+                {/* Search bar — blue border at rest, gold on focus */}
+                <div className="hidden items-center lg:flex">
+                  <div className="relative group">
+                    <input
+                      type="text"
+                      placeholder="بحث..."
+                      dir="rtl"
+                      className="h-10 w-40 rounded-full bg-white pr-10 pl-4 text-sm font-medium text-slate-700 outline-none transition-all duration-300 focus:w-48 placeholder:text-[#095C9B]/60 placeholder:font-semibold"
+                      style={{
+                        border: '2px solid rgba(9,92,155,0.3)',
+                        boxShadow: 'inset 0 0 0 1px rgba(194,156,65,0.12)',
+                      }}
+                      onFocus={e => {
+                        e.currentTarget.style.borderColor = '#C29C41';
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,156,65,0.15)';
+                      }}
+                      onBlur={e => {
+                        e.currentTarget.style.borderColor = 'rgba(9,92,155,0.3)';
+                        e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(194,156,65,0.12)';
+                      }}
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-200 text-[#095C9B]/60 group-focus-within:text-[#C29C41]">
+                      <LuSearch size={15} />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Mobile button */}
-              <button
-                className="rounded-xl bg-slate-100 p-2.5 text-slate-700 hover:bg-[#0369A1] hover:text-white lg:hidden"
-                onClick={() => setMobileMenuOpen(true)}
-              >
-                <LuMenu size={24} />
-              </button>
+                {/* Gold divider before AIDSMO logo */}
+                <div
+                  className="hidden lg:block flex-shrink-0 w-px self-stretch my-2"
+                  style={{ backgroundColor: 'rgba(194,156,65,0.35)' }}
+                />
+
+                {/* AIDSMO org logo — inside the nav box */}
+                <Link
+                  href="https://aidsmo.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden lg:flex flex-shrink-0 items-center"
+                >
+                  <Image
+                    src="/aidsmo-logo.png"
+                    alt="AIDSMO"
+                    height={160}
+                    width={160}
+                    className={cn(
+                      'object-contain transition-all duration-500',
+                      isScrolled ? 'h-10 w-auto' : 'h-14 w-auto',
+                    )}
+                  />
+                </Link>
+
+                {/* Mobile menu button */}
+                <button
+                  className="rounded-xl bg-slate-100 p-2.5 text-slate-700 hover:bg-[#0369A1] hover:text-white lg:hidden"
+                  onClick={() => setMobileMenuOpen(true)}
+                >
+                  <LuMenu size={24} />
+                </button>
+              </div>
 
             </div>
           </div>
@@ -396,7 +449,10 @@ const TopNavBar = () => {
 
       {/* Mobile overlay */}
       <div
-        className={cn('fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm lg:hidden', mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0 transition-opacity')}
+        className={cn(
+          'fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm lg:hidden',
+          mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0 transition-opacity',
+        )}
         onClick={() => setMobileMenuOpen(false)}
       />
 
@@ -406,20 +462,34 @@ const TopNavBar = () => {
         mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
       )}>
         <div className="mb-8 flex items-center justify-between border-b border-[#C29C41]/20 pb-4">
-          <Image src="/lib-logo.svg" alt="Logo" height={40} width={40} />
+          <div className="flex items-center gap-3">
+            <Image src="/logo-2.png" alt="Logo" height={36} width={100} className="h-9 w-auto object-contain" />
+            <span className="h-6 w-px" style={{ backgroundColor: 'rgba(194,156,65,0.3)' }} />
+            <Image src="/aidsmo-logo.png" alt="AIDSMO" height={36} width={36} className="h-9 w-auto object-contain" />
+          </div>
           <button onClick={() => setMobileMenuOpen(false)} className="rounded-full bg-slate-100 p-2">
             <LuX size={20} />
           </button>
         </div>
 
+        {/* Mobile search — blue border, gold on focus */}
         <div className="relative mb-6">
           <input
             type="text"
             placeholder="بحث..."
             dir="rtl"
-            className="w-full rounded-xl border-2 border-[#C29C41]/30 bg-slate-50 py-3 pr-10 pl-4 text-sm outline-none focus:border-[#C29C41] placeholder:text-[#C29C41]/60 placeholder:font-semibold"
+            className="w-full rounded-xl bg-slate-50 py-3 pr-10 pl-4 text-sm outline-none transition-all duration-200 placeholder:text-[#095C9B]/60 placeholder:font-semibold"
+            style={{ border: '2px solid rgba(9,92,155,0.25)' }}
+            onFocus={e => {
+              e.currentTarget.style.borderColor = '#C29C41';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,156,65,0.12)';
+            }}
+            onBlur={e => {
+              e.currentTarget.style.borderColor = 'rgba(9,92,155,0.25)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           />
-          <LuSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C29C41]/60" size={18} />
+          <LuSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-[#095C9B]/60" size={18} />
         </div>
 
         <nav className="flex flex-col gap-1">

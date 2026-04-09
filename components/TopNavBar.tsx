@@ -5,9 +5,6 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuChevronRight, LuMenu, LuX, LuSearch } from 'react-icons/lu';
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
 type SubItem = { label: string; href: string };
 type ChildItem = { label: string; href: string; subItems?: SubItem[] };
 type GroupDef = { title: string; items: ChildItem[] };
@@ -19,9 +16,6 @@ type MenuItem = {
   groups?: GroupDef[];
 };
 
-/* ------------------------------------------------------------------ */
-/*  Menu data                                                          */
-/* ------------------------------------------------------------------ */
 const menuItemsData: MenuItem[] = [
   { id: 'home', label: 'الرئيسية', href: '/' },
   { id: 'about', label: 'من نحن' },
@@ -115,12 +109,9 @@ const menuItemsData: MenuItem[] = [
   },
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Desktop: Simple dropdown                                           */
-/* ------------------------------------------------------------------ */
+/* ---- Simple dropdown ---- */
 const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
-
   return (
     <div className="min-w-[260px] rounded-2xl border border-slate-100 bg-white p-2 shadow-2xl">
       {items.map((item, idx) => (
@@ -135,22 +126,13 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
                 <Link href={item.href} className="flex-1">{item.label}</Link>
                 <LuChevronLeft size={14} className="text-slate-400" />
               </div>
-              {/* Flyout — opens to the LEFT (standard RTL nav, sub-menu goes further left) */}
-              <div
-                className={cn(
-                  'absolute left-0 top-0 z-50 -translate-x-full pl-1 transition-all duration-200',
-                  expandedIdx === idx
-                    ? 'pointer-events-auto translate-y-0 opacity-100'
-                    : 'pointer-events-none translate-y-1 opacity-0',
-                )}
-              >
+              <div className={cn(
+                'absolute left-0 top-0 z-50 -translate-x-full pl-1 transition-all duration-200',
+                expandedIdx === idx ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-1 opacity-0',
+              )}>
                 <div className="min-w-[240px] rounded-2xl border border-slate-100 bg-white p-2 shadow-2xl">
                   {item.subItems.map((sub) => (
-                    <Link
-                      key={sub.href}
-                      href={sub.href}
-                      className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]"
-                    >
+                    <Link key={sub.href} href={sub.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
                       {sub.label}
                     </Link>
                   ))}
@@ -158,10 +140,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
               </div>
             </div>
           ) : (
-            <Link
-              href={item.href}
-              className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]"
-            >
+            <Link href={item.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
               {item.label}
             </Link>
           )}
@@ -171,18 +150,14 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   );
 };
 
-/* ------------------------------------------------------------------ */
-/*  Desktop: Mega dropdown (Archive) — sub-flyout opens to the RIGHT  */
-/* ------------------------------------------------------------------ */
+/* ---- Mega dropdown (Archive) ---- */
 const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
-
   return (
     <div className="min-w-[540px] rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl">
       <div className={cn('grid gap-6', groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
         {groups.map((group) => (
           <div key={group.title}>
-            {/* Gold group header */}
             <p className="mb-2 border-b border-[#C29C41]/30 px-3 pb-2 text-xs font-bold text-[#C29C41]">
               {group.title}
             </p>
@@ -196,25 +171,15 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
                   >
                     <div className="flex cursor-default items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
                       <Link href={item.href} className="flex-1">{item.label}</Link>
-                      {/* Arrow points RIGHT — flyout opens to the right to stay on-screen */}
                       <LuChevronRight size={14} className="text-slate-400" />
                     </div>
-                    {/* Flyout opens to the RIGHT to prevent overflow */}
-                    <div
-                      className={cn(
-                        'absolute right-0 top-0 z-50 translate-x-full pr-1 transition-all duration-200',
-                        expandedKey === item.href
-                          ? 'pointer-events-auto translate-y-0 opacity-100'
-                          : 'pointer-events-none translate-y-1 opacity-0',
-                      )}
-                    >
+                    <div className={cn(
+                      'absolute right-0 top-0 z-50 translate-x-full pr-1 transition-all duration-200',
+                      expandedKey === item.href ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-1 opacity-0',
+                    )}>
                       <div className="min-w-[220px] rounded-2xl border border-slate-100 bg-white p-2 shadow-2xl">
                         {item.subItems.map((sub) => (
-                          <Link
-                            key={sub.href}
-                            href={sub.href}
-                            className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]"
-                          >
+                          <Link key={sub.href} href={sub.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
                             {sub.label}
                           </Link>
                         ))}
@@ -222,10 +187,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
                     </div>
                   </div>
                 ) : (
-                  <Link
-                    href={item.href}
-                    className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]"
-                  >
+                  <Link href={item.href} className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
                     {item.label}
                   </Link>
                 )}
@@ -238,9 +200,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   );
 };
 
-/* ------------------------------------------------------------------ */
-/*  Desktop nav item                                                   */
-/* ------------------------------------------------------------------ */
+/* ---- Desktop nav item ---- */
 const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -259,49 +219,29 @@ const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
         href={item.href ?? `#${item.id}`}
         className={cn(
           'relative flex items-center gap-1 px-4 py-2 text-sm font-bold text-nowrap transition-all duration-300',
-          isActive
-            ? 'text-[#C29C41]'  /* gold for active */
-            : 'text-slate-600 hover:text-[#0369A1]',  /* blue on hover */
+          isActive ? 'text-[#C29C41]' : 'text-slate-600 hover:text-[#0369A1]',
         )}
       >
         {item.label}
         {hasDropdown && (
-          <LuChevronDown
-            size={14}
-            className={cn('transition-transform duration-300', open && 'rotate-180')}
-          />
-        )}
-        {/* Gold underline indicator for active item */}
-        {isActive && (
-          <span className="absolute bottom-0 left-1/2 h-0.5 w-full -translate-x-1/2 rounded-full bg-[#C29C41]" />
+          <LuChevronDown size={14} className={cn('transition-transform duration-300', open && 'rotate-180')} />
         )}
       </Link>
 
       {hasDropdown && (
-        <div
-          className={cn(
-            'absolute right-0 top-full z-50 pt-2 transition-all duration-200',
-            /* Archive is the last item — anchor to LEFT edge so it doesn't overflow right */
-            item.id === 'archive' ? 'left-auto right-0' : 'right-0',
-            open
-              ? 'pointer-events-auto translate-y-0 opacity-100'
-              : 'pointer-events-none -translate-y-2 opacity-0',
-          )}
-        >
-          {item.groups ? (
-            <DropdownMega groups={item.groups} />
-          ) : (
-            <DropdownSimple items={item.children!} />
-          )}
+        <div className={cn(
+          'absolute top-full z-50 pt-2 transition-all duration-200',
+          item.id === 'archive' ? 'left-auto right-0' : 'right-0',
+          open ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0',
+        )}>
+          {item.groups ? <DropdownMega groups={item.groups} /> : <DropdownSimple items={item.children!} />}
         </div>
       )}
     </li>
   );
 };
 
-/* ------------------------------------------------------------------ */
-/*  Mobile accordion                                                   */
-/* ------------------------------------------------------------------ */
+/* ---- Mobile accordion ---- */
 const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () => void }) => {
   const [open, setOpen] = useState(false);
   const [expandedChild, setExpandedChild] = useState<string | null>(null);
@@ -319,11 +259,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
 
   if (!hasChildren) {
     return (
-      <Link
-        href={item.href ?? `#${item.id}`}
-        onClick={onNavigate}
-        className="block rounded-xl px-4 py-4 text-lg font-bold text-slate-600 hover:text-[#0369A1]"
-      >
+      <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block rounded-xl px-4 py-4 text-lg font-bold text-slate-600 hover:text-[#0369A1]">
         {item.label}
       </Link>
     );
@@ -336,26 +272,13 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
         className="flex w-full items-center justify-between rounded-xl px-4 py-4 text-lg font-bold text-slate-600"
       >
         {item.label}
-        <LuChevronDown
-          size={18}
-          className={cn('transition-transform duration-300', open && 'rotate-180')}
-        />
+        <LuChevronDown size={18} className={cn('transition-transform duration-300', open && 'rotate-180')} />
       </button>
-
-      <div
-        className={cn(
-          'overflow-hidden transition-all duration-300',
-          open ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0',
-        )}
-      >
+      <div className={cn('overflow-hidden transition-all duration-300', open ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0')}>
         <div className="mr-4 border-r-2 border-[#C29C41]/20 pr-2">
           {allChildren.map((child, idx) => {
             if (child.isGroupHeader) {
-              return (
-                <p key={`header-${idx}`} className="px-4 pb-1 pt-3 text-xs font-bold text-[#C29C41]">
-                  {child.groupTitle}
-                </p>
-              );
+              return <p key={`header-${idx}`} className="px-4 pb-1 pt-3 text-xs font-bold text-[#C29C41]">{child.groupTitle}</p>;
             }
             if (child.subItems && child.subItems.length > 0) {
               const isExpanded = expandedChild === child.href;
@@ -366,25 +289,12 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                     className="flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-[#0369A1]"
                   >
                     {child.label}
-                    <LuChevronDown
-                      size={14}
-                      className={cn('transition-transform duration-300', isExpanded && 'rotate-180')}
-                    />
+                    <LuChevronDown size={14} className={cn('transition-transform duration-300', isExpanded && 'rotate-180')} />
                   </button>
-                  <div
-                    className={cn(
-                      'overflow-hidden transition-all duration-300',
-                      isExpanded ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0',
-                    )}
-                  >
+                  <div className={cn('overflow-hidden transition-all duration-300', isExpanded ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0')}>
                     <div className="mr-4 border-r-2 border-slate-50 pr-2">
                       {child.subItems.map((sub) => (
-                        <Link
-                          key={sub.href}
-                          href={sub.href}
-                          onClick={onNavigate}
-                          className="block rounded-lg px-4 py-2 text-[0.8rem] font-medium text-slate-400 hover:text-[#C29C41]"
-                        >
+                        <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block rounded-lg px-4 py-2 text-[0.8rem] font-medium text-slate-400 hover:text-[#C29C41]">
                           {sub.label}
                         </Link>
                       ))}
@@ -394,12 +304,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
               );
             }
             return (
-              <Link
-                key={child.href}
-                href={child.href}
-                onClick={onNavigate}
-                className="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-[#0369A1]"
-              >
+              <Link key={child.href} href={child.href} onClick={onNavigate} className="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-[#0369A1]">
                 {child.label}
               </Link>
             );
@@ -410,9 +315,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
   );
 };
 
-/* ------------------------------------------------------------------ */
-/*  TopNavBar                                                          */
-/* ------------------------------------------------------------------ */
+/* ---- TopNavBar ---- */
 const TopNavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -424,11 +327,7 @@ const TopNavBar = () => {
       const sections = menuItemsData.map((item) => document.getElementById(item.id));
       const scrollPosition = window.scrollY + 100;
       sections.forEach((section) => {
-        if (
-          section &&
-          section.offsetTop <= scrollPosition &&
-          section.offsetTop + section.offsetHeight > scrollPosition
-        ) {
+        if (section && section.offsetTop <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
           setActiveSection(section.id);
         }
       });
@@ -439,34 +338,23 @@ const TopNavBar = () => {
 
   return (
     <>
-      <header
-        className={cn(
-          'fixed inset-x-0 top-0 z-[60] transition-all duration-500',
-          isScrolled ? 'top-2 px-4 md:px-8' : 'top-0 px-0',
-        )}
-      >
-        <nav
-          className={cn(
-            'mx-auto max-w-7xl transition-all duration-500',
-            isScrolled
-              ? 'rounded-2xl border border-white/20 bg-white/90 shadow-2xl backdrop-blur-md py-2'
-              : 'border-b border-transparent bg-transparent py-5',
-          )}
-        >
+      <header className={cn('fixed inset-x-0 top-0 z-[60] transition-all duration-500', isScrolled ? 'top-2 px-4 md:px-8' : 'top-0 px-0')}>
+        <nav className={cn(
+          'mx-auto max-w-7xl transition-all duration-500',
+          isScrolled ? 'rounded-2xl border border-white/20 bg-white/90 shadow-2xl backdrop-blur-md py-2' : 'border-b border-transparent bg-transparent py-5',
+        )}>
           <div className="px-6 lg:px-8">
-            <div className="flex items-center justify-between gap-8">
+            <div className="flex items-center justify-between gap-4">
+
               {/* Logo */}
               <div className="flex-shrink-0">
-                <Link href="/" className="flex items-center gap-3">
+                <Link href="/">
                   <Image
                     src="/logo-2.png"
                     alt="Logo"
                     height={200}
                     width={220}
-                    className={cn(
-                      'transition-all duration-500',
-                      isScrolled ? 'h-22 w-auto' : 'h-24 w-auto',
-                    )}
+                    className={cn('transition-all duration-500', isScrolled ? 'h-12 w-auto' : 'h-16 w-auto')}
                   />
                 </Link>
               </div>
@@ -478,16 +366,17 @@ const TopNavBar = () => {
                 ))}
               </ul>
 
-              {/* Search */}
+              {/* Search bar — gold bordered, contained */}
               <div className="hidden items-center lg:flex">
                 <div className="relative group">
                   <input
                     type="text"
-                    placeholder="ابحث عن الكتب، المقالات..."
-                    className="h-11 w-64 rounded-full border border-slate-200 bg-slate-100/50 pr-11 pl-4 text-sm font-medium text-slate-700 outline-none transition-all duration-300 focus:w-80 focus:border-[#0369A1] focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    placeholder="بحث..."
+                    dir="rtl"
+                    className="h-10 w-44 rounded-full border-2 border-[#C29C41]/40 bg-white pr-10 pl-4 text-sm font-medium text-slate-700 outline-none transition-all duration-300 focus:w-52 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20 placeholder:text-[#C29C41]/70 placeholder:font-semibold"
                   />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0369A1]">
-                    <LuSearch size={18} />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C29C41]/60 transition-colors duration-200 group-focus-within:text-[#C29C41]">
+                    <LuSearch size={16} />
                   </div>
                 </div>
               </div>
@@ -499,6 +388,7 @@ const TopNavBar = () => {
               >
                 <LuMenu size={24} />
               </button>
+
             </div>
           </div>
         </nav>
@@ -506,20 +396,15 @@ const TopNavBar = () => {
 
       {/* Mobile overlay */}
       <div
-        className={cn(
-          'fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm lg:hidden',
-          mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0 transition-opacity',
-        )}
+        className={cn('fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm lg:hidden', mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0 transition-opacity')}
         onClick={() => setMobileMenuOpen(false)}
       />
 
       {/* Mobile panel */}
-      <div
-        className={cn(
-          'fixed bottom-0 right-0 top-0 z-[110] w-[85%] max-w-sm overflow-y-auto bg-white p-6 transition-transform duration-500 lg:hidden',
-          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
-        )}
-      >
+      <div className={cn(
+        'fixed bottom-0 right-0 top-0 z-[110] w-[85%] max-w-sm overflow-y-auto bg-white p-6 transition-transform duration-500 lg:hidden',
+        mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
+      )}>
         <div className="mb-8 flex items-center justify-between border-b border-[#C29C41]/20 pb-4">
           <Image src="/lib-logo.svg" alt="Logo" height={40} width={40} />
           <button onClick={() => setMobileMenuOpen(false)} className="rounded-full bg-slate-100 p-2">
@@ -531,9 +416,10 @@ const TopNavBar = () => {
           <input
             type="text"
             placeholder="بحث..."
-            className="w-full rounded-xl border border-slate-100 bg-slate-50 py-3 pr-10 pl-4 text-sm focus:border-[#0369A1] outline-none"
+            dir="rtl"
+            className="w-full rounded-xl border-2 border-[#C29C41]/30 bg-slate-50 py-3 pr-10 pl-4 text-sm outline-none focus:border-[#C29C41] placeholder:text-[#C29C41]/60 placeholder:font-semibold"
           />
-          <LuSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <LuSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C29C41]/60" size={18} />
         </div>
 
         <nav className="flex flex-col gap-1">

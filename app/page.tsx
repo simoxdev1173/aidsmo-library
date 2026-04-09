@@ -7,6 +7,7 @@ import SubscribeToMail from "./ebook/components/SubscribeToMail"
 import BrowseBySubject from "./ebook/components/BrowseCategory"
 import LatestPublications from "./ebook/components/LatestPublications"
 import LibraryStats from "./ebook/components/LibraryStats"
+import ChatbotCTA from "./ebook/components/ChatbotCta"
 
 export default function Home() {
   return (
@@ -34,6 +35,9 @@ export default function Home() {
         </section>
          <section id="latest-pub">
           <LatestPublications />
+        </section>
+         <section id="chatbot">
+          <ChatbotCTA />
         </section>
         
         <section id="newsletter">

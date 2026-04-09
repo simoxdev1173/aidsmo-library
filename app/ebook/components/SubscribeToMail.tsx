@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { FormEvent, useState } from 'react';
 
 const bookImages = [
-  '/trendingSection/t-1.png',
-  '/trendingSection/t-11.png',
+  '/trendingSection/t-12.jpg',
+  '/bookCovers/i-2-1.png',
   '/trendingSection/t-7.png',
-  '/trendingSection/t-5.png',
+  '/trendingSection/t-9.png',
   '/trendingSection/t-3.png',
 ];
 

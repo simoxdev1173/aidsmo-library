@@ -95,8 +95,9 @@ const menuItemsData: MenuItem[] = [
           {
             label: 'القمة العربية', href: '/archive/league/summit',
             subItems: [
-              { label: 'مجلس جامعة الدول العربية', href: '/archive/league/summit/council' },
+              { label: 'قرارات مجلس الجامعة على المستوى الوزاري', href: '/archive/league/summit/council' },
               { label: 'مجلس الجامعة على مستوى القمة', href: '/archive/league/summit/summit-council' },
+              { label: 'القمة العربية الإقتصادية و التنموية و الإجتماعية', href: '/archive/league/summit/summit-council' },
             ],
           },
           { label: 'المجلس الاقتصادي والاجتماعي', href: '/archive/league/ecosoc' },

@@ -42,7 +42,7 @@ const LatestPublications = () => {
           <p className="flex items-center justify-center gap-2 text-sm font-semibold text-slate-400 tracking-widest">
             {latestBooks.map((book, idx) => (
               <React.Fragment key={book.id}>
-                <span style={{ color: "#2369A1" }}>{book.category}</span>
+                <span style={{ color: "#C29C41" }}>{book.category}</span>
                 {idx < latestBooks.length - 1 && (
                   <span className="text-[#C29C41]">—</span>
                 )}

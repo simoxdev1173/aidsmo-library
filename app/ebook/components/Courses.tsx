@@ -13,18 +13,11 @@ type NewsItem = {
 
 const news: NewsItem[] = [
   {
-    title: 'إطلاق قسم جديد للكتب المتخصصة في التقييس والجودة',
+    title:'إطلاق إصدارات جديدة في مجال عمل المنضمة  صناعة - تقييس - تعدين',
     date: '05 فبراير 2026',
     excerpt:
-      'تمت إضافة مجموعة جديدة من المراجع والدلائل الإرشادية لدعم الباحثين والمهنيين في مجالات المواصفات وتقييم المطابقة.',
+     'تعرّف على أحدث الإصدارات والدراسات الفنية المتخصصة التي أضافتها المكتبة الرقمية إلى مجموعتها في مجالات الصناعة والتقييس والتعدين.',
     href: '/news/standardization-section',
-  },
-  {
-    title: 'تحديثات على فهرسة الكتب الإلكترونية وتحسين البحث',
-    date: '02 فبراير 2026',
-    excerpt:
-      'أصبح البحث أسرع وأكثر دقة مع تصفية حسب القطاع، سنة النشر، والموضوعات الأكثر شيوعاً داخل المكتبة.',
-    href: '/news/search-upgrade',
   },
   {
     title: 'نشرات دورية: أهم الإصدارات والتحليلات الصناعية',
@@ -90,80 +83,66 @@ const LibraryNews = () => {
               <h2 className="mt-4 text-2xl font-extrabold text-slate-900 sm:text-3xl">
                 آخر المستجدات داخل المكتبة الرقمية
               </h2>
-
-              {/* Dual-color rule */}
-           
             </div>
 
             {/* News list */}
-            <div className="mt-6 space-y-3">
-              {news.map((item, idx) => {
-                const isMiddle = idx === 1;
-                return (
-                  <Link
-                    key={idx}
-                    href={item.href}
-                    className="group block rounded-2xl p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
-                    style={{
-                      border: isMiddle
-                        ? '1px solid rgba(194,156,65,0.35)'
-                        : '1px solid rgba(3,105,161,0.15)',
-                      background: isMiddle
-                        ? 'linear-gradient(135deg, #fffdf5 0%, #ffffff 100%)'
-                        : 'linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%)',
-                    }}
-                  >
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="min-w-0">
-                        <h3
-                          className="text-base font-bold text-slate-900 transition-colors duration-200 sm:text-base group-hover:text-[#0369A1]"
-                          style={isMiddle ? {} : {}}
-                        >
-                          {/* Gold accent number */}
-                          <span
-                            className="ml-2 text-xs font-black"
-                            style={{ color: isMiddle ? '#C29C41' : '#0369A1' }}
-                          >
-                            {String(idx + 1).padStart(2, '0')}
-                          </span>
-                          {item.title}
-                        </h3>
-                        <p className="mt-1 line-clamp-2 text-sm text-slate-500">
-                          {item.excerpt}
-                        </p>
-                      </div>
-
-                      <div className="flex shrink-0 items-center justify-between gap-3 sm:flex-col sm:items-end">
-                        {/* Date badge */}
-                        <div
-                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-semibold"
-                          style={{
-                            backgroundColor: isMiddle
-                              ? 'rgba(194,156,65,0.10)'
-                              : 'rgba(3,105,161,0.08)',
-                            color: isMiddle ? '#7a5c10' : '#003652',
-                          }}
-                        >
-                          <LuCalendar
-                            className="h-3.5 w-3.5"
-                            style={{ color: isMiddle ? '#C29C41' : '#0369A1' }}
-                          />
-                          {item.date}
-                        </div>
-
-                        {/* Read more */}
+            <div className="mt-6 space-y-5">
+              {news.map((item, idx) => (
+                <Link
+                  key={idx}
+                  href={item.href}
+                  className="group block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                  style={{
+                    border: '1px solid rgba(194,156,65,0.35)',
+                    background:
+                      'linear-gradient(135deg, #fffdf5 0%, #ffffff 100%)',
+                  }}
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-bold text-slate-900 transition-colors duration-200 sm:text-xl group-hover:text-[#C29C41]">
+                        {/* Gold accent number */}
                         <span
-                          className="inline-flex items-center gap-1.5 text-xs font-bold"
-                          style={{ color: isMiddle ? '#C29C41' : '#0369A1' }}
+                          className="ml-2 text-sm font-black"
+                          style={{ color: '#C29C41' }}
                         >
-                          اقرأ المزيد
-                          <LuArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-1" />
+                          {String(idx + 1).padStart(2, '0')}
                         </span>
-                      </div>
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 line-clamp-2 text-sm text-slate-500 sm:text-base">
+                        {item.excerpt}
+                      </p>
                     </div>
-                  </Link>
-                );
-              })}
+
+                    <div className="flex shrink-0 items-center justify-between gap-3 sm:flex-col sm:items-end">
+                      {/* Date badge */}
+                      <div
+                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold"
+                        style={{
+                          backgroundColor: 'rgba(194,156,65,0.10)',
+                          color: '#7a5c10',
+                        }}
+                      >
+                        <LuCalendar
+                          className="h-3.5 w-3.5"
+                          style={{ color: '#C29C41' }}
+                        />
+                        {item.date}
+                      </div>
+
+                      {/* Read more */}
+                      <span
+                        className="inline-flex items-center gap-1.5 text-xs font-bold"
+                        style={{ color: '#C29C41' }}
+                      >
+                        اقرأ المزيد
+                        <LuArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-1" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>

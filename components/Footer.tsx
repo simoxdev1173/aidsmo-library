@@ -76,32 +76,32 @@ const Footer = () => {
             <div className="md:col-span-4 lg:col-span-4">
               <div className="flex items-center gap-3 mb-6">
                 <Image
-                  src="/logo-2.png"
+                  src="/logo-3.png"
                   alt="المكتبة الرقمية"
                   width={160}
                   height={60}
-                  className="h-14 w-auto object-contain brightness-0 invert opacity-90"
+                  className="h-18 w-auto object-contain"
                 />
                 <span className="h-8 w-px bg-[#C29C41]/25" />
                 <Image
                   src="/aidsmo-logo.png"
                   alt="AIDSMO"
-                  width={60}
-                  height={60}
-                  className="h-12 w-auto object-contain brightness-0 invert opacity-80"
+                  width={160}
+                  height={160}
+                  className="h-18 w-auto object-contain"
                 />
               </div>
-              <p className="text-sm leading-[2] text-white/50 max-w-[340px] mb-6">
+              <p className="text-sm leading-[2] text-white max-w-[340px] mb-6">
                 المكتبة الرقمية الذكية — منصة رائدة لجمع المعرفة الصناعية والتقنية وتنظيمها وإتاحتها للمجتمع العربي.
               </p>
 
               {/* Contact info */}
               <div className="flex flex-col gap-3">
-                <a href="tel:+212537000000" className="inline-flex items-center gap-2.5 text-sm text-white/45 transition-colors duration-300 hover:text-[#C29C41]">
+                <a href="tel:+212537000000" className="inline-flex items-center gap-2.5 text-sm text-white transition-colors duration-300 hover:text-[#C29C41]">
                   <LuPhone size={14} className="flex-shrink-0" />
                   <span dir="ltr">+212 5 37 00 00 00</span>
                 </a>
-                <a href="mailto:info@aidsmo.org" className="inline-flex items-center gap-2.5 text-sm text-white/45 transition-colors duration-300 hover:text-[#C29C41]">
+                <a href="mailto:info@aidsmo.org" className="inline-flex items-center gap-2.5 text-sm text-white transition-colors duration-300 hover:text-[#C29C41]">
                   <LuMail size={14} className="flex-shrink-0" />
                   info@aidsmo.org
                 </a>
@@ -122,7 +122,7 @@ const Footer = () => {
                         <Link
                           href={item.href}
                           {...('external' in item && item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                          className="group/link inline-flex items-center gap-1.5 text-sm text-white/45 transition-colors duration-300 hover:text-white"
+                          className="group/link inline-flex items-center gap-1.5 text-sm text-white transition-colors duration-300 hover:text-white"
                         >
                           <LuChevronLeft size={12} className="text-[#C29C41]/40 transition-transform duration-300 group-hover/link:-translate-x-0.5 group-hover/link:text-[#C29C41]" />
                           {item.label}
@@ -171,7 +171,7 @@ const Footer = () => {
 
           {/* Bottom bar */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8">
-            <p className="text-xs text-white/30">
+            <p className="text-xs text-white">
               © {new Date().getFullYear()} المنظمة العربية للتنمية الصناعية والتقييس والتعدين. جميع الحقوق محفوظة.
             </p>
         

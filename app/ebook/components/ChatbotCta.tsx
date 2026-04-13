@@ -7,7 +7,7 @@ import { LuSparkles, LuArrowLeft } from 'react-icons/lu';
 
 const ChatbotCTA = () => {
   return (
-    <section className="py-16 md:py-24 px-4" dir="rtl">
+    <section className="py-16 md:py-24 px-4 bg-[#F0F7FC]" dir="rtl">
       <div className="mx-auto max-w-5xl">
 
         {/* Card */}

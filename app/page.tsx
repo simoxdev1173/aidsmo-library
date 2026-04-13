@@ -8,11 +8,12 @@ import BrowseBySubject from "./ebook/components/BrowseCategory"
 import LatestPublications from "./ebook/components/LatestPublications"
 import LibraryStats from "./ebook/components/LibraryStats"
 import ChatbotCTA from "./ebook/components/ChatbotCta"
+import VideoCarousel from "@/components/VideoCarousel"
 
 export default function Home() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
-      <TopNavBar  />
+      
       
       <main className="pt-20">
         <section id="home">
@@ -35,6 +36,9 @@ export default function Home() {
         </section>
          <section id="latest-pub">
           <LatestPublications />
+        </section>
+         <section id="latest-pub">
+          <VideoCarousel />
         </section>
          <section id="chatbot">
           <ChatbotCTA />

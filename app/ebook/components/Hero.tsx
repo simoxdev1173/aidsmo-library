@@ -49,24 +49,31 @@ const Hero = () => {
           />
 
           {/* TOP-RIGHT — Logo */}
-          <div className="absolute top-8 right-8 md:top-10 md:right-12 lg:right-16 z-20">
-            <div
-              className="rounded-2xl p-3"
-              style={{
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(194,156,65,0.30)',
-                backdropFilter: 'blur(12px)',
-              }}
-            >
-              <Image
-                src="/logo-3.png"
-                alt="المكتبة الرقمية"
-                width={200}
-                height={200}
-                className="object-contain w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 drop-shadow-2xl"
-              />
-            </div>
-          </div>
+       {/* TOP-RIGHT — Logo + Title */}
+<div className="absolute top-8 right-8 md:top-10 md:right-12 lg:right-16 z-20 flex flex-col items-start">
+  {/* Logo Container */}
+  <div
+    className="rounded-2xl p-3 mb-6"
+   
+  >
+    <Image
+      src="/logo-4.png"
+      alt="المكتبة الرقمية"
+      width={400}
+      height={400}
+      className="object-fill w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 drop-shadow-2xl"
+    />
+  </div>
+
+  {/* New Big Title */}
+  <h1 
+    dir="rtl" 
+    className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-lg select-none"
+  >
+    <span style={{ color: '#B99739' }}>المكتبة الرقمية</span>{' '}
+    <span style={{ color: '#0C5B99' }}>الذكية</span>
+  </h1>
+</div>
 
           {/* BOTTOM-LEFT — Title + Subtitle */}
           <div

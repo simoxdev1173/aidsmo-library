@@ -18,7 +18,7 @@ type MenuItem = {
 
 const menuItemsData: MenuItem[] = [
   { id: 'home', label: 'الرئيسية', href: '/' },
-  { id: 'about', label: 'من نحن' },
+  { id: 'about', label: 'من نحن' , href: '/about-us'},
   {
     id: 'industry', label: 'الصناعة',
     children: [

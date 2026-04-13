@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { Manrope, Readex_Pro } from 'next/font/google' // Changed here
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader';
-
+import TopNavBar from '@/components/TopNavBar';
+import Footer from '@/components/Footer';
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
@@ -30,10 +31,12 @@ export default function RootLayout({
     <html lang="ar" dir="rtl">
       {/* Updated the variable name to readexPro.variable */}
       <body className={`${manrope.variable} ${readexPro.variable} font-arabic`}>
+        <TopNavBar  />
         <NextTopLoader color="#0369a1" showSpinner={false} /> 
         <div>
           {children}
         </div>
+        <Footer />
       </body>
     </html>
   )

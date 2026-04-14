@@ -88,7 +88,7 @@ const Hero = () => {
             </h1> */}
 
             <p
-              className="text-sm mb-15 md:text-3xl leading-snug font-bold  text-justify text-[white] "
+              className="text-sm mb-5 md:text-3xl leading-snug font-bold  text-justify text-[white] "
             
             >
               {slide.subtitle}

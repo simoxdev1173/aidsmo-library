@@ -99,12 +99,11 @@ const Footer = () => {
               <div className="flex flex-col gap-3">
                 <a href="tel:+212537000000" className="inline-flex items-center gap-2.5 text-sm text-white transition-colors duration-300 hover:text-[#C29C41]">
                   <LuPhone size={14} className="flex-shrink-0" />
-                  <span dir="ltr">+212 5 37 00 00 00</span>
+                  <span dir="ltr">00212537274500</span>
                 </a>
                 <a href="mailto:info@aidsmo.org" className="inline-flex items-center gap-2.5 text-sm text-white transition-colors duration-300 hover:text-[#C29C41]">
                   <LuMail size={14} className="flex-shrink-0" />
-                  info@aidsmo.org
-                </a>
+aidsmo@aidsmo.org                </a>
               </div>
             </div>
 

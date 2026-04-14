@@ -10,12 +10,14 @@ type Video = {
 };
 
 const initialVideos: Video[] = [
-  { id: '1', youtubeId: '8UMN3Q1waZY', title: '' },
-  { id: '2', youtubeId: 'Sd_NYSIrcBg', title: '' },
-  { id: '3', youtubeId: '-VhO3fZg-i8', title: '' },
-  { id: '4', youtubeId: '4t3-cEkVyqg', title: '' },
-  { id: '5', youtubeId: 'RaO0_lbLqLg', title: '' },
-  { id: '6', youtubeId: 'Ccjv48W8mLQ', title: '' },
+  { id: '1', youtubeId: 'Ccjv48W8mLQ', title: '' },
+   { id: '2', youtubeId: '4t3-cEkVyqg', title: '' },
+  { id: '3', youtubeId: 'RaO0_lbLqLg', title: '' },
+  
+  { id: '4', youtubeId: '8UMN3Q1waZY', title: '' },
+  { id: '5', youtubeId: 'Sd_NYSIrcBg', title: '' },
+  { id: '6', youtubeId: '-VhO3fZg-i8', title: '' },
+  
 ];
 
 const CARD_WIDTH = 420;

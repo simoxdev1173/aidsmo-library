@@ -68,29 +68,33 @@ const Footer = () => {
         <div className="absolute bottom-[25%] right-[8%] w-20 h-20 border border-white/[0.03] rotate-45 rounded" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pt-16 pb-8 md:pt-20 md:pb-10">
+          
+          {/* Top Logos Block - Separated to prevent pushing text down */}
+          <div className="flex items-center gap-4 mb-8">
+            <Image
+              src="/logo-3.png"
+              alt="المكتبة الرقمية"
+              width={160}
+              height={80}
+              className="h-25 w-auto object-contain"
+            />
+            <span className="h-10 w-px bg-[#C29C41]/25" />
+            <Link href="https://aidsmo.org" target="_blank" rel="noopener noreferrer" className="inline-flex items-center transition-colors duration-300 hover:opacity-80">
+              <Image
+                src="/aidsmo-logo.png"
+                alt="AIDSMO"
+                width={160}
+                height={80}
+                className="h-16 w-auto object-contain"
+              />
+            </Link>
+          </div>
 
-          {/* Top row — logo + links + location */}
+          {/* Grid row — description + links + location */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 pb-12 border-b border-white/10">
 
-            {/* Logo + description */}
+            {/* Description & Contact info */}
             <div className="md:col-span-4 lg:col-span-4">
-              <div className="flex items-center gap-3 mb-6">
-                <Image
-                  src="/logo-3.png"
-                  alt="المكتبة الرقمية"
-                  width={160}
-                  height={60}
-                  className="h-18 w-auto object-contain"
-                />
-                <span className="h-8 w-px bg-[#C29C41]/25" />
-                <Image
-                  src="/aidsmo-logo.png"
-                  alt="AIDSMO"
-                  width={160}
-                  height={160}
-                  className="h-18 w-auto object-contain"
-                />
-              </div>
               <p className="text-sm leading-[2] text-white max-w-[340px] mb-6">
                 المكتبة الرقمية الذكية — منصة رائدة لجمع المعرفة الصناعية والتقنية وتنظيمها وإتاحتها للمجتمع العربي.
               </p>
@@ -103,7 +107,8 @@ const Footer = () => {
                 </a>
                 <a href="mailto:info@aidsmo.org" className="inline-flex items-center gap-2.5 text-sm text-white transition-colors duration-300 hover:text-[#C29C41]">
                   <LuMail size={14} className="flex-shrink-0" />
-aidsmo@aidsmo.org                </a>
+                  aidsmo@aidsmo.org
+                </a>
               </div>
             </div>
 
@@ -173,7 +178,6 @@ aidsmo@aidsmo.org                </a>
             <p className="text-xs text-white">
               © {new Date().getFullYear()} المنظمة العربية للتنمية الصناعية والتقييس والتعدين. جميع الحقوق محفوظة.
             </p>
-        
           </div>
         </div>
       </div>

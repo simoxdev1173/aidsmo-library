@@ -111,23 +111,23 @@ const AboutPage = () => {
             </span>
 
             <p className="text-lg md:text-xl leading-[2.2] text-slate-600 font-medium text-justify mb-8">
-              أعدّت{' '}
+             
               <span className="font-bold text-[#0C5B99]">
-                المنظمة العربية للتنمية الصناعية والتقييس والتعدين
+               أعدّت{' '}  المنظمة العربية للتنمية الصناعية والتقييس والتعدين 
               </span>{' '}
               <span className="font-bold text-[#C29C41]">
                 المكتبة الرقمية الذكية
               </span>
               {' '}، منصة رائدة تهدف إلى جمع{' '}
-              <span className="font-bold text-[#0C5B99]">
+              <span className="font-bold ">
                 المعرفة الصناعية والتقنية
               </span>{' '}
               وتنظيمها بطريقة ذكية ومتاحة للجميع. تم تصميم المكتبة باستخدام أحدث{' '}
-              <span className="font-bold text-[#C29C41]">
+              <span className="font-bold ">
                 التطورات التكنولوجية
               </span>{' '}
               لتسهيل{' '}
-              <span className="font-bold text-[#0C5B99]">
+              <span className="font-bold ">
                 البحث التفاعلي
               </span>{' '}
               والوصول السريع إلى المعلومات الدقيقة والموثوقة.
@@ -135,27 +135,27 @@ const AboutPage = () => {
 
             <p className="text-base md:text-lg leading-[2.3] text-slate-500 text-justify">
               تسعى المكتبة إلى أن تكون{' '}
-              <span className="font-bold text-[#0C5B99]">
+              <span className="font-bold ">
                 مرجعاً موثوقاً
               </span>{' '}
               للباحثين والمهتمين بالقطاع الصناعي والتعديني، من خلال توفير محتوى غني يدعم{' '}
-              <span className="font-bold text-[#C29C41]">
+              <span className="font-bold ">
                 البحث العلمي
               </span>
               ،{' '}
-              <span className="font-bold text-[#C29C41]">
+              <span className="font-bold ">
                 التطوير المهني
               </span>
               ، واتخاذ{' '}
-              <span className="font-bold text-[#0C5B99]">
+              <span className="font-bold ">
                 القرار المبني على المعرفة
               </span>
               . كما تهدف إلى تعزيز{' '}
-              <span className="font-bold text-[#C29C41]">
+              <span className="font-bold ">
                 الابتكار
               </span>{' '}
               ونشر المعرفة داخل{' '}
-              <span className="font-bold text-[#0C5B99]">
+              <span className="font-bold ">
                 المجتمع العربي
               </span>
               ، مع تصميم يجعل البحث واستكشاف المعلومات أمراً سهلاً وممتعاً لجميع المستخدمين.

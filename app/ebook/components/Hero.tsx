@@ -19,7 +19,7 @@ const Hero = () => {
 
           {/* Video */}
           <video
-            src="/hero-video-1.mp4"
+            src="/hero-video-2.mp4"
             autoPlay
             loop
             muted

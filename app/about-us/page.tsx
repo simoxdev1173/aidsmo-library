@@ -40,7 +40,21 @@ const AboutPage = () => {
             transition: 'all 0.9s cubic-bezier(.22,1,.36,1)',
           }}
         >
-          <div className="relative flex items-center justify-center py-24 md:py-32 lg:py-36 bg-gradient-to-bl from-[#0a2540] via-[#0C5B99] to-[#0369A1]">
+          {/* Video Background Layer */}
+          <div className="relative flex items-center justify-center py-24 md:py-32 lg:py-36">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/hero-video-2.mp4" type="video/mp4" />
+            </video>
+
+            {/* Gradient Overlay to maintain brand colors and readability */}
+            <div className="absolute inset-0 bg-gradient-to-bl from-[#0a2540]/70 via-[#0C5B99]/60 to-[#0369A1]/70" />
+
             {/* Gold top accent bar */}
             <div
               className="absolute inset-x-0 top-0 h-[5px] z-10"
@@ -49,7 +63,7 @@ const AboutPage = () => {
 
             {/* Subtle grid */}
             <div
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none z-10"
               style={{
                 backgroundImage:
                   'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)',
@@ -59,7 +73,7 @@ const AboutPage = () => {
 
             {/* Radial gold glows */}
             <div
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none z-10"
               style={{
                 background:
                   'radial-gradient(ellipse 55% 50% at 80% 25%, rgba(194,156,65,0.1) 0%, transparent 70%), radial-gradient(ellipse 40% 55% at 15% 75%, rgba(194,156,65,0.07) 0%, transparent 70%)',
@@ -67,24 +81,20 @@ const AboutPage = () => {
             />
 
             {/* Decorative diamonds */}
-            <div className="absolute top-[14%] right-[7%] w-36 h-36 border border-[#C29C41]/10 rotate-45 rounded-lg" />
-            <div className="absolute bottom-[16%] left-[9%] w-24 h-24 border border-[#C29C41]/10 rotate-45 rounded-lg" />
-            <div className="absolute top-[45%] right-[30%] w-12 h-12 border border-white/5 rotate-45 rounded" />
+            <div className="absolute top-[14%] right-[7%] w-36 h-36 border border-[#C29C41]/10 rotate-45 rounded-lg z-10" />
+            <div className="absolute bottom-[16%] left-[9%] w-24 h-24 border border-[#C29C41]/10 rotate-45 rounded-lg z-10" />
+            <div className="absolute top-[45%] right-[30%] w-12 h-12 border border-white/5 rotate-45 rounded z-10" />
 
             {/* Decorative circles */}
-            <div className="absolute -top-16 -left-16 w-56 h-56 rounded-full border border-[#C29C41]/[0.06]" />
-            <div className="absolute -bottom-12 -right-8 w-40 h-40 rounded-full border border-[#C29C41]/[0.06]" />
+            <div className="absolute -top-16 -left-16 w-56 h-56 rounded-full border border-[#C29C41]/[0.06] z-10" />
+            <div className="absolute -bottom-12 -right-8 w-40 h-40 rounded-full border border-[#C29C41]/[0.06] z-10" />
 
             {/* Title */}
-            <div className="relative z-10 text-center px-6">
-             
-
+            <div className="relative z-20 text-center px-6">
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-none select-none">
                 <span className="text-white">من </span>
                 <span className="text-[#C29C41]">نحن</span>
               </h1>
-
-             
             </div>
           </div>
         </div>
@@ -111,9 +121,8 @@ const AboutPage = () => {
             </span>
 
             <p className="text-lg md:text-xl leading-[2.2] text-slate-600 font-medium text-justify mb-8">
-             
               <span className="font-bold text-[#0C5B99]">
-               أعدّت{' '}  المنظمة العربية للتنمية الصناعية والتقييس والتعدين 
+                أعدّت{' '}  المنظمة العربية للتنمية الصناعية والتقييس والتعدين 
               </span>{' '}
               <span className="font-bold text-[#C29C41]">
                 المكتبة الرقمية الذكية

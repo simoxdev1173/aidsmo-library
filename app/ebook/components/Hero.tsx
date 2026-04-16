@@ -19,7 +19,7 @@ const Hero = () => {
 
           {/* Video */}
           <video
-            src="/hero-video-2.mp4"
+            src="/hero-video-3.mp4"
             autoPlay
             loop
             muted
@@ -27,8 +27,8 @@ const Hero = () => {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          {/* Overlay 1 — dark base */}
-          <div className="absolute inset-0 bg-black/55" />
+          {/* Overlay 1 — dark base (lightened) */}
+          <div className="absolute inset-0 bg-black/10" />
 
           {/* Overlay 2 — gold top bar */}
           <div
@@ -48,49 +48,35 @@ const Hero = () => {
             style={{ background: 'linear-gradient(315deg, rgba(194,156,65,0.20) 0%, transparent 50%)' }}
           />
 
-          {/* TOP-RIGHT — Logo */}
-       {/* TOP-RIGHT — Logo + Title */}
-<div className="absolute top-8 right-8 md:top-10 md:right-12 lg:right-16 z-20 flex flex-col items-start">
-  {/* Logo Container */}
-  <div
-    className="rounded-2xl p-3 mb-6"
-   
-  >
-    <Image
-      src="/logo-4.png"
-      alt="المكتبة الرقمية"
-      width={400}
-      height={400}
-      className="object-fill w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 drop-shadow-2xl"
-    />
-  </div>
+          {/* TOP-RIGHT — Logo + Title */}
+          <div className="absolute top-8 right-8 md:top-10 md:right-12 lg:right-16 z-20 flex flex-col items-start">
+            {/* Logo Container */}
+            <div className="rounded-2xl p-3 mb-6">
+              <Image
+                src="/logo-4.png"
+                alt="المكتبة الرقمية"
+                width={400}
+                height={400}
+                className="object-fill w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 drop-shadow-2xl"
+              />
+            </div>
 
-  {/* New Big Title */}
-  <h1 
-    dir="rtl" 
-    className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-lg select-none"
-  >
-    <span style={{ color: '#B99739' }}>المكتبة الرقمية</span>{' '}
-    <span style={{ color: '#0C5B99' }}>الذكية</span>
-  </h1>
-</div>
+            {/* New Big Title */}
+            <h1
+              dir="rtl"
+              className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-lg select-none"
+            >
+              <span style={{ color: '#B99739' }}>المكتبة الرقمية</span>{' '}
+              <span style={{ color: '#0C5B99' }}>الذكية</span>
+            </h1>
+          </div>
 
           {/* BOTTOM-LEFT — Title + Subtitle */}
           <div
             className="absolute bottom-16 left-8 md:bottom-20 md:left-12 lg:left-16 z-20 max-w-[55%]"
             dir="rtl"
           >
-            {/* <h1
-              className="mb-4 text-3xl font-extrabold leading-tight md:text-4xl lg:text-5xl"
-              style={{ color: '#C29C41' }}
-            >
-              {slide.title}
-            </h1> */}
-
-            <p
-              className="text-sm mb-5 md:text-3xl leading-snug font-bold  text-justify text-[white] "
-            
-            >
+            <p className="text-sm mb-5 md:text-3xl leading-snug font-bold text-justify text-[white]">
               {slide.subtitle}
             </p>
           </div>

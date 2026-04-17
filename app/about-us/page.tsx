@@ -33,7 +33,7 @@ const AboutPage = () => {
       <section className="bg-white pt-32 md:pt-36 pb-10 md:pb-14 px-4 lg:px-8">
         <div
           ref={heroRef}
-          className="relative mx-auto max-w-[95%] overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl"
+          className="relative mx-auto max-w-[55%] overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl"
           style={{
             opacity: heroVisible ? 1 : 0,
             transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -41,7 +41,7 @@ const AboutPage = () => {
           }}
         >
           {/* Video Background Layer */}
-          <div className="relative flex items-center justify-center py-24 md:py-32 lg:py-36">
+          <div className="relative flex items-center justify-center py-34 md:py-42 lg:py-46">
             <video
               autoPlay
               loop

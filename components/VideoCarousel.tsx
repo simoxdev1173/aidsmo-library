@@ -17,6 +17,8 @@ const initialVideos: Video[] = [
   { id: '4', youtubeId: '8UMN3Q1waZY', title: '' },
   { id: '5', youtubeId: 'Sd_NYSIrcBg', title: '' },
   { id: '6', youtubeId: '-VhO3fZg-i8', title: '' },
+  { id: '7', youtubeId: 'V365bLTljl0', title: '' },
+  
   
 ];
 

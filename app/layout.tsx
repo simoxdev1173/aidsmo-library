@@ -4,6 +4,7 @@ import './globals.css'
 import NextTopLoader from 'nextjs-toploader';
 import TopNavBar from '@/components/TopNavBar';
 import Footer from '@/components/Footer';
+import ChatbotWidget from '@/components/ChatbotWidget';
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
@@ -36,6 +37,7 @@ export default function RootLayout({
         <div>
           {children}
         </div>
+        <ChatbotWidget />
         <Footer />
       </body>
     </html>

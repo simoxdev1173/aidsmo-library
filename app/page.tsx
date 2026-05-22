@@ -1,8 +1,6 @@
-import TopNavBar from "@/components/TopNavBar"
 import Hero from "./ebook/components/Hero"
 import Benefits from "./ebook/components/TrendingSection"
 import Courses from "./ebook/components/Courses"
-import TestimonialSlider from "./ebook/components/TestimonialSlider"
 import SubscribeToMail from "./ebook/components/SubscribeToMail"
 import BrowseBySubject from "./ebook/components/BrowseCategory"
 import LatestPublications from "./ebook/components/LatestPublications"
@@ -12,15 +10,13 @@ import VideoCarousel from "@/components/VideoCarousel"
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
-      
-      
-      <main className="pt-20">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#F8FAFC] text-[#0A2540]">
+      <main>
         <section id="home">
           <Hero />
         </section>
         
-        <section className="bg-[#F0F7FC]">
+        <section className="border-y border-[#0369A1]/10 bg-[#F0F7FC]">
           <LibraryStats />
         </section>
         <section id="projects">
@@ -37,7 +33,7 @@ export default function Home() {
          <section id="latest-pub">
           <LatestPublications />
         </section>
-         <section id="latest-pub">
+         <section id="videos">
           <VideoCarousel />
         </section>
          <section id="chatbot">

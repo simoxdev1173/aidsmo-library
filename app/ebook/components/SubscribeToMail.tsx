@@ -1,5 +1,5 @@
 'use client';
-import TextFormInput from '@/components/form/TextFormInput';
+
 import Image from 'next/image';
 import { FormEvent, useState } from 'react';
 
@@ -17,10 +17,7 @@ const SubscribeToMail = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const validateEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,171 +48,94 @@ const SubscribeToMail = () => {
 
   return (
     <section className="bg-[#F0F7FC]" dir="rtl">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          {/* Text Content */}
+      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="corner-frame grid gap-10 border border-[#C29C41]/35 bg-white p-6 md:p-10 lg:grid-cols-2 lg:items-center">
           <div className="order-2 lg:order-1">
-            <h2 className="text-xl font-bold leading-tight text-[#1e293b] ">
-             ابقَ على اتصال بآخر مستجدات المكتبة الرقمية
+            <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-4xl">
+              ابقَ على اتصال بآخر مستجدات المكتبة الرقمية
             </h2>
 
-            <p className="mt-4 text-md leading-relaxed text-[#475569]">
-             انضم إلى نشرتنا البريدية لتصلك أحدث مجلات  ، تقارير التعدين، و اصدارات المنظمة فور صدورها.
+            <p className="mt-5 font-academic text-xl leading-relaxed text-[#475569]">
+              انضم إلى نشرتنا البريدية لتصلك أحدث المجلات وتقارير التعدين وإصدارات المنظمة فور صدورها.
             </p>
 
-            {/* Subscribe Form */}
             <div className="mt-8 max-w-xl">
               {isSuccess ? (
-                <div className="rounded-lg bg-green-50 p-4 text-center">
-                  <p className="text-green-700">✓ تم الاشتراك بنجاح! شكراً لك.</p>
+                <div className="border border-[#C29C41]/30 bg-[#F8FAFC] p-4 text-center text-[#003652]">
+                  تم الاشتراك بنجاح. شكراً لك.
                 </div>
               ) : (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
+                  <label htmlFor="newsletter-email" className="sr-only">
+                    البريد الإلكتروني
+                  </label>
                   <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="flex-1">
-                      <TextFormInput
+                      <input
+                        id="newsletter-email"
                         name="email"
                         type="email"
-                        fullWidth
                         value={email}
                         onChange={(e) => {
                           setEmail(e.target.value);
                           if (error) setError('');
                         }}
-                        className="h-14 w-full rounded-lg border-0 bg-white px-4 text-right placeholder:text-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#0369a1]"
+                        className="h-14 w-full border border-[#0369A1]/20 bg-[#F8FAFC] px-4 text-right text-[#0A2540] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/30"
                         placeholder="أدخل بريدك الإلكتروني"
-                        error={error}
+                        aria-invalid={Boolean(error)}
+                        aria-describedby={error ? 'newsletter-error' : undefined}
                       />
+                      {error && (
+                        <p id="newsletter-error" className="mt-2 text-sm font-medium text-red-600">
+                          {error}
+                        </p>
+                      )}
                     </div>
 
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="h-14 shrink-0 rounded-lg bg-[#0369a1] px-8 text-base font-semibold text-white transition-all hover:bg-[#075985] disabled:cursor-not-allowed disabled:opacity-70"
+                      className="engraved brass-gradient h-14 shrink-0 border border-[#C29C41] px-8 text-base font-bold text-[#0A2540] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white"
                     >
-                      {isSubmitting ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                              fill="none"
-                            />
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            />
-                          </svg>
-                          جاري الإرسال...
-                        </span>
-                      ) : (
-                        'اشترك الآن'
-                      )}
+                      {isSubmitting ? 'جاري الإرسال...' : 'اشترك الآن'}
                     </button>
                   </div>
                 </form>
               )}
             </div>
 
-            {/* Features */}
-            <div className="mt-8 flex flex-wrap gap-6">
-              {['محتوى حصري', 'تحديثات مستمرة', 'مجاني 100%'].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0369a1]/10">
-                    <svg
-                      className="h-4 w-4 text-[#0369a1]"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-sm text-[#475569]">{item}</span>
+            <div className="mt-8 flex flex-wrap gap-4">
+              {['محتوى حصري', 'تحديثات مستمرة', 'مجاني 100%'].map((item) => (
+                <div key={item} className="inline-flex items-center gap-2 border border-[#C29C41]/25 bg-[#F8FAFC] px-4 py-2 text-sm font-semibold text-[#334155]">
+                  <span className="h-2 w-2 rounded-full bg-[#C29C41]" aria-hidden />
+                  {item}
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Book Images Marquee */}
-          <div className="order-1 lg:order-2 flex justify-center">
-            <div className="h-[495px] overflow-hidden rounded-2xl">
+          <div className="order-1 flex justify-center lg:order-2">
+            <div className="h-[500px] overflow-hidden">
               <div className="marquee grid grid-cols-2 gap-4 place-items-center">
-                {/* Column 1 */}
-                <div className="flex flex-col gap-6 overflow-hidden">
-                  <div className="marquee-hero flex flex-col items-center gap-6">
-                    {bookImages.map((image, idx) => (
-                      <Image
-                        key={idx}
-                        alt="صورة كتاب"
-                        src={image}
-                        width={240}
-                        height={240}
-                        sizes="240px"
-                        className="w-60 rounded-lg object-cover shadow-md"
-                      />
+                {[false, true].map((reverse) => (
+                  <div key={String(reverse)} className={`${reverse ? 'marquee-reverse ' : ''}flex flex-col gap-6 overflow-hidden`}>
+                    {[0, 1].map((set) => (
+                      <div key={set} aria-hidden={set === 1} className="marquee-hero flex flex-col items-center gap-6">
+                        {bookImages.map((image, idx) => (
+                          <Image
+                            key={`${image}-${set}-${idx}`}
+                            alt="صورة كتاب"
+                            src={image}
+                            width={240}
+                            height={240}
+                            sizes="240px"
+                            className="w-56 border border-[#C29C41]/25 object-cover shadow-md"
+                          />
+                        ))}
+                      </div>
                     ))}
                   </div>
-                  <div
-                    aria-hidden
-                    className="marquee-hero flex flex-col items-center gap-6"
-                  >
-                    {bookImages.map((image, idx) => (
-                      <Image
-                        key={idx}
-                        alt="صورة كتاب"
-                        src={image}
-                        width={240}
-                        height={240}
-                        sizes="240px"
-                        className="w-60 rounded-lg object-cover shadow-md"
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Column 2 */}
-                <div className="marquee-reverse flex flex-col gap-6 overflow-hidden">
-                  <div className="marquee-hero flex flex-col items-center gap-6">
-                    {bookImages.map((image, idx) => (
-                      <Image
-                        key={idx}
-                        alt="صورة كتاب"
-                        src={image}
-                        width={240}
-                        height={240}
-                        sizes="240px"
-                        className="w-60 rounded-lg object-cover shadow-md"
-                      />
-                    ))}
-                  </div>
-                  <div
-                    aria-hidden
-                    className="marquee-hero flex flex-col items-center gap-6"
-                  >
-                    {bookImages.map((image, idx) => (
-                      <Image
-                        key={idx}
-                        alt="صورة كتاب"
-                        src={image}
-                        width={240}
-                        height={240}
-                        sizes="240px"
-                        className="w-60 rounded-lg object-cover shadow-md"
-                      />
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

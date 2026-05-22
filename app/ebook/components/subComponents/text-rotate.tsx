@@ -138,6 +138,18 @@ interface TextRotateProps {
   elementLevelClassName?: string
 }
 
+const motionByTag = {
+  p: motion.p,
+  span: motion.span,
+  div: motion.div,
+  h1: motion.h1,
+  h2: motion.h2,
+  h3: motion.h3,
+  h4: motion.h4,
+  h5: motion.h5,
+  h6: motion.h6,
+} as const
+
 /**
  * Interface for the ref object exposed by TextRotate component.
  * Provides methods to control text rotation programmatically.
@@ -354,8 +366,10 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       return () => clearInterval(intervalId)
     }, [next, rotationInterval, auto])
 
-    // Custom motion component to render the text as a custom HTML tag provided via prop
-    const MotionComponent = useMemo(() => motion.create(as ?? "p"), [as])
+    const MotionComponent =
+      typeof as === "string" && as in motionByTag
+        ? motionByTag[as as keyof typeof motionByTag]
+        : motion.p
 
     return (
       <MotionComponent

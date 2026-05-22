@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LuChevronLeft, LuChevronRight, LuPlay } from 'react-icons/lu';
+import Image from 'next/image';
 
 type Video = {
   id: string;
@@ -175,12 +176,11 @@ const VideoCarousel = () => {
                         onClick={() => setPlayingId(video.id)}
                       >
                         {/* YouTube thumbnail */}
-                        <img
-                          src={`https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
+                        <Image
+                          src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
                           alt={video.title}
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
-                          }}
+                          fill
+                          sizes="420px"
                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
 

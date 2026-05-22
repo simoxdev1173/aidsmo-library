@@ -1,11 +1,11 @@
 import React from 'react';
-import { Factory, Scale, HardHat, ChevronLeft } from 'lucide-react';
+import { Factory, Scale, HardHat, ChevronLeft, Sparkle } from 'lucide-react';
 import Link from 'next/link';
+
 const sectors = [
   {
     title: 'الصناعة',
-    subtitle: 'Industry',
-    icon: <Factory className="w-6 h-6 text-[#0369a1]" />,
+    icon: Factory,
     accent: '#0369A1',
     subjects: [
       { name: 'اللجنة الاستشارية للتنمية الصناعية', link: '#' },
@@ -18,8 +18,7 @@ const sectors = [
   },
   {
     title: 'التقييس',
-    subtitle: 'Standardization',
-    icon: <Scale className="w-6 h-6 text-[#C29C41]" />,
+    icon: Scale,
     accent: '#C29C41',
     subjects: [
       { name: 'الدراسات', link: '#' },
@@ -31,8 +30,7 @@ const sectors = [
   },
   {
     title: 'التعدين',
-    subtitle: 'Mining',
-    icon: <HardHat className="w-6 h-6 text-[#0369a1]" />,
+    icon: HardHat,
     accent: '#0369A1',
     subjects: [
       { name: 'الدراسات', link: '#' },
@@ -47,70 +45,54 @@ const sectors = [
 
 const BrowseBySubject = () => {
   return (
-    <section className="py-16 px-4 bg-[#F8FAFC]" dir="rtl">
-      <div className="max-w-7xl mx-auto">
-
-        {/* Section Header */}
-        <div className="mb-12 pr-6">
-          <h2 className="text-3xl font-bold text-[#003652]">تصفح حسب القطاعات</h2>
-          
+    <section className="bg-[#F8FAFC] px-4 py-20 md:py-28" dir="rtl">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-14 max-w-3xl">
+          <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">تصفح حسب القطاعات</h2>
+          <p className="mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#475569]">
+            أبواب معرفية منظمة للباحثين والمهتمين، تقودك مباشرة إلى الإصدارات والدراسات حسب مجال العمل.
+          </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {sectors.map((sector, index) => (
-            <div
-              key={index}
-              className="group relative bg-white rounded-2xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-lg overflow-hidden"
-              style={{ '--accent': sector.accent } as React.CSSProperties}
-            >
-              {/* Top accent bar */}
-              <div
-                className="absolute inset-x-0 top-0 h-[3px] rounded-t-2xl"
-                style={{ backgroundColor: sector.accent }}
-              />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {sectors.map((sector) => {
+            const Icon = sector.icon;
+            return (
+              <article
+                key={sector.title}
+                className="group corner-card academic-card overflow-hidden p-7"
+                style={{ '--accent': sector.accent } as React.CSSProperties}
+              >
+                <div className="mb-7 flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="academic-heading mt-2 text-3xl">{sector.title}</h3>
+                    <div className="mt-3 w-24 [--divider-bg:#F8FAFC]">
+                      <div className="ornate-divider" aria-hidden />
+                    </div>
+                  </div>
 
-              {/* Hover glow */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none"
-                style={{
-                  background: `radial-gradient(ellipse at top right, ${sector.accent}18 0%, transparent 70%)`,
-                }}
-              />
-
-              {/* Sector Header */}
-              <div className="relative flex items-center gap-4 mb-6">
-                <div
-                  className="p-3 rounded-xl"
-                  style={{ backgroundColor: `${sector.accent}15` }}
-                >
-                  {sector.icon}
+                  <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white text-[#C29C41]">
+                    <Icon className="h-6 w-6" strokeWidth={1.5} />
+                    <Sparkle className="absolute -left-1 -top-1 h-4 w-4 fill-[#C29C41] text-[#C29C41]" />
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-[#003652]">{sector.title}</h3>
-               
-                </div>
-              </div>
 
-              {/* Subjects List */}
-              <ul className="relative space-y-1">
-                {sector.subjects.map((subject, subIndex) => (
-                  <li key={subIndex}>
-                    <Link
-                      href={subject.link}
-                      className="group/link flex items-center justify-between py-2.5 border-b border-slate-100 last:border-0 text-slate-600 transition-colors duration-200 hover:text-[var(--accent)]"
-                    >
-                      <span className="text-sm font-medium">{subject.name}</span>
-                      <ChevronLeft
-                        className="w-4 h-4 text-[var(--accent)] opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-200 flex-shrink-0"
-                      />
-                    </Link>
-                  </li>
-                ))}
-              </ul> 
-
-            </div>
-          ))}
+                <ul className="space-y-1">
+                  {sector.subjects.map((subject) => (
+                    <li key={subject.name}>
+                      <Link
+                        href={subject.link}
+                        className="group/link flex min-h-12 items-center justify-between border-b border-[#0369A1]/10 py-3 text-sm font-medium text-[#334155] transition duration-300 last:border-0 hover:text-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#F8FAFC]"
+                      >
+                        <span>{subject.name}</span>
+                        <ChevronLeft className="h-4 w-4 shrink-0 text-[var(--accent)] opacity-60 transition duration-300 group-hover/link:-translate-x-1 group-hover/link:opacity-100" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

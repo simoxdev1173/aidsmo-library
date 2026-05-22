@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { LuSparkles, LuX, LuMessageSquare, LuMic, LuSend } from 'react-icons/lu';
+import { LuX, LuMic, LuSend } from 'react-icons/lu';
 import Image from 'next/image';
 
 const ChatbotWidget = () => {
@@ -60,7 +60,7 @@ const ChatbotWidget = () => {
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-                aria-label="Close Chat"
+                aria-label="إغلاق المحادثة"
               >
                 <LuX size={20} />
               </button>
@@ -68,7 +68,7 @@ const ChatbotWidget = () => {
 
             {/* Chat Area */}
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
-              {/* AI Welcome Message */}
+              {/* Welcome Message */}
               <motion.div
                 initial={{ opacity: 0, x: 10 }} // Switched to positive x for RTL entry from right
                 animate={{ opacity: 1, x: 0 }}
@@ -76,7 +76,7 @@ const ChatbotWidget = () => {
                 className="flex items-start gap-3"
               >
                 <div className="h-8 w-8 rounded-full bg-[#022A4E] border border-[#C29C41]/30 flex items-center justify-center shrink-0 overflow-hidden relative">
-                  <Image src="/ai.png" alt="AI" width={24} height={24} className="object-contain" />
+                  <Image src="/ai.png" alt="المساعد الذكي" width={24} height={24} className="object-contain" />
                 </div>
                 <div 
                   className="bg-white px-4 py-3 rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed"
@@ -99,7 +99,7 @@ const ChatbotWidget = () => {
                 {/* Audio Button */}
                 <button 
                   className="p-2.5 text-[#0369A1] hover:text-[#C29C41] hover:bg-[#0369A1]/5 rounded-xl transition-colors shrink-0"
-                  aria-label="Voice Input"
+                  aria-label="إدخال صوتي"
                 >
                   <LuMic size={20} />
                 </button>
@@ -167,7 +167,7 @@ const ChatbotWidget = () => {
               className="relative"
             >
                
-                  <Image src="/ai.png" alt="AI" width={44} height={44} className="object-fill" />
+                  <Image src="/ai.png" alt="المساعد الذكي" width={44} height={44} className="object-fill" />
                 
               {/* Notification dot */}
               <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">

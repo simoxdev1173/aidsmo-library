@@ -4,17 +4,38 @@
   /* Fonts */
   --font-primary: 'Manrope', sans-serif;
   --font-arabic: 'Readex Pro', sans-serif;
+  --font-academic: var(--font-amiri), 'Amiri', serif;
+  --font-display: var(--font-cinzel), 'Cinzel', serif;
+
+  /* Existing palette, recast as library materials */
+  --library-ink: #0a2540;
+  --library-blue: #0369a1;
+  --library-blue-deep: #003652;
+  --library-blue-mid: #0c5b99;
+  --library-gold: #c29c41;
+  --library-gold-light: #e8c96a;
+  --library-paper: #f8fafc;
+  --library-paper-blue: #f0f7fc;
+  --library-border: rgba(3, 105, 161, 0.16);
+  --library-border-gold: rgba(194, 156, 65, 0.34);
+  --library-muted: #475569;
 }
 
 @theme inline {
   --font-manrope: var(--font-manrope);
   /* Maps the Next.js variable to the Tailwind font utility */
   --font-arabic: var(--font-readex); 
+  --font-academic: var(--font-amiri);
+  --font-display: var(--font-cinzel);
 }
 
 /* Base font for Arabic */
 body {
   font-family: var(--font-readex), 'Readex Pro', sans-serif;
+  background:
+    radial-gradient(ellipse at top, rgba(3, 105, 161, 0.1), transparent 48%),
+    linear-gradient(180deg, #ffffff 0%, var(--library-paper-blue) 44%, #ffffff 100%);
+  color: var(--library-ink);
 }
 
 /* Use Manrope for English/numbers if needed */
@@ -25,6 +46,246 @@ body {
 /* Arabic font utility class */
 .font-arabic {
   font-family: var(--font-readex), 'Readex Pro', sans-serif;
+}
+
+.font-academic {
+  font-family: var(--font-academic);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: rgba(194, 156, 65, 0.28);
+  color: var(--library-ink);
+}
+
+.academic-atmosphere::before,
+.academic-atmosphere::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 80;
+}
+
+.academic-atmosphere::before {
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(10, 37, 64, 0.18) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+.academic-atmosphere::after {
+  background:
+    radial-gradient(ellipse at center, transparent 0%, transparent 58%, rgba(10, 37, 64, 0.13) 100%);
+}
+
+.academic-heading {
+  font-family: var(--font-academic);
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--library-blue-deep);
+}
+
+.ornate-divider {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(3, 105, 161, 0.18) 18%, var(--library-gold) 50%, rgba(3, 105, 161, 0.18) 82%, transparent 100%);
+}
+
+.ornate-divider::before {
+  content: "✶";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--library-gold);
+  background: var(--divider-bg, #ffffff);
+  padding: 0 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.corner-frame,
+.corner-card {
+  position: relative;
+}
+
+.corner-frame::before,
+.corner-frame::after,
+.corner-card::before,
+.corner-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-color: var(--library-gold);
+  border-style: solid;
+  opacity: 0.72;
+  transition: opacity 300ms ease-out;
+}
+
+.corner-frame::before,
+.corner-frame::after {
+  width: 42px;
+  height: 42px;
+  border-width: 2px;
+}
+
+.corner-frame::before {
+  top: -1px;
+  right: -1px;
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.corner-frame::after {
+  bottom: -1px;
+  left: -1px;
+  border-right: 0;
+  border-top: 0;
+}
+
+.corner-card::before,
+.corner-card::after {
+  width: 24px;
+  height: 24px;
+  border-width: 1px;
+}
+
+.corner-card::before {
+  top: -1px;
+  right: -1px;
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.corner-card::after {
+  bottom: -1px;
+  left: -1px;
+  border-right: 0;
+  border-top: 0;
+}
+
+.corner-frame:hover::before,
+.corner-frame:hover::after,
+.corner-card:hover::before,
+.corner-card:hover::after {
+  opacity: 1;
+}
+
+.arch-top {
+  border-radius: 40% 40% 0 0 / 20% 20% 0 0;
+}
+
+.sepia-reveal {
+  filter: sepia(0.46) contrast(0.96) brightness(0.94);
+  transition: filter 700ms ease-out, transform 700ms ease-out;
+}
+
+.group:hover .sepia-reveal,
+.sepia-reveal:hover {
+  filter: sepia(0) contrast(1) brightness(1);
+  transform: scale(1.025);
+}
+
+.hero-blinds-layer {
+  filter: saturate(1.03) contrast(1.02);
+}
+
+.hero-blind-strip {
+  transform: scaleY(0);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hero-blind-open 980ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes hero-blind-open {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.hero-copy-reveal {
+  animation: hero-copy-reveal 720ms cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@keyframes hero-copy-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #e8c96a 0%, #ffffff 100%);
+}
+
+.hero-progress-fill.is-active {
+  animation: hero-progress linear forwards;
+}
+
+@keyframes hero-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.brass-gradient {
+  background: linear-gradient(180deg, #e8c96a 0%, #c29c41 52%, #a77f24 100%);
+}
+
+.engraved {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.28), -1px -1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.dropcap::first-letter {
+  float: right;
+  margin: 0.08em 0 0 0.28em;
+  color: var(--library-gold);
+  font-family: var(--font-display);
+  font-size: 4.6rem;
+  line-height: 0.78;
+  text-shadow: 2px 2px 4px rgba(10, 37, 64, 0.22);
+}
+
+.academic-card {
+  border: 1px solid var(--library-border-gold);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(240, 247, 252, 0.82)),
+    var(--library-paper);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+  transition: border-color 300ms ease-out, box-shadow 300ms ease-out;
+}
+
+.academic-card:hover {
+  border-color: rgba(194, 156, 65, 0.62);
+  box-shadow: 0 14px 34px rgba(10, 37, 64, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.wax-seal {
+  background: radial-gradient(circle at 35% 25%, #e8c96a 0%, #c29c41 42%, #8f681a 100%);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.35),
+    inset 0 -2px 4px rgba(10, 37, 64, 0.22),
+    0 8px 18px rgba(10, 37, 64, 0.18);
 }
 
 /* Marquee Animation */
@@ -56,4 +317,27 @@ body {
 
 .marquee:hover .marquee-hero {
   animation-play-state: paused;
+}
+
+@media (max-width: 767px) {
+  .corner-frame::before,
+  .corner-frame::after {
+    width: 28px;
+    height: 28px;
+  }
+
+  .dropcap::first-letter {
+    font-size: 3.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

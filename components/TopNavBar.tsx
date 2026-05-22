@@ -1,9 +1,10 @@
 'use client';
+
 import { cn } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { LuChevronDown, LuChevronLeft, LuChevronRight, LuMenu, LuX, LuSearch } from 'react-icons/lu';
+import { LuChevronDown, LuChevronLeft, LuChevronRight, LuMenu, LuSearch, LuX } from 'react-icons/lu';
 
 type SubItem = { label: string; href: string };
 type ChildItem = { label: string; href: string; subItems?: SubItem[] };
@@ -18,9 +19,10 @@ type MenuItem = {
 
 const menuItemsData: MenuItem[] = [
   { id: 'home', label: 'الرئيسية', href: '/' },
-  { id: 'about', label: 'من نحن' , href: '/about-us'},
+  { id: 'about', label: 'من نحن', href: '/about-us' },
   {
-    id: 'industry', label: 'الصناعة',
+    id: 'industry',
+    label: 'الصناعة',
     children: [
       { label: 'اللجنة الاستشارية للتنمية الصناعية', href: '/industry/advisory-committee' },
       { label: 'إستراتيجية التكامل الصناعي', href: '/industry/integration-strategy' },
@@ -31,32 +33,36 @@ const menuItemsData: MenuItem[] = [
     ],
   },
   {
-    id: 'standardization', label: 'التقييس',
+    id: 'standardization',
+    label: 'التقييس',
     children: [
       { label: 'دراسات', href: '/standardization/studies' },
       { label: 'معاجم', href: '/standardization/glossaries' },
       { label: 'أدلة', href: '/standardization/guides' },
       { label: 'توجيهات', href: '/standardization/directives' },
-      { label: 'استراتيجيات', href: '/standardization/strategies' },
+      { label: 'إستراتيجيات', href: '/standardization/strategies' },
       { label: 'ورش ودورات تدريبية', href: '/standardization/workshops' },
     ],
   },
   {
-    id: 'mining', label: 'التعدين',
+    id: 'mining',
+    label: 'التعدين',
     children: [
       { label: 'المكتبة الرقمية للدراسات التعدينية العربية', href: 'https://arabmininglibrary.org/' },
     ],
   },
   {
-    id: 'industrial-info', label: 'المعلومات الصناعية',
+    id: 'industrial-info',
+    label: 'المعلومات الصناعية',
     children: [
       {
-        label: 'الإحصاءات الصناعية', href: '/info/statistics',
+        label: 'الإحصاءات الصناعية',
+        href: '/info/statistics',
         subItems: [
           { label: 'تقرير الصناعة العربية', href: '/info/statistics/arab-industry-report' },
           { label: 'كتيب المؤشرات الاقتصادية والصناعية', href: '/info/statistics/indicators-booklet' },
           { label: 'نشرة الإحصاءات الصناعية', href: '/info/statistics/bulletin' },
-          { label: 'الانفوجرافي', href: '/info/statistics/infographics' },
+          { label: 'الانفوجرافيك', href: '/info/statistics/infographics' },
         ],
       },
       { label: 'مؤتمرات وندوات', href: '/info/conferences' },
@@ -66,7 +72,8 @@ const menuItemsData: MenuItem[] = [
     ],
   },
   {
-    id: 'training', label: 'التدريب والاستشارات',
+    id: 'training',
+    label: 'التدريب والاستشارات',
     children: [
       { label: 'حول المعهد', href: '/training/about' },
       { label: 'الخطة التدريبية', href: '/training/plan' },
@@ -75,7 +82,8 @@ const menuItemsData: MenuItem[] = [
     ],
   },
   {
-    id: 'archive', label: 'الأرشيف',
+    id: 'archive',
+    label: 'الأرشيف',
     groups: [
       {
         title: 'المنظمة العربية للتنمية الصناعية والتقييس والتعدين',
@@ -93,11 +101,12 @@ const menuItemsData: MenuItem[] = [
         title: 'جامعة الدول العربية',
         items: [
           {
-            label: 'القمة العربية', href: '/archive/league/summit',
+            label: 'القمة العربية',
+            href: '/archive/league/summit',
             subItems: [
               { label: 'قرارات مجلس الجامعة على المستوى الوزاري', href: '/archive/league/summit/council' },
               { label: 'مجلس الجامعة على مستوى القمة', href: '/archive/league/summit/summit-council' },
-              { label: 'القمة العربية الإقتصادية و التنموية و الإجتماعية', href: '/archive/league/summit/summit-council' },
+              { label: 'القمة العربية الاقتصادية والاجتماعية', href: '/archive/league/summit/economic-social' },
             ],
           },
           { label: 'المجلس الاقتصادي والاجتماعي', href: '/archive/league/ecosoc' },
@@ -110,11 +119,13 @@ const menuItemsData: MenuItem[] = [
   },
 ];
 
-/* ---- Simple dropdown ---- */
+const dropdownShell = 'border border-[#C29C41]/30 bg-white/[0.98] p-2 shadow-[0_18px_44px_rgba(10,37,64,0.15)] backdrop-blur-xl';
+const dropdownLink = 'block px-4 py-2.5 text-sm font-medium leading-relaxed text-[#334155] transition duration-300 hover:bg-[#F0F7FC] hover:text-[#C29C41] focus:bg-[#F0F7FC] focus:text-[#C29C41] focus:outline-none';
+
 const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   return (
-    <div className="min-w-[260px] rounded-2xl border border-slate-100 bg-white p-2 shadow-2xl">
+    <div className={cn('min-w-[280px]', dropdownShell)}>
       {items.map((item, idx) => (
         <div key={item.href}>
           {item.subItems ? (
@@ -123,17 +134,19 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
               onMouseEnter={() => setExpandedIdx(idx)}
               onMouseLeave={() => setExpandedIdx(null)}
             >
-              <div className="flex cursor-default items-center justify-between rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
+              <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
                 <Link href={item.href} className="flex-1">{item.label}</Link>
-                <LuChevronLeft size={14} className="text-slate-400" />
+                <LuChevronLeft size={14} className="text-[#C29C41]" />
               </div>
-              <div className={cn(
-                'absolute left-0 top-0 z-50 -translate-x-full pl-1 transition-all duration-200',
-                expandedIdx === idx ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-1 opacity-0',
-              )}>
-                <div className="min-w-[240px] rounded-2xl border border-slate-100 bg-white p-2 shadow-2xl">
+              <div
+                className={cn(
+                  'absolute left-0 top-0 z-50 -translate-x-full pl-2 transition duration-300',
+                  expandedIdx === idx ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0',
+                )}
+              >
+                <div className={cn('min-w-[250px]', dropdownShell)}>
                   {item.subItems.map((sub) => (
-                    <Link key={sub.href} href={sub.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
+                    <Link key={sub.href} href={sub.href} className={dropdownLink}>
                       {sub.label}
                     </Link>
                   ))}
@@ -141,7 +154,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
               </div>
             </div>
           ) : (
-            <Link href={item.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
+            <Link href={item.href} className={dropdownLink}>
               {item.label}
             </Link>
           )}
@@ -151,15 +164,14 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   );
 };
 
-/* ---- Mega dropdown ---- */
 const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
   return (
-    <div className="min-w-[540px] rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl">
-      <div className={cn('grid gap-6', groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
+    <div className={cn('min-w-[600px]', dropdownShell)}>
+      <div className={cn('grid gap-5', groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
         {groups.map((group) => (
           <div key={group.title}>
-            <p className="mb-2 border-b border-[#C29C41]/30 px-3 pb-2 text-xs font-bold text-[#C29C41]">
+            <p className="mb-2 border-b border-[#C29C41]/25 px-3 pb-2 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#C29C41]">
               {group.title}
             </p>
             {group.items.map((item) => (
@@ -170,17 +182,19 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
                     onMouseEnter={() => setExpandedKey(item.href)}
                     onMouseLeave={() => setExpandedKey(null)}
                   >
-                    <div className="flex cursor-default items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
+                    <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
                       <Link href={item.href} className="flex-1">{item.label}</Link>
-                      <LuChevronRight size={14} className="text-slate-400" />
+                      <LuChevronRight size={14} className="text-[#C29C41]" />
                     </div>
-                    <div className={cn(
-                      'absolute right-0 top-0 z-50 translate-x-full pr-1 transition-all duration-200',
-                      expandedKey === item.href ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-1 opacity-0',
-                    )}>
-                      <div className="min-w-[220px] rounded-2xl border border-slate-100 bg-white p-2 shadow-2xl">
+                    <div
+                      className={cn(
+                        'absolute right-0 top-0 z-50 translate-x-full pr-2 transition duration-300',
+                        expandedKey === item.href ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0',
+                      )}
+                    >
+                      <div className={cn('min-w-[240px]', dropdownShell)}>
                         {item.subItems.map((sub) => (
-                          <Link key={sub.href} href={sub.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
+                          <Link key={sub.href} href={sub.href} className={dropdownLink}>
                             {sub.label}
                           </Link>
                         ))}
@@ -188,7 +202,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
                     </div>
                   </div>
                 ) : (
-                  <Link href={item.href} className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-amber-50 hover:text-[#C29C41]">
+                  <Link href={item.href} className={dropdownLink}>
                     {item.label}
                   </Link>
                 )}
@@ -201,14 +215,18 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   );
 };
 
-/* ---- Desktop nav item ---- */
 const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hasDropdown = item.children || item.groups;
 
-  const enter = () => { clearTimeout(timeout.current); setOpen(true); };
-  const leave = () => { timeout.current = setTimeout(() => setOpen(false), 150); };
+  const enter = () => {
+    clearTimeout(timeout.current);
+    setOpen(true);
+  };
+  const leave = () => {
+    timeout.current = setTimeout(() => setOpen(false), 150);
+  };
 
   return (
     <li
@@ -219,22 +237,22 @@ const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
       <Link
         href={item.href ?? `#${item.id}`}
         className={cn(
-          'relative flex items-center gap-1 px-3 py-2 text-base font-bold text-nowrap transition-all duration-300',
-          isActive ? 'text-[#C29C41]' : 'text-slate-700 hover:text-[#0369A1]',
+          'relative flex min-h-11 items-center gap-1 px-2.5 text-sm font-bold text-nowrap transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white xl:px-3',
+          isActive ? 'text-[#C29C41]' : 'text-[#0A2540] hover:text-[#C29C41]',
         )}
       >
         {item.label}
-        {hasDropdown && (
-          <LuChevronDown size={15} className={cn('transition-transform duration-300', open && 'rotate-180')} />
-        )}
+        {hasDropdown && <LuChevronDown size={15} className={cn('transition duration-300', open && 'rotate-180')} />}
       </Link>
 
       {hasDropdown && (
-        <div className={cn(
-          'absolute top-full z-50 pt-2 transition-all duration-200',
-          item.id === 'archive' ? 'left-auto right-0' : 'right-0',
-          open ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0',
-        )}>
+        <div
+          className={cn(
+            'absolute top-full z-50 pt-3 transition duration-300',
+            item.id === 'archive' ? 'left-auto right-0' : 'right-0',
+            open ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0',
+          )}
+        >
           {item.groups ? <DropdownMega groups={item.groups} /> : <DropdownSimple items={item.children!} />}
         </div>
       )}
@@ -242,7 +260,6 @@ const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
   );
 };
 
-/* ---- Mobile accordion ---- */
 const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () => void }) => {
   const [open, setOpen] = useState(false);
   const [expandedChild, setExpandedChild] = useState<string | null>(null);
@@ -252,50 +269,53 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
     item.children
       ? item.children
       : item.groups
-        ? item.groups.flatMap((g) => [
-            { label: '', href: '', isGroupHeader: true, groupTitle: g.title },
-            ...g.items,
-          ])
+        ? item.groups.flatMap((g) => [{ label: '', href: '', isGroupHeader: true, groupTitle: g.title }, ...g.items])
         : [];
 
   if (!hasChildren) {
     return (
-      <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block rounded-xl px-4 py-4 text-lg font-bold text-slate-600 hover:text-[#0369A1]">
+      <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block min-h-12 border-b border-[#0369A1]/10 px-2 py-3 text-lg font-bold text-[#003652]">
         {item.label}
       </Link>
     );
   }
 
   return (
-    <div>
+    <div className="border-b border-[#0369A1]/10">
       <button
+        type="button"
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between rounded-xl px-4 py-4 text-lg font-bold text-slate-600"
+        className="flex min-h-12 w-full items-center justify-between px-2 py-3 text-lg font-bold text-[#003652]"
       >
         {item.label}
-        <LuChevronDown size={18} className={cn('transition-transform duration-300', open && 'rotate-180')} />
+        <LuChevronDown size={18} className={cn('text-[#C29C41] transition duration-300', open && 'rotate-180')} />
       </button>
-      <div className={cn('overflow-hidden transition-all duration-300', open ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0')}>
-        <div className="mr-4 border-r-2 border-[#C29C41]/20 pr-2">
+      <div className={cn('overflow-hidden transition-all duration-300', open ? 'max-h-[1400px] opacity-100' : 'max-h-0 opacity-0')}>
+        <div className="mr-3 border-r border-[#C29C41]/30 pr-3">
           {allChildren.map((child, idx) => {
             if (child.isGroupHeader) {
-              return <p key={`header-${idx}`} className="px-4 pb-1 pt-3 text-xs font-bold text-[#C29C41]">{child.groupTitle}</p>;
+              return (
+                <p key={`header-${idx}`} className="px-2 pb-1 pt-3 text-xs font-bold text-[#C29C41]">
+                  {child.groupTitle}
+                </p>
+              );
             }
             if (child.subItems && child.subItems.length > 0) {
               const isExpanded = expandedChild === child.href;
               return (
                 <div key={child.href}>
                   <button
+                    type="button"
                     onClick={() => setExpandedChild(isExpanded ? null : child.href)}
-                    className="flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-[#0369A1]"
+                    className="flex w-full items-center justify-between px-2 py-2.5 text-sm font-semibold text-[#475569]"
                   >
                     {child.label}
-                    <LuChevronDown size={14} className={cn('transition-transform duration-300', isExpanded && 'rotate-180')} />
+                    <LuChevronDown size={14} className={cn('text-[#C29C41] transition duration-300', isExpanded && 'rotate-180')} />
                   </button>
-                  <div className={cn('overflow-hidden transition-all duration-300', isExpanded ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0')}>
-                    <div className="mr-4 border-r-2 border-slate-50 pr-2">
+                  <div className={cn('overflow-hidden transition-all duration-300', isExpanded ? 'max-h-[440px] opacity-100' : 'max-h-0 opacity-0')}>
+                    <div className="mr-4 border-r border-[#0369A1]/10 pr-2">
                       {child.subItems.map((sub) => (
-                        <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block rounded-lg px-4 py-2 text-[0.8rem] font-medium text-slate-400 hover:text-[#C29C41]">
+                        <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block px-2 py-2 text-sm text-[#64748B]">
                           {sub.label}
                         </Link>
                       ))}
@@ -305,7 +325,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
               );
             }
             return (
-              <Link key={child.href} href={child.href} onClick={onNavigate} className="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-[#0369A1]">
+              <Link key={child.href} href={child.href} onClick={onNavigate} className="block px-2 py-2.5 text-sm font-medium text-[#475569]">
                 {child.label}
               </Link>
             );
@@ -316,7 +336,6 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
   );
 };
 
-/* ---- TopNavBar ---- */
 const TopNavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -326,179 +345,148 @@ const TopNavBar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
       const sections = menuItemsData.map((item) => document.getElementById(item.id));
-      const scrollPosition = window.scrollY + 100;
+      const scrollPosition = window.scrollY + 120;
       sections.forEach((section) => {
         if (section && section.offsetTop <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
           setActiveSection(section.id);
         }
       });
     };
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
-      <header className={cn(
-        'fixed inset-x-0 top-0 z-[60] transition-all duration-500',
-        isScrolled ? 'top-2 px-4 md:px-8' : 'top-0 px-0',
-      )}>
-        <nav className={cn(
-          'mx-auto max-w-7xl transition-all duration-500',
-          isScrolled
-            ? 'rounded-2xl border border-white/20 bg-white/95 shadow-2xl backdrop-blur-md py-1'
-            : 'border-b border-transparent bg-transparent py-3',
-        )}>
-          <div className="px-4 lg:px-6">
+      <header
+        className={cn(
+          'fixed inset-x-0 top-0 z-[60] transition-all duration-500',
+          isScrolled ? 'top-3 px-3 md:px-6' : 'px-0',
+        )}
+      >
+        <nav
+          className={cn(
+            'corner-card mx-auto max-w-7xl border transition-all duration-500',
+            isScrolled
+              ? 'border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
+              : 'border-transparent bg-white/90 py-2 backdrop-blur-md',
+          )}
+        >
+          <div className="px-4 lg:px-5">
             <div className="flex items-center gap-3">
-
-              {/* LEFT — Main library logo */}
-              <Link href="/" className="flex-shrink-0">
+              <Link href="/" className="flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white">
                 <Image
                   src="/logo-2.png"
-                  alt="Logo"
+                  alt="المكتبة الرقمية"
                   height={240}
                   width={260}
-                  className={cn(
-                    'object-contain transition-all duration-500',
-                    isScrolled ? 'h-14 w-auto' : 'h-20 w-auto',
-                  )}
+                  className={cn('object-contain transition-all duration-500', isScrolled ? 'h-[3.25rem] w-auto' : 'h-16 w-auto md:h-20')}
+                  priority
                 />
               </Link>
 
-              {/* Gold divider */}
-              <div
-                className="hidden lg:block flex-shrink-0 w-px self-stretch my-2"
-                style={{ backgroundColor: 'rgba(194,156,65,0.35)' }}
-              />
+              <div className="hidden h-12 w-px shrink-0 bg-[#C29C41]/30 lg:block" aria-hidden />
 
-              {/* CENTER — Desktop nav */}
               <ul className="hidden flex-1 items-center justify-center gap-0 lg:flex">
                 {menuItemsData.map((item) => (
                   <NavItem key={item.id} item={item} isActive={activeSection === item.id} />
                 ))}
               </ul>
 
-              {/* RIGHT — Search + AIDSMO logo + mobile button */}
-              <div className="flex items-center gap-3 flex-shrink-0 mr-auto lg:mr-0">
-
-                {/* Search bar — blue border at rest, gold on focus */}
+              <div className="mr-auto flex shrink-0 items-center gap-3 lg:mr-0">
                 <div className="hidden items-center lg:flex">
-                  <div className="relative group">
+                  <label className="relative">
+                    <span className="sr-only">بحث</span>
                     <input
                       type="text"
                       placeholder="بحث..."
                       dir="rtl"
-                      className="h-10 w-40 rounded-full bg-white pr-10 pl-4 text-sm font-medium text-slate-700 outline-none transition-all duration-300 focus:w-48 placeholder:text-[#095C9B]/60 placeholder:font-semibold"
-                      style={{
-                        border: '2px solid rgba(9,92,155,0.3)',
-                        boxShadow: 'inset 0 0 0 1px rgba(194,156,65,0.12)',
-                      }}
-                      onFocus={e => {
-                        e.currentTarget.style.borderColor = '#C29C41';
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,156,65,0.15)';
-                      }}
-                      onBlur={e => {
-                        e.currentTarget.style.borderColor = 'rgba(9,92,155,0.3)';
-                        e.currentTarget.style.boxShadow = 'inset 0 0 0 1px rgba(194,156,65,0.12)';
-                      }}
+                      className="h-11 w-40 border border-[#0369A1]/20 bg-[#F8FAFC] pr-10 pl-4 text-sm font-medium text-[#0A2540] outline-none transition duration-300 placeholder:text-[#64748B] focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
                     />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-200 text-[#095C9B]/60 group-focus-within:text-[#C29C41]">
-                      <LuSearch size={15} />
-                    </div>
-                  </div>
+                    <LuSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C29C41]" />
+                  </label>
                 </div>
 
-                {/* Gold divider before AIDSMO logo */}
-                <div
-                  className="hidden lg:block flex-shrink-0 w-px self-stretch my-2"
-                  style={{ backgroundColor: 'rgba(194,156,65,0.35)' }}
-                />
+                <div className="hidden h-12 w-px shrink-0 bg-[#C29C41]/30 lg:block" aria-hidden />
 
-                {/* AIDSMO org logo — inside the nav box */}
                 <Link
                   href="https://aidsmo.org"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hidden lg:flex flex-shrink-0 items-center"
+                  className="hidden shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white lg:flex"
                 >
                   <Image
                     src="/aidsmo-logo.png"
-                    alt="AIDSMO"
+                    alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين"
                     height={160}
                     width={160}
-                    className={cn(
-                      'object-contain transition-all duration-500',
-                      isScrolled ? 'h-10 w-auto' : 'h-14 w-auto',
-                    )}
+                    className={cn('object-contain transition-all duration-500', isScrolled ? 'h-10 w-auto' : 'h-12 w-auto md:h-14')}
                   />
                 </Link>
 
-                {/* Mobile menu button */}
                 <button
-                  className="rounded-xl bg-slate-100 p-2.5 text-slate-700 hover:bg-[#0369A1] hover:text-white lg:hidden"
+                  type="button"
+                  className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white lg:hidden"
                   onClick={() => setMobileMenuOpen(true)}
+                  aria-label="فتح القائمة"
                 >
                   <LuMenu size={24} />
                 </button>
               </div>
-
             </div>
           </div>
         </nav>
       </header>
 
-      {/* Mobile overlay */}
       <div
         className={cn(
-          'fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm lg:hidden',
-          mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0 transition-opacity',
+          'fixed inset-0 z-[100] bg-[#0A2540]/55 backdrop-blur-sm transition-opacity lg:hidden',
+          mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
         onClick={() => setMobileMenuOpen(false)}
       />
 
-      {/* Mobile panel */}
-      <div className={cn(
-        'fixed bottom-0 right-0 top-0 z-[110] w-[85%] max-w-sm overflow-y-auto bg-white p-6 transition-transform duration-500 lg:hidden',
-        mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
-      )}>
-        <div className="mb-8 flex items-center justify-between border-b border-[#C29C41]/20 pb-4">
+      <aside
+        className={cn(
+          'fixed bottom-0 right-0 top-0 z-[110] w-[86%] max-w-sm overflow-y-auto border-l border-[#C29C41]/30 bg-white p-6 shadow-2xl transition-transform duration-500 lg:hidden',
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
+        )}
+        aria-label="القائمة الرئيسية"
+      >
+        <div className="mb-6 flex items-center justify-between border-b border-[#C29C41]/25 pb-4">
           <div className="flex items-center gap-3">
-            <Image src="/logo-2.png" alt="Logo" height={36} width={100} className="h-9 w-auto object-contain" />
-            <span className="h-6 w-px" style={{ backgroundColor: 'rgba(194,156,65,0.3)' }} />
-            <Image src="/aidsmo-logo.png" alt="AIDSMO" height={36} width={36} className="h-9 w-auto object-contain" />
+            <Image src="/logo-2.png" alt="المكتبة الرقمية" height={44} width={112} className="h-10 w-auto object-contain" />
+            <span className="h-8 w-px bg-[#C29C41]/30" />
+            <Image src="/aidsmo-logo.png" alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين" height={40} width={40} className="h-10 w-auto object-contain" />
           </div>
-          <button onClick={() => setMobileMenuOpen(false)} className="rounded-full bg-slate-100 p-2">
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex h-10 w-10 items-center justify-center border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652]"
+            aria-label="إغلاق القائمة"
+          >
             <LuX size={20} />
           </button>
         </div>
 
-        {/* Mobile search — blue border, gold on focus */}
-        <div className="relative mb-6">
+        <label className="relative mb-5 block">
+          <span className="sr-only">بحث</span>
           <input
             type="text"
             placeholder="بحث..."
             dir="rtl"
-            className="w-full rounded-xl bg-slate-50 py-3 pr-10 pl-4 text-sm outline-none transition-all duration-200 placeholder:text-[#095C9B]/60 placeholder:font-semibold"
-            style={{ border: '2px solid rgba(9,92,155,0.25)' }}
-            onFocus={e => {
-              e.currentTarget.style.borderColor = '#C29C41';
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(194,156,65,0.12)';
-            }}
-            onBlur={e => {
-              e.currentTarget.style.borderColor = 'rgba(9,92,155,0.25)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
+            className="h-12 w-full border border-[#0369A1]/20 bg-[#F8FAFC] pr-10 pl-4 text-sm outline-none transition duration-300 placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
           />
-          <LuSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-[#095C9B]/60" size={18} />
-        </div>
+          <LuSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C29C41]" />
+        </label>
 
-        <nav className="flex flex-col gap-1">
+        <nav className="flex flex-col">
           {menuItemsData.map((item) => (
             <MobileAccordion key={item.id} item={item} onNavigate={() => setMobileMenuOpen(false)} />
           ))}
         </nav>
-      </div>
+      </aside>
     </>
   );
 };

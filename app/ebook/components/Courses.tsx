@@ -13,10 +13,10 @@ type NewsItem = {
 
 const news: NewsItem[] = [
   {
-    title:'إطلاق إصدارات جديدة في مجال عمل المنضمة  صناعة - تقييس - تعدين',
+    title: 'إطلاق إصدارات جديدة في مجال عمل المنظمة: صناعة، تقييس، تعدين',
     date: '05 فبراير 2026',
     excerpt:
-     'تعرّف على أحدث الإصدارات والدراسات الفنية المتخصصة التي أضافتها المكتبة الرقمية إلى مجموعتها في مجالات الصناعة والتقييس والتعدين.',
+      'تعرّف على أحدث الإصدارات والدراسات الفنية المتخصصة التي أضافتها المكتبة الرقمية إلى مجموعتها في مجالات الصناعة والتقييس والتعدين.',
     href: '/news/standardization-section',
   },
   {
@@ -32,112 +32,63 @@ const LibraryNews = () => {
   return (
     <section
       id="library-news"
-      className="bg-white py-10 lg:py-16"
+      className="bg-white py-20 md:py-28"
       aria-label="أخبار المكتبة"
       dir="rtl"
     >
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-8 lg:grid-cols-5 lg:gap-12">
-
-          {/* Image */}
+        <div className="grid items-center gap-10 lg:grid-cols-5 lg:gap-14">
           <div className="lg:col-span-2">
-            <div className="relative overflow-hidden rounded-2xl shadow-sm"
-              style={{ border: '1px solid rgba(194,156,65,0.25)' }}
-            >
-              {/* Gold top bar */}
-              <div
-                className="absolute inset-x-0 top-0 z-10 h-[3px]"
-                style={{
-                  background: 'linear-gradient(to left, transparent, #C29C41, #e8c96a, #C29C41, transparent)',
-                }}
-              />
-              <Image
-                alt="أخبار المكتبة الرقمية"
-                src="/newsCover.png"
-                width={900}
-                height={650}
-                className="h-auto w-full object-cover rounded-2xl"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0 rounded-2xl" />
+            <div className="group corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F8FAFC] p-3">
+              <div className="relative aspect-[4/5] overflow-hidden arch-top">
+                <Image
+                  alt="أخبار المكتبة الرقمية"
+                  src="/newsCover.png"
+                  fill
+                  className="sepia-reveal object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/45 via-transparent to-transparent" />
+              </div>
             </div>
           </div>
 
-          {/* Content */}
           <div className="lg:col-span-3">
-            <div className="text-right">
-
-              {/* Eyebrow badge — gold */}
-              <div
-                className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
-                style={{
-                  borderColor: 'rgba(194,156,65,0.35)',
-                  backgroundColor: 'rgba(194,156,65,0.07)',
-                }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-[#C29C41]" />
-                <span className="text-xs font-bold tracking-widest text-[#C29C41]">
-                  أخبار المكتبة
-                </span>
-              </div>
-
-              <h2 className="mt-4 text-2xl font-extrabold text-slate-900 sm:text-3xl">
+            <div>
+              <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
                 آخر المستجدات داخل المكتبة الرقمية
               </h2>
+              <p className="mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#475569]">
+                أخبار وإعلانات مختارة تساعدك على متابعة الإصدارات الجديدة والمواد المعرفية فور صدورها.
+              </p>
             </div>
 
-            {/* News list */}
-            <div className="mt-6 space-y-5">
-              {news.map((item, idx) => (
+            <div className="mt-8 space-y-5">
+              {news.map((item) => (
                 <Link
-                  key={idx}
+                  key={item.href}
                   href={item.href}
-                  className="group block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
-                  style={{
-                    border: '1px solid rgba(194,156,65,0.35)',
-                    background:
-                      'linear-gradient(135deg, #fffdf5 0%, #ffffff 100%)',
-                  }}
+                  className="group corner-card block border border-[#C29C41]/30 bg-[#F8FAFC] p-6 transition duration-300 hover:border-[#C29C41]/60 hover:shadow-[0_14px_34px_rgba(10,37,64,0.1)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-white"
                 >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
-                      <h3 className="text-lg font-bold text-slate-900 transition-colors duration-200 sm:text-xl group-hover:text-[#C29C41]">
-                        {/* Gold accent number */}
-                        <span
-                          className="ml-2 text-sm font-black"
-                          style={{ color: '#C29C41' }}
-                        >
-                          {String(idx + 1).padStart(2, '0')}
-                        </span>
+                      <span className="text-lg text-[#C29C41]" aria-hidden>✶</span>
+                      <h3 className="mt-2 text-xl font-bold leading-relaxed text-[#003652] transition duration-300 group-hover:text-[#C29C41]">
                         {item.title}
                       </h3>
-                      <p className="mt-2 line-clamp-2 text-sm text-slate-500 sm:text-base">
+                      <p className="mt-2 line-clamp-2 font-academic text-lg leading-relaxed text-[#475569]">
                         {item.excerpt}
                       </p>
                     </div>
 
                     <div className="flex shrink-0 items-center justify-between gap-3 sm:flex-col sm:items-end">
-                      {/* Date badge */}
-                      <div
-                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold"
-                        style={{
-                          backgroundColor: 'rgba(194,156,65,0.10)',
-                          color: '#7a5c10',
-                        }}
-                      >
-                        <LuCalendar
-                          className="h-3.5 w-3.5"
-                          style={{ color: '#C29C41' }}
-                        />
+                      <div className="inline-flex items-center gap-2 border border-[#C29C41]/25 bg-white px-3 py-2 text-xs font-semibold text-[#7A5C10]">
+                        <LuCalendar className="h-3.5 w-3.5 text-[#C29C41]" />
                         {item.date}
                       </div>
 
-                      {/* Read more */}
-                      <span
-                        className="inline-flex items-center gap-1.5 text-xs font-bold"
-                        style={{ color: '#C29C41' }}
-                      >
+                      <span className="inline-flex items-center gap-2 text-sm font-bold text-[#C29C41]">
                         اقرأ المزيد
-                        <LuArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-1" />
+                        <LuArrowLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
                       </span>
                     </div>
                   </div>

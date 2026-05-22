@@ -1,15 +1,15 @@
 'use client';
-import React from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { LuMapPin, LuPhone, LuMail, LuExternalLink, LuChevronLeft } from 'react-icons/lu';
+import { LuChevronLeft, LuExternalLink, LuMail, LuMapPin, LuPhone } from 'react-icons/lu';
 
 const footerLinks = [
   {
     title: 'المكتبة',
     items: [
       { label: 'الرئيسية', href: '/' },
-      { label: 'من نحن', href: '/about' },
+      { label: 'من نحن', href: '/about-us' },
       { label: 'الدراسات والأدلة', href: '/industry/studies' },
       { label: 'الاصدارات', href: '/info/publications' },
     ],
@@ -36,148 +36,112 @@ const footerLinks = [
 
 const Footer = () => {
   return (
-    <footer dir="rtl" className="relative overflow-hidden">
-      <div className="relative bg-gradient-to-bl from-[#0a2540] via-[#0C5B99] to-[#0369A1]">
-        {/* Gold top bar */}
-        <div
-          className="absolute inset-x-0 top-0 h-[4px] z-10"
-          style={{ background: 'linear-gradient(to left, #C29C41, #e8c96a, #C29C41)' }}
-        />
+    <footer dir="rtl" className="relative overflow-hidden bg-[#0A2540] text-white">
+      <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+      <div
+        className="absolute inset-0 opacity-[0.035]"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)',
+          backgroundSize: '78px 78px',
+        }}
+        aria-hidden
+      />
 
-        {/* Subtle grid overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-            backgroundSize: '80px 80px',
-          }}
-        />
-
-        {/* Radial glows */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse 50% 50% at 85% 30%, rgba(194,156,65,0.08) 0%, transparent 70%), radial-gradient(ellipse 40% 50% at 10% 70%, rgba(194,156,65,0.05) 0%, transparent 70%)',
-          }}
-        />
-
-        {/* Decorative diamonds */}
-        <div className="absolute top-[20%] left-[5%] w-28 h-28 border border-[#C29C41]/[0.06] rotate-45 rounded-lg" />
-        <div className="absolute bottom-[25%] right-[8%] w-20 h-20 border border-white/[0.03] rotate-45 rounded" />
-
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pt-16 pb-8 md:pt-20 md:pb-10">
-          
-          {/* Top Logos Block - Separated to prevent pushing text down */}
-          <div className="flex items-center gap-4 mb-8">
-            <Image
-              src="/logo-3.png"
-              alt="المكتبة الرقمية"
-              width={160}
-              height={80}
-              className="h-25 w-auto object-contain"
-            />
-            <span className="h-10 w-px bg-[#C29C41]/25" />
-            <Link href="https://aidsmo.org" target="_blank" rel="noopener noreferrer" className="inline-flex items-center transition-colors duration-300 hover:opacity-80">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pb-8 pt-16 lg:px-8 lg:pt-20">
+        <div className="corner-frame border border-[#C29C41]/30 bg-white/[0.04] p-6 md:p-9">
+          <div className="mb-10 flex flex-col gap-6 border-b border-white/10 pb-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-4">
               <Image
-                src="/aidsmo-logo.png"
-                alt="AIDSMO"
-                width={160}
-                height={80}
-                className="h-16 w-auto object-contain"
+                src="/logo-3.png"
+                alt="المكتبة الرقمية"
+                width={170}
+                height={84}
+                className="h-20 w-auto object-contain"
               />
-            </Link>
+              <span className="h-12 w-px bg-[#C29C41]/30" aria-hidden />
+              <Link href="https://aidsmo.org" target="_blank" rel="noopener noreferrer" className="transition duration-300 hover:opacity-80">
+                <Image
+                  src="/aidsmo-logo.png"
+                  alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين"
+                  width={150}
+                  height={80}
+                  className="h-14 w-auto object-contain"
+                />
+              </Link>
+            </div>
+
+            <div className="max-w-md">
+              <p className="mt-3 font-academic text-xl leading-relaxed text-white/76">
+                منصة عربية لجمع المعرفة الصناعية والتقنية وتنظيمها وإتاحتها للمجتمع العربي.
+              </p>
+            </div>
           </div>
 
-          {/* Grid row — description + links + location */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 pb-12 border-b border-white/10">
+          <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-10 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <h3 className="text-xs font-bold tracking-[0.12em] text-[#C29C41]">تواصل معنا</h3>
 
-            {/* Description & Contact info */}
-            <div className="md:col-span-4 lg:col-span-4">
-              <p className="text-sm leading-[2] text-white max-w-[340px] mb-6">
-                المكتبة الرقمية الذكية — منصة رائدة لجمع المعرفة الصناعية والتقنية وتنظيمها وإتاحتها للمجتمع العربي.
-              </p>
-
-              {/* Contact info */}
-              <div className="flex flex-col gap-3">
-                <a href="tel:+212537000000" className="inline-flex items-center gap-2.5 text-sm text-white transition-colors duration-300 hover:text-[#C29C41]">
-                  <LuPhone size={14} className="flex-shrink-0" />
+              <div className="mt-5 flex flex-col gap-3">
+                <a href="tel:+212537274500" className="inline-flex items-center gap-3 text-sm text-white/78 transition duration-300 hover:text-[#C29C41]">
+                  <LuPhone size={15} className="shrink-0 text-[#C29C41]" />
                   <span dir="ltr">00212537274500</span>
                 </a>
-                <a href="mailto:info@aidsmo.org" className="inline-flex items-center gap-2.5 text-sm text-white transition-colors duration-300 hover:text-[#C29C41]">
-                  <LuMail size={14} className="flex-shrink-0" />
+                <a href="mailto:aidsmo@aidsmo.org" className="inline-flex items-center gap-3 text-sm text-white/78 transition duration-300 hover:text-[#C29C41]">
+                  <LuMail size={15} className="shrink-0 text-[#C29C41]" />
                   aidsmo@aidsmo.org
                 </a>
               </div>
+
+              <a
+                href="https://maps.google.com/?q=33.8511,-6.9863"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="corner-card mt-6 block max-w-xs border border-white/10 bg-white/[0.04] p-4 transition duration-300 hover:border-[#C29C41]/40 hover:bg-white/[0.07]"
+              >
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/30 text-[#C29C41]">
+                  <LuMapPin size={18} />
+                </div>
+                <p className="text-sm font-semibold text-white/78">الرباط، المملكة المغربية</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#C29C41]">
+                  خرائط جوجل
+                  <LuExternalLink size={11} />
+                </span>
+              </a>
             </div>
 
-            {/* Nav link columns + location */}
-            <div className="md:col-span-8 lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
-              {/* Link columns */}
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:col-span-8">
               {footerLinks.map((group) => (
                 <div key={group.title}>
-                  <h3 className="text-sm font-bold text-[#C29C41] mb-4 pb-2 border-b border-[#C29C41]/15">
+                  <h3 className="mb-4 border-b border-[#C29C41]/20 pb-3 font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
                     {group.title}
                   </h3>
-                  <ul className="flex flex-col gap-2.5">
+                  <ul className="flex flex-col gap-3">
                     {group.items.map((item) => (
                       <li key={item.href}>
                         <Link
                           href={item.href}
                           {...('external' in item && item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                          className="group/link inline-flex items-center gap-1.5 text-sm text-white transition-colors duration-300 hover:text-white"
+                          className="group/link inline-flex items-center gap-2 text-sm text-white/72 transition duration-300 hover:text-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
                         >
-                          <LuChevronLeft size={12} className="text-[#C29C41]/40 transition-transform duration-300 group-hover/link:-translate-x-0.5 group-hover/link:text-[#C29C41]" />
+                          <LuChevronLeft size={13} className="text-[#C29C41]/60 transition duration-300 group-hover/link:-translate-x-1 group-hover/link:text-[#C29C41]" />
                           {item.label}
-                          {'external' in item && item.external && (
-                            <LuExternalLink size={11} className="text-white/25" />
-                          )}
+                          {'external' in item && item.external && <LuExternalLink size={11} className="text-white/35" />}
                         </Link>
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
-
-              {/* Location column */}
-              <div>
-                <h3 className="text-sm font-bold text-[#C29C41] mb-4 pb-2 border-b border-[#C29C41]/15">
-                  الموقع
-                </h3>
-
-                <a
-                  href="https://maps.google.com/?q=33.8511,-6.9863"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/loc block rounded-xl border border-white/[0.06] bg-white/[0.03] p-4 transition-all duration-400 hover:border-[#C29C41]/20 hover:bg-white/[0.06]"
-                >
-                  {/* Pin icon */}
-                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#C29C41]/10 mb-3 mx-auto transition-all duration-400 group-hover/loc:bg-[#C29C41]/20 group-hover/loc:scale-110">
-                    <LuMapPin size={18} className="text-[#C29C41]" />
-                  </div>
-
-                  <p className="text-xs font-semibold text-white/60 text-center leading-relaxed mb-1">
-                    الرباط
-                  </p>
-                  <p className="text-[0.7rem] text-white/35 text-center leading-relaxed mb-3">
-                    المملكة المغربية
-                  </p>
-
-                  <span className="flex items-center justify-center gap-1 text-[0.65rem] font-semibold text-[#C29C41]/50 transition-colors duration-300 group-hover/loc:text-[#C29C41]">
-                    خرائط جوجل
-                    <LuExternalLink size={9} />
-                  </span>
-                </a>
-              </div>
             </div>
           </div>
 
-          {/* Bottom bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8">
-            <p className="text-xs text-white">
+          <div className="flex flex-col items-center justify-between gap-4 pt-7 text-center sm:flex-row sm:text-right">
+            <p className="text-xs leading-relaxed text-white/60">
               © {new Date().getFullYear()} المنظمة العربية للتنمية الصناعية والتقييس والتعدين. جميع الحقوق محفوظة.
             </p>
+            <div className="text-xs font-bold tracking-[0.12em] text-[#C29C41]/80">
+              المكتبة الرقمية الذكية
+            </div>
           </div>
         </div>
       </div>

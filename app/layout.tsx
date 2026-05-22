@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Manrope, Readex_Pro } from 'next/font/google' // Changed here
+import { Amiri, Cinzel, Manrope, Readex_Pro } from 'next/font/google'
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader';
 import TopNavBar from '@/components/TopNavBar';
@@ -13,8 +13,22 @@ const manrope = Manrope({
 
 const readexPro = Readex_Pro({
   subsets: ['arabic', 'latin'],
-  weight: ['300', '400', '500', '600', '700'], // Added a wider range of weights
+  weight: ['300', '400', '500', '600', '700'],
   variable: '--font-readex',
+  display: 'swap',
+})
+
+const amiri = Amiri({
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '700'],
+  variable: '--font-amiri',
+  display: 'swap',
+})
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-cinzel',
   display: 'swap',
 })
 
@@ -30,8 +44,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      {/* Updated the variable name to readexPro.variable */}
-      <body className={`${manrope.variable} ${readexPro.variable} font-arabic`}>
+      <body className={`${manrope.variable} ${readexPro.variable} ${amiri.variable} ${cinzel.variable} font-arabic academic-atmosphere`}>
         <TopNavBar  />
         <NextTopLoader color="#0369a1" showSpinner={false} /> 
         <div>

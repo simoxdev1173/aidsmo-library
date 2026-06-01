@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuMenu, LuSearch, LuX } from 'react-icons/lu';
+import { MdDashboardCustomize } from 'react-icons/md';
 
 type SubItem = { label: string; href: string };
 type ChildItem = { label: string; href: string; subItems?: SubItem[] };
@@ -231,7 +232,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
       <Link
         href={item.href ?? `#${item.id}`}
         className={cn(
-          'relative flex min-h-11 items-center gap-1 text-nowrap px-2.5 text-sm font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 xl:px-3',
+          'relative flex min-h-11 items-center gap-1 text-nowrap px-2 text-[0.82rem] font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:px-3 2xl:text-sm',
           isScrolled
             ? cn('focus:ring-offset-white', isActive ? 'text-[#C29C41]' : 'text-[#0A2540] hover:text-[#C29C41]')
             : cn('focus:ring-offset-[#0A2540]', isActive ? 'text-[#E8C96A]' : 'text-white/88 hover:text-[#E8C96A]'),
@@ -357,27 +358,27 @@ const TopNavBar = () => {
     <>
       <header
         className={cn(
-          'fixed inset-x-0 z-[60] px-3 transition-all duration-500 md:px-6',
+          'fixed inset-x-0 z-[60] px-2 transition-all duration-500 md:px-4 2xl:px-6',
           isScrolled ? 'top-3' : 'top-4',
         )}
       >
         <nav
           className={cn(
-            'mx-auto max-w-7xl border transition-all duration-500',
+            'mx-auto max-w-[92rem] border transition-all duration-500',
             isScrolled
               ? 'corner-card border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
               : 'border-white/15 bg-[#0A2540]/30 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.14)] backdrop-blur-md hover:border-[#C29C41]/35 hover:bg-[#0A2540]/55',
           )}
         >
-          <div className="px-4 lg:px-5">
-            <div className="flex items-center gap-3">
+          <div className="px-3 lg:px-4">
+            <div className="flex items-center gap-2 2xl:gap-3">
               <Link href="/" className="flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white">
                 <Image
                   src={isScrolled ? '/logo-2.png' : '/logo-3.png'}
                   alt="المكتبة الرقمية"
                   height={240}
                   width={260}
-                  className={cn('object-contain transition-all duration-500', isScrolled ? 'h-[3.25rem] w-auto' : 'h-14 w-auto md:h-[4.25rem]')}
+                  className={cn('object-contain transition-all duration-500', isScrolled ? 'h-12 w-auto' : 'h-14 w-auto md:h-16')}
                   priority
                 />
               </Link>
@@ -390,8 +391,8 @@ const TopNavBar = () => {
                 ))}
               </ul>
 
-              <div className="mr-auto flex shrink-0 items-center gap-3 lg:mr-0">
-                <div className="hidden items-center lg:flex">
+              <div className="mr-auto flex shrink-0 items-center gap-2 2xl:gap-3 lg:mr-0">
+                <div className="hidden items-center 2xl:flex">
                   <label className="relative">
                     <span className="sr-only">بحث</span>
                     <input
@@ -409,20 +410,46 @@ const TopNavBar = () => {
                   </label>
                 </div>
 
+                <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isScrolled ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+
+                <Link
+                  href="/dashboard"
+                  aria-label="لوحة التحكم"
+                  className={cn(
+                    'group relative hidden h-11 shrink-0 items-center justify-center gap-2 border px-3 text-sm font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:flex',
+                    isScrolled
+                      ? 'border-[#C29C41]/35 bg-[#FFF8E1] text-[#8A6A1D] shadow-[0_8px_22px_rgba(194,156,65,0.16)] hover:border-[#C29C41] hover:bg-[#C29C41] hover:text-[#0A2540] focus:ring-offset-white'
+                      : 'border-[#E8C96A]/35 bg-[#E8C96A]/12 text-[#E8C96A] shadow-[0_10px_26px_rgba(0,0,0,0.12)] hover:border-[#E8C96A] hover:bg-[#E8C96A] hover:text-[#0A2540] focus:ring-offset-[#0A2540]',
+                  )}
+                >
+                  <MdDashboardCustomize className="h-6 w-6" />
+                  <span className="hidden 2xl:inline">لوحة التحكم</span>
+                  <span
+                    className={cn(
+                      'pointer-events-none absolute top-full mt-3 whitespace-nowrap border px-3 py-1.5 text-xs font-bold opacity-0 shadow-[0_10px_24px_rgba(10,37,64,0.14)] transition duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 2xl:hidden',
+                      isScrolled
+                        ? 'border-[#C29C41]/30 bg-white text-[#003652]'
+                        : 'border-[#E8C96A]/30 bg-[#0A2540] text-white',
+                    )}
+                  >
+                    لوحة التحكم
+                  </span>
+                </Link>
+
                 <div className={cn('hidden h-12 w-px shrink-0 lg:block', isScrolled ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
                 <Link
                   href="https://aidsmo.org"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hidden shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white lg:flex"
+                  className="hidden shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white xl:flex"
                 >
                   <Image
                     src="/aidsmo-logo.png"
                     alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين"
                     height={160}
                     width={160}
-                    className={cn('object-contain transition-all duration-500', isScrolled ? 'h-10 w-auto' : 'h-11 w-auto  md:h-12')}
+                    className={cn('object-contain transition-all duration-500', isScrolled ? 'h-9 w-auto' : 'h-10 w-auto 2xl:h-11')}
                   />
                 </Link>
 
@@ -486,6 +513,15 @@ const TopNavBar = () => {
           />
           <LuSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C29C41]" />
         </label>
+
+        <Link
+          href="/dashboard"
+          onClick={() => setMobileMenuOpen(false)}
+          className="mb-4 flex min-h-12 items-center justify-between border border-[#C29C41]/35 bg-[#FFF8E1] px-4 py-3 text-sm font-bold text-[#003652] transition duration-200 hover:bg-[#F0F7FC] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+        >
+          <span>لوحة التحكم</span>
+          <MdDashboardCustomize className="h-6 w-6 text-[#8A6A1D]" />
+        </Link>
 
         <nav className="flex flex-col">
           {menuItemsData.map((item) => (

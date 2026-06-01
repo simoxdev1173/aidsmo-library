@@ -24,12 +24,12 @@ const heroContent = {
 const heroImages = [
   {
     image:
-      'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1800&q=85',
+      'cover-digital-1.png',
     alt: 'رفوف مكتبة حديثة مليئة بالكتب',
   },
   {
     image:
-      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1800&q=85',
+      'cover-digital-2.png',
     alt: 'ممر مكتبة جامعية مع رفوف كتب عالية',
   },
   {

@@ -116,7 +116,7 @@ export default function AboutPage() {
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div className="corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F0F7FC]">
               <Image
-                src="/hero-image-2.png"
+                src="/cover-digital.png"
                 alt="واجهة المكتبة الرقمية الذكية"
                 width={900}
                 height={700}

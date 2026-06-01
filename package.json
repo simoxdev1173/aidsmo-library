@@ -2,6 +2,9 @@
   "name": "digital-library",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "predev": "prisma generate",
     "dev": "next dev --turbopack",

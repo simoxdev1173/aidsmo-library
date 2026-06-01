@@ -34,7 +34,7 @@ const heroImages = [
   },
   {
     image:
-      'https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=1800&q=85',
+      'cover-digital-4.png',
     alt: 'كتاب مفتوح على مكتب بحث هادئ',
   },
 ];

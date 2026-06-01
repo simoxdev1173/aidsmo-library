@@ -1,182 +1,211 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  HiOutlineArchiveBox,
+  HiOutlineArrowLeft,
+  HiOutlineBookOpen,
+  HiOutlineBuildingLibrary,
+  HiOutlineCircleStack,
+  HiOutlineMagnifyingGlass,
+  HiOutlineSparkles,
+} from 'react-icons/hi2';
 
-/* ── intersection-observer hook ── */
-function useInView(threshold = 0.15): [React.RefObject<HTMLDivElement | null>, boolean] {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return [ref, visible];
-}
+const pillars = [
+  {
+    title: 'تنظيم المعرفة',
+    description: 'جمع الإصدارات والدراسات والتقارير المتخصصة في هيكل واضح يسهل تصفحه والرجوع إليه.',
+    Icon: HiOutlineArchiveBox,
+  },
+  {
+    title: 'بحث ذكي',
+    description: 'تجربة بحث تساعد المستخدم على الوصول إلى المحتوى الصناعي والتعديني والتقييسي بسرعة ووضوح.',
+    Icon: HiOutlineMagnifyingGlass,
+  },
+  {
+    title: 'مرجع عربي موثوق',
+    description: 'إتاحة مصادر معرفية صادرة عن المنظمة لخدمة الباحثين وصناع القرار والمهتمين بالقطاع الصناعي العربي.',
+    Icon: HiOutlineBuildingLibrary,
+  },
+];
 
-const AboutPage = () => {
-  const [heroRef, heroVisible] = useInView(0.1);
-  const [textRef, textVisible] = useInView(0.15);
+const stats = [
+  { value: '350+', label: 'كتاب رقمي', Icon: HiOutlineBookOpen },
+  { value: '140+', label: 'بحث ودراسة', Icon: HiOutlineSparkles },
+  { value: '90+', label: 'تقرير صناعي', Icon: HiOutlineCircleStack },
+];
 
+const chapters = [
+  {
+    number: '01',
+    title: 'الفكرة',
+    text: 'نشأت المكتبة الرقمية الذكية من الحاجة إلى بوابة عربية تجمع المعرفة الصناعية والتقنية المتخصصة وتعرضها بصورة قابلة للبحث والاستكشاف.',
+  },
+  {
+    number: '02',
+    title: 'الدور',
+    text: 'تدعم المكتبة الباحثين والمهنيين وصناع القرار بمحتوى موثوق يساعد على فهم التحولات الصناعية والتعدينية والتقييسية في الدول العربية.',
+  },
+  {
+    number: '03',
+    title: 'الأثر',
+    text: 'تسهم المنصة في نشر المعرفة، وتعزيز الابتكار، وتسهيل الوصول إلى إصدارات المنظمة ضمن تجربة رقمية واضحة وذات طابع مؤسسي.',
+  },
+];
+
+export default function AboutPage() {
   return (
-    <div dir="rtl">
-      {/* ═══════ HERO — centered card ═══════ */}
-      <section className="bg-white pt-32 md:pt-36 pb-10 md:pb-14 px-4 lg:px-8">
-        <div
-          ref={heroRef}
-          className="relative mx-auto max-w-[55%] overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl"
-          style={{
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'all 0.9s cubic-bezier(.22,1,.36,1)',
-          }}
+    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#0A2540]">
+      <section className="relative min-h-[78vh] overflow-hidden bg-[#0A2540] pt-32 text-white md:pt-36">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover opacity-55"
         >
-          {/* Video Background Layer */}
-          <div className="relative flex items-center justify-center py-34 md:py-42 lg:py-46">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-            >
-              <source src="/hero-video-3.mp4" type="video/mp4" />
-            </video>
+          <source src="/hero-video-3.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-l from-[#0A2540]/96 via-[#0369A1]/72 to-[#0A2540]/90" />
+        <div
+          className="absolute inset-0 opacity-[0.055]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)',
+            backgroundSize: '84px 84px',
+          }}
+          aria-hidden
+        />
+        <div className="absolute inset-x-0 bottom-0 h-1 brass-gradient" aria-hidden />
 
-            {/* Gradient Overlay to maintain brand colors and readability */}
-            <div className="absolute inset-0 bg-gradient-to-bl from-[#0a2540]/70 via-[#0C5B99]/60 to-[#0369A1]/70" />
-
-            {/* Gold top accent bar */}
-            <div
-              className="absolute inset-x-0 top-0 h-[5px] z-10"
-              style={{ background: 'linear-gradient(to left, #C29C41, #e8c96a, #C29C41)' }}
-            />
-
-            {/* Subtle grid */}
-            <div
-              className="absolute inset-0 pointer-events-none z-10"
-              style={{
-                backgroundImage:
-                  'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)',
-                backgroundSize: '80px 80px',
-              }}
-            />
-
-            {/* Radial gold glows */}
-            <div
-              className="absolute inset-0 pointer-events-none z-10"
-              style={{
-                background:
-                  'radial-gradient(ellipse 55% 50% at 80% 25%, rgba(194,156,65,0.1) 0%, transparent 70%), radial-gradient(ellipse 40% 55% at 15% 75%, rgba(194,156,65,0.07) 0%, transparent 70%)',
-              }}
-            />
-
-            {/* Decorative diamonds */}
-            <div className="absolute top-[14%] right-[7%] w-36 h-36 border border-[#C29C41]/10 rotate-45 rounded-lg z-10" />
-            <div className="absolute bottom-[16%] left-[9%] w-24 h-24 border border-[#C29C41]/10 rotate-45 rounded-lg z-10" />
-            <div className="absolute top-[45%] right-[30%] w-12 h-12 border border-white/5 rotate-45 rounded z-10" />
-
-            {/* Decorative circles */}
-            <div className="absolute -top-16 -left-16 w-56 h-56 rounded-full border border-[#C29C41]/[0.06] z-10" />
-            <div className="absolute -bottom-12 -right-8 w-40 h-40 rounded-full border border-[#C29C41]/[0.06] z-10" />
-
-            {/* Title */}
-            <div className="relative z-20 text-center px-6">
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-none select-none">
-                <span className="text-white">من </span>
-                <span className="text-[#C29C41]">نحن</span>
+        <div className="relative z-10 mx-auto flex min-h-[calc(78vh-9rem)] max-w-7xl items-center px-4 pb-20 sm:px-6 lg:px-8">
+          <div className="grid w-full gap-10 lg:grid-cols-[1fr_420px] lg:items-end">
+            <div className="max-w-4xl">
+              <p className="font-display text-xs font-bold uppercase tracking-[0.28em] text-[#E8C96A]">
+                المكتبة الرقمية الذكية
+              </p>
+              <h1 className="mt-6 font-academic text-5xl font-bold leading-tight md:text-7xl">
+                من نحن
               </h1>
+              <p className="mt-7 max-w-3xl font-academic text-xl leading-10 text-white/82 md:text-2xl">
+                منصة عربية متخصصة أعدّتها المنظمة العربية للتنمية الصناعية والتقييس والتعدين لجمع المعرفة الصناعية والتقنية وتنظيمها وإتاحتها للباحثين والمهنيين وصناع القرار.
+              </p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/catalog/industry"
+                  className="engraved brass-gradient inline-flex h-12 items-center gap-2 border border-[#C29C41] px-6 text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                >
+                  استكشاف المكتبة
+                  <HiOutlineArrowLeft className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/#chatbot"
+                  className="inline-flex h-12 items-center border border-white/24 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                >
+                  اسأل المساعد الذكي
+                </Link>
+              </div>
+            </div>
+
+           
+          </div>
+        </div>
+      </section>
+
+      <section className="relative bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div className="corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F0F7FC]">
+              <Image
+                src="/hero-image-2.png"
+                alt="واجهة المكتبة الرقمية الذكية"
+                width={900}
+                height={700}
+                className="h-full min-h-[420px] w-full object-cover sepia-reveal"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/46 via-transparent to-transparent" />
+            </div>
+
+            <div>
+              <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
+                رسالتنا
+              </p>
+              <h2 className="academic-heading mt-4 text-3xl leading-tight md:text-4xl">
+                تحويل أرشيف المعرفة إلى تجربة بحث واستكشاف
+              </h2>
+              <div className="mt-6 max-w-md [--divider-bg:#FFFFFF]">
+                <div className="ornate-divider" aria-hidden />
+              </div>
+              <div className="mt-8 space-y-6 font-academic text-xl leading-10 text-[#475569]">
+                <p>
+                  أعدّت المنظمة العربية للتنمية الصناعية والتقييس والتعدين المكتبة الرقمية الذكية لتكون منصة رائدة تجمع المعرفة الصناعية والتقنية وتنظمها بطريقة ذكية ومتاحة للجميع.
+                </p>
+                <p>
+                  تسعى المكتبة إلى أن تكون مرجعاً موثوقاً للباحثين والمهتمين بالقطاع الصناعي والتعديني، من خلال محتوى غني يدعم البحث العلمي والتطوير المهني واتخاذ القرار المبني على المعرفة.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════ ABOUT TEXT ═══════ */}
-      <section className="relative bg-white pt-16 pb-24 md:pt-20 md:pb-32">
-        {/* Top center gold line */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[3px] rounded-full bg-gradient-to-l from-[#C29C41] to-[#e8c96a]" />
-
-        <div
-          ref={textRef}
-          className="mx-auto max-w-[800px] px-6"
-          style={{
-            opacity: textVisible ? 1 : 0,
-            transform: textVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.9s cubic-bezier(.22,1,.36,1)',
-          }}
-        >
-          <div className="relative">
-            {/* Decorative quotation mark */}
-            <span className="absolute -top-8 -right-2 text-7xl text-[#C29C41] select-none leading-none font-serif">
-              ❝
-            </span>
-
-            <p className="text-lg md:text-xl leading-[2.2] text-slate-600 font-medium text-justify mb-8">
-              <span className="font-bold text-[#0C5B99]">
-                أعدّت{' '}  المنظمة العربية للتنمية الصناعية والتقييس والتعدين 
-              </span>{' '}
-              <span className="font-bold text-[#C29C41]">
-                المكتبة الرقمية الذكية
-              </span>
-              {' '}، منصة رائدة تهدف إلى جمع{' '}
-              <span className="font-bold ">
-                المعرفة الصناعية والتقنية
-              </span>{' '}
-              وتنظيمها بطريقة ذكية ومتاحة للجميع. تم تصميم المكتبة باستخدام أحدث{' '}
-              <span className="font-bold ">
-                التطورات التكنولوجية
-              </span>{' '}
-              لتسهيل{' '}
-              <span className="font-bold ">
-                البحث التفاعلي
-              </span>{' '}
-              والوصول السريع إلى المعلومات الدقيقة والموثوقة.
+      <section className="border-y border-[#0369A1]/10 bg-[#F0F7FC] py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <h2 className="academic-heading text-3xl leading-tight md:text-4xl">
+              ما الذي تقدمه المكتبة الرقمية الذكية ؟
+            </h2>
+            <p className="mt-5 font-academic text-xl leading-9 text-[#475569]">
+              تجربة مؤسسية واضحة تجمع بين موثوقية المحتوى وسهولة الوصول إليه.
             </p>
+          </div>
 
-            <p className="text-base md:text-lg leading-[2.3] text-slate-500 text-justify">
-              تسعى المكتبة إلى أن تكون{' '}
-              <span className="font-bold ">
-                مرجعاً موثوقاً
-              </span>{' '}
-              للباحثين والمهتمين بالقطاع الصناعي والتعديني، من خلال توفير محتوى غني يدعم{' '}
-              <span className="font-bold ">
-                البحث العلمي
-              </span>
-              ،{' '}
-              <span className="font-bold ">
-                التطوير المهني
-              </span>
-              ، واتخاذ{' '}
-              <span className="font-bold ">
-                القرار المبني على المعرفة
-              </span>
-              . كما تهدف إلى تعزيز{' '}
-              <span className="font-bold ">
-                الابتكار
-              </span>{' '}
-              ونشر المعرفة داخل{' '}
-              <span className="font-bold ">
-                المجتمع العربي
-              </span>
-              ، مع تصميم يجعل البحث واستكشاف المعلومات أمراً سهلاً وممتعاً لجميع المستخدمين.
-            </p>
-             <span className="absolute -bottom-8 -left-2 text-7xl text-[#C29C41] select-none leading-none font-serif">
-              ❝
-            </span>
+          <div className="grid gap-5 md:grid-cols-3">
+            {pillars.map((pillar) => {
+              const Icon = pillar.Icon;
+
+              return (
+                <article key={pillar.title} className="group corner-card academic-card p-6">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white text-[#C29C41] transition duration-300 group-hover:border-[#0369A1]/35 group-hover:text-[#0369A1]">
+                    <Icon className="h-7 w-7" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[#003652]">{pillar.title}</h3>
+                  <p className="mt-4 text-base leading-8 text-[#475569]">{pillar.description}</p>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
-    </div>
-  );
-};
 
-export default AboutPage;
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
+            <div>
+              <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
+                مسار العمل
+              </p>
+              <h2 className="academic-heading  mt-4 text-3xl leading-tight md:text-3xl">
+                من الأرشفة إلى الإتاحة الذكية
+              </h2>
+            </div>
+
+            <div className="grid gap-4">
+              {chapters.map((chapter) => (
+                <article key={chapter.number} className="grid gap-5 border border-[#0369A1]/14 bg-[#F8FAFC] p-5 md:grid-cols-[90px_1fr] md:p-6">
+                  <div className="font-display text-4xl font-bold text-[#C29C41]">{chapter.number}</div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-[#003652]">{chapter.title}</h3>
+                    <p className="mt-3 font-academic text-lg leading-9 text-[#475569]">{chapter.text}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      
+    </main>
+  );
+}

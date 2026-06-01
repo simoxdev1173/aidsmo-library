@@ -1,10 +1,7 @@
 import type { Metadata } from 'next'
 import { Amiri, Cinzel, Manrope, Readex_Pro } from 'next/font/google'
 import './globals.css'
-import NextTopLoader from 'nextjs-toploader';
-import TopNavBar from '@/components/TopNavBar';
-import Footer from '@/components/Footer';
-import ChatbotWidget from '@/components/ChatbotWidget';
+import SiteChrome from '@/components/SiteChrome';
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
@@ -45,13 +42,9 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${manrope.variable} ${readexPro.variable} ${amiri.variable} ${cinzel.variable} font-arabic academic-atmosphere`}>
-        <TopNavBar  />
-        <NextTopLoader color="#0369a1" showSpinner={false} /> 
-        <div>
+        <SiteChrome>
           {children}
-        </div>
-        <ChatbotWidget />
-        <Footer />
+        </SiteChrome>
       </body>
     </html>
   )

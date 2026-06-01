@@ -54,7 +54,8 @@ const LibraryNews = () => {
 
           <div className="lg:col-span-3">
             <div>
-              <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
+              <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-4
+              xl">
                 آخر المستجدات داخل المكتبة الرقمية
               </h2>
               <p className="mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#475569]">

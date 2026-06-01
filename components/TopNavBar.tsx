@@ -4,7 +4,7 @@ import { cn } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { LuChevronDown, LuChevronLeft, LuChevronRight, LuMenu, LuSearch, LuX } from 'react-icons/lu';
+import { LuChevronDown, LuChevronLeft, LuMenu, LuSearch, LuX } from 'react-icons/lu';
 
 type SubItem = { label: string; href: string };
 type ChildItem = { label: string; href: string; subItems?: SubItem[] };
@@ -166,9 +166,10 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
 
 const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
+
   return (
-    <div className={cn('min-w-[600px]', dropdownShell)}>
-      <div className={cn('grid gap-5', groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
+    <div className={cn('w-[min(680px,calc(100vw-2rem))]', dropdownShell)}>
+      <div className={cn('grid gap-4', groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
         {groups.map((group) => (
           <div key={group.title}>
             <p className="mb-2 border-b border-[#C29C41]/25 px-3 pb-2 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#C29C41]">
@@ -184,21 +185,14 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
                   >
                     <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
                       <Link href={item.href} className="flex-1">{item.label}</Link>
-                      <LuChevronRight size={14} className="text-[#C29C41]" />
+                      <LuChevronDown size={14} className={cn('text-[#C29C41] transition duration-300', expandedKey === item.href && 'rotate-180')} />
                     </div>
-                    <div
-                      className={cn(
-                        'absolute right-0 top-0 z-50 translate-x-full pr-2 transition duration-300',
-                        expandedKey === item.href ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0',
-                      )}
-                    >
-                      <div className={cn('min-w-[240px]', dropdownShell)}>
-                        {item.subItems.map((sub) => (
-                          <Link key={sub.href} href={sub.href} className={dropdownLink}>
-                            {sub.label}
-                          </Link>
-                        ))}
-                      </div>
+                    <div className={cn('overflow-hidden border-r border-[#C29C41]/20 pr-3 transition-all duration-300', expandedKey === item.href ? 'max-h-72 opacity-100' : 'max-h-0 opacity-0')}>
+                      {item.subItems.map((sub) => (
+                        <Link key={sub.href} href={sub.href} className="block px-4 py-2 text-xs font-medium leading-relaxed text-[#64748B] transition duration-200 hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:bg-[#F0F7FC] focus:text-[#0369A1] focus:outline-none">
+                          {sub.label}
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 ) : (
@@ -215,7 +209,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   );
 };
 
-const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
+const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boolean; isScrolled: boolean }) => {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hasDropdown = item.children || item.groups;
@@ -237,8 +231,10 @@ const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
       <Link
         href={item.href ?? `#${item.id}`}
         className={cn(
-          'relative flex min-h-11 items-center gap-1 px-2.5 text-sm font-bold text-nowrap transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white xl:px-3',
-          isActive ? 'text-[#C29C41]' : 'text-[#0A2540] hover:text-[#C29C41]',
+          'relative flex min-h-11 items-center gap-1 text-nowrap px-2.5 text-sm font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 xl:px-3',
+          isScrolled
+            ? cn('focus:ring-offset-white', isActive ? 'text-[#C29C41]' : 'text-[#0A2540] hover:text-[#C29C41]')
+            : cn('focus:ring-offset-[#0A2540]', isActive ? 'text-[#E8C96A]' : 'text-white/88 hover:text-[#E8C96A]'),
         )}
       >
         {item.label}
@@ -249,7 +245,7 @@ const NavItem = ({ item, isActive }: { item: MenuItem; isActive: boolean }) => {
         <div
           className={cn(
             'absolute top-full z-50 pt-3 transition duration-300',
-            item.id === 'archive' ? 'left-auto right-0' : 'right-0',
+            item.id === 'archive' ? 'left-0 right-auto' : 'right-0',
             open ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0',
           )}
         >
@@ -361,36 +357,36 @@ const TopNavBar = () => {
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-[60] transition-all duration-500',
-          isScrolled ? 'top-3 px-3 md:px-6' : 'px-0',
+          'fixed inset-x-0 z-[60] px-3 transition-all duration-500 md:px-6',
+          isScrolled ? 'top-3' : 'top-4',
         )}
       >
         <nav
           className={cn(
-            'corner-card mx-auto max-w-7xl border transition-all duration-500',
+            'mx-auto max-w-7xl border transition-all duration-500',
             isScrolled
-              ? 'border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
-              : 'border-transparent bg-white/90 py-2 backdrop-blur-md',
+              ? 'corner-card border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
+              : 'border-white/15 bg-[#0A2540]/30 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.14)] backdrop-blur-md hover:border-[#C29C41]/35 hover:bg-[#0A2540]/55',
           )}
         >
           <div className="px-4 lg:px-5">
             <div className="flex items-center gap-3">
               <Link href="/" className="flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white">
                 <Image
-                  src="/logo-2.png"
+                  src={isScrolled ? '/logo-2.png' : '/logo-3.png'}
                   alt="المكتبة الرقمية"
                   height={240}
                   width={260}
-                  className={cn('object-contain transition-all duration-500', isScrolled ? 'h-[3.25rem] w-auto' : 'h-16 w-auto md:h-20')}
+                  className={cn('object-contain transition-all duration-500', isScrolled ? 'h-[3.25rem] w-auto' : 'h-14 w-auto md:h-[4.25rem]')}
                   priority
                 />
               </Link>
 
-              <div className="hidden h-12 w-px shrink-0 bg-[#C29C41]/30 lg:block" aria-hidden />
+              <div className={cn('hidden h-12 w-px shrink-0 lg:block', isScrolled ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
               <ul className="hidden flex-1 items-center justify-center gap-0 lg:flex">
                 {menuItemsData.map((item) => (
-                  <NavItem key={item.id} item={item} isActive={activeSection === item.id} />
+                  <NavItem key={item.id} item={item} isActive={activeSection === item.id} isScrolled={isScrolled} />
                 ))}
               </ul>
 
@@ -402,13 +398,18 @@ const TopNavBar = () => {
                       type="text"
                       placeholder="بحث..."
                       dir="rtl"
-                      className="h-11 w-40 border border-[#0369A1]/20 bg-[#F8FAFC] pr-10 pl-4 text-sm font-medium text-[#0A2540] outline-none transition duration-300 placeholder:text-[#64748B] focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
+                      className={cn(
+                        'h-11 w-40 border pr-10 pl-4 text-sm font-medium outline-none transition duration-300 focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25',
+                        isScrolled
+                          ? 'border-[#0369A1]/20 bg-[#F8FAFC] text-[#0A2540] placeholder:text-[#64748B]'
+                          : 'border-white/16 bg-white/10 text-white placeholder:text-white/60',
+                      )}
                     />
-                    <LuSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C29C41]" />
+                    <LuSearch className={cn('absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2', isScrolled ? 'text-[#C29C41]' : 'text-[#E8C96A]')} />
                   </label>
                 </div>
 
-                <div className="hidden h-12 w-px shrink-0 bg-[#C29C41]/30 lg:block" aria-hidden />
+                <div className={cn('hidden h-12 w-px shrink-0 lg:block', isScrolled ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
                 <Link
                   href="https://aidsmo.org"
@@ -421,13 +422,18 @@ const TopNavBar = () => {
                     alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين"
                     height={160}
                     width={160}
-                    className={cn('object-contain transition-all duration-500', isScrolled ? 'h-10 w-auto' : 'h-12 w-auto md:h-14')}
+                    className={cn('object-contain transition-all duration-500', isScrolled ? 'h-10 w-auto' : 'h-11 w-auto  md:h-12')}
                   />
                 </Link>
 
                 <button
                   type="button"
-                  className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white lg:hidden"
+                  className={cn(
+                    'flex h-11 w-11 items-center justify-center border transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:hidden',
+                    isScrolled
+                      ? 'border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] focus:ring-offset-white'
+                      : 'border-white/20 bg-white/10 text-white focus:ring-offset-[#0A2540]',
+                  )}
                   onClick={() => setMobileMenuOpen(true)}
                   aria-label="فتح القائمة"
                 >

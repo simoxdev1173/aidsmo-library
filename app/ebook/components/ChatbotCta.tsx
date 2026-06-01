@@ -26,14 +26,11 @@ const ChatbotCTA = () => {
           <div className="absolute inset-0 bg-gradient-to-l from-[#0A2540]/94 via-[#0369A1]/78 to-[#0A2540]/86" />
           <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
 
-          <div className="relative z-10 px-7 py-12 md:px-12 md:py-16">
-            <h2 className="mt-5 max-w-2xl font-academic text-4xl font-bold leading-tight text-white md:text-4xl">
+          <div className="relative z-10  px-7 py-12 md:px-12 md:py-16">
+            <h2 className="mt-5 max-w-2xl pb-5 font-academic text-4xl font-bold leading-tight text-white md:text-4xl">
               تحدث مع مساعدنا الذكي الآن
             </h2>
 
-            <div className="my-7 max-w-sm [--divider-bg:#0A2540]">
-              <div className="ornate-divider" aria-hidden />
-            </div>
 
             <p className="max-w-2xl font-academic text-xl leading-relaxed text-white/78">
               اسأل عن المجلات والدراسات والتقارير الصناعية والتعدينية، وسيقودك المساعد إلى ما تبحث عنه في ثوان.
@@ -50,10 +47,7 @@ const ChatbotCTA = () => {
 
           <div className="relative z-10 flex min-h-[320px] items-center justify-center px-8 pb-12 lg:pb-0">
             <div className="corner-card relative border border-[#C29C41]/35 bg-white/10 p-8 backdrop-blur-md">
-              <div className="mb-5 flex items-center gap-3 text-[#C29C41]">
-                <LuSparkles className="h-5 w-5" />
-                <span className="text-xs font-bold tracking-[0.12em]">دليل ذكي للمكتبة</span>
-              </div>
+              
               <Image
                 src="/ai.png"
                 alt="مساعد الذكاء الاصطناعي"

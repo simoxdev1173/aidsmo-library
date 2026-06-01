@@ -15,7 +15,7 @@ const AUTO_INTERVAL = 6200;
 const TRANSITION_MS = 1450;
 
 const heroContent = {
-  eyebrow: 'أرشيف رقمي متجدد',
+  
   title: 'المكتبة الرقمية الذكية',
   subtitle:
     'منصة رقمية عربية متخصصة تعنى بجمع وتنظيم وإتاحة الدراسات الفنية والأبحاث العلمية التي تزخر بها المنظمة في مجالات الصناعة والتقييس والتعدين.',
@@ -423,15 +423,8 @@ const Hero = () => {
                 className="h-20 w-20 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-24"
                 priority
               />
-              <div className="h-14 w-px bg-[#C29C41]/45" aria-hidden />
-              <div>
-                <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.24em] text-[#E8C96A]">
-                  {heroContent.eyebrow}
-                </p>
-                <div className="mt-3 w-36 [--divider-bg:#0A2540]">
-                  <div className="ornate-divider" aria-hidden />
-                </div>
-              </div>
+           
+              
             </div>
 
             <h1 className="font-academic text-5xl font-bold leading-[1.1] text-white md:text-6xl lg:text-7xl">
@@ -467,14 +460,16 @@ const Hero = () => {
         </div>
 
         <div className="absolute bottom-5 left-5 right-5 z-20 flex items-center justify-between gap-4">
+          
           <button
             type="button"
-            aria-label="الشريحة التالية"
-            onClick={() => goToSlide(activeIndex + 1)}
+            aria-label="الشريحة السابقة"
+            onClick={() => goToSlide(activeIndex - 1)}
             className="flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
-            <LuChevronLeft className="h-5 w-5" />
+            <LuChevronRight className="h-5 w-5" />
           </button>
+        
 
           <div className="flex flex-1 items-center justify-center gap-2 px-2 sm:px-6" aria-label="شرائح العرض">
             {heroImages.map((slide, index) => (
@@ -494,14 +489,13 @@ const Hero = () => {
               </button>
             ))}
           </div>
-
-          <button
+              <button
             type="button"
-            aria-label="الشريحة السابقة"
-            onClick={() => goToSlide(activeIndex - 1)}
+            aria-label="الشريحة التالية"
+            onClick={() => goToSlide(activeIndex + 1)}
             className="flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
-            <LuChevronRight className="h-5 w-5" />
+            <LuChevronLeft className="h-5 w-5" />
           </button>
         </div>
       </div>

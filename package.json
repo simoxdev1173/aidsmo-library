@@ -3,12 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "prisma generate",
     "dev": "next dev --turbopack",
+    "prebuild": "prisma generate",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "clsx": "^2.1.1",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
@@ -17,12 +27,15 @@
     "motion": "^12.33.0",
     "next": "^16.1.6",
     "nextjs-toploader": "^3.9.17",
+    "pg": "^8.21.0",
+    "prisma": "^7.8.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.71.1",
     "react-icons": "^5.5.0",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.4.0",
+    "tsx": "^4.22.4",
     "yup": "^1.7.1"
   },
   "devDependencies": {

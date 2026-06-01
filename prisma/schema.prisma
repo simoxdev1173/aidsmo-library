@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EntryStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id           String         @id @default(cuid())
+  name         String
+  slug         String         @unique
+  description  String?
+  navHref      String?
+  order        Int            @default(0)
+  isNavVisible Boolean        @default(true)
+  parentId     String?
+  parent       Category?      @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children     Category[]     @relation("CategoryTree")
+  entries      LibraryEntry[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([parentId])
+  @@index([order])
+}
+
+model LibraryEntry {
+  id             String      @id @default(cuid())
+  title          String
+  slug           String      @unique
+  description    String      @db.Text
+  coverImagePath String?
+  filePath       String?
+  publisher      String?
+  author         String?
+  year           Int?
+  language       String      @default("العربية")
+  pageCount      Int?
+  status         EntryStatus @default(DRAFT)
+  featured       Boolean     @default(false)
+  categoryId     String
+  category       Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  publishedAt    DateTime?
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([year])
+  @@index([featured])
+}

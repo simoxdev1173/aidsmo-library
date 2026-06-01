@@ -33,6 +33,13 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# local uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# generated database client
+/lib/generated/
+
 # vercel
 .vercel
 

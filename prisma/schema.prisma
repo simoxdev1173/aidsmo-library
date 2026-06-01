@@ -13,6 +13,12 @@ enum EntryStatus {
   ARCHIVED
 }
 
+enum EntryType {
+  BOOK
+  PAGE
+  OTHER
+}
+
 model AdminUser {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -43,9 +49,12 @@ model Category {
 
 model LibraryEntry {
   id             String      @id @default(cuid())
+  entryType      EntryType   @default(BOOK)
   title          String
   slug           String      @unique
   description    String      @db.Text
+  notes          String?     @db.Text
+  contentSections Json       @default("[]")
   coverImagePath String?
   filePath       String?
   publisher      String?
@@ -63,6 +72,7 @@ model LibraryEntry {
 
   @@index([categoryId])
   @@index([status])
+  @@index([entryType])
   @@index([year])
   @@index([featured])
 }

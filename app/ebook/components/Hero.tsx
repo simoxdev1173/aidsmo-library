@@ -4,8 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  LuArchive,
-  LuBookOpen,
   LuChevronLeft,
   LuChevronRight,
   LuSearch,
@@ -37,11 +35,6 @@ const heroImages = [
       'cover-digital-4.png',
     alt: 'كتاب مفتوح على مكتب بحث هادئ',
   },
-];
-
-const heroMetrics = [
-  { icon: LuArchive, label: 'أرشيف معرفي', value: '350+ كتاب رقمي' },
-  { icon: LuBookOpen, label: 'دراسات متخصصة', value: '140+ بحث ودراسة' },
 ];
 
 type WebGlHeroSliderProps = {

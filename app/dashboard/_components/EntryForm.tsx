@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import EntryTypedFields from '@/app/dashboard/_components/EntryTypedFields';
 import { FileField, FormBusyOverlay, SubmitButton } from '@/app/dashboard/_components/FormFeedback';
+import { type EntrySection } from '@/app/dashboard/_components/SectionFields';
 import { createEntryAction, updateEntryAction } from '@/lib/library-actions';
 
 type CategoryOption = {
@@ -11,9 +13,12 @@ type CategoryOption = {
 
 type EntryFormValue = {
   id: string;
+  entryType: string;
   title: string;
   slug: string;
   description: string;
+  notes: string | null;
+  contentSections: unknown;
   coverImagePath: string | null;
   filePath: string | null;
   publisher: string | null;
@@ -32,6 +37,22 @@ function fieldClass() {
 
 function labelClass() {
   return 'mb-2 block text-sm font-bold text-[#334155]';
+}
+
+function normalizeSections(value: unknown): EntrySection[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null;
+      const section = item as { title?: unknown; body?: unknown };
+
+      return {
+        title: typeof section.title === 'string' ? section.title : '',
+        body: typeof section.body === 'string' ? section.body : '',
+      };
+    })
+    .filter((item): item is EntrySection => Boolean(item && (item.title || item.body)));
 }
 
 export default function EntryForm({
@@ -71,6 +92,17 @@ export default function EntryForm({
               className="w-full rounded-md border border-[#CBD5E1] bg-white px-3 py-3 text-sm leading-7 text-[#0A2540] outline-none transition duration-200 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20"
             />
           </label>
+
+          <EntryTypedFields
+            initialType={entry?.entryType}
+            notes={entry?.notes}
+            publisher={entry?.publisher}
+            author={entry?.author}
+            year={entry?.year}
+            language={entry?.language}
+            pageCount={entry?.pageCount}
+            sections={normalizeSections(entry?.contentSections)}
+          />
         </div>
 
         <aside className="space-y-5 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-4">
@@ -131,30 +163,6 @@ export default function EntryForm({
           </label>
         </aside>
       </div>
-
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-        <label className="block">
-          <span className={labelClass()}>الناشر</span>
-          <input name="publisher" defaultValue={entry?.publisher ?? ''} className={fieldClass()} />
-        </label>
-        <label className="block">
-          <span className={labelClass()}>المؤلف</span>
-          <input name="author" defaultValue={entry?.author ?? ''} className={fieldClass()} />
-        </label>
-        <label className="block">
-          <span className={labelClass()}>السنة</span>
-          <input name="year" type="number" min="1900" max="2100" defaultValue={entry?.year ?? ''} className={fieldClass()} />
-        </label>
-        <label className="block">
-          <span className={labelClass()}>عدد الصفحات</span>
-          <input name="pageCount" type="number" min="1" defaultValue={entry?.pageCount ?? ''} className={fieldClass()} />
-        </label>
-      </div>
-
-      <label className="block max-w-md">
-        <span className={labelClass()}>اللغة</span>
-        <input name="language" defaultValue={entry?.language ?? 'العربية'} className={fieldClass()} />
-      </label>
 
       <div className="flex flex-col-reverse gap-3 border-t border-[#E2E8F0] pt-5 sm:flex-row sm:justify-end">
         <Link href="/dashboard/entries" className="inline-flex h-11 items-center justify-center rounded-md border border-[#CBD5E1] px-5 text-sm font-bold text-[#334155] transition duration-200 hover:border-[#C29C41]">

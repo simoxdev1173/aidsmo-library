@@ -13,6 +13,7 @@
     "start": "next start",
     "lint": "eslint .",
     "prisma:generate": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed"
   },

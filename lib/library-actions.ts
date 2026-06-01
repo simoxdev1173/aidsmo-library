@@ -25,6 +25,25 @@ function optionalInt(formData: FormData, key: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function entryType(formData: FormData): "BOOK" | "PAGE" | "OTHER" {
+  const value = text(formData, "entryType");
+  if (value === "PAGE" || value === "OTHER") return value;
+  return "BOOK";
+}
+
+function contentSections(formData: FormData) {
+  const titles = formData
+    .getAll("sectionTitle")
+    .map((value) => (typeof value === "string" ? value.trim() : ""));
+  const bodies = formData
+    .getAll("sectionBody")
+    .map((value) => (typeof value === "string" ? value.trim() : ""));
+
+  return titles
+    .map((title, index) => ({ title, body: bodies[index] ?? "" }))
+    .filter((section) => section.title.length > 0 || section.body.length > 0);
+}
+
 function errorUrl(path: string, error: string) {
   return `${path}?error=${encodeURIComponent(error)}`;
 }
@@ -116,7 +135,10 @@ export async function createEntryAction(formData: FormData) {
       data: {
         title,
         slug,
+        entryType: entryType(formData),
         description,
+        notes: optionalText(formData, "notes"),
+        contentSections: contentSections(formData),
         categoryId,
         coverImagePath,
         filePath,
@@ -170,7 +192,10 @@ export async function updateEntryAction(id: string, formData: FormData) {
       data: {
         title,
         slug,
+        entryType: entryType(formData),
         description,
+        notes: optionalText(formData, "notes"),
+        contentSections: contentSections(formData),
         categoryId,
         coverImagePath,
         filePath,

@@ -3,11 +3,8 @@ import Link from 'next/link';
 import {
   HiOutlineArchiveBox,
   HiOutlineArrowLeft,
-  HiOutlineBookOpen,
   HiOutlineBuildingLibrary,
-  HiOutlineCircleStack,
   HiOutlineMagnifyingGlass,
-  HiOutlineSparkles,
 } from 'react-icons/hi2';
 
 const pillars = [
@@ -26,12 +23,6 @@ const pillars = [
     description: 'إتاحة مصادر معرفية صادرة عن المنظمة لخدمة الباحثين وصناع القرار والمهتمين بالقطاع الصناعي العربي.',
     Icon: HiOutlineBuildingLibrary,
   },
-];
-
-const stats = [
-  { value: '350+', label: 'كتاب رقمي', Icon: HiOutlineBookOpen },
-  { value: '140+', label: 'بحث ودراسة', Icon: HiOutlineSparkles },
-  { value: '90+', label: 'تقرير صناعي', Icon: HiOutlineCircleStack },
 ];
 
 const chapters = [
@@ -55,6 +46,7 @@ const chapters = [
 export default function AboutPage() {
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#0A2540]">
+      {/* ─── Hero ─── */}
       <section className="relative min-h-[78vh] overflow-hidden bg-[#0A2540] pt-32 text-white md:pt-36">
         <video
           autoPlay
@@ -87,7 +79,7 @@ export default function AboutPage() {
                 من نحن
               </h1>
               <p className="mt-7 max-w-3xl font-academic text-xl leading-10 text-white/82 md:text-2xl">
-                منصة عربية متخصصة أعدّتها المنظمة العربية للتنمية الصناعية والتقييس والتعدين لجمع المعرفة الصناعية والتقنية وتنظيمها وإتاحتها للباحثين والمهنيين وصناع القرار.
+                منصة رائدة أعدّتها المنظمة العربية للتنمية الصناعية والتقييس والتعدين، تهدف إلى جمع المعرفة الصناعية والتقنية وتنظيمها بطريقة ذكية ومتاحة للجميع.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
@@ -105,49 +97,62 @@ export default function AboutPage() {
                 </Link>
               </div>
             </div>
-
-           
           </div>
         </div>
       </section>
 
+      {/* ─── Mission ─── */}
       <section className="relative bg-white py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div className="corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F0F7FC]">
-              <Image
-                src="/cover-digital.png"
-                alt="واجهة المكتبة الرقمية الذكية"
-                width={900}
-                height={700}
-                className="h-full min-h-[420px] w-full object-cover sepia-reveal"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/46 via-transparent to-transparent" />
-            </div>
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] items-stretch">
 
-            <div>
-              <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
-                رسالتنا
-              </p>
-              <h2 className="academic-heading mt-4 text-3xl leading-tight md:text-4xl">
-                تحويل أرشيف المعرفة إلى تجربة بحث واستكشاف
-              </h2>
-              <div className="mt-6 max-w-md [--divider-bg:#FFFFFF]">
-                <div className="ornate-divider" aria-hidden />
-              </div>
-              <div className="mt-8 space-y-6 font-academic text-xl leading-10 text-[#475569]">
-                <p>
-                  أعدّت المنظمة العربية للتنمية الصناعية والتقييس والتعدين المكتبة الرقمية الذكية لتكون منصة رائدة تجمع المعرفة الصناعية والتقنية وتنظمها بطريقة ذكية ومتاحة للجميع.
-                </p>
-                <p>
-                  تسعى المكتبة إلى أن تكون مرجعاً موثوقاً للباحثين والمهتمين بالقطاع الصناعي والتعديني، من خلال محتوى غني يدعم البحث العلمي والتطوير المهني واتخاذ القرار المبني على المعرفة.
-                </p>
-              </div>
-            </div>
-          </div>
+      {/* Content */}
+      <div className="flex flex-col justify-center max-w-xl">
+        <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
+          رسالتنا
+        </p>
+
+        <h2 className="academic-heading mt-4 text-2xl leading-tight md:text-3xl">
+          تحويل أرشيف المعرفة إلى تجربة بحث واستكشاف
+        </h2>
+
+        <div className="mt-6 [--divider-bg:#FFFFFF]">
+          <div className="ornate-divider" aria-hidden />
         </div>
-      </section>
 
+        <div className="mt-8 space-y-5 font-academic text-lg leading-8 text-[#475569]">
+          <p>
+            أعدّت المنظمة العربية للتنمية الصناعية والتقييس والتعدين المكتبة الرقمية الذكية،
+            منصة رائدة تهدف إلى جمع المعرفة الصناعية والتقنية وتنظيمها بطريقة ذكية ومتاحة للجميع.
+            تم تصميم المكتبة باستخدام أحدث التطورات التكنولوجية لتسهيل البحث التفاعلي والوصول السريع
+            إلى المعلومات الدقيقة والموثوقة.
+          </p>
+
+          <p>
+            تسعى المكتبة إلى أن تكون مرجعاً موثوقاً للباحثين والمهتمين بالقطاع الصناعي والتعديني،
+            من خلال توفير محتوى غني يدعم البحث العلمي والتطوير المهني واتخاذ القرار المبني على المعرفة،
+            مع تعزيز الابتكار ونشر المعرفة داخل المجتمع العربي.
+          </p>
+        </div>
+      </div>
+
+      {/* Image */}
+      <div className="corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F0F7FC] h-full">
+        <Image
+          src="/cover-digital-1.png"
+          alt="واجهة المكتبة الرقمية الذكية"
+          width={900}
+          height={700}
+          className="h-full min-h-[500px] w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/46 via-transparent to-transparent" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+      {/* ─── Pillars ─── */}
       <section className="border-y border-[#0369A1]/10 bg-[#F0F7FC] py-20 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-12 max-w-3xl text-center">
@@ -162,7 +167,6 @@ export default function AboutPage() {
           <div className="grid gap-5 md:grid-cols-3">
             {pillars.map((pillar) => {
               const Icon = pillar.Icon;
-
               return (
                 <article key={pillar.title} className="group corner-card academic-card p-6">
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white text-[#C29C41] transition duration-300 group-hover:border-[#0369A1]/35 group-hover:text-[#0369A1]">
@@ -177,6 +181,7 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ─── Chapters ─── */}
       <section className="bg-white py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
@@ -184,14 +189,17 @@ export default function AboutPage() {
               <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
                 مسار العمل
               </p>
-              <h2 className="academic-heading  mt-4 text-3xl leading-tight md:text-3xl">
+              <h2 className="academic-heading mt-4 text-3xl leading-tight md:text-3xl">
                 من الأرشفة إلى الإتاحة الذكية
               </h2>
             </div>
 
             <div className="grid gap-4">
               {chapters.map((chapter) => (
-                <article key={chapter.number} className="grid gap-5 border border-[#0369A1]/14 bg-[#F8FAFC] p-5 md:grid-cols-[90px_1fr] md:p-6">
+                <article
+                  key={chapter.number}
+                  className="grid gap-5 border border-[#0369A1]/14 bg-[#F8FAFC] p-5 md:grid-cols-[90px_1fr] md:p-6"
+                >
                   <div className="font-display text-4xl font-bold text-[#C29C41]">{chapter.number}</div>
                   <div>
                     <h3 className="text-2xl font-bold text-[#003652]">{chapter.title}</h3>
@@ -203,9 +211,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      
-      
     </main>
   );
 }

@@ -6,6 +6,27 @@ import { getPublishedEntryBySlug } from '@/lib/library-data';
 
 export const dynamic = 'force-dynamic';
 
+type ContentSection = {
+  title: string;
+  body: string;
+};
+
+function getContentSections(value: unknown): ContentSection[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null;
+      const section = item as { title?: unknown; body?: unknown };
+
+      return {
+        title: typeof section.title === 'string' ? section.title : '',
+        body: typeof section.body === 'string' ? section.body : '',
+      };
+    })
+    .filter((item): item is ContentSection => Boolean(item && (item.title || item.body)));
+}
+
 export default async function BookPage({
   params,
 }: {
@@ -18,6 +39,8 @@ export default async function BookPage({
     notFound();
   }
 
+  const isBook = entry.entryType === 'BOOK';
+  const sections = getContentSections(entry.contentSections);
   const metadata = [
     ['الناشر', entry.publisher],
     ['المؤلف', entry.author],
@@ -76,17 +99,34 @@ export default async function BookPage({
             </button>
           </div>
 
-          <section className="mt-10 rounded-lg border border-[#D9E3EE] bg-white">
-            <h2 className="border-b border-[#E2E8F0] px-5 py-4 text-lg font-bold text-[#003652]">معلومات إضافية</h2>
-            <dl className="grid gap-px overflow-hidden rounded-b-lg bg-[#E2E8F0] sm:grid-cols-2">
-              {metadata.map(([label, value]) => (
-                <div key={label} className="bg-white px-5 py-4">
-                  <dt className="text-xs font-bold text-[#C29C41]">{label}</dt>
-                  <dd className="mt-2 text-sm font-bold leading-6 text-[#334155]">{value}</dd>
+          {isBook && metadata.length > 0 && (
+            <section className="mt-10 rounded-lg border border-[#D9E3EE] bg-white">
+              <h2 className="border-b border-[#E2E8F0] px-5 py-4 text-lg font-bold text-[#003652]">معلومات إضافية</h2>
+              <dl className="grid gap-px overflow-hidden rounded-b-lg bg-[#E2E8F0] sm:grid-cols-2">
+                {metadata.map(([label, value]) => (
+                  <div key={label} className="bg-white px-5 py-4">
+                    <dt className="text-xs font-bold text-[#C29C41]">{label}</dt>
+                    <dd className="mt-2 text-sm font-bold leading-6 text-[#334155]">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          {!isBook && sections.length > 0 && (
+            <section className="mt-10 space-y-4">
+              {sections.map((section, index) => (
+                <div key={`${section.title}-${index}`} className="rounded-lg border border-[#D9E3EE] bg-white p-5">
+                  {section.title && (
+                    <h2 className="text-xl font-bold leading-8 text-[#003652]">{section.title}</h2>
+                  )}
+                  {section.body && (
+                    <p className="mt-3 whitespace-pre-line text-base leading-8 text-[#475569]">{section.body}</p>
+                  )}
                 </div>
               ))}
-            </dl>
-          </section>
+            </section>
+          )}
         </article>
       </section>
     </main>

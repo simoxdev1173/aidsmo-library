@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import {
+  HiOutlineAdjustmentsHorizontal,
   HiOutlineArrowLeftOnRectangle,
   HiOutlineBookOpen,
   HiOutlineHome,
-  HiOutlineRectangleGroup,
   HiOutlineSquares2X2,
 } from 'react-icons/hi2';
 import { logoutAction } from '@/lib/library-actions';
@@ -13,7 +13,7 @@ import { cn } from '@/utils';
 const navItems = [
   { href: '/dashboard', label: 'لوحة التحكم', icon: HiOutlineSquares2X2 },
   { href: '/dashboard/entries', label: 'المداخل', icon: HiOutlineBookOpen },
-  { href: '/dashboard/categories', label: 'التصنيفات', icon: HiOutlineRectangleGroup },
+  { href: '/dashboard/other', label: 'إعدادات أخرى', icon: HiOutlineAdjustmentsHorizontal },
   { href: '/', label: 'عرض الموقع', icon: HiOutlineHome },
 ];
 

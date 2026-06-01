@@ -1,21 +1,28 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   HiOutlineBookOpen,
   HiOutlineCheckCircle,
   HiOutlineClock,
-  HiOutlineRectangleGroup,
+  HiOutlineDocumentText,
 } from 'react-icons/hi2';
 import { getDashboardStats } from '@/lib/library-data';
 
 export const dynamic = 'force-dynamic';
 
+function categoryPath(category: { name: string; parent?: { name: string } | null }) {
+  return category.parent ? `${category.parent.name} / ${category.name}` : category.name;
+}
+
 export default async function DashboardPage() {
   const stats = await getDashboardStats();
   const cards = [
     { label: 'كل المداخل', value: stats.entries, icon: HiOutlineBookOpen },
+    { label: 'كتب وإصدارات', value: stats.bookEntries, icon: HiOutlineBookOpen },
+    { label: 'صفحات محتوى', value: stats.pageEntries, icon: HiOutlineDocumentText },
+    { label: 'أخرى', value: stats.otherEntries, icon: HiOutlineDocumentText },
     { label: 'منشورة', value: stats.publishedEntries, icon: HiOutlineCheckCircle },
     { label: 'مسودات', value: stats.draftEntries, icon: HiOutlineClock },
-    { label: 'تصنيفات', value: stats.categories, icon: HiOutlineRectangleGroup },
   ];
 
   return (
@@ -30,7 +37,7 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
         {cards.map((card) => {
           const Icon = card.icon;
 
@@ -61,9 +68,18 @@ export default async function DashboardPage() {
           {stats.recentEntries.length > 0 ? (
             stats.recentEntries.map((entry) => (
               <Link key={entry.id} href={`/dashboard/entries/${entry.id}`} className="grid gap-3 px-5 py-4 transition duration-200 hover:bg-[#F8FAFC] md:grid-cols-[1fr_180px_120px]">
-                <div>
-                  <p className="font-bold text-[#0A2540]">{entry.title}</p>
-                  <p className="mt-1 text-sm text-[#64748B]">{entry.category.name}</p>
+                <div className="flex items-center gap-3">
+                  <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
+                    {entry.coverImagePath ? (
+                      <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#0369A1]">PDF</div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="line-clamp-2 font-bold text-[#0A2540]">{entry.title}</p>
+                    <p className="mt-1 text-sm leading-6 text-[#64748B]">{categoryPath(entry.category)}</p>
+                  </div>
                 </div>
                 <p className="text-sm text-[#64748B]">{entry.author ?? 'بدون مؤلف'}</p>
                 <p className="text-sm font-bold text-[#0369A1]">{entry.status}</p>

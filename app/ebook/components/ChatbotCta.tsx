@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { LuArrowLeft, LuSparkles } from 'react-icons/lu';
+import { LuArrowLeft } from 'react-icons/lu';
 
 const ChatbotCTA = () => {
   return (

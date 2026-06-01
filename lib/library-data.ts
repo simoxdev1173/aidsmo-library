@@ -1,19 +1,54 @@
 import { prisma } from "@/lib/prisma";
 
+type CategoryTreeItem = {
+  id: string;
+  parentId: string | null;
+};
+
+function collectDescendantCategoryIds(categories: CategoryTreeItem[], rootId: string) {
+  const ids = new Set<string>([rootId]);
+  let changed = true;
+
+  while (changed) {
+    changed = false;
+
+    for (const category of categories) {
+      if (category.parentId && ids.has(category.parentId) && !ids.has(category.id)) {
+        ids.add(category.id);
+        changed = true;
+      }
+    }
+  }
+
+  return Array.from(ids);
+}
+
+async function getCategoryFilterIds(categoryId?: string) {
+  if (!categoryId) return undefined;
+
+  const categories = await prisma.category.findMany({
+    select: { id: true, parentId: true },
+  });
+
+  return collectDescendantCategoryIds(categories, categoryId);
+}
+
 export async function getDashboardStats() {
-  const [entries, publishedEntries, draftEntries, categories, recentEntries] = await Promise.all([
+  const [entries, publishedEntries, draftEntries, bookEntries, pageEntries, otherEntries, recentEntries] = await Promise.all([
     prisma.libraryEntry.count(),
     prisma.libraryEntry.count({ where: { status: "PUBLISHED" } }),
     prisma.libraryEntry.count({ where: { status: "DRAFT" } }),
-    prisma.category.count(),
+    prisma.libraryEntry.count({ where: { entryType: "BOOK" } }),
+    prisma.libraryEntry.count({ where: { entryType: "PAGE" } }),
+    prisma.libraryEntry.count({ where: { entryType: "OTHER" } }),
     prisma.libraryEntry.findMany({
       take: 5,
       orderBy: { updatedAt: "desc" },
-      include: { category: true },
+      include: { category: { include: { parent: true } } },
     }),
   ]);
 
-  return { entries, publishedEntries, draftEntries, categories, recentEntries };
+  return { entries, publishedEntries, draftEntries, bookEntries, pageEntries, otherEntries, recentEntries };
 }
 
 export async function getCategoryOptions() {
@@ -37,13 +72,16 @@ export async function getEntries(filters: {
   q?: string;
   categoryId?: string;
   status?: string;
+  entryType?: string;
 }) {
   const q = filters.q?.trim();
+  const categoryIds = await getCategoryFilterIds(filters.categoryId);
 
   return prisma.libraryEntry.findMany({
     where: {
-      ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
+      ...(categoryIds ? { categoryId: { in: categoryIds } } : {}),
       ...(filters.status ? { status: filters.status as "DRAFT" | "PUBLISHED" | "ARCHIVED" } : {}),
+      ...(filters.entryType ? { entryType: filters.entryType as "BOOK" | "PAGE" | "OTHER" } : {}),
       ...(q
         ? {
             OR: [
@@ -56,7 +94,7 @@ export async function getEntries(filters: {
         : {}),
     },
     orderBy: { updatedAt: "desc" },
-    include: { category: true },
+    include: { category: { include: { parent: true } } },
   });
 }
 
@@ -78,24 +116,12 @@ export async function getCategoryWithEntries(slug: string) {
     return null;
   }
 
-  const ids = new Set<string>([category.id]);
-  let changed = true;
-
-  while (changed) {
-    changed = false;
-
-    for (const item of categories) {
-      if (item.parentId && ids.has(item.parentId) && !ids.has(item.id)) {
-        ids.add(item.id);
-        changed = true;
-      }
-    }
-  }
+  const ids = collectDescendantCategoryIds(categories, category.id);
 
   const entries = await prisma.libraryEntry.findMany({
     where: {
       status: "PUBLISHED",
-      categoryId: { in: Array.from(ids) },
+      categoryId: { in: ids },
     },
     orderBy: [{ featured: "desc" }, { year: "desc" }, { title: "asc" }],
     include: { category: true },

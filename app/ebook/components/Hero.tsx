@@ -424,7 +424,7 @@ const Hero = () => {
              
              <div className='text-nowrap'>
                <span className=" text-[#E8C96A]">المكتبة الرقمية</span>
-              <span className=" text-white">الذكية</span>
+              <span className="text-white pr-3">الذكية</span>
               </div>
             </h1>
 

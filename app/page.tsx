@@ -16,12 +16,10 @@ export default function Home() {
           <Hero />
         </section>
         
-        <section className="border-y border-[#0369A1]/10 bg-[#F0F7FC]">
+        <section className="border-y border-[#C29C41]/20 bg-white">
           <LibraryStats />
         </section>
-        <section id="projects">
-          <Benefits />
-        </section>
+        <Benefits />
         
         <section id="about">
           <BrowseBySubject />

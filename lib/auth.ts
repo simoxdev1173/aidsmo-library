@@ -14,7 +14,27 @@ type SessionPayload = {
 };
 
 function getAuthSecret() {
-  return process.env.AUTH_SECRET ?? "development-only-auth-secret";
+  const secret = process.env.AUTH_SECRET;
+
+  if (process.env.NODE_ENV === "production" && !secret) {
+    throw new Error("AUTH_SECRET must be set in production.");
+  }
+
+  return secret ?? "development-only-auth-secret";
+}
+
+function getCookieSecure() {
+  const explicit = process.env.AUTH_COOKIE_SECURE?.toLowerCase();
+
+  if (explicit === "true") return true;
+  if (explicit === "false") return false;
+
+  const publicUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.COOLIFY_FQDN ?? process.env.COOLIFY_URL;
+  if (publicUrl) {
+    return publicUrl.startsWith("https://");
+  }
+
+  return process.env.NODE_ENV === "production";
 }
 
 function sign(value: string) {
@@ -86,7 +106,7 @@ export async function createAdminSession(admin: { id: string; email: string }) {
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: getCookieSecure(),
     path: "/",
     maxAge: SESSION_TTL_SECONDS,
   });

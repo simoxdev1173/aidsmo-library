@@ -46,7 +46,7 @@ const SectionRow = ({ sector }: { sector: Sector }) => {
   const onNext = () => scrollerRef.current && scrollByAmount(scrollerRef.current, -720);
 
   return (
-    <div className="corner-frame overflow-hidden border border-[#C29C41]/35 bg-[#F8FAFC]">
+    <div className="corner-frame overflow-hidden border border-[#C29C41]/35 bg-white/90 shadow-[0_18px_46px_rgba(10,37,64,0.08)]">
       <div className="brass-gradient h-1 w-full" />
 
       <div className="p-5 sm:p-8">
@@ -137,8 +137,20 @@ const SectionRow = ({ sector }: { sector: Sector }) => {
 
 const TrendingBooks = () => {
   return (
-    <section id="projects" className="bg-white py-20 md:py-28" dir="rtl">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="projects" className="relative overflow-hidden bg-[#F0F7FC] py-20 md:py-28" dir="rtl">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.075]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(10,37,64,0.78) 1px, transparent 1px), linear-gradient(90deg, rgba(10,37,64,0.78) 1px, transparent 1px)',
+          backgroundSize: '76px 76px',
+        }}
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(240,247,252,0.68)_0%,rgba(248,250,252,0.88)_42%,rgba(240,247,252,0.72)_100%)]" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[#C29C41]/25" aria-hidden />
+
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
             كنوز المكتبة الرقمية
@@ -146,7 +158,7 @@ const TrendingBooks = () => {
           <p className="mt-5 font-academic text-xl leading-relaxed text-[#475569]">
             مجموعات رائجة من مجلات علمية ودراسات متخصصة وتقارير تقنية، معروضة كرفوف معرفة قابلة للتصفح.
           </p>
-          <div className="mx-auto mt-7 max-w-md [--divider-bg:#FFFFFF]">
+          <div className="mx-auto mt-7 max-w-md [--divider-bg:#F0F7FC]">
             <div className="ornate-divider" aria-hidden />
           </div>
         </div>

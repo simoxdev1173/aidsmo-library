@@ -2,7 +2,15 @@ import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 
-const uploadRoot = path.join(process.cwd(), "public", "uploads");
+function getUploadRoot() {
+  const configured = process.env.UPLOAD_DIR;
+
+  if (!configured) {
+    return path.join(process.cwd(), "public", "uploads");
+  }
+
+  return path.isAbsolute(configured) ? configured : path.join(process.cwd(), configured);
+}
 
 const allowedMimeTypes = {
   covers: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
@@ -40,7 +48,7 @@ export async function saveUpload(file: File | null, folder: "covers" | "document
     throw new Error(folder === "covers" ? "Cover image must be 10MB or smaller." : "PDF must be 50MB or smaller.");
   }
 
-  const directory = path.join(uploadRoot, folder);
+  const directory = path.join(getUploadRoot(), folder);
   await mkdir(directory, { recursive: true });
 
   const filename = `${randomUUID()}.${extensionFor(file)}`;

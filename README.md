@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AIDSMO Digital Library
 
-## Getting Started
+Next.js digital library with an admin dashboard, PostgreSQL/Prisma, and local file uploads.
 
-First, run the development server:
+## Local Development
 
 ```bash
+npm install
+npm run prisma:migrate
+npm run prisma:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Required Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DB?schema=public"
+ADMIN_EMAIL="admin@example.com"
+ADMIN_PASSWORD="change-this-password"
+AUTH_SECRET="generate-a-long-random-string"
+NEXT_PUBLIC_APP_URL="https://your-domain.com"
+AUTH_COOKIE_SECURE="true"
+UPLOAD_DIR="public/uploads"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Use `AUTH_COOKIE_SECURE="true"` when the site is opened with `https://`.
+Use `AUTH_COOKIE_SECURE="false"` only when the public Coolify URL is plain `http://`.
 
-## Learn More
+`AUTH_SECRET` must stay the same between deployments. If it changes, existing dashboard sessions become invalid and the admin will be sent back to `/dashboard/login`.
 
-To learn more about Next.js, take a look at the following resources:
+## Coolify Deployment Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Set the app environment variables above in Coolify.
+2. Use the public URL you actually open in the browser for `NEXT_PUBLIC_APP_URL`.
+3. If Coolify serves the app over HTTPS, keep `AUTH_COOKIE_SECURE=true`.
+4. If you are testing over HTTP, set `AUTH_COOKIE_SECURE=false`.
+5. Run production migrations after deployment:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run prisma:deploy
+npm run prisma:seed
+```
 
-## Deploy on Vercel
+## Upload Persistence
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Dashboard uploads are saved under:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+/app/public/uploads
+```
+
+The database stores public paths like:
+
+```bash
+/uploads/covers/file.png
+/uploads/documents/file.pdf
+```
+
+In Coolify, add a persistent volume for the application:
+
+```bash
+/app/public/uploads
+```
+
+Without this volume, uploaded images and PDFs can disappear after a rebuild/redeploy because container filesystems are ephemeral.
+
+Local uploaded files are ignored by Git, so files uploaded on your local machine will not appear on the server automatically. Upload them again through the production dashboard, or copy them to the Coolify volume manually.

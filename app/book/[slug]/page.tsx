@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { HiOutlineBookmark, HiOutlineEye, HiOutlineRectangleGroup } from 'react-icons/hi2';
 import { getPublishedEntryBySlug } from '@/lib/library-data';
+import { categoryPath } from '@/lib/library-labels';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,10 +42,12 @@ export default async function BookPage({
 
   const isBook = entry.entryType === 'BOOK';
   const sections = getContentSections(entry.contentSections);
+  const description = entry.description?.trim();
   const metadata = [
     ['الناشر', entry.publisher],
     ['المؤلف', entry.author],
-    ['تصنيف', entry.category.parent ? `${entry.category.parent.name} / ${entry.category.name}` : entry.category.name],
+    ['تصنيف', categoryPath(entry.category)],
+    ['الوسم', entry.tag],
     ['سنة', entry.year?.toString()],
     ['اللغة', entry.language],
     ['عدد الصفحات', entry.pageCount?.toString()],
@@ -57,7 +60,7 @@ export default async function BookPage({
           <div className="overflow-hidden rounded-lg border border-[#C29C41]/35 bg-white shadow-[0_22px_60px_rgba(10,37,64,0.10)]">
             <div className="relative aspect-[3/4] bg-[#F0F7FC]">
               {entry.coverImagePath ? (
-                <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" priority />
+                <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" priority unoptimized />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-8 text-center text-2xl font-bold leading-relaxed text-[#0369A1]">
                   {entry.title}
@@ -77,20 +80,22 @@ export default async function BookPage({
             {entry.title}
           </h1>
 
-          <p className="mt-6 max-w-4xl text-lg leading-9 text-[#475569]">
-            {entry.description}
-          </p>
+          {description && (
+            <p className="mt-6 max-w-4xl text-lg leading-9 text-[#475569]">
+              {description}
+            </p>
+          )}
 
           <div className="mt-8 flex flex-wrap gap-3">
             {entry.filePath ? (
               <a href={entry.filePath} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center gap-2 rounded-md bg-[#0369A1] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#003652]">
                 <HiOutlineEye className="h-5 w-5" />
-                اطِّلاع
+                اطّلاع
               </a>
             ) : (
               <button type="button" disabled className="inline-flex h-12 items-center gap-2 rounded-md bg-[#94A3B8] px-6 text-sm font-bold text-white">
                 <HiOutlineEye className="h-5 w-5" />
-                اطِّلاع
+                اطّلاع
               </button>
             )}
             <button type="button" className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-md border border-[#C29C41]/60 bg-white px-6 text-sm font-bold text-[#003652] transition duration-200 hover:bg-[#F0F7FC]">

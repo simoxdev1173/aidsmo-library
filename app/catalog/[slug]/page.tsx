@@ -42,7 +42,7 @@ export default async function CatalogPage({
                 <div className="grid grid-cols-[120px_1fr] gap-4 p-4">
                   <div className="relative aspect-[3/4] overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
                     {entry.coverImagePath ? (
-                      <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover transition duration-300 group-hover:scale-[1.03]" />
+                      <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover transition duration-300 group-hover:scale-[1.03]" unoptimized />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center px-3 text-center text-sm font-bold leading-6 text-[#0369A1]">
                         {entry.year ?? 'AIDSMO'}
@@ -50,11 +50,13 @@ export default async function CatalogPage({
                     )}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#C29C41]">{entry.category.name}</p>
+                    <p className="text-xs font-bold text-[#C29C41]">{entry.tag ?? entry.category.name}</p>
                     <h2 className="mt-2 line-clamp-3 text-lg font-bold leading-7 text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
                       {entry.title}
                     </h2>
-                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#64748B]">{entry.description}</p>
+                    {entry.description && (
+                      <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#64748B]">{entry.description}</p>
+                    )}
                     <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#0369A1]">
                       عرض التفاصيل
                       <HiOutlineArrowLeft className="h-4 w-4" />

@@ -11,10 +11,10 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 const initialDescription =
-  "يهدف النظام الاسترشادي التعديني للدول العربية إلى توفير إطار مرجعي موحّد يساعد الحكومات على تطوير تشريعات حديثة ومتناغمة لقطاع التعدين، بما يعزز الشفافية والاستثمار المسؤول. انطلق إعداد النظام من دراسة استقصائية شاملة للأنظمة القائمة وتحليل فجواتها، إضافة إلى مقارنة دولية لبناء رؤية عربية مشتركة. ويتناول النظام مراحل النشاط التعديني من الاستطلاع إلى الاستغلال، ويحدّد الحقوق والالتزامات، وآليات منح التراخيص، والضوابط البيئية والاقتصادية والاجتماعية، مع التركيز على حماية الموارد والبيئة وحقوق المجتمعات. ويوفر إطاراً قانونياً مرناً يعزز التكامل الإقليمي، ويرفع جاذبية القطاع للاستثمار، ويسهم في تنمية اقتصادات الدول العربية بشكل مستدام.";
+  "يهدف النظام الاسترشادي التعديني للدول العربية إلى توفير إطار مرجعي موحد يساعد الحكومات على تطوير تشريعات حديثة ومتناغمة لقطاع التعدين، بما يعزز الشفافية والاستثمار المسؤول. انطلق إعداد النظام من دراسة استقصائية شاملة للأنظمة القائمة وتحليل فجواتها، إضافة إلى مقارنة دولية لبناء رؤية عربية مشتركة. ويتناول النظام مراحل النشاط التعديني من الاستطلاع إلى الاستغلال، ويحدد الحقوق والالتزامات، وآليات منح التراخيص، والضوابط البيئية والاقتصادية والاجتماعية، مع التركيز على حماية الموارد والبيئة وحقوق المجتمعات. ويوفر إطارا قانونيا مرنا يعزز التكامل الإقليمي، ويرفع جاذبية القطاع للاستثمار، ويسهم في تنمية اقتصادات الدول العربية بشكل مستدام.";
 
 const categories = [
-  { name: "الصناعة", slug: "industry", order: 10, navHref: "/industry/advisory-committee" },
+  { name: "الصناعة", slug: "industry", order: 10, navHref: "/industry/integration-strategy" },
   { name: "التقييس", slug: "standardization", order: 20, navHref: "/standardization/studies" },
   { name: "التعدين", slug: "mining", order: 30, navHref: "/catalog/mining" },
   { name: "المعلومات الصناعية", slug: "industrial-info", order: 40, navHref: "/info/statistics" },
@@ -23,12 +23,12 @@ const categories = [
 ];
 
 const children = [
-  { parentSlug: "industry", name: "اللجنة الاستشارية للتنمية الصناعية", slug: "industry-advisory-committee", order: 11, navHref: "/industry/advisory-committee" },
-  { parentSlug: "industry", name: "إستراتيجية التكامل الصناعي", slug: "industry-integration-strategy", order: 12, navHref: "/industry/integration-strategy" },
-  { parentSlug: "industry", name: "لجنة تنسيق مراكز البحوث الصناعية", slug: "industry-research-coordination", order: 13, navHref: "/industry/research-coordination" },
-  { parentSlug: "industry", name: "الصناعات الصغيرة والمتوسطة", slug: "industry-sme", order: 14, navHref: "/industry/sme" },
-  { parentSlug: "industry", name: "فعاليات وأنشطة", slug: "industry-events", order: 15, navHref: "/industry/events" },
-  { parentSlug: "industry", name: "الدراسات والأدلة", slug: "industry-studies", order: 16, navHref: "/industry/studies" },
+  { parentSlug: "industry", name: "إستراتيجيات", slug: "industry-integration-strategy", order: 11, navHref: "/industry/integration-strategy" },
+  { parentSlug: "industry", name: "الصناعات الصغيرة والمتوسطة", slug: "industry-sme", order: 12, navHref: "/industry/sme" },
+  { parentSlug: "industry", name: "فعاليات وأنشطة", slug: "industry-events", order: 13, navHref: "/industry/events" },
+  { parentSlug: "industry", name: "الدراسات والأدلة", slug: "industry-studies", order: 14, navHref: "/industry/studies" },
+  { parentSlug: "industry-studies", name: "الدراسات", slug: "industry-studies-studies", order: 141, navHref: "/industry/studies/studies" },
+  { parentSlug: "industry-studies", name: "الأدلة", slug: "industry-studies-guides", order: 142, navHref: "/industry/studies/guides" },
   { parentSlug: "standardization", name: "دراسات", slug: "standardization-studies", order: 21, navHref: "/standardization/studies" },
   { parentSlug: "standardization", name: "معاجم", slug: "standardization-glossaries", order: 22, navHref: "/standardization/glossaries" },
   { parentSlug: "standardization", name: "أدلة", slug: "standardization-guides", order: 23, navHref: "/standardization/guides" },
@@ -44,9 +44,9 @@ const children = [
   { parentSlug: "industrial-statistics", name: "نشرة الإحصاءات الصناعية", slug: "statistics-bulletin", order: 403, navHref: "/info/statistics/bulletin" },
   { parentSlug: "industrial-statistics", name: "الانفوجرافيك", slug: "infographics", order: 404, navHref: "/info/statistics/infographics" },
   { parentSlug: "industrial-info", name: "مؤتمرات وندوات", slug: "conferences", order: 41, navHref: "/info/conferences" },
-  { parentSlug: "industrial-info", name: "الإصدارات", slug: "publications", order: 44, navHref: "/info/publications" },
   { parentSlug: "industrial-info", name: "مجلة التنمية الصناعية", slug: "industrial-development-magazine", order: 42, navHref: "/info/magazine" },
   { parentSlug: "industrial-info", name: "النشرة الدورية", slug: "newsletter", order: 43, navHref: "/info/newsletter" },
+  { parentSlug: "industrial-info", name: "الإصدارات", slug: "publications", order: 44, navHref: "/info/publications" },
   { parentSlug: "training", name: "حول المعهد", slug: "training-about", order: 51, navHref: "/training/about" },
   { parentSlug: "training", name: "الخطة التدريبية", slug: "training-plan", order: 52, navHref: "/training/plan" },
   { parentSlug: "training", name: "دورات تدريبية", slug: "training-courses", order: 53, navHref: "/training/courses" },
@@ -70,6 +70,11 @@ const children = [
   { parentSlug: "archive-league", name: "اللوائح والأنظمة", slug: "archive-league-regulations", order: 625, navHref: "/archive/league/regulations" },
 ];
 
+const hiddenCategorySlugs = [
+  "industry-advisory-committee",
+  "industry-research-coordination",
+];
+
 async function seedAdmin() {
   const email = (process.env.ADMIN_EMAIL ?? "admin@aidsmo.local").trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD ?? "ChangeMe123!";
@@ -90,8 +95,8 @@ async function seedCategories() {
   for (const category of categories) {
     await prisma.category.upsert({
       where: { slug: category.slug },
-      update: category,
-      create: category,
+      update: { ...category, isNavVisible: true },
+      create: { ...category, isNavVisible: true },
     });
   }
 
@@ -108,6 +113,7 @@ async function seedCategories() {
         order: child.order,
         navHref: child.navHref,
         parentId: parent.id,
+        isNavVisible: true,
       },
       create: {
         name: child.name,
@@ -115,9 +121,15 @@ async function seedCategories() {
         order: child.order,
         navHref: child.navHref,
         parentId: parent.id,
+        isNavVisible: true,
       },
     });
   }
+
+  await prisma.category.updateMany({
+    where: { slug: { in: hiddenCategorySlugs } },
+    data: { isNavVisible: false },
+  });
 }
 
 async function seedEntries() {
@@ -129,11 +141,12 @@ async function seedEntries() {
   await prisma.libraryEntry.upsert({
     where: { slug: "النظام-الاسترشادي-التعديني-للدول-العربية" },
     update: {
-      title: "الـنـظـام االسـترشـادي التعديني للدول العربية",
+      title: "النظام الاسترشادي التعديني للدول العربية",
       entryType: "BOOK",
       description: initialDescription,
       notes: null,
       contentSections: [],
+      tag: "نظام استرشادي",
       publisher: "المنظمة العربية للتنمية الصناعية والتقييس والتعدين",
       author: "إدارة الثروة المعدنية",
       categoryId: category.id,
@@ -145,12 +158,13 @@ async function seedEntries() {
       publishedAt: new Date("2026-01-01T00:00:00.000Z"),
     },
     create: {
-      title: "الـنـظـام االسـترشـادي التعديني للدول العربية",
+      title: "النظام الاسترشادي التعديني للدول العربية",
       slug: "النظام-الاسترشادي-التعديني-للدول-العربية",
       entryType: "BOOK",
       description: initialDescription,
       notes: null,
       contentSections: [],
+      tag: "نظام استرشادي",
       publisher: "المنظمة العربية للتنمية الصناعية والتقييس والتعدين",
       author: "إدارة الثروة المعدنية",
       categoryId: category.id,

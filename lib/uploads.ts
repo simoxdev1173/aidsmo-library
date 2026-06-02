@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 
-function getUploadRoot() {
+export function getUploadRoot() {
   const configured = process.env.UPLOAD_DIR;
 
   if (!configured) {

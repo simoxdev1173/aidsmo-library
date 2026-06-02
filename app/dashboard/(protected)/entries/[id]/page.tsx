@@ -44,7 +44,7 @@ export default async function EditEntryPage({
       )}
       {query.error && (
         <Notice tone="error" title="تعذر حفظ المدخل">
-          {query.error === 'missing' ? 'العنوان والوصف والتصنيف مطلوبة.' : decodeURIComponent(query.error)}
+          {query.error === 'missing' ? 'العنوان والتصنيف مطلوبان.' : decodeURIComponent(query.error)}
         </Notice>
       )}
 

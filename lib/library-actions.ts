@@ -25,25 +25,6 @@ function optionalInt(formData: FormData, key: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function entryType(formData: FormData): "BOOK" | "PAGE" | "OTHER" {
-  const value = text(formData, "entryType");
-  if (value === "PAGE" || value === "OTHER") return value;
-  return "BOOK";
-}
-
-function contentSections(formData: FormData) {
-  const titles = formData
-    .getAll("sectionTitle")
-    .map((value) => (typeof value === "string" ? value.trim() : ""));
-  const bodies = formData
-    .getAll("sectionBody")
-    .map((value) => (typeof value === "string" ? value.trim() : ""));
-
-  return titles
-    .map((title, index) => ({ title, body: bodies[index] ?? "" }))
-    .filter((section) => section.title.length > 0 || section.body.length > 0);
-}
-
 function errorUrl(path: string, error: string) {
   return `${path}?error=${encodeURIComponent(error)}`;
 }
@@ -119,9 +100,8 @@ export async function createEntryAction(formData: FormData) {
 
   const title = text(formData, "title");
   const categoryId = text(formData, "categoryId");
-  const description = text(formData, "description");
 
-  if (!title || !categoryId || !description) {
+  if (!title || !categoryId) {
     redirect("/dashboard/entries/new?error=missing");
   }
 
@@ -135,10 +115,11 @@ export async function createEntryAction(formData: FormData) {
       data: {
         title,
         slug,
-        entryType: entryType(formData),
-        description,
+        entryType: "BOOK",
+        description: optionalText(formData, "description"),
         notes: optionalText(formData, "notes"),
-        contentSections: contentSections(formData),
+        contentSections: [],
+        tag: optionalText(formData, "tag"),
         categoryId,
         coverImagePath,
         filePath,
@@ -168,9 +149,8 @@ export async function updateEntryAction(id: string, formData: FormData) {
 
   const title = text(formData, "title");
   const categoryId = text(formData, "categoryId");
-  const description = text(formData, "description");
 
-  if (!title || !categoryId || !description) {
+  if (!title || !categoryId) {
     redirect(`/dashboard/entries/${id}?error=missing`);
   }
 
@@ -192,10 +172,10 @@ export async function updateEntryAction(id: string, formData: FormData) {
       data: {
         title,
         slug,
-        entryType: entryType(formData),
-        description,
+        entryType: "BOOK",
+        description: existing.description,
         notes: optionalText(formData, "notes"),
-        contentSections: contentSections(formData),
+        tag: optionalText(formData, "tag"),
         categoryId,
         coverImagePath,
         filePath,

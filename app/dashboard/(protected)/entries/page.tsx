@@ -3,17 +3,14 @@ import Link from 'next/link';
 import { HiOutlineMagnifyingGlass, HiOutlinePencilSquare, HiOutlinePlus } from 'react-icons/hi2';
 import { Notice } from '@/app/dashboard/_components/FormFeedback';
 import { getCategoryOptions, getEntries } from '@/lib/library-data';
+import { categoryPath, statusLabel } from '@/lib/library-labels';
 
 export const dynamic = 'force-dynamic';
-
-function categoryPath(category: { name: string; parent?: { name: string } | null }) {
-  return category.parent ? `${category.parent.name} / ${category.name}` : category.name;
-}
 
 export default async function EntriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; categoryId?: string; status?: string; entryType?: string; saved?: string }>;
+  searchParams: Promise<{ q?: string; categoryId?: string; status?: string; saved?: string }>;
 }) {
   const filters = await searchParams;
   const [entries, categories] = await Promise.all([
@@ -34,13 +31,13 @@ export default async function EntriesPage({
         </Link>
       </div>
 
-      <form className="grid gap-3 rounded-lg border border-[#D9E3EE] bg-white p-4 lg:grid-cols-[1fr_210px_160px_160px_auto]">
+      <form className="grid gap-3 rounded-lg border border-[#D9E3EE] bg-white p-4 lg:grid-cols-[1fr_240px_170px_auto]">
         <label className="relative">
           <span className="sr-only">بحث</span>
           <input
             name="q"
             defaultValue={filters.q}
-            placeholder="بحث بالعنوان أو المؤلف أو الناشر"
+            placeholder="بحث بالعنوان أو المؤلف أو الناشر أو الوسم"
             className="h-11 w-full rounded-md border border-[#CBD5E1] bg-white pr-10 pl-3 text-sm text-[#0A2540] outline-none transition duration-200 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20"
           />
           <HiOutlineMagnifyingGlass className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#94A3B8]" />
@@ -49,7 +46,7 @@ export default async function EntriesPage({
           <option value="">كل التصنيفات</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
-              {category.parent ? `${category.parent.name} / ${category.name}` : category.name}
+              {categoryPath(category)}
             </option>
           ))}
         </select>
@@ -58,12 +55,6 @@ export default async function EntriesPage({
           <option value="DRAFT">مسودة</option>
           <option value="PUBLISHED">منشور</option>
           <option value="ARCHIVED">مؤرشف</option>
-        </select>
-        <select name="entryType" defaultValue={filters.entryType ?? ''} className="h-11 rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#0A2540] outline-none focus:border-[#0369A1]">
-          <option value="">كل الأنواع</option>
-          <option value="BOOK">كتاب / إصدار</option>
-          <option value="PAGE">صفحة محتوى</option>
-          <option value="OTHER">أخرى</option>
         </select>
         <button type="submit" className="h-11 cursor-pointer rounded-md border border-[#0369A1] bg-[#F0F7FC] px-5 text-sm font-bold text-[#0369A1] transition duration-200 hover:bg-[#0369A1] hover:text-white">
           تطبيق
@@ -83,7 +74,7 @@ export default async function EntriesPage({
             <thead className="bg-[#F8FAFC] text-xs font-bold text-[#64748B]">
               <tr>
                 <th className="px-4 py-3">الإصدار</th>
-                <th className="px-4 py-3">النوع</th>
+                <th className="px-4 py-3">الوسم</th>
                 <th className="px-4 py-3">التصنيف</th>
                 <th className="px-4 py-3">السنة</th>
                 <th className="px-4 py-3">الحالة</th>
@@ -98,7 +89,7 @@ export default async function EntriesPage({
                     <div className="flex items-center gap-3">
                       <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
                         {entry.coverImagePath ? (
-                          <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" />
+                          <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" unoptimized />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#0369A1]">PDF</div>
                         )}
@@ -110,14 +101,16 @@ export default async function EntriesPage({
                     </div>
                   </td>
                   <td className="px-4 py-4">
-                    <span className="rounded-full bg-[#FFF8E1] px-3 py-1 text-xs font-bold text-[#8A6A1D]">
-                      {entry.entryType === 'PAGE' ? 'صفحة' : entry.entryType === 'OTHER' ? 'أخرى' : 'كتاب'}
-                    </span>
+                    {entry.tag ? (
+                      <span className="rounded-full bg-[#FFF8E1] px-3 py-1 text-xs font-bold text-[#8A6A1D]">{entry.tag}</span>
+                    ) : (
+                      <span className="text-sm text-[#94A3B8]">-</span>
+                    )}
                   </td>
                   <td className="px-4 py-4 text-sm font-semibold leading-6 text-[#475569]">{categoryPath(entry.category)}</td>
                   <td className="px-4 py-4 text-sm text-[#475569]">{entry.year ?? '-'}</td>
                   <td className="px-4 py-4">
-                    <span className="rounded-full bg-[#F0F7FC] px-3 py-1 text-xs font-bold text-[#0369A1]">{entry.status}</span>
+                    <span className="rounded-full bg-[#F0F7FC] px-3 py-1 text-xs font-bold text-[#0369A1]">{statusLabel(entry.status)}</span>
                   </td>
                   <td className="px-4 py-4 text-sm text-[#64748B]">{entry.updatedAt.toLocaleDateString('ar-MA')}</td>
                   <td className="px-4 py-4">

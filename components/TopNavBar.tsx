@@ -25,12 +25,13 @@ const menuItemsData: MenuItem[] = [
     id: 'industry',
     label: 'الصناعة',
     children: [
-      { label: 'اللجنة الاستشارية للتنمية الصناعية', href: '/industry/advisory-committee' },
-      { label: 'إستراتيجية التكامل الصناعي', href: '/industry/integration-strategy' },
-      { label: 'لجنة تنسيق مراكز البحوث الصناعية', href: '/industry/research-coordination' },
+      { label: 'إستراتيجيات', href: '/industry/integration-strategy' },
       { label: 'الصناعات الصغيرة والمتوسطة', href: '/industry/sme' },
       { label: 'فعاليات وأنشطة', href: '/industry/events' },
-      { label: 'الدراسات والأدلة', href: '/industry/studies' },
+      { label: 'الدراسات والأدلة', href: '/industry/studies' , subItems: [
+           { label: 'الدراسات', href: '/industry/studies/studies' },
+        { label: 'الأدلة', href: '/industry/studies/guides' },
+        ],  },
     ],
   },
   {

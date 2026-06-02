@@ -7,22 +7,19 @@ import {
   HiOutlineDocumentText,
 } from 'react-icons/hi2';
 import { getDashboardStats } from '@/lib/library-data';
+import { categoryPath, statusLabel } from '@/lib/library-labels';
 
 export const dynamic = 'force-dynamic';
-
-function categoryPath(category: { name: string; parent?: { name: string } | null }) {
-  return category.parent ? `${category.parent.name} / ${category.name}` : category.name;
-}
 
 export default async function DashboardPage() {
   const stats = await getDashboardStats();
   const cards = [
     { label: 'كل المداخل', value: stats.entries, icon: HiOutlineBookOpen },
-    { label: 'كتب وإصدارات', value: stats.bookEntries, icon: HiOutlineBookOpen },
-    { label: 'صفحات محتوى', value: stats.pageEntries, icon: HiOutlineDocumentText },
-    { label: 'أخرى', value: stats.otherEntries, icon: HiOutlineDocumentText },
     { label: 'منشورة', value: stats.publishedEntries, icon: HiOutlineCheckCircle },
     { label: 'مسودات', value: stats.draftEntries, icon: HiOutlineClock },
+    { label: 'مؤرشفة', value: stats.archivedEntries, icon: HiOutlineDocumentText },
+    { label: 'ملفات PDF', value: stats.documentEntries, icon: HiOutlineDocumentText },
+    { label: 'أغلفة', value: stats.coverEntries, icon: HiOutlineBookOpen },
   ];
 
   return (
@@ -71,7 +68,7 @@ export default async function DashboardPage() {
                 <div className="flex items-center gap-3">
                   <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
                     {entry.coverImagePath ? (
-                      <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" />
+                      <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" unoptimized />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#0369A1]">PDF</div>
                     )}
@@ -82,7 +79,7 @@ export default async function DashboardPage() {
                   </div>
                 </div>
                 <p className="text-sm text-[#64748B]">{entry.author ?? 'بدون مؤلف'}</p>
-                <p className="text-sm font-bold text-[#0369A1]">{entry.status}</p>
+                <p className="text-sm font-bold text-[#0369A1]">{statusLabel(entry.status)}</p>
               </Link>
             ))
           ) : (

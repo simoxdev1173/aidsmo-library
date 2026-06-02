@@ -52,9 +52,10 @@ model LibraryEntry {
   entryType      EntryType   @default(BOOK)
   title          String
   slug           String      @unique
-  description    String      @db.Text
+  description    String?     @db.Text
   notes          String?     @db.Text
   contentSections Json       @default("[]")
+  tag            String?
   coverImagePath String?
   filePath       String?
   publisher      String?

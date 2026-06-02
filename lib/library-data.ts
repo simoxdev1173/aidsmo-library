@@ -34,28 +34,29 @@ async function getCategoryFilterIds(categoryId?: string) {
 }
 
 export async function getDashboardStats() {
-  const [entries, publishedEntries, draftEntries, bookEntries, pageEntries, otherEntries, recentEntries] = await Promise.all([
+  const [entries, publishedEntries, draftEntries, archivedEntries, documentEntries, coverEntries, recentEntries] = await Promise.all([
     prisma.libraryEntry.count(),
     prisma.libraryEntry.count({ where: { status: "PUBLISHED" } }),
     prisma.libraryEntry.count({ where: { status: "DRAFT" } }),
-    prisma.libraryEntry.count({ where: { entryType: "BOOK" } }),
-    prisma.libraryEntry.count({ where: { entryType: "PAGE" } }),
-    prisma.libraryEntry.count({ where: { entryType: "OTHER" } }),
+    prisma.libraryEntry.count({ where: { status: "ARCHIVED" } }),
+    prisma.libraryEntry.count({ where: { filePath: { not: null } } }),
+    prisma.libraryEntry.count({ where: { coverImagePath: { not: null } } }),
     prisma.libraryEntry.findMany({
       take: 5,
       orderBy: { updatedAt: "desc" },
-      include: { category: { include: { parent: true } } },
+      include: { category: { include: { parent: { include: { parent: true } } } } },
     }),
   ]);
 
-  return { entries, publishedEntries, draftEntries, bookEntries, pageEntries, otherEntries, recentEntries };
+  return { entries, publishedEntries, draftEntries, archivedEntries, documentEntries, coverEntries, recentEntries };
 }
 
 export async function getCategoryOptions() {
   return prisma.category.findMany({
+    where: { isNavVisible: true },
     orderBy: [{ order: "asc" }, { name: "asc" }],
     include: {
-      parent: true,
+      parent: { include: { parent: true } },
       _count: { select: { entries: true, children: true } },
     },
   });
@@ -72,7 +73,6 @@ export async function getEntries(filters: {
   q?: string;
   categoryId?: string;
   status?: string;
-  entryType?: string;
 }) {
   const q = filters.q?.trim();
   const categoryIds = await getCategoryFilterIds(filters.categoryId);
@@ -81,12 +81,12 @@ export async function getEntries(filters: {
     where: {
       ...(categoryIds ? { categoryId: { in: categoryIds } } : {}),
       ...(filters.status ? { status: filters.status as "DRAFT" | "PUBLISHED" | "ARCHIVED" } : {}),
-      ...(filters.entryType ? { entryType: filters.entryType as "BOOK" | "PAGE" | "OTHER" } : {}),
       ...(q
         ? {
             OR: [
               { title: { contains: q, mode: "insensitive" } },
               { description: { contains: q, mode: "insensitive" } },
+              { tag: { contains: q, mode: "insensitive" } },
               { author: { contains: q, mode: "insensitive" } },
               { publisher: { contains: q, mode: "insensitive" } },
             ],
@@ -94,14 +94,14 @@ export async function getEntries(filters: {
         : {}),
     },
     orderBy: { updatedAt: "desc" },
-    include: { category: { include: { parent: true } } },
+    include: { category: { include: { parent: { include: { parent: true } } } } },
   });
 }
 
 export async function getPublishedEntryBySlug(slug: string) {
   return prisma.libraryEntry.findFirst({
     where: { slug, status: "PUBLISHED" },
-    include: { category: { include: { parent: true } } },
+    include: { category: { include: { parent: { include: { parent: true } } } } },
   });
 }
 
@@ -124,7 +124,7 @@ export async function getCategoryWithEntries(slug: string) {
       categoryId: { in: ids },
     },
     orderBy: [{ featured: "desc" }, { year: "desc" }, { title: "asc" }],
-    include: { category: true },
+    include: { category: { include: { parent: { include: { parent: true } } } } },
   });
 
   return { category, entries };

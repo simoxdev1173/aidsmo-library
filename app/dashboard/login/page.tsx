@@ -28,7 +28,7 @@ export default async function LoginPage({
             لوحة إدارة المكتبة الرقمية
           </h1>
           <p className="mt-4 max-w-xl text-lg leading-relaxed text-[#475569]">
-            إدارة الإصدارات والتصنيفات المرتبطة بالملاحة العامة للموقع.
+            إدارة الإصدارات و المداخل خاصة للموقع.
           </p>
         </section>
 

@@ -2,7 +2,6 @@ import Hero from "./ebook/components/Hero"
 import Benefits from "./ebook/components/TrendingSection"
 import Courses from "./ebook/components/Courses"
 import SubscribeToMail from "./ebook/components/SubscribeToMail"
-import BrowseBySubject from "./ebook/components/BrowseCategory"
 import LatestPublications from "./ebook/components/LatestPublications"
 import LibraryStats from "./ebook/components/LibraryStats"
 import ChatbotCTA from "./ebook/components/ChatbotCta"
@@ -20,10 +19,6 @@ export default function Home() {
           <LibraryStats />
         </section>
         <Benefits />
-        
-        <section id="about">
-          <BrowseBySubject />
-        </section>
         
         <section id="contact">
           <Courses />

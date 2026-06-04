@@ -2,99 +2,179 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { LuArrowLeft, LuCalendar } from 'react-icons/lu';
+import {
+  ArrowLeft,
+  BookOpenCheck,
+  Bot,
+  Building2,
+  Factory,
+  LibraryBig,
+  Pickaxe,
+  Scale,
+  Search,
+} from 'lucide-react';
 
-type NewsItem = {
+type ServiceCard = {
   title: string;
-  date: string;
-  excerpt: string;
+  description: string;
   href: string;
+  action: string;
+  Icon: typeof Search;
 };
 
-const news: NewsItem[] = [
+type SectorLink = {
+  label: string;
+  href: string;
+  Icon: typeof Factory;
+};
+
+const services: ServiceCard[] = [
   {
-    title: 'إطلاق إصدارات جديدة في مجال عمل المنظمة: صناعة، تقييس، تعدين',
-    date: '05 فبراير 2026',
-    excerpt:
-      'تعرّف على أحدث الإصدارات والدراسات الفنية المتخصصة التي أضافتها المكتبة الرقمية إلى مجموعتها في مجالات الصناعة والتقييس والتعدين.',
-    href: '/news/standardization-section',
+    title: 'مساعدة بحثية فورية',
+    description: 'انتقل إلى المساعد الذكي لطرح أسئلة حول الإصدارات أو تضييق نطاق البحث داخل المكتبة.',
+    href: '#chatbot',
+    action: 'اسأل المساعد',
+    Icon: Bot,
   },
   {
-    title: 'نشرات دورية: أهم الإصدارات والتحليلات الصناعية',
-    date: '28 يناير 2026',
-    excerpt:
-      'اشترك لتصلك أحدث التقارير والدراسات المختارة بعناية في الصناعة والتعدين والتقييس مباشرة إلى بريدك.',
-    href: '/news/newsletter',
+    title: 'أحدث الإصدارات',
+    description: 'تابع المواد التي تمت إضافتها حديثا في مجالات الصناعة والتقييس والتعدين.',
+    href: '#latest-pub',
+    action: 'عرض الإصدارات',
+    Icon: BookOpenCheck,
   },
+  {
+    title: 'مدخل القطاعات',
+    description: 'ابدأ من المجال المناسب ثم انتقل مباشرة إلى الرف الرقمي الخاص به.',
+    href: '/catalog/industry',
+    action: 'ابدأ التصفح',
+    Icon: LibraryBig,
+  },
+];
+
+const sectors: SectorLink[] = [
+  { label: 'الصناعة', href: '/catalog/industry', Icon: Factory },
+  { label: 'التقييس', href: '/catalog/standardization', Icon: Scale },
+  { label: 'التعدين', href: '/catalog/mining', Icon: Pickaxe },
+  { label: 'المعلومات الصناعية', href: '/catalog/industrial-info', Icon: Building2 },
 ];
 
 const LibraryNews = () => {
   return (
     <section
-      id="library-news"
-      className="bg-white py-20 md:py-28"
-      aria-label="أخبار المكتبة"
+      id="library-services"
+      className="relative overflow-hidden bg-[#F8FAFC] py-20 md:py-28"
+      aria-label="خدمات المكتبة الرقمية"
       dir="rtl"
     >
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-5 lg:gap-14">
-          <div className="lg:col-span-2">
-            <div className="group corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F8FAFC] p-3">
-              <div className="relative aspect-[4/5] overflow-hidden arch-top">
-                <Image
-                  alt="أخبار المكتبة الرقمية"
-                  src="/newsCover.png"
-                  fill
-                  className="sepia-reveal object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/45 via-transparent to-transparent" />
-              </div>
-            </div>
-          </div>
+      <Image
+        src="/background-01.png"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover opacity-[0.42] contrast-110 saturate-125"
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(248,250,252,0.84)_0%,rgba(248,250,252,0.68)_42%,rgba(255,255,255,0.42)_100%)]" aria-hidden />
+      <div className="absolute inset-0 bg-white/10" aria-hidden />
 
-          <div className="lg:col-span-3">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-stretch gap-10 lg:grid-cols-5 lg:gap-14" dir="ltr">
+         
+
+          <div className="flex h-full flex-col justify-center lg:col-span-3 lg:col-start-3 lg:row-start-1" dir="rtl">
             <div>
-              <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-4
-              xl">
-                آخر المستجدات داخل المكتبة الرقمية
+
+              <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
+                خدمات المكتبة الرقمية
               </h2>
               <p className="mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#475569]">
-                أخبار وإعلانات مختارة تساعدك على متابعة الإصدارات الجديدة والمواد المعرفية فور صدورها.
+                مسارات عملية تساعدك على الوصول إلى الإصدارات، اختيار مجال البحث، أو طلب إرشاد سريع من المساعد الذكي.
               </p>
             </div>
 
-            <div className="mt-8 space-y-5">
-              {news.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group corner-card block border border-[#C29C41]/30 bg-[#F8FAFC] p-6 transition duration-300 hover:border-[#C29C41]/60 hover:shadow-[0_14px_34px_rgba(10,37,64,0.1)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-white"
-                >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0">
-                      <span className="text-lg text-[#C29C41]" aria-hidden>✶</span>
-                      <h3 className="mt-2 text-xl font-bold leading-relaxed text-[#003652] transition duration-300 group-hover:text-[#C29C41]">
-                        {item.title}
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {services.map((service) => {
+                const Icon = service.Icon;
+
+                return (
+                  <Link
+                    key={service.title}
+                    href={service.href}
+                    className="group corner-card flex min-h-[15rem] flex-col justify-between border border-[#C29C41]/30 bg-[#F8FAFC] p-5 text-right transition duration-300 hover:-translate-y-0.5 hover:border-[#C29C41]/65 hover:shadow-[0_18px_36px_rgba(10,37,64,0.1)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-white"
+                  >
+                    <div>
+                      <span className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-white text-[#9A7421]">
+                        <Icon className="h-5 w-5" strokeWidth={1.7} />
+                      </span>
+                      <h3 className="mt-4 text-xl font-bold leading-relaxed text-[#003652] transition duration-300 group-hover:text-[#9A7421]">
+                        {service.title}
                       </h3>
-                      <p className="mt-2 line-clamp-2 font-academic text-lg leading-relaxed text-[#475569]">
-                        {item.excerpt}
+                      <p className="mt-2 font-academic text-base leading-relaxed text-[#64748B]">
+                        {service.description}
                       </p>
                     </div>
 
-                    <div className="flex shrink-0 items-center justify-between gap-3 sm:flex-col sm:items-end">
-                      <div className="inline-flex items-center gap-2 border border-[#C29C41]/25 bg-white px-3 py-2 text-xs font-semibold text-[#7A5C10]">
-                        <LuCalendar className="h-3.5 w-3.5 text-[#C29C41]" />
-                        {item.date}
-                      </div>
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#0369A1] transition duration-300 group-hover:text-[#C29C41]">
+                      {service.action}
+                      <ArrowLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
 
-                      <span className="inline-flex items-center gap-2 text-sm font-bold text-[#C29C41]">
-                        اقرأ المزيد
-                        <LuArrowLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
-                      </span>
-                    </div>
+            <div className="mt-5 border border-[#0369A1]/15 bg-white p-4 shadow-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-[#003652]">اختر مجال العمل مباشرة</h3>
+                  <p className="mt-1 font-academic text-base leading-relaxed text-[#64748B]">
+                    روابط مختصرة إلى نفس قطاعات المكتبة المستخدمة في شريط التنقل.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {sectors.map((sector) => {
+                    const Icon = sector.Icon;
+
+                    return (
+                      <Link
+                        key={sector.href}
+                        href={sector.href}
+                        className="inline-flex items-center gap-2 border border-[#C29C41]/30 bg-[#FFF8E1] px-3 py-2 text-sm font-bold text-[#7A5C10] transition duration-200 hover:border-[#C29C41]/70 hover:bg-[#F7E5A9] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                      >
+                        <Icon className="h-4 w-4" strokeWidth={1.7} />
+                        {sector.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+           <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1" dir="rtl">
+            <div className="corner-frame relative h-full overflow-hidden border border-[#C29C41]/35 bg-[#F8FAFC] p-3 shadow-[0_22px_58px_rgba(10,37,64,0.1)]">
+              <div className="relative min-h-[28rem] overflow-hidden arch-top lg:h-full lg:min-h-0">
+                <Image
+                  alt="واجهة خدمات المكتبة الرقمية"
+                  src="/newsCover.png"
+                  fill
+                  sizes="(min-width: 1024px) 380px, 100vw"
+                  className="sepia-reveal object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/72 via-[#0A2540]/18 to-transparent" />
+
+                <div className="absolute inset-x-4 bottom-4 space-y-3">
+                  <div className="border border-white/25 bg-white/90 p-4 text-right shadow-[0_12px_30px_rgba(10,37,64,0.2)] backdrop-blur">
+                    <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#C29C41]">
+                      خدمات المكتبة
+                    </p>
+                    <p className="mt-2 text-lg font-bold leading-relaxed text-[#003652]">
+                      وصول أسرع إلى المعرفة المتخصصة
+                    </p>
                   </div>
-                </Link>
-              ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

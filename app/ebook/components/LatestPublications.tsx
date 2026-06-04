@@ -41,14 +41,12 @@ const LatestPublications = () => {
             {latestBooks.map((book, idx) => (
               <React.Fragment key={book.id}>
                 <span className="text-[#C29C41]">{book.category}</span>
-                {idx < latestBooks.length - 1 && <span className="text-[#C29C41]/50">✶</span>}
+                {idx < latestBooks.length - 1 && <span className="text-[#C29C41]/50">-</span>}
               </React.Fragment>
             ))}
           </p>
 
-          <div className="mx-auto mt-7 max-w-md [--divider-bg:#F8FAFC]">
-            <div className="ornate-divider" aria-hidden />
-          </div>
+         
         </div>
 
         <div className="flex flex-wrap justify-center gap-20 md:gap-28">

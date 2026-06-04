@@ -60,7 +60,7 @@ model LibraryEntry {
   filePath       String?
   publisher      String?
   author         String?
-  year           Int?
+  year           String?
   language       String      @default("العربية")
   pageCount      Int?
   status         EntryStatus @default(DRAFT)

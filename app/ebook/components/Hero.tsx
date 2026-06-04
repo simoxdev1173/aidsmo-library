@@ -10,7 +10,12 @@ import {
 } from 'react-icons/lu';
 
 const AUTO_INTERVAL = 6200;
-const TRANSITION_MS = 1450;
+const TRANSITION_MS = 1500;
+
+type RippleCenter = {
+  x: number;
+  y: number;
+};
 
 const heroContent = {
   
@@ -22,19 +27,25 @@ const heroContent = {
 const heroImages = [
   {
     image:
-      'cover-digital-1.png',
+      'hero0cover-1.png',
     alt: 'رفوف مكتبة حديثة مليئة بالكتب',
   },
   {
     image:
-      'cover-digital-2.png',
+      'hero0cover-2.png',
     alt: 'ممر مكتبة جامعية مع رفوف كتب عالية',
   },
   {
     image:
-      'cover-digital-4.png',
+      'hero0cover-4.png',
     alt: 'كتاب مفتوح على مكتب بحث هادئ',
   },
+];
+
+const autoRippleCenters: RippleCenter[] = [
+  { x: 0.18, y: 0.28 },
+  { x: 0.78, y: 0.34 },
+  { x: 0.56, y: 0.72 },
 ];
 
 type WebGlHeroSliderProps = {
@@ -42,6 +53,7 @@ type WebGlHeroSliderProps = {
   fromIndex: number;
   toIndex: number;
   transitionId: number;
+  rippleCenter: RippleCenter;
   reducedMotion: boolean;
 };
 
@@ -56,16 +68,24 @@ const vertexShaderSource = `
 `;
 
 const fragmentShaderSource = `
-  precision mediump float;
+  precision highp float;
 
   uniform sampler2D u_from;
   uniform sampler2D u_to;
   uniform vec2 u_resolution;
   uniform vec2 u_fromResolution;
   uniform vec2 u_toResolution;
+  uniform vec2 u_center;
   uniform float u_progress;
-  uniform float u_time;
   varying vec2 v_uv;
+
+  const float WAVE_SPEED = 1.62;
+  const float WAVE_WIDTH = 0.15;
+  const float WAVE_FREQ = 30.0;
+  const float PUSH_AMOUNT = 0.12;
+  const float CA_STRENGTH = 0.018;
+  const float GLOW_AMOUNT = 0.58;
+  const float NOISE_WARP = 0.34;
 
   vec2 coverUv(vec2 uv, vec2 imageResolution) {
     vec2 scale = u_resolution / imageResolution;
@@ -76,36 +96,103 @@ const fragmentShaderSource = `
     return uv * ratio + offset;
   }
 
-  float easeOutExpo(float x) {
-    return x >= 1.0 ? 1.0 : 1.0 - pow(2.0, -10.0 * x);
+  float hash21(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+  }
+
+  float vnoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    float a = hash21(i);
+    float b = hash21(i + vec2(1.0, 0.0));
+    float c = hash21(i + vec2(0.0, 1.0));
+    float d = hash21(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+
+    for (int i = 0; i < 4; i++) {
+      value += amplitude * vnoise(p * frequency);
+      frequency *= 2.0;
+      amplitude *= 0.5;
+    }
+
+    return value;
   }
 
   void main() {
-    float eased = easeOutExpo(u_progress);
     vec2 uv = v_uv;
-    float band = floor(uv.y * 18.0);
-    float bandPhase = fract(band * 0.137);
-    float curtain = smoothstep(bandPhase * 0.34, 0.72 + bandPhase * 0.22, eased);
-    float wave = sin((uv.y * 16.0) + (u_time * 0.0035)) * 0.024;
-    float ripple = sin((uv.x + uv.y) * 28.0 + eased * 7.5) * 0.012 * (1.0 - abs(eased - 0.5) * 2.0);
-    float displacement = (wave + ripple) * (1.0 - curtain);
+    vec2 p = uv - u_center;
+    float aspect = u_resolution.x / u_resolution.y;
+    p.x *= aspect;
 
-    vec2 fromUv = coverUv(uv + vec2(displacement * 0.55, 0.0), u_fromResolution);
-    vec2 toUv = coverUv(uv - vec2(displacement, 0.0), u_toResolution);
+    float distanceFromCenter = length(p);
+    float maxDistance = length(vec2(max(u_center.x, 1.0 - u_center.x) * aspect, max(u_center.y, 1.0 - u_center.y)));
+    float normalizedDistance = clamp(distanceFromCenter / maxDistance, 0.0, 1.0);
 
-    vec4 fromColor = texture2D(u_from, fromUv);
-    vec4 toColor = texture2D(u_to, toUv);
+    float noiseLarge = fbm(p * 4.0 + vec2(u_progress, u_progress * 0.5));
+    float noiseSmall = fbm(p * 13.0 + vec2(u_progress * 2.0, -u_progress * 1.45));
+    float warpScale = smoothstep(0.0, 0.06, u_progress);
+    float warpedDistance = normalizedDistance
+      + (noiseLarge - 0.5) * NOISE_WARP * warpScale
+      + (noiseSmall - 0.5) * NOISE_WARP * 0.72 * warpScale;
 
-    float chroma = 0.006 * (1.0 - abs(eased - 0.5) * 2.0);
-    toColor.r = texture2D(u_to, coverUv(uv - vec2(displacement + chroma, 0.0), u_toResolution)).r;
-    toColor.b = texture2D(u_to, coverUv(uv - vec2(displacement - chroma, 0.0), u_toResolution)).b;
+    float waveFront = u_progress * WAVE_SPEED;
+    float delta = warpedDistance - waveFront;
+    float baseEnvelope = exp(-(delta * delta) / (2.0 * WAVE_WIDTH * WAVE_WIDTH));
+    float rippleBands = 0.62 + 0.38 * max(0.0, cos(delta * WAVE_FREQ));
+    float envelope = baseEnvelope * rippleBands;
+    envelope *= smoothstep(0.0, 0.07, u_progress) * (1.0 - smoothstep(0.84, 1.0, u_progress));
 
-    vec4 color = mix(fromColor, toColor, curtain);
-    float glow = smoothstep(0.0, 0.18, curtain) * smoothstep(1.0, 0.72, curtain);
-    color.rgb += vec3(0.88, 0.72, 0.32) * glow * 0.16;
-    gl_FragColor = color;
+    vec2 direction = distanceFromCenter > 0.001 ? normalize(p) : vec2(0.0);
+    vec2 offset = direction * envelope * PUSH_AMOUNT;
+    offset.x /= aspect;
+
+    vec2 chromaOffset = direction * envelope * CA_STRENGTH;
+    chromaOffset.x /= aspect;
+
+    vec2 fromUvR = coverUv(uv - offset * 0.45 - chromaOffset * 0.32, u_fromResolution);
+    vec2 fromUvG = coverUv(uv - offset * 0.45, u_fromResolution);
+    vec2 fromUvB = coverUv(uv - offset * 0.45 + chromaOffset * 0.32, u_fromResolution);
+    vec2 toUvR = coverUv(uv - offset - chromaOffset, u_toResolution);
+    vec2 toUvG = coverUv(uv - offset, u_toResolution);
+    vec2 toUvB = coverUv(uv - offset + chromaOffset, u_toResolution);
+
+    vec4 fromColor = vec4(
+      texture2D(u_from, fromUvR).r,
+      texture2D(u_from, fromUvG).g,
+      texture2D(u_from, fromUvB).b,
+      1.0
+    );
+    vec4 toColor = vec4(
+      texture2D(u_to, toUvR).r,
+      texture2D(u_to, toUvG).g,
+      texture2D(u_to, toUvB).b,
+      1.0
+    );
+
+    float feather = 0.045 + 0.045 * noiseLarge;
+    float reveal = 1.0 - smoothstep(waveFront - feather, waveFront + feather, warpedDistance);
+    reveal *= smoothstep(0.0, 0.05, u_progress);
+
+    vec4 color = mix(fromColor, toColor, reveal);
+    float glow = envelope * GLOW_AMOUNT;
+    color.rgb = clamp(color.rgb / max(1.0 - glow, 0.01), 0.0, 1.0);
+    color.rgb += vec3(0.92, 0.76, 0.34) * envelope * 0.08;
+    gl_FragColor = vec4(clamp(color.rgb, 0.0, 1.0), 1.0);
   }
 `;
+
+function easeInOutQuad(progress: number) {
+  return progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+}
 
 function createShader(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type);
@@ -174,16 +261,19 @@ const WebGlHeroSlider = ({
   fromIndex,
   toIndex,
   transitionId,
+  rippleCenter,
   reducedMotion,
 }: WebGlHeroSliderProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
-  const renderRef = useRef<((progress: number, now: number, from: number, to: number) => void) | null>(null);
+  const renderRef = useRef<((progress: number, from: number, to: number, center: RippleCenter) => void) | null>(null);
   const animationFrame = useRef<number | null>(null);
   const latestIndices = useRef({ from: fromIndex, to: toIndex });
+  const latestRippleCenter = useRef(rippleCenter);
   const [webGlReady, setWebGlReady] = useState(false);
 
   latestIndices.current = { from: fromIndex, to: toIndex };
+  latestRippleCenter.current = rippleCenter;
 
   useEffect(() => {
     let cancelled = false;
@@ -207,10 +297,10 @@ const WebGlHeroSlider = ({
 
     const positionLocation = gl.getAttribLocation(program, 'a_position');
     const progressLocation = gl.getUniformLocation(program, 'u_progress');
-    const timeLocation = gl.getUniformLocation(program, 'u_time');
     const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
     const fromResolutionLocation = gl.getUniformLocation(program, 'u_fromResolution');
     const toResolutionLocation = gl.getUniformLocation(program, 'u_toResolution');
+    const centerLocation = gl.getUniformLocation(program, 'u_center');
     const fromLocation = gl.getUniformLocation(program, 'u_from');
     const toLocation = gl.getUniformLocation(program, 'u_to');
     const buffer = gl.createBuffer();
@@ -263,17 +353,17 @@ const WebGlHeroSlider = ({
           gl.viewport(0, 0, width, height);
         };
 
-        renderRef.current = (progress, now, from, to) => {
+        renderRef.current = (progress, from, to, center) => {
           resize();
           gl.useProgram(program);
           gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
           gl.enableVertexAttribArray(positionLocation);
           gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
           gl.uniform1f(progressLocation, progress);
-          gl.uniform1f(timeLocation, now);
           gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
           gl.uniform2f(fromResolutionLocation, loadedImages[from].naturalWidth, loadedImages[from].naturalHeight);
           gl.uniform2f(toResolutionLocation, loadedImages[to].naturalWidth, loadedImages[to].naturalHeight);
+          gl.uniform2f(centerLocation, center.x, center.y);
           gl.uniform1i(fromLocation, 0);
           gl.uniform1i(toLocation, 1);
           gl.activeTexture(gl.TEXTURE0);
@@ -284,7 +374,7 @@ const WebGlHeroSlider = ({
         };
 
         glRef.current = gl;
-        renderRef.current(1, performance.now(), latestIndices.current.to, latestIndices.current.to);
+        renderRef.current(1, latestIndices.current.to, latestIndices.current.to, latestRippleCenter.current);
         setWebGlReady(true);
       })
       .catch(() => {
@@ -310,10 +400,11 @@ const WebGlHeroSlider = ({
     const start = performance.now();
 
     const animate = (now: number) => {
-      const progress = Math.min((now - start) / TRANSITION_MS, 1);
-      renderRef.current?.(progress, now, fromIndex, toIndex);
+      const linearProgress = Math.min((now - start) / TRANSITION_MS, 1);
+      const progress = easeInOutQuad(linearProgress);
+      renderRef.current?.(progress, fromIndex, toIndex, rippleCenter);
 
-      if (progress < 1) {
+      if (linearProgress < 1) {
         animationFrame.current = requestAnimationFrame(animate);
       }
     };
@@ -325,7 +416,7 @@ const WebGlHeroSlider = ({
         cancelAnimationFrame(animationFrame.current);
       }
     };
-  }, [fromIndex, reducedMotion, toIndex, transitionId]);
+  }, [fromIndex, reducedMotion, rippleCenter, toIndex, transitionId]);
 
   return (
     <>
@@ -350,10 +441,11 @@ const Hero = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [fromIndex, setFromIndex] = useState(0);
   const [transitionId, setTransitionId] = useState(0);
+  const [rippleCenter, setRippleCenter] = useState<RippleCenter>(autoRippleCenters[0]);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const goToSlide = useCallback(
-    (targetIndex: number) => {
+    (targetIndex: number, center?: RippleCenter) => {
       const nextIndex = (targetIndex + heroImages.length) % heroImages.length;
 
       if (nextIndex === activeIndex) {
@@ -361,6 +453,7 @@ const Hero = () => {
       }
 
       setFromIndex(activeIndex);
+      setRippleCenter(center ?? autoRippleCenters[nextIndex % autoRippleCenters.length]);
       setActiveIndex(nextIndex);
       setTransitionId((current) => current + 1);
     },
@@ -397,11 +490,12 @@ const Hero = () => {
           fromIndex={fromIndex}
           toIndex={activeIndex}
           transitionId={transitionId}
+          rippleCenter={rippleCenter}
           reducedMotion={prefersReducedMotion}
         />
 
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,37,64,0.08)_0%,rgba(10,37,64,0.55)_44%,rgba(10,37,64,0.92)_100%)]" aria-hidden />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.3),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.18),transparent_30%)]" aria-hidden />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,37,64,0.04)_0%,rgba(10,37,64,0.42)_44%,rgba(10,37,64,0.78)_100%)]" aria-hidden />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.1),transparent_30%)]" aria-hidden />
         <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />
 
         <div className="relative z-10 mx-auto grid min-h-[760px] max-w-7xl items-center gap-10 px-6 py-12 sm:px-10 lg:grid-cols-[0.95fr_1.05fr] lg:px-14">
@@ -452,26 +546,46 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="absolute bottom-5 left-5 right-5 z-20 flex items-center justify-between gap-4">
+        <div className="pointer-events-none absolute inset-x-5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-between gap-4">
+          <button
+            type="button"
+            aria-label="Previous slide"
+            onClick={() => goToSlide(activeIndex - 1, { x: 0.16, y: 0.5 })}
+            className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+          >
+            <LuChevronRight className="h-5 w-5" />
+          </button>
+
+          <button
+            type="button"
+            aria-label="Next slide"
+            onClick={() => goToSlide(activeIndex + 1, { x: 0.84, y: 0.5 })}
+            className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+          >
+            <LuChevronLeft className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="absolute bottom-5 left-5 right-5 z-20 flex items-center justify-center gap-4">
           
           <button
             type="button"
             aria-label="الشريحة السابقة"
-            onClick={() => goToSlide(activeIndex - 1)}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            onClick={() => goToSlide(activeIndex - 1, { x: 0.16, y: 0.5 })}
+            className="hidden h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <LuChevronRight className="h-5 w-5" />
           </button>
         
 
-          <div className="flex flex-1 items-center justify-center gap-2 px-2 sm:px-6" aria-label="شرائح العرض">
+          <div className="flex w-full max-w-md items-center justify-center gap-2 px-2 sm:px-6" aria-label="شرائح العرض">
             {heroImages.map((slide, index) => (
               <button
                 key={slide.image}
                 type="button"
                 aria-label={`عرض الصورة ${index + 1}`}
                 aria-current={index === activeIndex ? 'true' : undefined}
-                onClick={() => goToSlide(index)}
+                onClick={() => goToSlide(index, { x: 0.5, y: 0.9 })}
                 className="hero-progress-segment h-1.5 max-w-28 flex-1 cursor-pointer overflow-hidden bg-white/24 transition duration-300 hover:bg-white/38 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
               >
                 <span
@@ -485,8 +599,8 @@ const Hero = () => {
               <button
             type="button"
             aria-label="الشريحة التالية"
-            onClick={() => goToSlide(activeIndex + 1)}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            onClick={() => goToSlide(activeIndex + 1, { x: 0.84, y: 0.5 })}
+            className="hidden h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <LuChevronLeft className="h-5 w-5" />
           </button>

@@ -20,7 +20,7 @@ type EntryFormValue = {
   filePath: string | null;
   publisher: string | null;
   author: string | null;
-  year: number | null;
+  year: string | null;
   language: string;
   pageCount: number | null;
   status: string;

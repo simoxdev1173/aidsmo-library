@@ -25,6 +25,13 @@ function optionalInt(formData: FormData, key: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function optionalYearLabel(formData: FormData, key: string) {
+  const value = text(formData, key);
+  if (!value) return null;
+
+  return value.replace(/[–—]/g, "-").replace(/\s*-\s*/g, " - ");
+}
+
 function errorUrl(path: string, error: string) {
   return `${path}?error=${encodeURIComponent(error)}`;
 }
@@ -125,7 +132,7 @@ export async function createEntryAction(formData: FormData) {
         filePath,
         publisher: optionalText(formData, "publisher"),
         author: optionalText(formData, "author"),
-        year: optionalInt(formData, "year"),
+        year: optionalYearLabel(formData, "year"),
         language: text(formData, "language") || "العربية",
         pageCount: optionalInt(formData, "pageCount"),
         status: status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
@@ -181,7 +188,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
         filePath,
         publisher: optionalText(formData, "publisher"),
         author: optionalText(formData, "author"),
-        year: optionalInt(formData, "year"),
+        year: optionalYearLabel(formData, "year"),
         language: text(formData, "language") || "العربية",
         pageCount: optionalInt(formData, "pageCount"),
         status: status as "DRAFT" | "PUBLISHED" | "ARCHIVED",

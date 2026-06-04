@@ -5,7 +5,7 @@ type EntryTypedFieldsProps = {
   notes?: string | null;
   publisher?: string | null;
   author?: string | null;
-  year?: number | null;
+  year?: string | null;
   language?: string | null;
   pageCount?: number | null;
 };
@@ -47,7 +47,15 @@ export default function EntryTypedFields({
           </label>
           <label className="block">
             <span className={labelClass()}>السنة</span>
-            <input name="year" type="number" min="1900" max="2100" defaultValue={year ?? ''} className={fieldClass()} />
+            <input
+              name="year"
+              type="text"
+              inputMode="text"
+              dir="ltr"
+              placeholder="2023 or 2023 - 2019"
+              defaultValue={year ?? ''}
+              className={fieldClass()}
+            />
           </label>
           <label className="block">
             <span className={labelClass()}>عدد الصفحات</span>

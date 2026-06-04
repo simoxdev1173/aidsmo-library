@@ -47,9 +47,30 @@ const SubscribeToMail = () => {
   };
 
   return (
-    <section className="bg-[#F0F7FC]" dir="rtl">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="corner-frame grid gap-10 border border-[#C29C41]/35 bg-white p-6 md:p-10 lg:grid-cols-2 lg:items-center">
+    <section className="relative overflow-hidden bg-[#F7F0E1]" dir="rtl">
+      <Image
+        src="/background-01.png"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover opacity-[0.24] contrast-110 saturate-125"
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.92)_0%,rgba(247,240,225,0.8)_48%,rgba(255,252,244,0.94)_100%)]" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
+          backgroundSize: '56px 56px',
+        }}
+        aria-hidden
+      />
+      <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="corner-frame grid gap-10 border border-[#C29C41]/35 bg-white/88 p-6 shadow-[0_22px_58px_rgba(10,37,64,0.1)] backdrop-blur-sm md:p-10 lg:grid-cols-2 lg:items-center">
           <div className="order-2 lg:order-1">
             <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-4xl">
               ابقَ على اتصال بآخر مستجدات المكتبة الرقمية
@@ -61,7 +82,7 @@ const SubscribeToMail = () => {
 
             <div className="mt-8 max-w-xl">
               {isSuccess ? (
-                <div className="border border-[#C29C41]/30 bg-[#F8FAFC] p-4 text-center text-[#003652]">
+                <div className="border border-[#C29C41]/30 bg-[#FFF8E1] p-4 text-center text-[#003652]">
                   تم الاشتراك بنجاح. شكراً لك.
                 </div>
               ) : (
@@ -80,7 +101,7 @@ const SubscribeToMail = () => {
                           setEmail(e.target.value);
                           if (error) setError('');
                         }}
-                        className="h-14 w-full border border-[#0369A1]/20 bg-[#F8FAFC] px-4 text-right text-[#0A2540] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/30"
+                        className="h-14 w-full border border-[#C29C41]/25 bg-[#FFFCF4] px-4 text-right text-[#0A2540] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/30"
                         placeholder="أدخل بريدك الإلكتروني"
                         aria-invalid={Boolean(error)}
                         aria-describedby={error ? 'newsletter-error' : undefined}
@@ -106,7 +127,7 @@ const SubscribeToMail = () => {
 
             <div className="mt-8 flex flex-wrap gap-4">
               {['محتوى حصري', 'تحديثات مستمرة', 'مجاني 100%'].map((item) => (
-                <div key={item} className="inline-flex items-center gap-2 border border-[#C29C41]/25 bg-[#F8FAFC] px-4 py-2 text-sm font-semibold text-[#334155]">
+                <div key={item} className="inline-flex items-center gap-2 border border-[#C29C41]/25 bg-[#FFF8E1] px-4 py-2 text-sm font-semibold text-[#334155]">
                   <span className="h-2 w-2 rounded-full bg-[#C29C41]" aria-hidden />
                   {item}
                 </div>

@@ -130,10 +130,10 @@ function LibraryCard({ item, index }: { item: LibraryItem; index: number }) {
   return (
     <Link
       href={item.href}
-      className="group block w-40 shrink-0 text-right text-[#0A2540] outline-none [perspective:1100px] sm:w-44"
+      className="group block w-48 shrink-0 text-right text-[#0A2540] outline-none [perspective:1100px] sm:w-56 lg:w-60"
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      <div className="relative mx-auto h-64 w-36 [transform-style:preserve-3d] transition duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] [animation:research-card-rise_700ms_cubic-bezier(0.19,1,0.22,1)_both] group-hover:[transform:rotateY(-10deg)_rotateX(5deg)_translateY(-12px)] group-focus-visible:[transform:rotateY(-10deg)_rotateX(5deg)_translateY(-12px)] motion-reduce:transform-none motion-reduce:transition-none sm:h-72 sm:w-40">
+      <div className="relative mx-auto h-72 w-44 [transform-style:preserve-3d] transition duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] [animation:research-card-rise_700ms_cubic-bezier(0.19,1,0.22,1)_both] group-hover:[transform:rotateY(-10deg)_rotateX(5deg)_translateY(-12px)] group-focus-visible:[transform:rotateY(-10deg)_rotateX(5deg)_translateY(-12px)] motion-reduce:transform-none motion-reduce:transition-none sm:h-80 sm:w-52 lg:h-[22rem] lg:w-56">
         <div className="absolute inset-0 translate-x-3 translate-y-4 bg-[#0A2540]/18 blur-xl transition duration-700 group-hover:translate-y-7 group-hover:bg-[#0A2540]/28" aria-hidden />
         <div className="absolute inset-y-3 right-[-10px] w-5 bg-gradient-to-l from-[#5A4217] via-[#C29C41] to-[#F7E5A9] shadow-[inset_3px_0_6px_rgba(10,37,64,0.22)] [transform:rotateY(72deg)] [transform-origin:left]" aria-hidden />
         <div className="absolute inset-0 overflow-hidden border border-[#C29C41]/35 bg-[#0A2540] shadow-[0_18px_34px_rgba(10,37,64,0.18)] [transform:translateZ(18px)]">
@@ -141,7 +141,7 @@ function LibraryCard({ item, index }: { item: LibraryItem; index: number }) {
             src={item.cover}
             alt={item.title}
             fill
-            sizes="180px"
+            sizes="(min-width: 1024px) 224px, (min-width: 640px) 208px, 176px"
             className="relative z-10 object-cover transition duration-700 group-hover:scale-[1.055]"
           />
           <div className="absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-black/28 via-white/8 to-transparent" aria-hidden />
@@ -150,8 +150,8 @@ function LibraryCard({ item, index }: { item: LibraryItem; index: number }) {
         </div>
       </div>
 
-      <div className="mt-5">
-        <h3 className="line-clamp-2 min-h-[3.25rem] text-[0.98rem] font-bold leading-7 text-[#003652] transition duration-300 group-hover:text-[#9A7421] group-focus-visible:text-[#9A7421]">
+      <div className="mt-5 px-1">
+        <h3 className="line-clamp-2 min-h-[3.25rem] text-base font-bold leading-7 text-[#003652] transition duration-300 group-hover:text-[#9A7421] group-focus-visible:text-[#9A7421] sm:text-[1.05rem]">
           {item.title}
         </h3>
         <p className="mt-1 line-clamp-1 text-xs font-semibold text-[#64748B]">
@@ -223,7 +223,7 @@ function LibraryCarouselRow({ row }: { row: LibraryRow }) {
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#F7F0E1] to-transparent" aria-hidden />
         <div
           ref={scrollerRef}
-          className="flex gap-6 overflow-x-auto overflow-y-visible px-2 pb-7 pt-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-8 overflow-x-auto overflow-y-visible px-2 pb-7 pt-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           style={{ scrollSnapType: 'x mandatory' }}
         >
           {row.items.map((item, itemIndex) => (
@@ -251,6 +251,7 @@ export default function TrendingBooks() {
       />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.92)_0%,rgba(247,240,225,0.82)_42%,rgba(255,252,244,0.94)_100%)]" aria-hidden />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl text-center">

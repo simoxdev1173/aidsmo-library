@@ -84,17 +84,38 @@ const VideoCarousel = () => {
   const translateX = activeIndex * (CARD_WIDTH + GAP);
 
   return (
-    <section dir="rtl" className="relative bg-white py-20 md:py-28 overflow-hidden">
+    <section dir="rtl" className="relative overflow-hidden bg-[#F7F0E1] py-20 md:py-28">
+      <Image
+        src="/background-01.png"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover opacity-[0.24] contrast-110 saturate-125"
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.92)_0%,rgba(247,240,225,0.8)_48%,rgba(255,252,244,0.94)_100%)]" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
+          backgroundSize: '56px 56px',
+        }}
+        aria-hidden
+      />
+      <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
+
       {/* Section header */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-14">
-        <div className="flex flex-col text-center sm:flex-row items-start sm:items-end justify-between gap-6">
+      <div className="relative z-10 mx-auto mb-14 max-w-7xl px-6 lg:px-8">
+        <div className="flex flex-col gap-6 text-center sm:flex-row sm:items-end sm:justify-between">
           <div>
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#0a2540] leading-snug"
+              className="academic-heading text-4xl leading-tight md:text-5xl"
             >
               الفيديوهات
             </motion.h2>
@@ -110,13 +131,13 @@ const VideoCarousel = () => {
           >
             <button
               onClick={prev}
-              className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#0a2540]/15 bg-[#fafaf8] text-[#0a2540] shadow-sm transition-all duration-300 hover:border-[#C29C41] hover:bg-[#C29C41] hover:text-white hover:shadow-md hover:shadow-[#C29C41]/20"
+              className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
               <LuChevronRight size={18} />
             </button>
             <button
               onClick={next}
-              className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#0a2540]/15 bg-[#fafaf8] text-[#0a2540] shadow-sm transition-all duration-300 hover:border-[#C29C41] hover:bg-[#C29C41] hover:text-white hover:shadow-md hover:shadow-[#C29C41]/20"
+              className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
               <LuChevronLeft size={18} />
             </button>
@@ -125,7 +146,7 @@ const VideoCarousel = () => {
       </div>
 
       {/* Carousel track */}
-      <div ref={containerRef} className="mx-auto max-w-7xl px-6 lg:px-8 overflow-hidden">
+      <div ref={containerRef} className="relative z-10 mx-auto max-w-7xl overflow-hidden px-6 lg:px-8">
         <motion.div
           className="flex"
           style={{ gap: GAP }}
@@ -142,7 +163,7 @@ const VideoCarousel = () => {
               className="flex-shrink-0"
               style={{ width: CARD_WIDTH }}
             >
-              <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-all duration-400 hover:shadow-xl hover:border-[#C29C41]/20 hover:-translate-y-1">
+              <div className="group corner-card relative overflow-hidden border border-[#C29C41]/30 bg-white/88 shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)]">
                 {/* Gold top strip */}
                 <div
                   className="h-[3px] opacity-0 transition-opacity duration-400 group-hover:opacity-100"
@@ -215,7 +236,7 @@ const VideoCarousel = () => {
       </div>
 
       {/* Progress dots */}
-      <div className="flex items-center justify-center gap-2 mt-10">
+      <div className="relative z-10 mt-10 flex items-center justify-center gap-2">
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}

@@ -63,20 +63,30 @@ const LibraryNews = () => {
   return (
     <section
       id="library-services"
-      className="relative overflow-hidden bg-[#F8FAFC] py-20 md:py-28"
+      className="relative overflow-hidden bg-[#F7F0E1] py-20 md:py-28"
       aria-label="خدمات المكتبة الرقمية"
       dir="rtl"
     >
-      <Image
+  <Image
         src="/background-01.png"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.42] contrast-110 saturate-125"
+        className="object-cover opacity-[0.44] contrast-110 saturate-125"
         aria-hidden
       />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(248,250,252,0.84)_0%,rgba(248,250,252,0.68)_42%,rgba(255,255,255,0.42)_100%)]" aria-hidden />
-      <div className="absolute inset-0 bg-white/10" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.74)_0%,rgba(247,240,225,0.46)_48%,rgba(255,252,244,0.82)_100%)]" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.14]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
+          backgroundSize: '56px 56px',
+        }}
+        aria-hidden
+      />
+      <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-stretch gap-10 lg:grid-cols-5 lg:gap-14" dir="ltr">
@@ -101,7 +111,7 @@ const LibraryNews = () => {
                   <Link
                     key={service.title}
                     href={service.href}
-                    className="group corner-card flex min-h-[15rem] flex-col justify-between border border-[#C29C41]/30 bg-[#F8FAFC] p-5 text-right transition duration-300 hover:-translate-y-0.5 hover:border-[#C29C41]/65 hover:shadow-[0_18px_36px_rgba(10,37,64,0.1)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-white"
+                    className="group corner-card flex min-h-[15rem] flex-col justify-between border border-[#C29C41]/30 bg-white/88 p-5 text-right shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 hover:-translate-y-0.5 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-[#F7F0E1]"
                   >
                     <div>
                       <span className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-white text-[#9A7421]">
@@ -124,7 +134,7 @@ const LibraryNews = () => {
               })}
             </div>
 
-            <div className="mt-5 border border-[#0369A1]/15 bg-white p-4 shadow-sm">
+            <div className="mt-5 border border-[#C29C41]/25 bg-white/88 p-4 shadow-[0_14px_34px_rgba(10,37,64,0.08)] backdrop-blur-sm">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h3 className="text-lg font-bold text-[#003652]">اختر مجال العمل مباشرة</h3>
@@ -153,7 +163,7 @@ const LibraryNews = () => {
             </div>
           </div>
            <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1" dir="rtl">
-            <div className="corner-frame relative h-full overflow-hidden border border-[#C29C41]/35 bg-[#F8FAFC] p-3 shadow-[0_22px_58px_rgba(10,37,64,0.1)]">
+            <div className="corner-frame relative h-full overflow-hidden border border-[#C29C41]/35 bg-white/88 p-3 shadow-[0_22px_58px_rgba(10,37,64,0.1)]">
               <div className="relative min-h-[28rem] overflow-hidden arch-top lg:h-full lg:min-h-0">
                 <Image
                   alt="واجهة خدمات المكتبة الرقمية"

@@ -30,8 +30,12 @@ const latestBooks = [
 
 const LatestPublications = () => {
   return (
-    <section className="bg-[#F8FAFC] py-20 md:py-28" dir="rtl">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-[#F8F6ED] py-20 md:py-28" dir="rtl">
+   
+    
+
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
             أحدث الإصدارات

@@ -15,7 +15,7 @@ export default function Home() {
           <Hero />
         </section>
         
-        <section className="border-y border-[#C29C41]/20 bg-white">
+        <section>
           <LibraryStats />
         </section>
         <Benefits />

@@ -7,8 +7,10 @@ import { LuArrowLeft } from 'react-icons/lu';
 
 const ChatbotCTA = () => {
   return (
-    <section className="bg-[#F0F7FC] px-4 py-20 md:py-28" dir="rtl">
-      <div className="mx-auto max-w-6xl">
+    <section className="relative overflow-hidden bg-[#F8F6ED] px-4 py-20 md:py-28" dir="rtl">
+   
+
+      <div className="relative z-10 mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}

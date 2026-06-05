@@ -90,12 +90,12 @@ const VideoCarousel = () => {
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.24] contrast-110 saturate-125"
+        className="object-cover opacity-[0.44] contrast-110 saturate-125"
         aria-hidden
       />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.92)_0%,rgba(247,240,225,0.8)_48%,rgba(255,252,244,0.94)_100%)]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.74)_0%,rgba(247,240,225,0.46)_48%,rgba(255,252,244,0.82)_100%)]" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        className="pointer-events-none absolute inset-0 opacity-[0.14]"
         style={{
           backgroundImage:
             'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',

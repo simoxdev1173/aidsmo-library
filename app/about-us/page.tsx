@@ -139,13 +139,14 @@ export default function AboutPage() {
       {/* Image */}
       <div className="corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F0F7FC] h-full">
         <Image
-          src="/cover-digital-1.png"
-          alt="واجهة المكتبة الرقمية الذكية"
+          src="/library-3d-scene.png"
+          alt="واجهة ثلاثية الأبعاد للمكتبة الرقمية الذكية"
           width={900}
           height={700}
           className="h-full min-h-[500px] w-full object-cover"
+          priority={false}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/46 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/28 via-transparent to-transparent" />
       </div>
 
     </div>

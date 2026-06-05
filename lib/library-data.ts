@@ -129,3 +129,81 @@ export async function getCategoryWithEntries(slug: string) {
 
   return { category, entries };
 }
+
+export async function getStandardizationPageData(
+  slug: string,
+  filters: {
+    q?: string;
+    tag?: string;
+    year?: string;
+    sort?: string;
+  } = {},
+) {
+  const category = await prisma.category.findUnique({
+    where: { slug },
+  });
+
+  if (!category) {
+    return null;
+  }
+
+  const q = filters.q?.trim();
+  const tag = filters.tag?.trim();
+  const year = filters.year?.trim();
+
+  const baseWhere = {
+    status: "PUBLISHED" as const,
+    categoryId: category.id,
+  };
+
+  const where = {
+    ...baseWhere,
+    ...(tag ? { tag } : {}),
+    ...(year ? { year } : {}),
+    ...(q
+      ? {
+          OR: [
+            { title: { contains: q, mode: "insensitive" as const } },
+            { description: { contains: q, mode: "insensitive" as const } },
+            { tag: { contains: q, mode: "insensitive" as const } },
+            { author: { contains: q, mode: "insensitive" as const } },
+            { publisher: { contains: q, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  };
+
+  const orderBy =
+    filters.sort === "featured"
+      ? [{ featured: "desc" as const }, { updatedAt: "desc" as const }]
+      : filters.sort === "year"
+        ? [{ year: "desc" as const }, { updatedAt: "desc" as const }]
+        : filters.sort === "title"
+          ? [{ title: "asc" as const }]
+          : [{ publishedAt: "desc" as const }, { updatedAt: "desc" as const }];
+
+  const [entries, facetEntries] = await Promise.all([
+    prisma.libraryEntry.findMany({
+      where,
+      orderBy,
+      include: { category: { include: { parent: { include: { parent: true } } } } },
+    }),
+    prisma.libraryEntry.findMany({
+      where: baseWhere,
+      select: { tag: true, year: true },
+      orderBy: [{ year: "desc" }, { tag: "asc" }],
+    }),
+  ]);
+
+  const tags = Array.from(new Set(facetEntries.map((entry) => entry.tag).filter((item): item is string => Boolean(item))));
+  const years = Array.from(new Set(facetEntries.map((entry) => entry.year).filter((item): item is string => Boolean(item))));
+
+  return {
+    category,
+    entries,
+    facets: {
+      tags,
+      years,
+    },
+  };
+}

@@ -18,15 +18,26 @@ const ChatbotCTA = () => {
           transition={{ duration: 0.7, ease: 'easeOut' }}
           className="corner-frame relative grid overflow-hidden border border-[#C29C41]/35 bg-[#0A2540] lg:grid-cols-[1.1fr_0.9fr]"
         >
-          <Image
-            src="/chatbot-card.png"
-            alt=""
-            fill
-            className="sepia-reveal object-cover opacity-35"
-            aria-hidden
-          />
-          <div className="absolute inset-0 bg-gradient-to-l from-[#0A2540]/94 via-[#0369A1]/78 to-[#0A2540]/86" />
-          <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+             <Image
+               src="/background-01.png"
+               alt=""
+               fill
+               sizes="100vw"
+               className="object-cover opacity-[0.44] contrast-110 saturate-125"
+               aria-hidden
+             />
+             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.74)_0%,rgba(247,240,225,0.46)_48%,rgba(255,252,244,0.82)_100%)]" aria-hidden />
+             <div
+               className="pointer-events-none absolute inset-0 opacity-[0.14]"
+               style={{
+                 backgroundImage:
+                   'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
+                 backgroundSize: '56px 56px',
+               }}
+               aria-hidden
+             />
+             <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+             <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
           <div className="relative z-10  px-7 py-12 md:px-12 md:py-16">
             <h2 className="mt-5 max-w-2xl pb-5 font-academic text-4xl font-bold leading-tight text-white md:text-4xl">

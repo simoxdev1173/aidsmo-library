@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 import { authenticateAdmin, createAdminSession, destroyAdminSession, requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
-import { saveUpload } from "@/lib/uploads";
-import { createPdfCoverFromFile } from "@/lib/pdf-cover";
+import { readUpload, saveUploadBytes } from "@/lib/uploads";
+import { createPdfCoverFromBytes } from "@/lib/pdf-cover";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -45,13 +45,30 @@ function getActionError(error: unknown) {
   return "Something went wrong. Please try again.";
 }
 
-async function tryCreatePdfCover(file: File | null) {
-  try {
-    return await createPdfCoverFromFile(file);
-  } catch (error) {
-    console.error("PDF cover generation failed", error);
-    return null;
+type CoverGenerationResult = {
+  path: string | null;
+  failed: boolean;
+};
+
+async function tryCreatePdfCover(bytes: Buffer | null | undefined, context: string): Promise<CoverGenerationResult> {
+  if (!bytes) {
+    return { path: null, failed: false };
   }
+
+  try {
+    return {
+      path: await createPdfCoverFromBytes(bytes),
+      failed: false,
+    };
+  } catch (error) {
+    console.error(`PDF cover generation failed: ${context}`, error);
+    return { path: null, failed: true };
+  }
+}
+
+function coverStatusParam(result: CoverGenerationResult, attempted: boolean) {
+  if (!attempted) return "";
+  return result.path ? "&cover=generated" : result.failed ? "&cover=failed" : "";
 }
 
 async function uniqueEntrySlug(baseValue: string, currentId?: string) {
@@ -122,14 +139,20 @@ export async function createEntryAction(formData: FormData) {
     redirect("/dashboard/entries/new?error=missing");
   }
 
+  let coverRedirectStatus = "";
+
   try {
     const status = text(formData, "status") || "DRAFT";
     const documentFile = formData.get("document") as File | null;
     const coverFile = formData.get("cover") as File | null;
-    const filePath = await saveUpload(documentFile, "documents");
-    const uploadedCoverImagePath = await saveUpload(coverFile, "covers");
-    const generatedCoverImagePath = uploadedCoverImagePath ? null : await tryCreatePdfCover(documentFile);
-    const coverImagePath = uploadedCoverImagePath ?? generatedCoverImagePath;
+    const documentUpload = await readUpload(documentFile, "documents");
+    const coverUpload = await readUpload(coverFile, "covers");
+    const filePath = await saveUploadBytes(documentUpload, "documents");
+    const uploadedCoverImagePath = await saveUploadBytes(coverUpload, "covers");
+    const coverGeneration = uploadedCoverImagePath
+      ? { path: null, failed: false }
+      : await tryCreatePdfCover(documentUpload?.bytes, `new entry "${title}"`);
+    const coverImagePath = uploadedCoverImagePath ?? coverGeneration.path;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title);
 
     await prisma.libraryEntry.create({
@@ -158,11 +181,12 @@ export async function createEntryAction(formData: FormData) {
     revalidatePath("/");
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/entries");
+    coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(documentUpload && !uploadedCoverImagePath));
   } catch (error) {
     redirect(errorUrl("/dashboard/entries/new", getActionError(error)));
   }
 
-  redirect("/dashboard/entries?saved=created");
+  redirect(`/dashboard/entries?saved=created${coverRedirectStatus}`);
 }
 
 export async function updateEntryAction(id: string, formData: FormData) {
@@ -180,16 +204,22 @@ export async function updateEntryAction(id: string, formData: FormData) {
     redirect("/dashboard/entries");
   }
 
+  let coverRedirectStatus = "";
+
   try {
     const status = text(formData, "status") || "DRAFT";
     const documentFile = formData.get("document") as File | null;
     const coverFile = formData.get("cover") as File | null;
+    const documentUpload = await readUpload(documentFile, "documents");
+    const coverUpload = await readUpload(coverFile, "covers");
     const filePath =
-      (await saveUpload(documentFile, "documents")) ?? existing.filePath;
-    const uploadedCoverImagePath = await saveUpload(coverFile, "covers");
-    const generatedCoverImagePath =
-      uploadedCoverImagePath || existing.coverImagePath ? null : await tryCreatePdfCover(documentFile);
-    const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? generatedCoverImagePath;
+      (await saveUploadBytes(documentUpload, "documents")) ?? existing.filePath;
+    const uploadedCoverImagePath = await saveUploadBytes(coverUpload, "covers");
+    const coverGeneration =
+      uploadedCoverImagePath || existing.coverImagePath
+        ? { path: null, failed: false }
+        : await tryCreatePdfCover(documentUpload?.bytes, `entry "${existing.title}" (${id})`);
+    const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? coverGeneration.path;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title, id);
 
     await prisma.libraryEntry.update({
@@ -219,11 +249,12 @@ export async function updateEntryAction(id: string, formData: FormData) {
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/entries");
     revalidatePath(`/dashboard/entries/${id}`);
+    coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(documentUpload && !uploadedCoverImagePath && !existing.coverImagePath));
   } catch (error) {
     redirect(errorUrl(`/dashboard/entries/${id}`, getActionError(error)));
   }
 
-  redirect(`/dashboard/entries/${id}?saved=1`);
+  redirect(`/dashboard/entries/${id}?saved=1${coverRedirectStatus}`);
 }
 
 export async function deleteEntryAction(id: string) {

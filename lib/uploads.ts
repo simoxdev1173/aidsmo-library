@@ -12,6 +12,17 @@ export function getUploadRoot() {
   return path.isAbsolute(configured) ? configured : path.join(process.cwd(), configured);
 }
 
+export function getUploadRoots() {
+  const roots = [
+    getUploadRoot(),
+    path.join(process.cwd(), "public", "uploads"),
+    "/app/public/uploads",
+    "/app/.next/standalone/public/uploads",
+  ];
+
+  return Array.from(new Set(roots.map((root) => path.resolve(root))));
+}
+
 export function publicUploadPathToFilePath(filePath: string | null | undefined) {
   if (!filePath || !filePath.startsWith("/uploads/")) {
     return null;
@@ -44,11 +55,7 @@ function extensionFor(file: File) {
   return "jpg";
 }
 
-export async function saveUpload(file: File | null, folder: "covers" | "documents") {
-  if (!file || file.size === 0) {
-    return null;
-  }
-
+function validateUpload(file: File, folder: "covers" | "documents") {
   if (!allowedMimeTypes[folder].has(file.type)) {
     throw new Error(folder === "covers" ? "Unsupported cover image type." : "The document must be a PDF.");
   }
@@ -56,13 +63,39 @@ export async function saveUpload(file: File | null, folder: "covers" | "document
   if (file.size > maxFileSize[folder]) {
     throw new Error(folder === "covers" ? "Cover image must be 10MB or smaller." : "PDF must be 50MB or smaller.");
   }
+}
+
+export async function readUpload(file: File | null, folder: "covers" | "documents") {
+  if (!file || file.size === 0) {
+    return null;
+  }
+
+  validateUpload(file, folder);
+
+  return {
+    file,
+    bytes: Buffer.from(await file.arrayBuffer()),
+    extension: extensionFor(file),
+  };
+}
+
+export async function saveUploadBytes(
+  upload: Awaited<ReturnType<typeof readUpload>>,
+  folder: "covers" | "documents",
+) {
+  if (!upload) {
+    return null;
+  }
 
   const directory = path.join(getUploadRoot(), folder);
   await mkdir(directory, { recursive: true });
 
-  const filename = `${randomUUID()}.${extensionFor(file)}`;
-  const bytes = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(directory, filename), bytes);
+  const filename = `${randomUUID()}.${upload.extension}`;
+  await writeFile(path.join(directory, filename), upload.bytes);
 
   return `/uploads/${folder}/${filename}`;
+}
+
+export async function saveUpload(file: File | null, folder: "covers" | "documents") {
+  return saveUploadBytes(await readUpload(file, folder), folder);
 }

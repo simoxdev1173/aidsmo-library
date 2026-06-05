@@ -11,7 +11,7 @@ export default async function EditEntryPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ saved?: string; error?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string; cover?: string }>;
 }) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
   const [entry, categories] = await Promise.all([
@@ -40,6 +40,16 @@ export default async function EditEntryPage({
       {query.saved === '1' && (
         <Notice tone="success" title="تم الحفظ">
           تم الحفظ.
+        </Notice>
+      )}
+      {query.cover === 'generated' && (
+        <Notice tone="success" title="تم إنشاء صورة الغلاف تلقائيا">
+          تم استخراج صورة الغلاف من الصفحة الأولى لملف PDF.
+        </Notice>
+      )}
+      {query.cover === 'failed' && (
+        <Notice tone="info" title="تم حفظ PDF بدون صورة غلاف">
+          تعذر استخراج صورة الغلاف تلقائيا. يمكن رفع صورة غلاف يدويا أو إعادة محاولة الحفظ لاحقا.
         </Notice>
       )}
       {query.error && (

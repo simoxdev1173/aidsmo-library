@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export default async function EntriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; categoryId?: string; status?: string; saved?: string }>;
+  searchParams: Promise<{ q?: string; categoryId?: string; status?: string; saved?: string; cover?: string }>;
 }) {
   const filters = await searchParams;
   const [entries, categories] = await Promise.all([
@@ -63,6 +63,16 @@ export default async function EntriesPage({
 
       {filters.saved === 'created' && (
         <Notice tone="success" title="تم إنشاء المدخل" />
+      )}
+      {filters.cover === 'generated' && (
+        <Notice tone="success" title="تم إنشاء صورة الغلاف تلقائيا">
+          تم استخراج صورة الغلاف من الصفحة الأولى لملف PDF.
+        </Notice>
+      )}
+      {filters.cover === 'failed' && (
+        <Notice tone="info" title="تم حفظ PDF بدون صورة غلاف">
+          تعذر استخراج صورة الغلاف تلقائيا. يمكن رفع صورة غلاف يدويا أو إعادة محاولة الحفظ لاحقا.
+        </Notice>
       )}
       {filters.saved === 'deleted' && (
         <Notice tone="success" title="تم حذف المدخل" />

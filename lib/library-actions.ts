@@ -6,7 +6,7 @@ import { authenticateAdmin, createAdminSession, destroyAdminSession, requireAdmi
 import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { readUpload, saveUploadBytes } from "@/lib/uploads";
-import { createPdfCoverFromBytes } from "@/lib/pdf-cover";
+import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -255,6 +255,53 @@ export async function updateEntryAction(id: string, formData: FormData) {
   }
 
   redirect(`/dashboard/entries/${id}?saved=1${coverRedirectStatus}`);
+}
+
+export async function generateEntryCoverAction(id: string) {
+  await requireAdmin();
+
+  const entry = await prisma.libraryEntry.findUnique({
+    where: { id },
+    select: { id: true, title: true, coverImagePath: true, filePath: true },
+  });
+
+  if (!entry) {
+    redirect("/dashboard/entries");
+  }
+
+  if (entry.coverImagePath || !entry.filePath) {
+    redirect(`/dashboard/entries/${id}?cover=skipped`);
+  }
+
+  let coverImagePath: string | null = null;
+
+  try {
+    coverImagePath = await createPdfCoverFromPublicPath(entry.filePath);
+  } catch (error) {
+    console.error(`PDF cover generation failed: existing entry "${entry.title}" (${id})`, error);
+    redirect(`/dashboard/entries/${id}?cover=failed`);
+  }
+
+  if (!coverImagePath) {
+    redirect(`/dashboard/entries/${id}?cover=missing-pdf`);
+  }
+
+  try {
+    await prisma.libraryEntry.update({
+      where: { id },
+      data: { coverImagePath },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/entries");
+    revalidatePath(`/dashboard/entries/${id}`);
+  } catch (error) {
+    console.error(`PDF cover save failed: existing entry "${entry.title}" (${id})`, error);
+    redirect(`/dashboard/entries/${id}?cover=failed`);
+  }
+
+  redirect(`/dashboard/entries/${id}?saved=1&cover=generated`);
 }
 
 export async function deleteEntryAction(id: string) {

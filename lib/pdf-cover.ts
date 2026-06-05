@@ -3,7 +3,7 @@ import { createRequire } from "module";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 import { pathToFileURL } from "url";
-import { getUploadRoot, publicUploadPathToFilePath } from "@/lib/uploads";
+import { getUploadRoot, resolvePublicUploadFilePath } from "@/lib/uploads";
 
 const require = createRequire(import.meta.url);
 
@@ -92,7 +92,7 @@ export async function createPdfCoverFromFilePath(pdfFilePath: string) {
 }
 
 export async function createPdfCoverFromPublicPath(filePath: string | null | undefined) {
-  const absoluteFilePath = publicUploadPathToFilePath(filePath);
+  const absoluteFilePath = await resolvePublicUploadFilePath(filePath);
 
   if (!absoluteFilePath) {
     return null;

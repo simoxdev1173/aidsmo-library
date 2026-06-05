@@ -1,18 +1,6 @@
-import { access } from "fs/promises";
 import { prisma } from "@/lib/prisma";
 import { createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
-import { publicUploadPathToFilePath } from "@/lib/uploads";
-
-async function fileExists(filePath: string | null) {
-  if (!filePath) return false;
-
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
+import { resolvePublicUploadFilePath } from "@/lib/uploads";
 
 async function main() {
   const entries = await prisma.libraryEntry.findMany({
@@ -32,9 +20,9 @@ async function main() {
   let skipped = 0;
 
   for (const entry of entries) {
-    const absolutePdfPath = publicUploadPathToFilePath(entry.filePath);
+    const absolutePdfPath = await resolvePublicUploadFilePath(entry.filePath);
 
-    if (!(await fileExists(absolutePdfPath))) {
+    if (!absolutePdfPath) {
       skipped += 1;
       console.log(`Skipped missing PDF: ${entry.title}`);
       continue;

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { deleteEntryAction } from '@/lib/library-actions';
+import { deleteEntryAction, generateEntryCoverAction } from '@/lib/library-actions';
 import EntryForm from '@/app/dashboard/_components/EntryForm';
 import { Notice, SubmitButton } from '@/app/dashboard/_components/FormFeedback';
 import { getCategoryOptions, getEntryForEdit } from '@/lib/library-data';
@@ -52,10 +52,28 @@ export default async function EditEntryPage({
           تعذر استخراج صورة الغلاف تلقائيا. يمكن رفع صورة غلاف يدويا أو إعادة محاولة الحفظ لاحقا.
         </Notice>
       )}
+      {query.cover === 'missing-pdf' && (
+        <Notice tone="error" title="ملف PDF غير موجود على الخادم">
+          لا يمكن إنشاء غلاف من ملف غير موجود. تأكد من إعداد التخزين الدائم لمجلد الرفع في Coolify.
+        </Notice>
+      )}
+      {query.cover === 'skipped' && (
+        <Notice tone="info" title="لم يتم إنشاء غلاف جديد">
+          المدخل لديه غلاف بالفعل أو لا يحتوي على ملف PDF.
+        </Notice>
+      )}
       {query.error && (
         <Notice tone="error" title="تعذر حفظ المدخل">
           {query.error === 'missing' ? 'العنوان والتصنيف مطلوبان.' : decodeURIComponent(query.error)}
         </Notice>
+      )}
+
+      {!entry.coverImagePath && entry.filePath && (
+        <form action={generateEntryCoverAction.bind(null, entry.id)} className="flex justify-end rounded-lg border border-[#D9E3EE] bg-white p-4">
+          <SubmitButton pendingText="جاري إنشاء الغلاف...">
+            إنشاء غلاف من PDF
+          </SubmitButton>
+        </form>
       )}
 
       <EntryForm entry={entry} categories={categories} />

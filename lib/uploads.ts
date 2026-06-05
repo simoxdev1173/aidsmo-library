@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
+import { access, mkdir, writeFile } from "fs/promises";
 import path from "path";
 
 export function getUploadRoot() {
@@ -30,6 +30,42 @@ export function publicUploadPathToFilePath(filePath: string | null | undefined) 
 
   const relativePath = filePath.replace(/^\/uploads\//, "");
   return path.join(getUploadRoot(), relativePath);
+}
+
+function safeUploadPath(rootPath: string, parts: string[]) {
+  const root = path.resolve(rootPath);
+  const requested = path.resolve(root, ...parts);
+
+  if (requested !== root && requested.startsWith(`${root}${path.sep}`)) {
+    return requested;
+  }
+
+  return null;
+}
+
+export async function resolvePublicUploadFilePath(filePath: string | null | undefined) {
+  if (!filePath || !filePath.startsWith("/uploads/")) {
+    return null;
+  }
+
+  const parts = filePath.replace(/^\/uploads\//, "").split("/").filter(Boolean);
+
+  for (const root of getUploadRoots()) {
+    const candidate = safeUploadPath(root, parts);
+
+    if (!candidate) {
+      continue;
+    }
+
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // Keep checking known deployment roots.
+    }
+  }
+
+  return null;
 }
 
 const allowedMimeTypes = {

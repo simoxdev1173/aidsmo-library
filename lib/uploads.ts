@@ -12,6 +12,15 @@ export function getUploadRoot() {
   return path.isAbsolute(configured) ? configured : path.join(process.cwd(), configured);
 }
 
+export function publicUploadPathToFilePath(filePath: string | null | undefined) {
+  if (!filePath || !filePath.startsWith("/uploads/")) {
+    return null;
+  }
+
+  const relativePath = filePath.replace(/^\/uploads\//, "");
+  return path.join(getUploadRoot(), relativePath);
+}
+
 const allowedMimeTypes = {
   covers: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
   documents: new Set(["application/pdf"]),

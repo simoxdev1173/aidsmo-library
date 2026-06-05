@@ -1,4 +1,4 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
@@ -50,18 +50,6 @@ const sortOptions = [
   { value: 'title', label: 'العنوان' },
 ];
 
-const dashboardFields = [
-  'العنوان',
-  'التصنيف',
-  'الوسم',
-  'الناشر',
-  'المؤلف',
-  'السنة',
-  'اللغة',
-  'عدد الصفحات',
-  'ملف PDF',
-  'صورة الغلاف',
-];
 
 function fieldValue(value: string | number | null | undefined) {
   if (value === null || value === undefined || value === '') return null;
@@ -277,3 +265,4 @@ export default async function StandardizationInternalPage({
     </main>
   );
 }
+

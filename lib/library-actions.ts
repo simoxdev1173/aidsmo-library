@@ -6,6 +6,7 @@ import { authenticateAdmin, createAdminSession, destroyAdminSession, requireAdmi
 import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { saveUpload } from "@/lib/uploads";
+import { createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -114,8 +115,10 @@ export async function createEntryAction(formData: FormData) {
 
   try {
     const status = text(formData, "status") || "DRAFT";
-    const coverImagePath = await saveUpload(formData.get("cover") as File | null, "covers");
     const filePath = await saveUpload(formData.get("document") as File | null, "documents");
+    const uploadedCoverImagePath = await saveUpload(formData.get("cover") as File | null, "covers");
+    const generatedCoverImagePath = uploadedCoverImagePath ? null : await createPdfCoverFromPublicPath(filePath);
+    const coverImagePath = uploadedCoverImagePath ?? generatedCoverImagePath;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title);
 
     await prisma.libraryEntry.create({
@@ -168,10 +171,12 @@ export async function updateEntryAction(id: string, formData: FormData) {
 
   try {
     const status = text(formData, "status") || "DRAFT";
-    const coverImagePath =
-      (await saveUpload(formData.get("cover") as File | null, "covers")) ?? existing.coverImagePath;
     const filePath =
       (await saveUpload(formData.get("document") as File | null, "documents")) ?? existing.filePath;
+    const uploadedCoverImagePath = await saveUpload(formData.get("cover") as File | null, "covers");
+    const generatedCoverImagePath =
+      uploadedCoverImagePath || existing.coverImagePath ? null : await createPdfCoverFromPublicPath(filePath);
+    const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? generatedCoverImagePath;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title, id);
 
     await prisma.libraryEntry.update({

@@ -23,14 +23,13 @@ function coverFilename() {
   return `${randomUUID()}.png`;
 }
 
-export async function createPdfCoverFromFilePath(pdfFilePath: string) {
+async function renderPdfCover(bytes: Uint8Array) {
   const { createCanvas } = await import("@napi-rs/canvas");
   const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist/legacy/build/pdf.mjs");
   GlobalWorkerOptions.workerSrc = "";
 
-  const bytes = await readFile(pdfFilePath);
   const loadingTask = getDocument({
-    data: new Uint8Array(bytes),
+    data: bytes,
     disableFontFace: true,
     useSystemFonts: true,
   });
@@ -68,6 +67,22 @@ export async function createPdfCoverFromFilePath(pdfFilePath: string) {
       await pdf.cleanup();
     }
   }
+}
+
+export async function createPdfCoverFromBytes(bytes: ArrayBuffer | Uint8Array | Buffer) {
+  return renderPdfCover(new Uint8Array(bytes));
+}
+
+export async function createPdfCoverFromFile(file: File | null | undefined) {
+  if (!file || file.size === 0 || file.type !== "application/pdf") {
+    return null;
+  }
+
+  return createPdfCoverFromBytes(await file.arrayBuffer());
+}
+
+export async function createPdfCoverFromFilePath(pdfFilePath: string) {
+  return renderPdfCover(new Uint8Array(await readFile(pdfFilePath)));
 }
 
 export async function createPdfCoverFromPublicPath(filePath: string | null | undefined) {

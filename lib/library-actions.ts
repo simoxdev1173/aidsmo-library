@@ -6,7 +6,7 @@ import { authenticateAdmin, createAdminSession, destroyAdminSession, requireAdmi
 import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { saveUpload } from "@/lib/uploads";
-import { createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
+import { createPdfCoverFromFile } from "@/lib/pdf-cover";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -43,6 +43,15 @@ function getActionError(error: unknown) {
   }
 
   return "Something went wrong. Please try again.";
+}
+
+async function tryCreatePdfCover(file: File | null) {
+  try {
+    return await createPdfCoverFromFile(file);
+  } catch (error) {
+    console.error("PDF cover generation failed", error);
+    return null;
+  }
 }
 
 async function uniqueEntrySlug(baseValue: string, currentId?: string) {
@@ -115,9 +124,11 @@ export async function createEntryAction(formData: FormData) {
 
   try {
     const status = text(formData, "status") || "DRAFT";
-    const filePath = await saveUpload(formData.get("document") as File | null, "documents");
-    const uploadedCoverImagePath = await saveUpload(formData.get("cover") as File | null, "covers");
-    const generatedCoverImagePath = uploadedCoverImagePath ? null : await createPdfCoverFromPublicPath(filePath);
+    const documentFile = formData.get("document") as File | null;
+    const coverFile = formData.get("cover") as File | null;
+    const filePath = await saveUpload(documentFile, "documents");
+    const uploadedCoverImagePath = await saveUpload(coverFile, "covers");
+    const generatedCoverImagePath = uploadedCoverImagePath ? null : await tryCreatePdfCover(documentFile);
     const coverImagePath = uploadedCoverImagePath ?? generatedCoverImagePath;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title);
 
@@ -171,11 +182,13 @@ export async function updateEntryAction(id: string, formData: FormData) {
 
   try {
     const status = text(formData, "status") || "DRAFT";
+    const documentFile = formData.get("document") as File | null;
+    const coverFile = formData.get("cover") as File | null;
     const filePath =
-      (await saveUpload(formData.get("document") as File | null, "documents")) ?? existing.filePath;
-    const uploadedCoverImagePath = await saveUpload(formData.get("cover") as File | null, "covers");
+      (await saveUpload(documentFile, "documents")) ?? existing.filePath;
+    const uploadedCoverImagePath = await saveUpload(coverFile, "covers");
     const generatedCoverImagePath =
-      uploadedCoverImagePath || existing.coverImagePath ? null : await createPdfCoverFromPublicPath(filePath);
+      uploadedCoverImagePath || existing.coverImagePath ? null : await tryCreatePdfCover(documentFile);
     const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? generatedCoverImagePath;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title, id);
 

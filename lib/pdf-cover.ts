@@ -29,6 +29,7 @@ function coverFilename() {
 
 async function renderPdfCover(bytes: Uint8Array) {
   const { createCanvas } = await import("@napi-rs/canvas");
+  await import("pdfjs-dist/legacy/build/pdf.worker.mjs");
   const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist/legacy/build/pdf.mjs");
   GlobalWorkerOptions.workerSrc = pathToFileURL(
     require.resolve("pdfjs-dist/legacy/build/pdf.worker.mjs"),

@@ -50,20 +50,39 @@ type CoverGenerationResult = {
   failed: boolean;
 };
 
-async function tryCreatePdfCover(bytes: Buffer | null | undefined, context: string): Promise<CoverGenerationResult> {
-  if (!bytes) {
+async function tryCreatePdfCover(
+  bytes: Buffer | null | undefined,
+  context: string,
+  savedFilePath?: string | null,
+): Promise<CoverGenerationResult> {
+  if (!bytes && !savedFilePath) {
     return { path: null, failed: false };
   }
 
-  try {
-    return {
-      path: await createPdfCoverFromBytes(bytes),
-      failed: false,
-    };
-  } catch (error) {
-    console.error(`PDF cover generation failed: ${context}`, error);
-    return { path: null, failed: true };
+  if (bytes) {
+    try {
+      return {
+        path: await createPdfCoverFromBytes(bytes),
+        failed: false,
+      };
+    } catch (error) {
+      console.error(`PDF cover generation from upload bytes failed: ${context}`, error);
+    }
   }
+
+  if (savedFilePath) {
+    try {
+      const path = await createPdfCoverFromPublicPath(savedFilePath);
+
+      if (path) {
+        return { path, failed: false };
+      }
+    } catch (error) {
+      console.error(`PDF cover generation from saved file failed: ${context}`, error);
+    }
+  }
+
+  return { path: null, failed: true };
 }
 
 function coverStatusParam(result: CoverGenerationResult, attempted: boolean) {
@@ -151,7 +170,7 @@ export async function createEntryAction(formData: FormData) {
     const uploadedCoverImagePath = await saveUploadBytes(coverUpload, "covers");
     const coverGeneration = uploadedCoverImagePath
       ? { path: null, failed: false }
-      : await tryCreatePdfCover(documentUpload?.bytes, `new entry "${title}"`);
+      : await tryCreatePdfCover(documentUpload?.bytes, `new entry "${title}"`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? coverGeneration.path;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title);
 
@@ -218,7 +237,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
     const coverGeneration =
       uploadedCoverImagePath || existing.coverImagePath
         ? { path: null, failed: false }
-        : await tryCreatePdfCover(documentUpload?.bytes, `entry "${existing.title}" (${id})`);
+        : await tryCreatePdfCover(documentUpload?.bytes, `entry "${existing.title}" (${id})`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? coverGeneration.path;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title, id);
 

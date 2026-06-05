@@ -1,7 +1,11 @@
 import { randomUUID } from "crypto";
+import { createRequire } from "module";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
+import { pathToFileURL } from "url";
 import { getUploadRoot, publicUploadPathToFilePath } from "@/lib/uploads";
+
+const require = createRequire(import.meta.url);
 
 type PdfPageViewport = {
   width: number;
@@ -26,7 +30,9 @@ function coverFilename() {
 async function renderPdfCover(bytes: Uint8Array) {
   const { createCanvas } = await import("@napi-rs/canvas");
   const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  GlobalWorkerOptions.workerSrc = "";
+  GlobalWorkerOptions.workerSrc = pathToFileURL(
+    require.resolve("pdfjs-dist/legacy/build/pdf.worker.mjs"),
+  ).toString();
 
   const loadingTask = getDocument({
     data: bytes,

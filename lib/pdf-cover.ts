@@ -28,7 +28,19 @@ function coverFilename() {
 }
 
 async function renderPdfCover(bytes: Uint8Array) {
-  const { createCanvas } = await import("@napi-rs/canvas");
+  let createCanvas: typeof import("@napi-rs/canvas").createCanvas;
+
+  try {
+    ({ createCanvas } = await import("@napi-rs/canvas"));
+  } catch (error) {
+    console.error("PDF cover canvas import failed", {
+      platform: process.platform,
+      arch: process.arch,
+      message: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
+
   await import("pdfjs-dist/legacy/build/pdf.worker.mjs");
   const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist/legacy/build/pdf.mjs");
   GlobalWorkerOptions.workerSrc = pathToFileURL(

@@ -17,6 +17,7 @@ enum EntryType {
   BOOK
   PAGE
   OTHER
+  EVENT
 }
 
 model AdminUser {
@@ -63,6 +64,10 @@ model LibraryEntry {
   year           String?
   language       String      @default("العربية")
   pageCount      Int?
+  eventStartDate DateTime?
+  eventEndDate   DateTime?
+  eventLocation  String?
+  eventImages    Json        @default("[]")
   status         EntryStatus @default(DRAFT)
   featured       Boolean     @default(false)
   categoryId     String
@@ -75,5 +80,6 @@ model LibraryEntry {
   @@index([status])
   @@index([entryType])
   @@index([year])
+  @@index([eventStartDate])
   @@index([featured])
 }

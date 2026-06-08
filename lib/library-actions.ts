@@ -126,6 +126,77 @@ async function uniqueCategorySlug(baseValue: string, currentId?: string) {
   return slug;
 }
 
+const eventCategorySlugs = new Set([
+  "training-plan-2024",
+  "training-plan-2025",
+  "training-plan-2026",
+]);
+
+async function isEventCategory(categoryId: string) {
+  const category = await prisma.category.findUnique({
+    where: { id: categoryId },
+    select: {
+      slug: true,
+      parent: { select: { slug: true } },
+    },
+  });
+
+  return Boolean(category && (eventCategorySlugs.has(category.slug) || (category.parent?.slug && eventCategorySlugs.has(category.parent.slug))));
+}
+
+function optionalDate(formData: FormData, key: string) {
+  const value = text(formData, key);
+  if (!value) return null;
+
+  const date = new Date(`${value}T00:00:00.000Z`);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error("Invalid event date.");
+  }
+
+  return date;
+}
+
+function eventDates(formData: FormData) {
+  const startDate = optionalDate(formData, "eventStartDate");
+  const endDate = optionalDate(formData, "eventEndDate");
+
+  if (startDate && endDate && endDate < startDate) {
+    throw new Error("Event end date must be after the start date.");
+  }
+
+  return { startDate, endDate };
+}
+
+function imageList(value: unknown) {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === "string" && item.startsWith("/uploads/"));
+}
+
+async function saveEventImages(formData: FormData, existingImages: string[] = []) {
+  const files = formData
+    .getAll("eventImages")
+    .filter((file): file is File => file instanceof File && file.size > 0);
+
+  if (files.length === 0) {
+    return existingImages;
+  }
+
+  if (existingImages.length + files.length > 3) {
+    throw new Error("Event images are limited to 3 images.");
+  }
+
+  const savedImages: string[] = [];
+  for (const file of files) {
+    const upload = await readUpload(file, "events");
+    const savedPath = await saveUploadBytes(upload, "events");
+    if (savedPath) {
+      savedImages.push(savedPath);
+    }
+  }
+
+  return [...existingImages, ...savedImages];
+}
+
 export async function loginAction(formData: FormData) {
   let admin: Awaited<ReturnType<typeof authenticateAdmin>> = null;
 
@@ -162,13 +233,16 @@ export async function createEntryAction(formData: FormData) {
 
   try {
     const status = text(formData, "status") || "DRAFT";
-    const documentFile = formData.get("document") as File | null;
-    const coverFile = formData.get("cover") as File | null;
+    const isEvent = await isEventCategory(categoryId);
+    const documentFile = isEvent ? null : (formData.get("document") as File | null);
+    const coverFile = isEvent ? null : (formData.get("cover") as File | null);
     const documentUpload = await readUpload(documentFile, "documents");
     const coverUpload = await readUpload(coverFile, "covers");
-    const filePath = await saveUploadBytes(documentUpload, "documents");
-    const uploadedCoverImagePath = await saveUploadBytes(coverUpload, "covers");
-    const coverGeneration = uploadedCoverImagePath
+    const eventImages = isEvent ? await saveEventImages(formData) : [];
+    const dates = isEvent ? eventDates(formData) : { startDate: null, endDate: null };
+    const filePath = isEvent ? null : await saveUploadBytes(documentUpload, "documents");
+    const uploadedCoverImagePath = isEvent ? eventImages[0] ?? null : await saveUploadBytes(coverUpload, "covers");
+    const coverGeneration = uploadedCoverImagePath || isEvent
       ? { path: null, failed: false }
       : await tryCreatePdfCover(documentUpload?.bytes, `new entry "${title}"`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? coverGeneration.path;
@@ -178,7 +252,7 @@ export async function createEntryAction(formData: FormData) {
       data: {
         title,
         slug,
-        entryType: "BOOK",
+        entryType: isEvent ? "EVENT" : "BOOK",
         description: optionalText(formData, "description"),
         notes: optionalText(formData, "notes"),
         contentSections: [],
@@ -186,11 +260,15 @@ export async function createEntryAction(formData: FormData) {
         categoryId,
         coverImagePath,
         filePath,
-        publisher: optionalText(formData, "publisher"),
-        author: optionalText(formData, "author"),
-        year: optionalYearLabel(formData, "year"),
+        publisher: isEvent ? null : optionalText(formData, "publisher"),
+        author: isEvent ? null : optionalText(formData, "author"),
+        year: isEvent ? null : optionalYearLabel(formData, "year"),
         language: text(formData, "language") || "العربية",
-        pageCount: optionalInt(formData, "pageCount"),
+        pageCount: isEvent ? null : optionalInt(formData, "pageCount"),
+        eventStartDate: dates.startDate,
+        eventEndDate: dates.endDate,
+        eventLocation: isEvent ? optionalText(formData, "eventLocation") : null,
+        eventImages,
         status: status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
         featured: formData.get("featured") === "on",
         publishedAt: status === "PUBLISHED" ? new Date() : null,
@@ -227,15 +305,18 @@ export async function updateEntryAction(id: string, formData: FormData) {
 
   try {
     const status = text(formData, "status") || "DRAFT";
-    const documentFile = formData.get("document") as File | null;
-    const coverFile = formData.get("cover") as File | null;
+    const isEvent = await isEventCategory(categoryId);
+    const documentFile = isEvent ? null : (formData.get("document") as File | null);
+    const coverFile = isEvent ? null : (formData.get("cover") as File | null);
     const documentUpload = await readUpload(documentFile, "documents");
     const coverUpload = await readUpload(coverFile, "covers");
+    const eventImages = isEvent ? await saveEventImages(formData, imageList(existing.eventImages)) : imageList(existing.eventImages);
+    const dates = isEvent ? eventDates(formData) : { startDate: existing.eventStartDate, endDate: existing.eventEndDate };
     const filePath =
-      (await saveUploadBytes(documentUpload, "documents")) ?? existing.filePath;
-    const uploadedCoverImagePath = await saveUploadBytes(coverUpload, "covers");
+      isEvent ? existing.filePath : (await saveUploadBytes(documentUpload, "documents")) ?? existing.filePath;
+    const uploadedCoverImagePath = isEvent ? eventImages[0] ?? existing.coverImagePath : await saveUploadBytes(coverUpload, "covers");
     const coverGeneration =
-      uploadedCoverImagePath || existing.coverImagePath
+      uploadedCoverImagePath || existing.coverImagePath || isEvent
         ? { path: null, failed: false }
         : await tryCreatePdfCover(documentUpload?.bytes, `entry "${existing.title}" (${id})`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? coverGeneration.path;
@@ -246,18 +327,22 @@ export async function updateEntryAction(id: string, formData: FormData) {
       data: {
         title,
         slug,
-        entryType: "BOOK",
-        description: existing.description,
+        entryType: isEvent ? "EVENT" : "BOOK",
+        description: isEvent ? optionalText(formData, "description") : existing.description,
         notes: optionalText(formData, "notes"),
         tag: optionalText(formData, "tag"),
         categoryId,
         coverImagePath,
         filePath,
-        publisher: optionalText(formData, "publisher"),
-        author: optionalText(formData, "author"),
-        year: optionalYearLabel(formData, "year"),
-        language: text(formData, "language") || "العربية",
-        pageCount: optionalInt(formData, "pageCount"),
+        publisher: isEvent ? existing.publisher : optionalText(formData, "publisher"),
+        author: isEvent ? existing.author : optionalText(formData, "author"),
+        year: isEvent ? existing.year : optionalYearLabel(formData, "year"),
+        language: isEvent ? existing.language : text(formData, "language") || "العربية",
+        pageCount: isEvent ? existing.pageCount : optionalInt(formData, "pageCount"),
+        eventStartDate: dates.startDate,
+        eventEndDate: dates.endDate,
+        eventLocation: isEvent ? optionalText(formData, "eventLocation") : existing.eventLocation,
+        eventImages,
         status: status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
         featured: formData.get("featured") === "on",
         publishedAt: status === "PUBLISHED" ? existing.publishedAt ?? new Date() : null,

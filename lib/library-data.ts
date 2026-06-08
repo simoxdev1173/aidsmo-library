@@ -53,11 +53,24 @@ export async function getDashboardStats() {
 
 export async function getCategoryOptions() {
   return prisma.category.findMany({
-    where: { isNavVisible: true },
+    where: { isNavVisible: true, children: { none: {} } },
     orderBy: [{ order: "asc" }, { name: "asc" }],
-    include: {
-      parent: { include: { parent: true } },
-      _count: { select: { entries: true, children: true } },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      parent: {
+        select: {
+          name: true,
+          slug: true,
+          parent: {
+            select: {
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      },
     },
   });
 }

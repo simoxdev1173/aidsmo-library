@@ -6,6 +6,15 @@ import { getCategoryOptions, getEntryForEdit } from '@/lib/library-data';
 
 export const dynamic = 'force-dynamic';
 
+function dateInputValue(date: Date | null | undefined) {
+  return date ? date.toISOString().slice(0, 10) : null;
+}
+
+function eventImagesValue(value: unknown) {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === 'string' && item.startsWith('/uploads/'));
+}
+
 export default async function EditEntryPage({
   params,
   searchParams,
@@ -76,7 +85,30 @@ export default async function EditEntryPage({
         </form>
       )}
 
-      <EntryForm entry={entry} categories={categories} />
+      <EntryForm
+        entry={{
+          id: entry.id,
+          title: entry.title,
+          description: entry.description,
+          tag: entry.tag,
+          notes: entry.notes,
+          coverImagePath: entry.coverImagePath,
+          filePath: entry.filePath,
+          publisher: entry.publisher,
+          author: entry.author,
+          year: entry.year,
+          language: entry.language,
+          pageCount: entry.pageCount,
+          status: entry.status,
+          featured: entry.featured,
+          categoryId: entry.categoryId,
+          eventStartDate: dateInputValue(entry.eventStartDate),
+          eventEndDate: dateInputValue(entry.eventEndDate),
+          eventLocation: entry.eventLocation,
+          eventImages: eventImagesValue(entry.eventImages),
+        }}
+        categories={categories}
+      />
     </div>
   );
 }

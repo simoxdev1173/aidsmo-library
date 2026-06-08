@@ -49,8 +49,9 @@ const children = [
   { parentSlug: "industrial-info", name: "الإصدارات", slug: "publications", order: 44, navHref: "/info/publications" },
   { parentSlug: "training", name: "حول المعهد", slug: "training-about", order: 51, navHref: "/training/about" },
   { parentSlug: "training", name: "الخطة التدريبية", slug: "training-plan", order: 52, navHref: "/training/plan" },
-  { parentSlug: "training", name: "دورات تدريبية", slug: "training-courses", order: 53, navHref: "/training/courses" },
-  { parentSlug: "training", name: "ورش عمل", slug: "training-workshops", order: 54, navHref: "/training/workshops" },
+  { parentSlug: "training-plan", name: "2024", slug: "training-plan-2024", order: 521, navHref: "/training/plan/2024" },
+  { parentSlug: "training-plan", name: "2025", slug: "training-plan-2025", order: 522, navHref: "/training/plan/2025" },
+  { parentSlug: "training-plan", name: "2026", slug: "training-plan-2026", order: 523, navHref: "/training/plan/2026" },
   { parentSlug: "archive", name: "المنظمة العربية للتنمية الصناعية والتقييس والتعدين", slug: "archive-org", order: 61, navHref: "/archive/org/founding" },
   { parentSlug: "archive-org", name: "تأسيس المنظمة", slug: "archive-org-founding", order: 611, navHref: "/archive/org/founding" },
   { parentSlug: "archive-org", name: "اتفاقيات الانشاء", slug: "archive-org-agreements", order: 612, navHref: "/archive/org/agreements" },
@@ -73,6 +74,8 @@ const children = [
 const hiddenCategorySlugs = [
   "industry-advisory-committee",
   "industry-research-coordination",
+  "training-courses",
+  "training-workshops",
 ];
 
 async function seedAdmin() {

@@ -68,14 +68,18 @@ export async function resolvePublicUploadFilePath(filePath: string | null | unde
   return null;
 }
 
-const allowedMimeTypes = {
+type UploadFolder = "covers" | "documents" | "events";
+
+const allowedMimeTypes: Record<UploadFolder, Set<string>> = {
   covers: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
   documents: new Set(["application/pdf"]),
+  events: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
 };
 
-const maxFileSize = {
+const maxFileSize: Record<UploadFolder, number> = {
   covers: 10 * 1024 * 1024,
   documents: 50 * 1024 * 1024,
+  events: 10 * 1024 * 1024,
 };
 
 function extensionFor(file: File) {
@@ -91,17 +95,17 @@ function extensionFor(file: File) {
   return "jpg";
 }
 
-function validateUpload(file: File, folder: "covers" | "documents") {
+function validateUpload(file: File, folder: UploadFolder) {
   if (!allowedMimeTypes[folder].has(file.type)) {
-    throw new Error(folder === "covers" ? "Unsupported cover image type." : "The document must be a PDF.");
+    throw new Error(folder === "documents" ? "The document must be a PDF." : "Unsupported image type.");
   }
 
   if (file.size > maxFileSize[folder]) {
-    throw new Error(folder === "covers" ? "Cover image must be 10MB or smaller." : "PDF must be 50MB or smaller.");
+    throw new Error(folder === "documents" ? "PDF must be 50MB or smaller." : "Image must be 10MB or smaller.");
   }
 }
 
-export async function readUpload(file: File | null, folder: "covers" | "documents") {
+export async function readUpload(file: File | null, folder: UploadFolder) {
   if (!file || file.size === 0) {
     return null;
   }
@@ -117,7 +121,7 @@ export async function readUpload(file: File | null, folder: "covers" | "document
 
 export async function saveUploadBytes(
   upload: Awaited<ReturnType<typeof readUpload>>,
-  folder: "covers" | "documents",
+  folder: UploadFolder,
 ) {
   if (!upload) {
     return null;
@@ -132,6 +136,6 @@ export async function saveUploadBytes(
   return `/uploads/${folder}/${filename}`;
 }
 
-export async function saveUpload(file: File | null, folder: "covers" | "documents") {
+export async function saveUpload(file: File | null, folder: UploadFolder) {
   return saveUploadBytes(await readUpload(file, folder), folder);
 }

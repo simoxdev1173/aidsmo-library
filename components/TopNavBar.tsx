@@ -78,9 +78,15 @@ const menuItemsData: MenuItem[] = [
     label: 'التدريب والاستشارات',
     children: [
       { label: 'حول المعهد', href: '/training/about' },
-      { label: 'الخطة التدريبية', href: '/training/plan' },
-      { label: 'دورات تدريبية', href: '/training/courses' },
-      { label: 'ورش عمل', href: '/training/workshops' },
+      {
+        label: 'الخطة التدريبية',
+        href: '/training/plan',
+        subItems: [
+          { label: '2024', href: '/training/plan/2024' },
+          { label: '2025', href: '/training/plan/2025' },
+          { label: '2026', href: '/training/plan/2026' },
+        ],
+      },
     ],
   },
   {

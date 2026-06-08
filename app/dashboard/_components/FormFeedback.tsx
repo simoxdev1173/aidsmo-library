@@ -104,11 +104,13 @@ export function FileField({
   accept,
   label,
   hint,
+  multiple = false,
 }: {
   name: string;
   accept: string;
   label: string;
   hint: string;
+  multiple?: boolean;
 }) {
   const { pending } = useFormStatus();
 
@@ -119,6 +121,7 @@ export function FileField({
         name={name}
         type="file"
         accept={accept}
+        multiple={multiple}
         disabled={pending}
         className="block w-full cursor-pointer rounded-md border border-[#CBD5E1] bg-white text-sm text-[#475569] file:ml-3 file:cursor-pointer file:border-0 file:bg-[#0369A1] file:px-4 file:py-2.5 file:font-bold file:text-white disabled:cursor-wait disabled:opacity-70"
       />

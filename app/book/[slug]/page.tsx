@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { HiOutlineBookmark, HiOutlineEye, HiOutlineRectangleGroup } from 'react-icons/hi2';
+import { HiOutlineBookmark, HiOutlineChatBubbleLeftRight, HiOutlineEye, HiOutlineRectangleGroup } from 'react-icons/hi2';
 import { getPublishedEntryBySlug } from '@/lib/library-data';
 import { categoryPath } from '@/lib/library-labels';
+import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,12 +81,6 @@ export default async function BookPage({
             {entry.title}
           </h1>
 
-          {description && (
-            <p className="mt-6 max-w-4xl text-lg leading-9 text-[#475569]">
-              {description}
-            </p>
-          )}
-
           <div className="mt-8 flex flex-wrap gap-3">
             {entry.filePath ? (
               <a href={entry.filePath} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center gap-2 rounded-md bg-[#0369A1] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#003652]">
@@ -118,6 +113,15 @@ export default async function BookPage({
             </section>
           )}
 
+          {description && (
+            <section className="mt-10 rounded-lg border border-[#D9E3EE] bg-white p-6 shadow-[0_18px_48px_rgba(10,37,64,0.07)]">
+              <h2 className="text-xl font-bold text-[#003652]">وصف المدخل</h2>
+              <p className="mt-4 max-w-4xl text-base leading-9 text-[#475569]">
+                {description}
+              </p>
+            </section>
+          )}
+
           {!isBook && sections.length > 0 && (
             <section className="mt-10 space-y-4">
               {sections.map((section, index) => (
@@ -132,6 +136,33 @@ export default async function BookPage({
               ))}
             </section>
           )}
+
+          <section className="mt-10 overflow-hidden rounded-lg border border-[#C29C41]/30 bg-[#071D2F] text-white shadow-[0_22px_70px_rgba(10,37,64,0.16)]">
+            <div className="p-6">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#C29C41]/35 bg-[#C29C41]/12 text-[#E8C96A]">
+                <HiOutlineChatBubbleLeftRight className="h-6 w-6" />
+              </div>
+              <h2 className="mt-4 text-2xl font-bold">اسأل المساعد عن هذا المدخل</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-white/72">
+                افتح المساعد الذكي بسؤال جاهز لتلخيص المحتوى أو استخراج أهم المعلومات قبل الاطلاع على الملف.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {[
+                  `لخص مدخل ${entry.title}`,
+                  `ما أهم الكلمات المفتاحية في ${entry.title}؟`,
+                  `اقترح أسئلة بحثية حول ${entry.title}`,
+                ].map((prompt) => (
+                  <ChatbotPromptButton
+                    key={prompt}
+                    prompt={prompt}
+                    className="rounded-full border border-white/12 bg-white/[0.07] px-4 py-2 text-sm font-bold text-white/82 transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/45 hover:bg-[#C29C41] hover:text-[#071D2F] active:translate-y-0"
+                  >
+                    {prompt}
+                  </ChatbotPromptButton>
+                ))}
+              </div>
+            </div>
+          </section>
         </article>
       </section>
     </main>

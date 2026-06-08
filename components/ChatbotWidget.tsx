@@ -20,6 +20,19 @@ const ChatbotWidget = () => {
     }
   }, [message]);
 
+  useEffect(() => {
+    const openFromPrompt = (event: Event) => {
+      const prompt = event instanceof CustomEvent && typeof event.detail?.prompt === 'string' ? event.detail.prompt : '';
+      setIsOpen(true);
+      if (prompt) {
+        setMessage(prompt);
+      }
+    };
+
+    window.addEventListener('aidsmo:open-chatbot', openFromPrompt);
+    return () => window.removeEventListener('aidsmo:open-chatbot', openFromPrompt);
+  }, []);
+
   return (
     <div dir="rtl" className="fixed bottom-6 right-6 z-50">
       <AnimatePresence>

@@ -6,6 +6,8 @@ import {
   HiOutlineArrowLeft,
   HiOutlineBookOpen,
   HiOutlineCalendarDays,
+  HiOutlineChatBubbleLeftRight,
+  HiOutlineChevronDown,
   HiOutlineDocumentText,
   HiOutlineLanguage,
   HiOutlineMagnifyingGlass,
@@ -13,6 +15,7 @@ import {
 } from 'react-icons/hi2';
 import { getStandardizationPageData } from '@/lib/library-data';
 import { categoryPath } from '@/lib/library-labels';
+import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 
 type StandardizationPageConfig = {
   slug: string;
@@ -49,6 +52,71 @@ const sortOptions = [
   { value: 'year', label: 'السنة' },
   { value: 'title', label: 'العنوان' },
 ];
+
+function SelectField({
+  name,
+  value,
+  options,
+  label,
+}: {
+  name: string;
+  value: string;
+  label: string;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <label className="group relative block">
+      <span className="pointer-events-none absolute right-3 top-2 text-[0.65rem] font-bold text-[#C29C41] transition duration-200 group-focus-within:text-[#0369A1]">
+        {label}
+      </span>
+      <select
+        name={name}
+        defaultValue={value}
+        className="h-14 w-full cursor-pointer appearance-none rounded-md border border-[#D9E3EE] bg-white px-3 pb-2 pt-6 text-sm font-bold text-[#334155] shadow-sm outline-none transition duration-200 hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>{option.label}</option>
+        ))}
+      </select>
+      <HiOutlineChevronDown className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64748B] transition duration-200 group-focus-within:text-[#0369A1]" />
+    </label>
+  );
+}
+
+function AiPromptPanel({ title }: { title: string }) {
+  const prompts = [
+    `لخص أهم ما ورد في ${title}`,
+    `ما الوثائق الأكثر ارتباطا بهذا الموضوع؟`,
+    `اقترح كلمات بحث دقيقة داخل هذه الصفحة`,
+  ];
+
+  return (
+    <section className="mt-10 overflow-hidden border border-[#C29C41]/28 bg-[#071D2F] text-white shadow-[0_22px_70px_rgba(10,37,64,0.16)]">
+      <div className="grid gap-6 p-5 md:grid-cols-[1fr_auto] md:items-center md:p-7">
+        <div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#C29C41]/35 bg-[#C29C41]/12 text-[#E8C96A]">
+            <HiOutlineChatBubbleLeftRight className="h-6 w-6" />
+          </div>
+          <h2 className="mt-4 text-2xl font-bold text-white">اسأل المساعد الذكي عن هذه الصفحة</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-7 text-white/72">
+            استخدم الأسئلة المقترحة لتضييق البحث أو استخراج ملخص سريع من محتوى التقييس.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 md:max-w-xl md:justify-end">
+          {prompts.map((prompt) => (
+            <ChatbotPromptButton
+              key={prompt}
+              prompt={prompt}
+              className="rounded-full border border-white/12 bg-white/[0.07] px-4 py-2 text-sm font-bold text-white/82 transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/45 hover:bg-[#C29C41] hover:text-[#071D2F] active:translate-y-0"
+            >
+              {prompt}
+            </ChatbotPromptButton>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 
 function fieldValue(value: string | number | null | undefined) {
@@ -122,8 +190,8 @@ export default async function StandardizationInternalPage({
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-5 border border-[#D9E3EE] bg-white p-4 shadow-[0_18px_55px_rgba(10,37,64,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
-          <form className="grid gap-3 md:grid-cols-[1.25fr_180px_180px_170px_auto]">
+        <div className="grid gap-5 rounded-lg border border-[#D9E3EE] bg-white p-4 shadow-[0_18px_55px_rgba(10,37,64,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
+          <form className="grid gap-3 md:grid-cols-[1.25fr_190px_190px_180px_auto]">
             <label className="relative block">
               <span className="sr-only">بحث</span>
               <HiOutlineMagnifyingGlass className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#C29C41]" />
@@ -131,38 +199,39 @@ export default async function StandardizationInternalPage({
                 name="q"
                 defaultValue={filters.q ?? ''}
                 placeholder="ابحث في العنوان، المؤلف، الناشر، أو الوصف"
-                className="h-12 w-full border border-[#D9E3EE] bg-[#F8FAFC] pr-10 pl-3 text-sm font-semibold outline-none transition duration-200 placeholder:text-[#64748B] focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
+                className="h-14 w-full rounded-md border border-[#D9E3EE] bg-white pr-10 pl-3 text-sm font-semibold shadow-sm outline-none transition duration-200 placeholder:text-[#64748B] hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
               />
             </label>
 
-            <select name="tag" defaultValue={filters.tag ?? ''} className="h-12 border border-[#D9E3EE] bg-[#F8FAFC] px-3 text-sm font-bold text-[#334155] outline-none focus:border-[#0369A1]">
-              <option value="">كل الوسوم</option>
-              {data.facets.tags.map((tag) => (
-                <option key={tag} value={tag}>{tag}</option>
-              ))}
-            </select>
+            <SelectField
+              name="tag"
+              value={filters.tag ?? ''}
+              label="الوسم"
+              options={[{ value: '', label: 'كل الوسوم' }, ...data.facets.tags.map((tag) => ({ value: tag, label: tag }))]}
+            />
 
-            <select name="year" defaultValue={filters.year ?? ''} className="h-12 border border-[#D9E3EE] bg-[#F8FAFC] px-3 text-sm font-bold text-[#334155] outline-none focus:border-[#0369A1]">
-              <option value="">كل السنوات</option>
-              {data.facets.years.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
+            <SelectField
+              name="year"
+              value={filters.year ?? ''}
+              label="السنة"
+              options={[{ value: '', label: 'كل السنوات' }, ...data.facets.years.map((year) => ({ value: year, label: year }))]}
+            />
 
-            <select name="sort" defaultValue={activeSort} className="h-12 border border-[#D9E3EE] bg-[#F8FAFC] px-3 text-sm font-bold text-[#334155] outline-none focus:border-[#0369A1]">
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
+            <SelectField
+              name="sort"
+              value={activeSort}
+              label="الترتيب"
+              options={sortOptions}
+            />
 
-            <button type="submit" className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 bg-[#0369A1] px-5 text-sm font-bold text-white transition duration-200 hover:bg-[#003652] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">
+            <button type="submit" className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#0369A1] px-5 text-sm font-bold text-white shadow-[0_10px_24px_rgba(3,105,161,0.18)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#003652] focus:outline-none focus:ring-2 focus:ring-[#C29C41] active:translate-y-0">
               <HiOutlineAdjustmentsHorizontal className="h-5 w-5" />
               تطبيق
             </button>
           </form>
 
           {hasFilters && (
-            <Link href={data.category.navHref ?? `/catalog/${data.category.slug}`} className="inline-flex h-12 items-center justify-center border border-[#C29C41]/45 px-4 text-sm font-bold text-[#8A6A1D] transition duration-200 hover:bg-[#FFF8E1]">
+            <Link href={data.category.navHref ?? `/catalog/${data.category.slug}`} className="inline-flex h-14 items-center justify-center rounded-md border border-[#C29C41]/45 px-4 text-sm font-bold text-[#8A6A1D] transition duration-200 hover:bg-[#FFF8E1]">
               مسح الفلتر
             </Link>
           )}
@@ -222,7 +291,10 @@ export default async function StandardizationInternalPage({
                       {entry.title}
                     </h2>
                     {entry.description && (
-                      <p className="mt-3 line-clamp-3 text-sm leading-7 text-[#64748B]">{entry.description}</p>
+                      <div className="mt-4 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] p-3">
+                        <p className="text-[0.7rem] font-bold text-[#C29C41]">وصف مختصر</p>
+                        <p className="mt-2 line-clamp-3 text-sm leading-7 text-[#64748B]">{entry.description}</p>
+                      </div>
                     )}
 
                     <div className="mt-5 flex flex-wrap gap-2">
@@ -261,6 +333,8 @@ export default async function StandardizationInternalPage({
             </div>
           </div>
         )}
+
+        <AiPromptPanel title={config.title} />
       </section>
     </main>
   );

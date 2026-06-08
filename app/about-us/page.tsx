@@ -72,10 +72,7 @@ export default function AboutPage() {
         <div className="relative z-10 mx-auto flex min-h-[calc(78vh-9rem)] max-w-7xl items-center px-4 pb-20 sm:px-6 lg:px-8">
           <div className="grid w-full gap-10 lg:grid-cols-[1fr_420px] lg:items-end">
             <div className="max-w-4xl">
-              <p className="font-display text-xs font-bold uppercase tracking-[0.28em] text-[#E8C96A]">
-                المكتبة الرقمية الذكية
-              </p>
-              <h1 className="mt-6 font-academic text-5xl font-bold leading-tight md:text-7xl">
+              <h1 className="mt-6 font-academic text-3xl font-bold leading-tight md:text-5xl">
                 من نحن
               </h1>
               <p className="mt-7 max-w-3xl font-academic text-xl leading-10 text-white/82 md:text-2xl">
@@ -108,11 +105,11 @@ export default function AboutPage() {
 
       {/* Content */}
       <div className="flex flex-col justify-center max-w-xl">
-        <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
+        <p className="academic-heading text-2xl leading-tight md:text-3xl">
           رسالتنا
         </p>
 
-        <h2 className="academic-heading mt-4 text-2xl leading-tight md:text-3xl">
+        <h2 className="font-display mt-4  text-lg font-bold uppercase tracking-[0.22em] text-[#C29C41]">
           تحويل أرشيف المعرفة إلى تجربة بحث واستكشاف
         </h2>
 
@@ -187,10 +184,10 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
             <div>
-              <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-[#C29C41]">
+              <p className="academic-heading  text-3xl leading-tight md:text-3xl">
                 مسار العمل
               </p>
-              <h2 className="academic-heading mt-4 text-3xl leading-tight md:text-3xl">
+              <h2 className="font-display text-lg mt-4 font-bold uppercase tracking-[0.22em] text-[#C29C41]">
                 من الأرشفة إلى الإتاحة الذكية
               </h2>
             </div>

@@ -3,6 +3,7 @@
 import { cn } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuMenu, LuSearch, LuX } from 'react-icons/lu';
 import { MdDashboardCustomize } from 'react-icons/md';
@@ -344,6 +345,9 @@ const TopNavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const pathname = usePathname();
+  const forceSolidNav = pathname.startsWith('/standardization');
+  const isSolid = isScrolled || forceSolidNav;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -366,13 +370,13 @@ const TopNavBar = () => {
       <header
         className={cn(
           'fixed inset-x-0 z-[60] px-2 transition-all duration-500 md:px-4 2xl:px-6',
-          isScrolled ? 'top-3' : 'top-4',
+          isSolid ? 'top-3' : 'top-4',
         )}
       >
         <nav
           className={cn(
             'mx-auto max-w-[92rem] border transition-all duration-500',
-            isScrolled
+            isSolid
               ? 'corner-card border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
               : 'border-white/15 bg-[#0A2540]/30 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.14)] backdrop-blur-md hover:border-[#C29C41]/35 hover:bg-[#0A2540]/55',
           )}
@@ -381,20 +385,20 @@ const TopNavBar = () => {
             <div className="flex items-center gap-2 2xl:gap-3">
               <Link href="/" className="flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white">
                 <Image
-                  src={isScrolled ? '/logo-2.png' : '/logo-3.png'}
+                  src={isSolid ? '/logo-2.png' : '/logo-3.png'}
                   alt="المكتبة الرقمية"
                   height={240}
                   width={260}
-                  className={cn('object-contain transition-all duration-500', isScrolled ? 'h-12 w-auto' : 'h-14 w-auto md:h-16')}
+                  className={cn('object-contain transition-all duration-500', isSolid ? 'h-12 w-auto' : 'h-14 w-auto md:h-16')}
                   priority
                 />
               </Link>
 
-              <div className={cn('hidden h-12 w-px shrink-0 lg:block', isScrolled ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+              <div className={cn('hidden h-12 w-px shrink-0 lg:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
               <ul className="hidden flex-1 items-center justify-center gap-0 lg:flex">
                 {menuItemsData.map((item) => (
-                  <NavItem key={item.id} item={item} isActive={activeSection === item.id} isScrolled={isScrolled} />
+                  <NavItem key={item.id} item={item} isActive={activeSection === item.id} isScrolled={isSolid} />
                 ))}
               </ul>
 
@@ -408,23 +412,23 @@ const TopNavBar = () => {
                       dir="rtl"
                       className={cn(
                         'h-11 w-40 border pr-10 pl-4 text-sm font-medium outline-none transition duration-300 focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25',
-                        isScrolled
+                        isSolid
                           ? 'border-[#0369A1]/20 bg-[#F8FAFC] text-[#0A2540] placeholder:text-[#64748B]'
                           : 'border-white/16 bg-white/10 text-white placeholder:text-white/60',
                       )}
                     />
-                    <LuSearch className={cn('absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2', isScrolled ? 'text-[#C29C41]' : 'text-[#E8C96A]')} />
+                    <LuSearch className={cn('absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2', isSolid ? 'text-[#C29C41]' : 'text-[#E8C96A]')} />
                   </label>
                 </div>
 
-                <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isScrolled ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+                <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
                 <Link
                   href="/dashboard"
                   aria-label="لوحة التحكم"
                   className={cn(
                     'group relative hidden h-11 shrink-0 items-center justify-center gap-2 border px-3 text-sm font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:flex',
-                    isScrolled
+                    isSolid
                       ? 'border-[#C29C41]/35 bg-[#FFF8E1] text-[#8A6A1D] shadow-[0_8px_22px_rgba(194,156,65,0.16)] hover:border-[#C29C41] hover:bg-[#C29C41] hover:text-[#0A2540] focus:ring-offset-white'
                       : 'border-[#E8C96A]/35 bg-[#E8C96A]/12 text-[#E8C96A] shadow-[0_10px_26px_rgba(0,0,0,0.12)] hover:border-[#E8C96A] hover:bg-[#E8C96A] hover:text-[#0A2540] focus:ring-offset-[#0A2540]',
                   )}
@@ -434,7 +438,7 @@ const TopNavBar = () => {
                   <span
                     className={cn(
                       'pointer-events-none absolute top-full mt-3 whitespace-nowrap border px-3 py-1.5 text-xs font-bold opacity-0 shadow-[0_10px_24px_rgba(10,37,64,0.14)] transition duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 2xl:hidden',
-                      isScrolled
+                      isSolid
                         ? 'border-[#C29C41]/30 bg-white text-[#003652]'
                         : 'border-[#E8C96A]/30 bg-[#0A2540] text-white',
                     )}
@@ -443,7 +447,7 @@ const TopNavBar = () => {
                   </span>
                 </Link>
 
-                <div className={cn('hidden h-12 w-px shrink-0 lg:block', isScrolled ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+                <div className={cn('hidden h-12 w-px shrink-0 lg:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
                 <Link
                   href="https://aidsmo.org"
@@ -456,7 +460,7 @@ const TopNavBar = () => {
                     alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين"
                     height={160}
                     width={160}
-                    className={cn('object-contain transition-all duration-500', isScrolled ? 'h-9 w-auto' : 'h-10 w-auto 2xl:h-11')}
+                    className={cn('object-contain transition-all duration-500', isSolid ? 'h-9 w-auto' : 'h-10 w-auto 2xl:h-11')}
                   />
                 </Link>
 
@@ -464,7 +468,7 @@ const TopNavBar = () => {
                   type="button"
                   className={cn(
                     'flex h-11 w-11 items-center justify-center border transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:hidden',
-                    isScrolled
+                    isSolid
                       ? 'border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] focus:ring-offset-white'
                       : 'border-white/20 bg-white/10 text-white focus:ring-offset-[#0A2540]',
                   )}

@@ -15,7 +15,7 @@ const initialDescription =
 
 const categories = [
   { name: "الصناعة", slug: "industry", order: 10, navHref: "/industry/integration-strategy" },
-  { name: "التقييس", slug: "standardization", order: 20, navHref: "/standardization/studies" },
+  { name: "التقييس", slug: "standardization", order: 20, navHref: "/standardization" },
   { name: "التعدين", slug: "mining", order: 30, navHref: "/catalog/mining" },
   { name: "المعلومات الصناعية", slug: "industrial-info", order: 40, navHref: "/info/statistics" },
   { name: "التدريب والاستشارات", slug: "training", order: 50, navHref: "/training/about" },

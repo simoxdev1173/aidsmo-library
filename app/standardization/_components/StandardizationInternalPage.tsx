@@ -19,6 +19,7 @@ import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 
 type StandardizationPageConfig = {
   slug: string | string[];
+  resetHref?: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -222,7 +223,7 @@ export default async function StandardizationInternalPage({
           </form>
 
           {hasFilters && (
-            <Link href={data.category.navHref ?? `/catalog/${data.category.slug}`} className="inline-flex h-14 items-center justify-center rounded-md border border-[#C29C41]/45 px-4 text-sm font-bold text-[#8A6A1D] transition duration-200 hover:bg-[#FFF8E1]">
+            <Link href={config.resetHref ?? data.category.navHref ?? `/catalog/${data.category.slug}`} className="inline-flex h-14 items-center justify-center rounded-md border border-[#C29C41]/45 px-4 text-sm font-bold text-[#8A6A1D] transition duration-200 hover:bg-[#FFF8E1]">
               مسح الفلتر
             </Link>
           )}

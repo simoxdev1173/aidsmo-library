@@ -8,6 +8,11 @@ BEGIN
   LIMIT 1;
 
   IF standardization_id IS NOT NULL THEN
+    UPDATE "Category"
+    SET "navHref" = '/standardization',
+        "updatedAt" = CURRENT_TIMESTAMP
+    WHERE "id" = standardization_id;
+
     INSERT INTO "Category" ("id", "name", "slug", "navHref", "order", "isNavVisible", "parentId", "createdAt", "updatedAt")
     VALUES
       ('standardization-training-courses', 'دورات تدريبية', 'standardization-training-courses', '/standardization/training-courses', 261, true, standardization_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

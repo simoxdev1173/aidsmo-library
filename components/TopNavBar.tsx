@@ -37,6 +37,7 @@ const menuItemsData: MenuItem[] = [
   {
     id: 'standardization',
     label: 'التقييس',
+    href: '/standardization',
     children: [
       { label: 'دراسات', href: '/standardization/studies' },
       { label: 'معاجم', href: '/standardization/glossaries' },

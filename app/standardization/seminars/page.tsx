@@ -2,7 +2,7 @@ import StandardizationInternalPage from '@/app/standardization/_components/Stand
 
 export const dynamic = 'force-dynamic';
 
-export default function StandardizationWorkshopsPage({
+export default function StandardizationSeminarsPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string; tag?: string; year?: string; sort?: string }>;
@@ -11,11 +11,11 @@ export default function StandardizationWorkshopsPage({
     <StandardizationInternalPage
       searchParams={searchParams}
       config={{
-        slug: ['standardization-workshops-events', 'standardization-workshops'],
-        eyebrow: 'التقييس / ورش عمل',
-        title: 'ورش عمل التقييس',
+        slug: 'standardization-seminars',
+        eyebrow: 'التقييس / ندوات',
+        title: 'ندوات التقييس',
         description:
-          'مساحة لورش العمل المرتبطة بالمواصفات والجودة والمطابقة، مع مواد معرفية تدعم بناء القدرات الفنية والمؤسسية.',
+          'مساحة للندوات المرتبطة بمنظومات التقييس والجودة والمطابقة، مع مدخلات تساعد على متابعة النقاشات الفنية والمؤسسية.',
         accent: '#C29C41',
         heroImage: '/trendingSection/t-2.jpg',
       }}

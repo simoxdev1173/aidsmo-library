@@ -144,7 +144,7 @@ export async function getCategoryWithEntries(slug: string) {
 }
 
 export async function getStandardizationPageData(
-  slug: string,
+  slug: string | string[],
   filters: {
     q?: string;
     tag?: string;
@@ -152,21 +152,25 @@ export async function getStandardizationPageData(
     sort?: string;
   } = {},
 ) {
-  const category = await prisma.category.findUnique({
-    where: { slug },
+  const slugs = Array.isArray(slug) ? slug : [slug];
+  const categories = await prisma.category.findMany({
+    where: { slug: { in: slugs } },
   });
 
-  if (!category) {
+  if (categories.length === 0) {
     return null;
   }
 
+  const category = slugs
+    .map((item) => categories.find((candidate) => candidate.slug === item))
+    .find((item): item is (typeof categories)[number] => Boolean(item)) ?? categories[0];
   const q = filters.q?.trim();
   const tag = filters.tag?.trim();
   const year = filters.year?.trim();
 
   const baseWhere = {
     status: "PUBLISHED" as const,
-    categoryId: category.id,
+    categoryId: { in: categories.map((item) => item.id) },
   };
 
   const where = {

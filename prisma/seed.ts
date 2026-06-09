@@ -35,6 +35,10 @@ const children = [
   { parentSlug: "standardization", name: "توجيهات", slug: "standardization-directives", order: 24, navHref: "/standardization/directives" },
   { parentSlug: "standardization", name: "إستراتيجيات", slug: "standardization-strategies", order: 25, navHref: "/standardization/strategies" },
   { parentSlug: "standardization", name: "ورش ودورات تدريبية", slug: "standardization-workshops", order: 26, navHref: "/standardization/workshops" },
+  { parentSlug: "standardization", name: "دورات تدريبية", slug: "standardization-training-courses", order: 261, navHref: "/standardization/training-courses" },
+  { parentSlug: "standardization", name: "ورش عمل", slug: "standardization-workshops-events", order: 262, navHref: "/standardization/workshops" },
+  { parentSlug: "standardization", name: "ندوات", slug: "standardization-seminars", order: 263, navHref: "/standardization/seminars" },
+  { parentSlug: "standardization", name: "إجتماعات", slug: "standardization-meetings", order: 264, navHref: "/standardization/meetings" },
   { parentSlug: "mining", name: "المكتبة الرقمية للدراسات التعدينية العربية", slug: "arab-mining-library", order: 30, navHref: "https://arabmininglibrary.org/" },
   { parentSlug: "mining", name: "جيولوجيا", slug: "geology", order: 31, navHref: "/catalog/geology" },
   { parentSlug: "geology", name: "الصناعة التعدينية", slug: "mining-industry", order: 32, navHref: "/catalog/mining-industry" },
@@ -74,6 +78,7 @@ const children = [
 const hiddenCategorySlugs = [
   "industry-advisory-committee",
   "industry-research-coordination",
+  "standardization-workshops",
   "training-courses",
   "training-workshops",
 ];

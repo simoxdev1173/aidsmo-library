@@ -18,7 +18,7 @@ import { categoryPath } from '@/lib/library-labels';
 import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 
 type StandardizationPageConfig = {
-  slug: string;
+  slug: string | string[];
   eyebrow: string;
   title: string;
   description: string;
@@ -156,23 +156,14 @@ export default async function StandardizationInternalPage({
   const downloadableCount = data.entries.filter((entry) => entry.filePath).length;
 
   return (
-    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] pt-28 text-[#0A2540]">
+    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#0A2540]">
       <section className="relative border-b border-[#C29C41]/20 bg-[#071D2F] text-white">
-        <div className="absolute inset-0 opacity-30" aria-hidden>
-          <Image src={config.heroImage} alt="" fill className="object-cover" priority />
+        <div className="absolute inset-0 opacity-[0.72]" aria-hidden>
+          <Image src="/standardization-bg.png" alt="" fill className="object-cover" priority />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.96),rgba(3,105,161,0.72)_54%,rgba(7,29,47,0.90))]" aria-hidden />
-        <div
-          className="absolute inset-0 opacity-[0.08]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.9) 1px, transparent 1px)',
-            backgroundSize: '72px 72px',
-          }}
-          aria-hidden
-        />
+        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.76),rgba(3,105,161,0.38)_56%,rgba(7,29,47,0.66))]" aria-hidden />
 
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8 lg:py-20">
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-36 sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8 lg:pb-20 lg:pt-40">
           <div className="max-w-4xl">
             <p className="font-display text-xs font-bold uppercase tracking-[0.26em] text-[#E8C96A]">
               {config.eyebrow}

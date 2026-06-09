@@ -39,6 +39,10 @@ type EntryFormValue = {
 };
 
 const eventCategorySlugs = new Set([
+  'standardization-training-courses',
+  'standardization-workshops-events',
+  'standardization-seminars',
+  'standardization-meetings',
   'training-plan-2024',
   'training-plan-2025',
   'training-plan-2026',

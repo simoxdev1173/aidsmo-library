@@ -3,7 +3,6 @@
 import { cn } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuMenu, LuSearch, LuX } from 'react-icons/lu';
 import { MdDashboardCustomize } from 'react-icons/md';
@@ -44,7 +43,10 @@ const menuItemsData: MenuItem[] = [
       { label: 'أدلة', href: '/standardization/guides' },
       { label: 'توجيهات', href: '/standardization/directives' },
       { label: 'إستراتيجيات', href: '/standardization/strategies' },
-      { label: 'ورش ودورات تدريبية', href: '/standardization/workshops' },
+      { label: 'دورات تدريبية', href: '/standardization/training-courses' },
+      { label: 'ورش عمل', href: '/standardization/workshops' },
+      { label: 'ندوات', href: '/standardization/seminars' },
+      { label: 'إجتماعات', href: '/standardization/meetings' },
     ],
   },
   {
@@ -345,9 +347,7 @@ const TopNavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const pathname = usePathname();
-  const forceSolidNav = pathname.startsWith('/standardization');
-  const isSolid = isScrolled || forceSolidNav;
+  const isSolid = isScrolled;
 
   useEffect(() => {
     const handleScroll = () => {

@@ -138,10 +138,10 @@ const LibraryStats = () => {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl text-center">
-          <h2 className="academic-heading text-4xl leading-tight md:text-5xl">
+          <h2 className="text-white text-4xl leading-tight md:text-5xl">
             أرقام تعكس ثراء مكتبتنا
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#475569]">
+          <p className="mx-auto mt-5 max-w-2xl font-academic text-xl leading-relaxed text-white">
             حصيلة معرفية منظمة تجمع الإصدارات والدراسات والتقارير في تجربة رقمية قابلة للاستكشاف.
           </p>
         </div>

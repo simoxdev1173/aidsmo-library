@@ -114,7 +114,7 @@ const VideoCarousel = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="academic-heading text-4xl leading-tight md:text-5xl"
+              className="text-white text-4xl leading-tight md:text-5xl"
             >
               الفيديوهات
             </motion.h2>

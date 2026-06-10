@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { HiOutlineArrowDown, HiOutlineArrowUp, HiOutlineDocumentPlus, HiOutlineTrash } from 'react-icons/hi2';
 import { LuCheck, LuChevronDown, LuSearch } from 'react-icons/lu';
 import EntryTypedFields from '@/app/dashboard/_components/EntryTypedFields';
@@ -52,6 +52,9 @@ const eventCategorySlugs = new Set([
   'training-plan-2025',
   'training-plan-2026',
 ]);
+
+const PDF_MAX_BYTES = 50 * 1024 * 1024;
+const IMAGE_MAX_BYTES = 10 * 1024 * 1024;
 
 function fieldClass() {
   return 'h-11 w-full rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#0A2540] outline-none transition duration-200 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20';
@@ -271,6 +274,9 @@ export default function EntryForm({
   categories: CategoryOption[];
 }) {
   const action = entry ? updateEntryAction.bind(null, entry.id) : createEntryAction;
+  const formRef = useRef<HTMLFormElement>(null);
+  const draftKey = `entry-form-draft:${entry?.id ?? 'new'}`;
+  const [clientError, setClientError] = useState<string | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(entry?.categoryId ?? '');
   const selectedCategory = useMemo(
     () => categories.find((category) => category.id === selectedCategoryId),
@@ -278,12 +284,125 @@ export default function EntryForm({
   );
   const eventMode = isEventCategory(selectedCategory);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const draft = window.sessionStorage.getItem(draftKey);
+    if (!draft || !formRef.current) return;
+    let restoreFrame: number | null = null;
+
+    try {
+      const values = JSON.parse(draft) as Record<string, string | boolean>;
+      const form = formRef.current;
+
+      for (const [name, value] of Object.entries(values)) {
+        const fields = Array.from(form.elements).filter((element): element is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement => {
+          return 'name' in element && element.name === name;
+        });
+
+        for (const field of fields) {
+          if (field instanceof HTMLInputElement && field.type === 'file') continue;
+          if (field instanceof HTMLInputElement && field.type === 'checkbox') {
+            field.checked = Boolean(value);
+          } else {
+            field.value = String(value);
+          }
+        }
+      }
+
+      if (typeof values.categoryId === 'string') {
+        restoreFrame = window.requestAnimationFrame(() => {
+          setSelectedCategoryId(String(values.categoryId));
+        });
+      }
+    } catch {
+      window.sessionStorage.removeItem(draftKey);
+    }
+
+    return () => {
+      if (restoreFrame !== null) {
+        window.cancelAnimationFrame(restoreFrame);
+      }
+    };
+  }, [draftKey]);
+
+  function persistDraft(form: HTMLFormElement) {
+    if (typeof window === 'undefined') return;
+
+    const values: Record<string, string | boolean> = {};
+    const elements = Array.from(form.elements);
+
+    for (const element of elements) {
+      if (!(element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement)) continue;
+      if (!element.name || element.type === 'file') continue;
+      values[element.name] = element instanceof HTMLInputElement && element.type === 'checkbox' ? element.checked : element.value;
+    }
+
+    values.categoryId = selectedCategoryId;
+    window.sessionStorage.setItem(draftKey, JSON.stringify(values));
+  }
+
+  function validateFiles(form: HTMLFormElement) {
+    const documentInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="documents"]'));
+    const coverInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="cover"]'));
+    const eventImageInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="eventImages"]'));
+    const existingInput = form.querySelector<HTMLInputElement>('input[name="documentFilesExisting"]');
+    let existingFiles: string[] = [];
+
+    try {
+      existingFiles = documentFilesValue(existingInput?.value ? JSON.parse(existingInput.value) : []);
+    } catch {
+      existingFiles = [];
+    }
+
+    const selectedDocuments = documentInputs.flatMap((input) => Array.from(input.files ?? []));
+
+    if (existingFiles.length + selectedDocuments.length > MAX_DOCUMENT_FILES) {
+      return `يمكن إضافة ${MAX_DOCUMENT_FILES} ملفات PDF كحد أقصى.`;
+    }
+
+    const oversizedPdf = selectedDocuments.find((file) => file.size > PDF_MAX_BYTES);
+    if (oversizedPdf) {
+      return `ملف PDF "${oversizedPdf.name}" يتجاوز 50MB. اختر ملفا أصغر.`;
+    }
+
+    const selectedImages = [...coverInputs, ...eventImageInputs].flatMap((input) => Array.from(input.files ?? []));
+    const oversizedImage = selectedImages.find((file) => file.size > IMAGE_MAX_BYTES);
+    if (oversizedImage) {
+      return `الصورة "${oversizedImage.name}" تتجاوز 10MB. اختر صورة أصغر.`;
+    }
+
+    return null;
+  }
+
   return (
-    <form action={action} className="space-y-6 rounded-lg border border-[#D9E3EE] bg-white p-5">
+    <form
+      ref={formRef}
+      action={action}
+      onChange={(event) => persistDraft(event.currentTarget)}
+      onSubmit={(event) => {
+        const error = validateFiles(event.currentTarget);
+        if (error) {
+          event.preventDefault();
+          setClientError(error);
+          persistDraft(event.currentTarget);
+          return;
+        }
+
+        setClientError(null);
+        persistDraft(event.currentTarget);
+      }}
+      className="space-y-6 rounded-lg border border-[#D9E3EE] bg-white p-5"
+    >
       <FormBusyOverlay
         title="جاري حفظ المدخل"
         detail="إذا كنت ترفع صورا أو ملف PDF فقد يستغرق الأمر قليلا. انتظر حتى تكتمل العملية."
       />
+      {clientError && (
+        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold leading-6 text-red-700" role="alert">
+          {clientError}
+        </div>
+      )}
       <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
         <div className="space-y-5">
           <label className="block">

@@ -68,14 +68,13 @@ const LibraryNews = () => {
       dir="rtl"
     >
   <Image
-        src="/background-01.png"
+        src="/services-bg.png"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.44] contrast-110 saturate-125"
+        className="object-cover opacity-100 blur-xs sm:opacity-75"
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.74)_0%,rgba(247,240,225,0.46)_48%,rgba(255,252,244,0.82)_100%)]" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.14]"
         style={{
@@ -95,10 +94,10 @@ const LibraryNews = () => {
           <div className="flex h-full flex-col justify-center lg:col-span-3 lg:col-start-3 lg:row-start-1" dir="rtl">
             <div>
 
-              <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
+              <h2 className="academic-heading text-[#FAF5F2] mt-4 text-4xl leading-tight md:text-5xl">
                 خدمات المكتبة الرقمية
               </h2>
-              <p className="mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#475569]">
+              <p className="mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#F2EEEC]">
                 مسارات عملية تساعدك على الوصول إلى الإصدارات، اختيار مجال البحث، أو طلب إرشاد سريع من المساعد الذكي.
               </p>
             </div>
@@ -163,16 +162,16 @@ const LibraryNews = () => {
             </div>
           </div>
            <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1" dir="rtl">
-            <div className="corner-frame relative h-full overflow-hidden border border-[#C29C41]/35 bg-white/88 p-3 shadow-[0_22px_58px_rgba(10,37,64,0.1)]">
-              <div className="relative min-h-[28rem] overflow-hidden arch-top lg:h-full lg:min-h-0">
+            <div className=" relative h-full overflow-hidden border border-[#C29C41]/35 bg-white/88 p-3 shadow-[0_22px_58px_rgba(10,37,64,0.1)]">
+              <div className="relative min-h-[28rem] overflow-hidden  lg:h-full lg:min-h-0">
                 <Image
                   alt="واجهة خدمات المكتبة الرقمية"
-                  src="/newsCover.png"
+                  src="/section-4-card.png"
                   fill
                   sizes="(min-width: 1024px) 380px, 100vw"
-                  className="sepia-reveal object-cover"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/72 via-[#0A2540]/18 to-transparent" />
+
 
                 <div className="absolute inset-x-4 bottom-4 space-y-3">
                   <div className="border border-white/25 bg-white/90 p-4 text-right shadow-[0_12px_30px_rgba(10,37,64,0.2)] backdrop-blur">

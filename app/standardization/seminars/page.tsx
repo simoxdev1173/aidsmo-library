@@ -17,7 +17,7 @@ export default function StandardizationSeminarsPage({
         description:
           'مساحة للندوات المرتبطة بمنظومات التقييس والجودة والمطابقة، مع مدخلات تساعد على متابعة النقاشات الفنية والمؤسسية.',
         accent: '#C29C41',
-        heroImage: '/trendingSection/t-2.jpg',
+        heroImage: '/standardization-bg.png',
       }}
     />
   );

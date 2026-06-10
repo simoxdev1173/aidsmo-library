@@ -17,7 +17,7 @@ export default function StandardizationMeetingsPage({
         description:
           'مساحة للاجتماعات المرتبطة ببرامج التقييس والجودة والمطابقة، مع مدخلات منظمة تسهل الوصول إلى المواد والوثائق ذات الصلة.',
         accent: '#C29C41',
-        heroImage: '/trendingSection/t-2.jpg',
+        heroImage: '/standardization-bg.png',
       }}
     />
   );

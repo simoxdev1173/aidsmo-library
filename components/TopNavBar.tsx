@@ -24,6 +24,7 @@ const menuItemsData: MenuItem[] = [
   {
     id: 'industry',
     label: 'الصناعة',
+    href: '/industry',
     children: [
       { label: 'إستراتيجيات', href: '/industry/integration-strategy' },
       { label: 'الصناعات الصغيرة والمتوسطة', href: '/industry/sme' },
@@ -59,6 +60,7 @@ const menuItemsData: MenuItem[] = [
   },
   {
     id: 'industrial-info',
+    href: '/info',
     label: 'المعلومات الصناعية',
     children: [
       {

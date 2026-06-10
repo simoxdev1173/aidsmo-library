@@ -59,6 +59,7 @@ model LibraryEntry {
   tag            String?
   coverImagePath String?
   filePath       String?
+  documentFiles  Json        @default("[]")
   publisher      String?
   author         String?
   year           String?

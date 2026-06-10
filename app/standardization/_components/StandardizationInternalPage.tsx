@@ -20,6 +20,7 @@ import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 type StandardizationPageConfig = {
   slug: string | string[];
   resetHref?: string;
+  assistantScope?: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -84,11 +85,11 @@ function SelectField({
   );
 }
 
-function AiPromptPanel({ title }: { title: string }) {
+function AiPromptPanel({ title, scope = 'هذه الصفحة' }: { title: string; scope?: string }) {
   const prompts = [
     `لخص أهم ما ورد في ${title}`,
     `ما الوثائق الأكثر ارتباطا بهذا الموضوع؟`,
-    `اقترح كلمات بحث دقيقة داخل هذه الصفحة`,
+    `اقترح كلمات بحث دقيقة داخل ${scope}`,
   ];
 
   return (
@@ -100,7 +101,7 @@ function AiPromptPanel({ title }: { title: string }) {
           </div>
           <h2 className="mt-4 text-2xl font-bold text-white">اسأل المساعد الذكي عن هذه الصفحة</h2>
           <p className="mt-2 max-w-2xl text-sm leading-7 text-white/72">
-            استخدم الأسئلة المقترحة لتضييق البحث أو استخراج ملخص سريع من محتوى التقييس.
+            استخدم الأسئلة المقترحة لتضييق البحث أو استخراج ملخص سريع من {scope}.
           </p>
         </div>
         <div className="flex flex-wrap gap-2 md:max-w-xl md:justify-end">
@@ -160,7 +161,7 @@ export default async function StandardizationInternalPage({
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#0A2540]">
       <section className="relative border-b border-[#C29C41]/20 bg-[#071D2F] text-white">
         <div className="absolute inset-0 opacity-[0.72]" aria-hidden>
-          <Image src="/standardization-bg.png" alt="" fill className="object-cover" priority />
+          <Image src={config.heroImage} alt="" fill className="object-cover" priority />
         </div>
         <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.76),rgba(3,105,161,0.38)_56%,rgba(7,29,47,0.66))]" aria-hidden />
 
@@ -326,7 +327,7 @@ export default async function StandardizationInternalPage({
           </div>
         )}
 
-        <AiPromptPanel title={config.title} />
+        <AiPromptPanel title={config.title} scope={config.assistantScope} />
       </section>
     </main>
   );

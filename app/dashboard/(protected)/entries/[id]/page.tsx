@@ -3,6 +3,7 @@ import { deleteEntryAction, generateEntryCoverAction } from '@/lib/library-actio
 import EntryForm from '@/app/dashboard/_components/EntryForm';
 import { Notice, SubmitButton } from '@/app/dashboard/_components/FormFeedback';
 import { getCategoryOptions, getEntryForEdit } from '@/lib/library-data';
+import { documentFilesValue } from '@/lib/document-files';
 
 export const dynamic = 'force-dynamic';
 
@@ -77,7 +78,7 @@ export default async function EditEntryPage({
         </Notice>
       )}
 
-      {!entry.coverImagePath && entry.filePath && (
+      {!entry.coverImagePath && documentFilesValue(entry.documentFiles, entry.filePath).length > 0 && (
         <form action={generateEntryCoverAction.bind(null, entry.id)} className="flex justify-end rounded-lg border border-[#D9E3EE] bg-white p-4">
           <SubmitButton pendingText="جاري إنشاء الغلاف...">
             إنشاء غلاف من PDF
@@ -94,6 +95,7 @@ export default async function EditEntryPage({
           notes: entry.notes,
           coverImagePath: entry.coverImagePath,
           filePath: entry.filePath,
+          documentFiles: documentFilesValue(entry.documentFiles, entry.filePath),
           publisher: entry.publisher,
           author: entry.author,
           year: entry.year,

@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { readUpload, saveUploadBytes } from "@/lib/uploads";
 import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
+import { MAX_DOCUMENT_FILES, documentFilesValue, parseDocumentFilesInput } from "@/lib/document-files";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -127,6 +128,8 @@ async function uniqueCategorySlug(baseValue: string, currentId?: string) {
 }
 
 const eventCategorySlugs = new Set([
+  "industry-events",
+  "conferences",
   "standardization-training-courses",
   "standardization-workshops-events",
   "standardization-seminars",
@@ -174,6 +177,40 @@ function eventDates(formData: FormData) {
 function imageList(value: unknown) {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === "string" && item.startsWith("/uploads/"));
+}
+
+async function saveDocumentUploads(formData: FormData, availableSlots = MAX_DOCUMENT_FILES) {
+  const files = formData
+    .getAll("documents")
+    .filter((file): file is File => file instanceof File && file.size > 0);
+
+  if (files.length > availableSlots) {
+    throw new Error(`PDF files are limited to ${MAX_DOCUMENT_FILES}.`);
+  }
+
+  const uploads = [];
+  for (const file of files) {
+    uploads.push(await readUpload(file, "documents"));
+  }
+
+  const savedFiles: string[] = [];
+  for (const upload of uploads) {
+    const savedPath = await saveUploadBytes(upload, "documents");
+    if (savedPath) {
+      savedFiles.push(savedPath);
+    }
+  }
+
+  return {
+    uploads,
+    files: savedFiles,
+  };
+}
+
+function assertDocumentLimit(files: string[]) {
+  if (files.length > MAX_DOCUMENT_FILES) {
+    throw new Error(`PDF files are limited to ${MAX_DOCUMENT_FILES}.`);
+  }
 }
 
 async function saveEventImages(formData: FormData, existingImages: string[] = []) {
@@ -238,17 +275,19 @@ export async function createEntryAction(formData: FormData) {
   try {
     const status = text(formData, "status") || "DRAFT";
     const isEvent = await isEventCategory(categoryId);
-    const documentFile = isEvent ? null : (formData.get("document") as File | null);
     const coverFile = isEvent ? null : (formData.get("cover") as File | null);
-    const documentUpload = await readUpload(documentFile, "documents");
     const coverUpload = await readUpload(coverFile, "covers");
+    const documentUploads = isEvent ? { uploads: [], files: [] } : await saveDocumentUploads(formData);
+    const documentFiles = isEvent ? [] : documentFilesValue(documentUploads.files);
+    assertDocumentLimit(documentFiles);
     const eventImages = isEvent ? await saveEventImages(formData) : [];
     const dates = isEvent ? eventDates(formData) : { startDate: null, endDate: null };
-    const filePath = isEvent ? null : await saveUploadBytes(documentUpload, "documents");
+    const filePath = documentFiles[0] ?? null;
     const uploadedCoverImagePath = isEvent ? eventImages[0] ?? null : await saveUploadBytes(coverUpload, "covers");
+    const primaryUpload = documentUploads.uploads[0] ?? null;
     const coverGeneration = uploadedCoverImagePath || isEvent
       ? { path: null, failed: false }
-      : await tryCreatePdfCover(documentUpload?.bytes, `new entry "${title}"`, filePath);
+      : await tryCreatePdfCover(primaryUpload?.bytes, `new entry "${title}"`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? coverGeneration.path;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title);
 
@@ -264,6 +303,7 @@ export async function createEntryAction(formData: FormData) {
         categoryId,
         coverImagePath,
         filePath,
+        documentFiles,
         publisher: isEvent ? null : optionalText(formData, "publisher"),
         author: isEvent ? null : optionalText(formData, "author"),
         year: isEvent ? null : optionalYearLabel(formData, "year"),
@@ -282,7 +322,7 @@ export async function createEntryAction(formData: FormData) {
     revalidatePath("/");
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/entries");
-    coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(documentUpload && !uploadedCoverImagePath));
+    coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(filePath && !uploadedCoverImagePath));
   } catch (error) {
     redirect(errorUrl("/dashboard/entries/new", getActionError(error)));
   }
@@ -310,19 +350,26 @@ export async function updateEntryAction(id: string, formData: FormData) {
   try {
     const status = text(formData, "status") || "DRAFT";
     const isEvent = await isEventCategory(categoryId);
-    const documentFile = isEvent ? null : (formData.get("document") as File | null);
     const coverFile = isEvent ? null : (formData.get("cover") as File | null);
-    const documentUpload = await readUpload(documentFile, "documents");
     const coverUpload = await readUpload(coverFile, "covers");
+    const existingDocumentFiles = isEvent
+      ? []
+      : parseDocumentFilesInput(formData.get("documentFilesExisting"));
+    assertDocumentLimit(existingDocumentFiles);
+    const documentUploads = isEvent ? { uploads: [], files: [] } : await saveDocumentUploads(formData, MAX_DOCUMENT_FILES - existingDocumentFiles.length);
+    const documentFiles = isEvent
+      ? []
+      : documentFilesValue([...existingDocumentFiles, ...documentUploads.files], existing.filePath);
+    assertDocumentLimit(documentFiles);
     const eventImages = isEvent ? await saveEventImages(formData, imageList(existing.eventImages)) : imageList(existing.eventImages);
     const dates = isEvent ? eventDates(formData) : { startDate: existing.eventStartDate, endDate: existing.eventEndDate };
-    const filePath =
-      isEvent ? existing.filePath : (await saveUploadBytes(documentUpload, "documents")) ?? existing.filePath;
+    const filePath = isEvent ? existing.filePath : documentFiles[0] ?? null;
     const uploadedCoverImagePath = isEvent ? eventImages[0] ?? existing.coverImagePath : await saveUploadBytes(coverUpload, "covers");
+    const primaryUpload = existingDocumentFiles.length === 0 ? documentUploads.uploads[0] ?? null : null;
     const coverGeneration =
       uploadedCoverImagePath || existing.coverImagePath || isEvent
         ? { path: null, failed: false }
-        : await tryCreatePdfCover(documentUpload?.bytes, `entry "${existing.title}" (${id})`, filePath);
+        : await tryCreatePdfCover(primaryUpload?.bytes, `entry "${existing.title}" (${id})`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? coverGeneration.path;
     const slug = await uniqueEntrySlug(text(formData, "slug") || title, id);
 
@@ -338,6 +385,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
         categoryId,
         coverImagePath,
         filePath,
+        documentFiles,
         publisher: isEvent ? existing.publisher : optionalText(formData, "publisher"),
         author: isEvent ? existing.author : optionalText(formData, "author"),
         year: isEvent ? existing.year : optionalYearLabel(formData, "year"),
@@ -357,7 +405,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/entries");
     revalidatePath(`/dashboard/entries/${id}`);
-    coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(documentUpload && !uploadedCoverImagePath && !existing.coverImagePath));
+    coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(filePath && !uploadedCoverImagePath && !existing.coverImagePath));
   } catch (error) {
     redirect(errorUrl(`/dashboard/entries/${id}`, getActionError(error)));
   }
@@ -370,21 +418,24 @@ export async function generateEntryCoverAction(id: string) {
 
   const entry = await prisma.libraryEntry.findUnique({
     where: { id },
-    select: { id: true, title: true, coverImagePath: true, filePath: true },
+    select: { id: true, title: true, coverImagePath: true, filePath: true, documentFiles: true },
   });
 
   if (!entry) {
     redirect("/dashboard/entries");
   }
 
-  if (entry.coverImagePath || !entry.filePath) {
+  const documentFiles = documentFilesValue(entry.documentFiles, entry.filePath);
+  const primaryFilePath = documentFiles[0] ?? null;
+
+  if (entry.coverImagePath || !primaryFilePath) {
     redirect(`/dashboard/entries/${id}?cover=skipped`);
   }
 
   let coverImagePath: string | null = null;
 
   try {
-    coverImagePath = await createPdfCoverFromPublicPath(entry.filePath);
+    coverImagePath = await createPdfCoverFromPublicPath(primaryFilePath);
   } catch (error) {
     console.error(`PDF cover generation failed: existing entry "${entry.title}" (${id})`, error);
     redirect(`/dashboard/entries/${id}?cover=failed`);

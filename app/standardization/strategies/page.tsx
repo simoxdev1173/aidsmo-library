@@ -17,7 +17,7 @@ export default function StandardizationStrategiesPage({
         description:
           'مرجع منظم للإستراتيجيات والرؤى التي تدعم تطوير منظومات التقييس، البنية التحتية للجودة، والمواءمة العربية في مجالات المواصفات والاعتماد.',
         accent: '#0A2540',
-        heroImage: '/trendingSection/t-5.png',
+        heroImage: '/standardization-bg.png',
       }}
     />
   );

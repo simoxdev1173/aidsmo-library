@@ -5,6 +5,7 @@ import { HiOutlineBookmark, HiOutlineChatBubbleLeftRight, HiOutlineEye, HiOutlin
 import { getPublishedEntryBySlug } from '@/lib/library-data';
 import { categoryPath } from '@/lib/library-labels';
 import ChatbotPromptButton from '@/components/ChatbotPromptButton';
+import { documentFilesValue } from '@/lib/document-files';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,6 +44,8 @@ export default async function BookPage({
 
   const isBook = entry.entryType === 'BOOK';
   const sections = getContentSections(entry.contentSections);
+  const documentFiles = documentFilesValue(entry.documentFiles, entry.filePath);
+  const primaryDocument = documentFiles[0] ?? null;
   const description = entry.description?.trim();
   const summary =
     description ||
@@ -85,8 +88,8 @@ export default async function BookPage({
           </h1>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            {entry.filePath ? (
-              <a href={entry.filePath} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center gap-2 rounded-md bg-[#0369A1] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#003652]">
+            {primaryDocument ? (
+              <a href={primaryDocument} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center gap-2 rounded-md bg-[#0369A1] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#003652]">
                 <HiOutlineEye className="h-5 w-5" />
                 اطّلاع
               </a>
@@ -101,6 +104,26 @@ export default async function BookPage({
               حفظ
             </button>
           </div>
+
+          {documentFiles.length > 1 && (
+            <section className="mt-6 rounded-lg border border-[#D9E3EE] bg-white p-4">
+              <h2 className="text-base font-bold text-[#003652]">ملفات PDF المرفقة</h2>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {documentFiles.map((file, index) => (
+                  <a
+                    key={file}
+                    href={file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-12 items-center justify-between gap-3 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] px-3 py-2 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#C29C41] hover:bg-[#FFF8E1]"
+                  >
+                    <span>{index === 0 ? 'الملف الأساسي' : `ملف PDF ${index + 1}`}</span>
+                    <HiOutlineEye className="h-5 w-5 shrink-0" />
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
 
           {isBook && metadata.length > 0 && (
             <section className="mt-10 rounded-lg border border-[#D9E3EE] bg-white">

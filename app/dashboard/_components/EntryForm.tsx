@@ -3,11 +3,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import { HiOutlineArrowDown, HiOutlineArrowUp, HiOutlineDocumentPlus, HiOutlineTrash } from 'react-icons/hi2';
 import { LuCheck, LuChevronDown, LuSearch } from 'react-icons/lu';
 import EntryTypedFields from '@/app/dashboard/_components/EntryTypedFields';
 import { FileField, FormBusyOverlay, SubmitButton } from '@/app/dashboard/_components/FormFeedback';
 import { createEntryAction, updateEntryAction } from '@/lib/library-actions';
 import { categoryPath } from '@/lib/library-labels';
+import { MAX_DOCUMENT_FILES, documentFilesValue } from '@/lib/document-files';
 
 type CategoryOption = {
   id: string;
@@ -24,6 +26,7 @@ type EntryFormValue = {
   notes: string | null;
   coverImagePath: string | null;
   filePath: string | null;
+  documentFiles: string[];
   publisher: string | null;
   author: string | null;
   year: string | null;
@@ -39,6 +42,8 @@ type EntryFormValue = {
 };
 
 const eventCategorySlugs = new Set([
+  'industry-events',
+  'conferences',
   'standardization-training-courses',
   'standardization-workshops-events',
   'standardization-seminars',
@@ -54,6 +59,128 @@ function fieldClass() {
 
 function labelClass() {
   return 'mb-2 block text-sm font-bold text-[#334155]';
+}
+
+function DocumentFilesField({
+  files,
+}: {
+  files: string[];
+}) {
+  const initialFiles = documentFilesValue(files);
+  const [existingFiles, setExistingFiles] = useState(initialFiles);
+  const [uploadSlots, setUploadSlots] = useState(initialFiles.length === 0 ? [0] : []);
+  const totalSlots = existingFiles.length + uploadSlots.length;
+  const canAdd = totalSlots < MAX_DOCUMENT_FILES;
+
+  function moveFile(index: number, direction: -1 | 1) {
+    setExistingFiles((current) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= current.length) return current;
+
+      const next = [...current];
+      [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
+      return next;
+    });
+  }
+
+  return (
+    <section className="rounded-lg border border-[#E2E8F0] bg-white p-4">
+      <input type="hidden" name="documentFilesExisting" value={JSON.stringify(existingFiles)} />
+
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-bold text-[#334155]">ملفات PDF</h3>
+          <p className="mt-1 text-xs leading-5 text-[#64748B]">
+            يمكن إضافة حتى {MAX_DOCUMENT_FILES} ملفات. الملف الأول يستخدم كملف أساسي ولإنشاء الغلاف تلقائيا.
+          </p>
+        </div>
+        <span className="rounded-full bg-[#F0F7FC] px-3 py-1 text-xs font-bold text-[#0369A1]">
+          {totalSlots}/{MAX_DOCUMENT_FILES}
+        </span>
+      </div>
+
+      {existingFiles.length > 0 && (
+        <div className="mb-4 space-y-2">
+          {existingFiles.map((file, index) => (
+            <div key={file} className="grid gap-2 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] p-3 sm:grid-cols-[1fr_auto] sm:items-center">
+              <a href={file} target="_blank" rel="noopener noreferrer" className="min-w-0 text-sm font-bold text-[#0369A1] hover:text-[#003652]">
+                <span className="block truncate" dir="ltr">{file.split('/').pop()}</span>
+                <span className="mt-1 block text-xs font-semibold text-[#64748B]">
+                  {index === 0 ? 'الملف الأساسي' : `ملف PDF ${index + 1}`}
+                </span>
+              </a>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => moveFile(index, -1)}
+                  disabled={index === 0}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#CBD5E1] bg-white text-[#475569] transition duration-200 hover:border-[#0369A1] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="رفع ملف PDF"
+                >
+                  <HiOutlineArrowUp className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveFile(index, 1)}
+                  disabled={index === existingFiles.length - 1}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#CBD5E1] bg-white text-[#475569] transition duration-200 hover:border-[#0369A1] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="إنزال ملف PDF"
+                >
+                  <HiOutlineArrowDown className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setExistingFiles((current) => current.filter((item) => item !== file))}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 transition duration-200 hover:bg-red-100"
+                  aria-label="حذف ملف PDF"
+                >
+                  <HiOutlineTrash className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {uploadSlots.map((slot, index) => (
+          <div key={slot} className="rounded-md border border-dashed border-[#CBD5E1] bg-[#F8FAFC] p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1">
+                <FileField
+                  name="documents"
+                  label={existingFiles.length + index === 0 ? 'ملف PDF الأساسي' : `إضافة ملف PDF ${existingFiles.length + index + 1}`}
+                  accept="application/pdf"
+                  hint="PDF فقط. الحد الأقصى 50MB لكل ملف."
+                />
+              </div>
+              {uploadSlots.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setUploadSlots((current) => current.filter((item) => item !== slot))}
+                  className="mt-7 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-red-200 bg-white text-red-700 transition duration-200 hover:bg-red-50"
+                  aria-label="إزالة خانة PDF"
+                >
+                  <HiOutlineTrash className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {canAdd && (
+        <button
+          type="button"
+          onClick={() => setUploadSlots((current) => [...current, Date.now()])}
+          className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#0369A1]/35 bg-[#F0F7FC] px-4 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#0369A1] hover:bg-[#0369A1] hover:text-white"
+        >
+          <HiOutlineDocumentPlus className="h-5 w-5" />
+          إضافة PDF
+        </button>
+      )}
+    </section>
+  );
 }
 
 function isEventCategory(category?: CategoryOption) {
@@ -284,20 +411,7 @@ export default function EntryForm({
                 />
               </label>
 
-              <label className="block">
-                <span className={labelClass()}>ملف PDF</span>
-                {entry?.filePath && (
-                  <a href={entry.filePath} target="_blank" rel="noopener noreferrer" className="mb-3 block rounded-md border border-[#D9E3EE] bg-white px-3 py-2 text-sm font-bold text-[#0369A1]">
-                    فتح الملف الحالي
-                  </a>
-                )}
-                <FileField
-                  name="document"
-                  label="اختيار ملف PDF"
-                  accept="application/pdf"
-                  hint="PDF فقط. الحد الأقصى 50MB."
-                />
-              </label>
+              <DocumentFilesField files={entry?.documentFiles ?? documentFilesValue([], entry?.filePath)} />
             </>
           )}
         </aside>

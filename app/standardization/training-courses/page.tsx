@@ -17,7 +17,7 @@ export default function StandardizationTrainingCoursesPage({
         description:
           'مساحة للدورات التدريبية المرتبطة بالمواصفات والجودة والمطابقة، مع مواد معرفية تساعد على تطوير القدرات الفنية والمؤسسية.',
         accent: '#C29C41',
-        heroImage: '/trendingSection/t-2.jpg',
+        heroImage: '/standardization-bg.png',
       }}
     />
   );

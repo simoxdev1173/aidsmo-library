@@ -14,10 +14,10 @@ const initialDescription =
   "يهدف النظام الاسترشادي التعديني للدول العربية إلى توفير إطار مرجعي موحد يساعد الحكومات على تطوير تشريعات حديثة ومتناغمة لقطاع التعدين، بما يعزز الشفافية والاستثمار المسؤول. انطلق إعداد النظام من دراسة استقصائية شاملة للأنظمة القائمة وتحليل فجواتها، إضافة إلى مقارنة دولية لبناء رؤية عربية مشتركة. ويتناول النظام مراحل النشاط التعديني من الاستطلاع إلى الاستغلال، ويحدد الحقوق والالتزامات، وآليات منح التراخيص، والضوابط البيئية والاقتصادية والاجتماعية، مع التركيز على حماية الموارد والبيئة وحقوق المجتمعات. ويوفر إطارا قانونيا مرنا يعزز التكامل الإقليمي، ويرفع جاذبية القطاع للاستثمار، ويسهم في تنمية اقتصادات الدول العربية بشكل مستدام.";
 
 const categories = [
-  { name: "الصناعة", slug: "industry", order: 10, navHref: "/industry/integration-strategy" },
+  { name: "الصناعة", slug: "industry", order: 10, navHref: "/industry" },
   { name: "التقييس", slug: "standardization", order: 20, navHref: "/standardization" },
   { name: "التعدين", slug: "mining", order: 30, navHref: "/catalog/mining" },
-  { name: "المعلومات الصناعية", slug: "industrial-info", order: 40, navHref: "/info/statistics" },
+  { name: "المعلومات الصناعية", slug: "industrial-info", order: 40, navHref: "/info" },
   { name: "التدريب والاستشارات", slug: "training", order: 50, navHref: "/training/about" },
   { name: "الأرشيف", slug: "archive", order: 60, navHref: "/archive/org/founding" },
 ];

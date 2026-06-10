@@ -433,16 +433,6 @@ export default function EntryForm({
                     <input name="eventLocation" defaultValue={entry?.eventLocation ?? ''} className={fieldClass()} />
                   </label>
                 </div>
-                <label className="mt-5 block">
-                  <span className={labelClass()}>وصف الفعالية</span>
-                  <textarea
-                    name="description"
-                    defaultValue={entry?.description ?? ''}
-                    rows={5}
-                    placeholder="اكتب وصفا مختصرا للفعالية يظهر للزوار."
-                    className="w-full rounded-md border border-[#CBD5E1] bg-white px-3 py-3 text-sm leading-7 text-[#0A2540] outline-none transition duration-200 placeholder:text-[#94A3B8] focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20"
-                  />
-                </label>
               </section>
 
               <label className="block">
@@ -494,25 +484,29 @@ export default function EntryForm({
           </label>
 
           {eventMode ? (
-            <label className="block">
-              <span className={labelClass()}>صور الفعالية</span>
-              {entry?.eventImages && entry.eventImages.length > 0 && (
-                <div className="mb-3 grid grid-cols-3 gap-2">
-                  {entry.eventImages.map((image) => (
-                    <div key={image} className="relative aspect-square overflow-hidden rounded-md border border-[#D9E3EE] bg-white">
-                      <Image src={image} alt={entry.title} fill className="object-cover" unoptimized />
-                    </div>
-                  ))}
-                </div>
-              )}
-              <FileField
-                name="eventImages"
-                label="اختيار صور الفعالية"
-                accept="image/png,image/jpeg,image/webp,image/avif"
-                hint="حتى 3 صور. PNG أو JPG أو WebP أو AVIF، والحد الأقصى 10MB لكل صورة."
-                multiple
-              />
-            </label>
+            <>
+              <label className="block">
+                <span className={labelClass()}>صور الفعالية</span>
+                {entry?.eventImages && entry.eventImages.length > 0 && (
+                  <div className="mb-3 grid grid-cols-3 gap-2">
+                    {entry.eventImages.map((image) => (
+                      <div key={image} className="relative aspect-square overflow-hidden rounded-md border border-[#D9E3EE] bg-white">
+                        <Image src={image} alt={entry.title} fill className="object-cover" unoptimized />
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <FileField
+                  name="eventImages"
+                  label="اختيار صور الفعالية"
+                  accept="image/png,image/jpeg,image/webp,image/avif"
+                  hint="حتى 3 صور. PNG أو JPG أو WebP أو AVIF، والحد الأقصى 10MB لكل صورة."
+                  multiple
+                />
+              </label>
+
+              <DocumentFilesField files={entry?.documentFiles ?? documentFilesValue([], entry?.filePath)} />
+            </>
           ) : (
             <>
               <label className="block">

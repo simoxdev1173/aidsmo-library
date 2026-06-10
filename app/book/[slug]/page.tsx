@@ -49,7 +49,9 @@ export default async function BookPage({
   const description = entry.description?.trim();
   const summary =
     description ||
-    'هذا ملخص تمهيدي مؤقت لهذا المدخل، يوضح الفكرة العامة للمحتوى ويمنح القارئ لمحة سريعة قبل الاطلاع على الملف الكامل. سيتم استبدال هذا النص لاحقا بملخص محرر يعكس موضوع الإصدار ومنهجه وأهم محاوره.';
+    (isBook
+      ? 'هذا ملخص تمهيدي مؤقت لهذا المدخل، يوضح الفكرة العامة للمحتوى ويمنح القارئ لمحة سريعة قبل الاطلاع على الملف الكامل. سيتم استبدال هذا النص لاحقا بملخص محرر يعكس موضوع الإصدار ومنهجه وأهم محاوره.'
+      : null);
   const metadata = [
     ['الناشر', entry.publisher],
     ['المؤلف', entry.author],
@@ -139,17 +141,19 @@ export default async function BookPage({
             </section>
           )}
 
-          <section className="mt-10 overflow-hidden rounded-lg border border-[#D9E3EE] bg-white shadow-[0_18px_48px_rgba(10,37,64,0.07)]">
-            <div className="border-b border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
-              <h2 className="text-xl font-bold text-[#003652]">ملخص قصير</h2>
-            </div>
-            <div className="relative p-6">
-              <div className="absolute bottom-0 right-0 h-full w-1 bg-[#C29C41]" aria-hidden />
-              <p className="max-w-4xl text-base leading-9 text-[#475569]">
-                {summary}
-              </p>
-            </div>
-          </section>
+          {summary && (
+            <section className="mt-10 overflow-hidden rounded-lg border border-[#D9E3EE] bg-white shadow-[0_18px_48px_rgba(10,37,64,0.07)]">
+              <div className="border-b border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
+                <h2 className="text-xl font-bold text-[#003652]">ملخص قصير</h2>
+              </div>
+              <div className="relative p-6">
+                <div className="absolute bottom-0 right-0 h-full w-1 bg-[#C29C41]" aria-hidden />
+                <p className="max-w-4xl text-base leading-9 text-[#475569]">
+                  {summary}
+                </p>
+              </div>
+            </section>
+          )}
 
           {!isBook && sections.length > 0 && (
             <section className="mt-10 space-y-4">

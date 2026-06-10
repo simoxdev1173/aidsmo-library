@@ -277,8 +277,8 @@ export async function createEntryAction(formData: FormData) {
     const isEvent = await isEventCategory(categoryId);
     const coverFile = isEvent ? null : (formData.get("cover") as File | null);
     const coverUpload = await readUpload(coverFile, "covers");
-    const documentUploads = isEvent ? { uploads: [], files: [] } : await saveDocumentUploads(formData);
-    const documentFiles = isEvent ? [] : documentFilesValue(documentUploads.files);
+    const documentUploads = await saveDocumentUploads(formData);
+    const documentFiles = documentFilesValue(documentUploads.files);
     assertDocumentLimit(documentFiles);
     const eventImages = isEvent ? await saveEventImages(formData) : [];
     const dates = isEvent ? eventDates(formData) : { startDate: null, endDate: null };
@@ -296,7 +296,7 @@ export async function createEntryAction(formData: FormData) {
         title,
         slug,
         entryType: isEvent ? "EVENT" : "BOOK",
-        description: optionalText(formData, "description"),
+        description: isEvent ? null : optionalText(formData, "description"),
         notes: optionalText(formData, "notes"),
         contentSections: [],
         tag: optionalText(formData, "tag"),
@@ -352,18 +352,14 @@ export async function updateEntryAction(id: string, formData: FormData) {
     const isEvent = await isEventCategory(categoryId);
     const coverFile = isEvent ? null : (formData.get("cover") as File | null);
     const coverUpload = await readUpload(coverFile, "covers");
-    const existingDocumentFiles = isEvent
-      ? []
-      : parseDocumentFilesInput(formData.get("documentFilesExisting"));
+    const existingDocumentFiles = parseDocumentFilesInput(formData.get("documentFilesExisting"));
     assertDocumentLimit(existingDocumentFiles);
-    const documentUploads = isEvent ? { uploads: [], files: [] } : await saveDocumentUploads(formData, MAX_DOCUMENT_FILES - existingDocumentFiles.length);
-    const documentFiles = isEvent
-      ? []
-      : documentFilesValue([...existingDocumentFiles, ...documentUploads.files], existing.filePath);
+    const documentUploads = await saveDocumentUploads(formData, MAX_DOCUMENT_FILES - existingDocumentFiles.length);
+    const documentFiles = documentFilesValue([...existingDocumentFiles, ...documentUploads.files], existing.filePath);
     assertDocumentLimit(documentFiles);
     const eventImages = isEvent ? await saveEventImages(formData, imageList(existing.eventImages)) : imageList(existing.eventImages);
     const dates = isEvent ? eventDates(formData) : { startDate: existing.eventStartDate, endDate: existing.eventEndDate };
-    const filePath = isEvent ? existing.filePath : documentFiles[0] ?? null;
+    const filePath = documentFiles[0] ?? null;
     const uploadedCoverImagePath = isEvent ? eventImages[0] ?? existing.coverImagePath : await saveUploadBytes(coverUpload, "covers");
     const primaryUpload = existingDocumentFiles.length === 0 ? documentUploads.uploads[0] ?? null : null;
     const coverGeneration =
@@ -379,7 +375,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
         title,
         slug,
         entryType: isEvent ? "EVENT" : "BOOK",
-        description: isEvent ? optionalText(formData, "description") : existing.description,
+        description: isEvent ? existing.description : optionalText(formData, "description"),
         notes: optionalText(formData, "notes"),
         tag: optionalText(formData, "tag"),
         categoryId,

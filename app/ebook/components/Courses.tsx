@@ -2,191 +2,223 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  BookOpenCheck,
-  Bot,
-  Building2,
-  Factory,
-  LibraryBig,
-  Pickaxe,
-  Scale,
-  Search,
-} from 'lucide-react';
+import { LuChevronLeft } from 'react-icons/lu';
 
-type ServiceCard = {
-  title: string;
-  description: string;
-  href: string;
-  action: string;
-  Icon: typeof Search;
-};
+const primaryButton =
+  'engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
 
-type SectorLink = {
-  label: string;
-  href: string;
-  Icon: typeof Factory;
-};
-
-const services: ServiceCard[] = [
-  {
-    title: 'مساعدة بحثية فورية',
-    description: 'انتقل إلى المساعد الذكي لطرح أسئلة حول الإصدارات أو تضييق نطاق البحث داخل المكتبة.',
-    href: '#chatbot',
-    action: 'اسأل المساعد',
-    Icon: Bot,
-  },
-  {
-    title: 'أحدث الإصدارات',
-    description: 'تابع المواد التي تمت إضافتها حديثا في مجالات الصناعة والتقييس والتعدين.',
-    href: '#latest-pub',
-    action: 'عرض الإصدارات',
-    Icon: BookOpenCheck,
-  },
-  {
-    title: 'مدخل القطاعات',
-    description: 'ابدأ من المجال المناسب ثم انتقل مباشرة إلى الرف الرقمي الخاص به.',
-    href: '/catalog/industry',
-    action: 'ابدأ التصفح',
-    Icon: LibraryBig,
-  },
-];
-
-const sectors: SectorLink[] = [
-  { label: 'الصناعة', href: '/catalog/industry', Icon: Factory },
-  { label: 'التقييس', href: '/catalog/standardization', Icon: Scale },
-  { label: 'التعدين', href: '/catalog/mining', Icon: Pickaxe },
-  { label: 'المعلومات الصناعية', href: '/catalog/industrial-info', Icon: Building2 },
-];
+const darkButton =
+  'inline-flex h-12 cursor-pointer items-center justify-center gap-3 border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
 
 const LibraryNews = () => {
   return (
     <section
       id="library-services"
-      className="relative overflow-hidden bg-[#F7F0E1] py-20 md:py-28"
+      className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24"
       aria-label="خدمات المكتبة الرقمية"
       dir="rtl"
     >
-  <Image
-        src="/services-bg.png"
+      <Image
+        src="/background-01.png"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-100 blur-xs sm:opacity-75"
+        className="object-cover opacity-[0.34] contrast-110 saturate-125"
         aria-hidden
       />
+
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.14]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(247,240,225,0.94)_0%,rgba(247,240,225,0.74)_48%,rgba(247,240,225,0.96)_100%)]"
+        aria-hidden
+      />
+
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.12]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
+            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.22) 1px, transparent 1px)',
           backgroundSize: '56px 56px',
         }}
         aria-hidden
       />
+
       <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-stretch gap-10 lg:grid-cols-5 lg:gap-14" dir="ltr">
-         
+        <div className="mb-10 max-w-3xl">
+        
 
-          <div className="flex h-full flex-col justify-center lg:col-span-3 lg:col-start-3 lg:row-start-1" dir="rtl">
+          <h2 className="academic-heading mt-3 text-3xl leading-tight text-[#0A2540] md:text-4xl">
+            خدمات المكتبة الرقمية
+          </h2>
+
+          <p className="mt-4 max-w-2xl text-nowrap font-academic text-lg leading-relaxed text-[#475569]">
+            مسارات عملية تساعدك على الوصول إلى الإصدارات، اختيار مجال البحث، أو طلب إرشاد سريع من المساعد الذكي.
+          </p>
+        </div>
+
+        <div className="grid auto-rows-[210px] gap-5 lg:grid-cols-3">
+          {/* Big parchment card */}
+          <Link
+            href="#latest-pub"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden border border-[#C29C41]/35 bg-[#FFF8E8]/95 p-7 shadow-[0_22px_58px_rgba(10,37,64,0.09)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 hover:shadow-[0_28px_76px_rgba(10,37,64,0.14)] md:p-8 lg:row-span-2"
+          >
             <div>
+              <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#9A7421]">
+                أحدث الإصدارات
+              </p>
 
-              <h2 className="academic-heading text-[#FAF5F2] mt-4 text-4xl leading-tight md:text-5xl">
-                خدمات المكتبة الرقمية
-              </h2>
-              <p className="mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#F2EEEC]">
-                مسارات عملية تساعدك على الوصول إلى الإصدارات، اختيار مجال البحث، أو طلب إرشاد سريع من المساعد الذكي.
+              <h3 className="mt-5 max-w-md font-academic text-2xl font-bold leading-[1.55] text-[#0A2540] md:text-3xl">
+                اكتشف المواد الجديدة في الصناعة والتقييس والتعدين
+              </h3>
+
+              <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-[#64748B]">
+                تابع الإصدارات والدراسات المضافة حديثا داخل المكتبة الرقمية.
               </p>
             </div>
 
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {services.map((service) => {
-                const Icon = service.Icon;
+            <span className={`${primaryButton} mt-7 w-fit`}>
+              عرض الإصدارات
+              <LuChevronLeft className="h-4 w-4" />
+            </span>
+          </Link>
 
-                return (
-                  <Link
-                    key={service.title}
-                    href={service.href}
-                    className="group corner-card flex min-h-[15rem] flex-col justify-between border border-[#C29C41]/30 bg-white/88 p-5 text-right shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 hover:-translate-y-0.5 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-[#F7F0E1]"
-                  >
-                    <div>
-                      <span className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-white text-[#9A7421]">
-                        <Icon className="h-5 w-5" strokeWidth={1.7} />
-                      </span>
-                      <h3 className="mt-4 text-xl font-bold leading-relaxed text-[#003652] transition duration-300 group-hover:text-[#9A7421]">
-                        {service.title}
-                      </h3>
-                      <p className="mt-2 font-academic text-base leading-relaxed text-[#64748B]">
-                        {service.description}
-                      </p>
-                    </div>
+          {/* Top image card */}
+          <Link
+            href="/catalog/industry"
+            className="corner-frame group relative overflow-hidden border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
+          >
+            <Image
+              src="/industry-informations-bg.png"
+              alt="تصفح المكتبة الرقمية"
+              fill
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              className="object-cover transition duration-700 group-hover:scale-105"
+            />
 
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#0369A1] transition duration-300 group-hover:text-[#C29C41]">
-                      {service.action}
-                      <ArrowLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
-                    </span>
-                  </Link>
-                );
-              })}
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,37,64,0.12)_0%,rgba(10,37,64,0.54)_52%,rgba(10,37,64,0.88)_100%)]" />
+
+            <div className="absolute inset-x-6 bottom-6 text-right">
+              <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#E8C96A]">
+                تصفح حسب المجال
+              </p>
+
+              <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
+                انتقال مباشر إلى رفوف المكتبة
+              </p>
+            </div>
+          </Link>
+
+          {/* Smart assistant card */}
+          <Link
+            href="#chatbot"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden border border-[#C29C41]/30 bg-[#0A2540] p-7 text-white shadow-[0_24px_68px_rgba(10,37,64,0.16)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 md:p-8 lg:row-span-2"
+          >
+            <div
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_16%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_78%_82%,rgba(14,165,233,0.12),transparent_30%)]"
+              aria-hidden
+            />
+
+            <div className="relative z-10">
+              <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#E8C96A]">
+                المساعد الذكي
+              </p>
+
+              <h3 className="mt-5 max-w-md font-academic text-2xl font-bold leading-[1.55] text-white md:text-3xl">
+                اسأل عن الإصدارات والقطاعات واحصل على إرشاد فوري
+              </h3>
+
+              <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-white/72">
+                يساعدك في تضييق البحث والوصول إلى المواد المناسبة بسرعة.
+              </p>
             </div>
 
-            <div className="mt-5 border border-[#C29C41]/25 bg-white/88 p-4 shadow-[0_14px_34px_rgba(10,37,64,0.08)] backdrop-blur-sm">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-[#003652]">اختر مجال العمل مباشرة</h3>
-                  <p className="mt-1 font-academic text-base leading-relaxed text-[#64748B]">
-                    روابط مختصرة إلى نفس قطاعات المكتبة المستخدمة في شريط التنقل.
-                  </p>
-                </div>
+            <span className={`${primaryButton} relative z-10 mt-7 w-fit`}>
+              اسأل المساعد
+              <LuChevronLeft className="h-4 w-4" />
+            </span>
+          </Link>
 
-                <div className="flex flex-wrap gap-2">
-                  {sectors.map((sector) => {
-                    const Icon = sector.Icon;
+          {/* Main blue sector card */}
+          <Link
+            href="/catalog/standardization"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden border border-[#C29C41]/30 bg-[#0B4E84] p-7 text-white shadow-[0_24px_68px_rgba(10,37,64,0.15)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 md:p-8 lg:row-span-2"
+          >
+            <div
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(232,201,106,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]"
+              aria-hidden
+            />
 
-                    return (
-                      <Link
-                        key={sector.href}
-                        href={sector.href}
-                        className="inline-flex items-center gap-2 border border-[#C29C41]/30 bg-[#FFF8E1] px-3 py-2 text-sm font-bold text-[#7A5C10] transition duration-200 hover:border-[#C29C41]/70 hover:bg-[#F7E5A9] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
-                      >
-                        <Icon className="h-4 w-4" strokeWidth={1.7} />
-                        {sector.label}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
+            <div className="relative z-10">
+              <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#E8C96A]">
+                مدخل القطاعات
+              </p>
+
+              <h3 className="mt-5 max-w-lg font-academic text-2xl font-bold leading-[1.55] text-white md:text-3xl">
+                اختر مجال العمل وانتقل مباشرة إلى الرف الرقمي المناسب
+              </h3>
+
+              <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-white/76">
+                الصناعة، التقييس، التعدين، والمعلومات الصناعية في مسار واضح.
+              </p>
             </div>
-          </div>
-           <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1" dir="rtl">
-            <div className=" relative h-full overflow-hidden border border-[#C29C41]/35 bg-white/88 p-3 shadow-[0_22px_58px_rgba(10,37,64,0.1)]">
-              <div className="relative min-h-[28rem] overflow-hidden  lg:h-full lg:min-h-0">
-                <Image
-                  alt="واجهة خدمات المكتبة الرقمية"
-                  src="/section-4-card.png"
-                  fill
-                  sizes="(min-width: 1024px) 380px, 100vw"
-                  className="object-cover"
-                />
 
+            <span className={`${darkButton} relative z-10 mt-7 w-fit`}>
+              ابدأ التصفح
+              <LuChevronLeft className="h-4 w-4" />
+            </span>
+          </Link>
 
-                <div className="absolute inset-x-4 bottom-4 space-y-3">
-                  <div className="border border-white/25 bg-white/90 p-4 text-right shadow-[0_12px_30px_rgba(10,37,64,0.2)] backdrop-blur">
-                    <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#C29C41]">
-                      خدمات المكتبة
-                    </p>
-                    <p className="mt-2 text-lg font-bold leading-relaxed text-[#003652]">
-                      وصول أسرع إلى المعرفة المتخصصة
-                    </p>
-                  </div>
-                </div>
-              </div>
+          {/* Bottom image card */}
+          <Link
+            href="/catalog/mining"
+            className="corner-frame group relative overflow-hidden border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
+          >
+            <Image
+              src="/industry-bg.png"
+              alt="موارد التعدين"
+              fill
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              className="object-cover transition duration-700 group-hover:scale-105"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/88 via-[#0A2540]/34 to-transparent" />
+
+            <div className="absolute inset-x-6 bottom-6 text-right">
+              
+
+              <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
+                موارد فنية ودراسات متخصصة
+              </p>
             </div>
-          </div>
+          </Link>
+
+          {/* Bottom image card */}
+          <Link
+            href="/catalog/industrial-info"
+            className="corner-frame group relative overflow-hidden border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
+          >
+            <Image
+              src="/standardization-bg.png"
+              alt="المعلومات الصناعية"
+              fill
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              className="object-cover transition duration-700 group-hover:scale-105"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/88 via-[#0A2540]/34 to-transparent" />
+
+            <div className="absolute inset-x-6 bottom-6 text-right">
+          
+              <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
+                بيانات ومعرفة قابلة للاستكشاف
+              </p>
+            </div>
+          </Link>
         </div>
+
+        
       </div>
     </section>
   );

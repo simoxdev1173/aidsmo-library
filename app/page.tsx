@@ -1,7 +1,6 @@
 import Hero from "./ebook/components/Hero"
 import Benefits from "./ebook/components/TrendingSection"
 import Courses from "./ebook/components/Courses"
-import SubscribeToMail from "./ebook/components/SubscribeToMail"
 import LatestPublications from "./ebook/components/LatestPublications"
 import LibraryStats from "./ebook/components/LibraryStats"
 import ChatbotCTA from "./ebook/components/ChatbotCta"
@@ -31,10 +30,6 @@ export default function Home() {
         </section>
          <section id="chatbot">
           <ChatbotCTA />
-        </section>
-        
-        <section id="newsletter">
-          <SubscribeToMail />
         </section>
       </main>
     </div>

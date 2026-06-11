@@ -86,15 +86,16 @@ const VideoCarousel = () => {
   return (
     <section dir="rtl" className="relative overflow-hidden bg-[#F7F0E1] py-20 md:py-28">
       <Image
-        src="/video-section-bg.png"
+        src="/standardization-bg.png"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover blur-xs sm:opacity-90"
+        className="object-cover opacity-[70] contrast-110 saturate-125"
         aria-hidden
       />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.74)_0%,rgba(247,240,225,0.46)_48%,rgba(255,252,244,0.82)_100%)]" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.14]"
+        className="pointer-events-none absolute inset-0 opacity-[70]"
         style={{
           backgroundImage:
             'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
@@ -114,7 +115,7 @@ const VideoCarousel = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-white text-4xl leading-tight md:text-5xl"
+              className="academic-heading text-4xl leading-tight md:text-5xl"
             >
               الفيديوهات
             </motion.h2>

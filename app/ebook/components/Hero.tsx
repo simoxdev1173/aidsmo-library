@@ -503,11 +503,11 @@ const Hero = () => {
           <div className="max-w-2xl justify-self-end text-white">
             <div className="mb-8 flex items-center gap-4">
               <Image
-                src="/logo-4.png"
+                src="/logo-3d-3d.png"
                 alt="المكتبة الرقمية"
-                width={120}
-                height={120}
-                className="h-20 w-20 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-24"
+                width={420}
+                height={420}
+                className="h-20 w-20 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-34"
                 priority
               />
            
@@ -518,7 +518,7 @@ const Hero = () => {
              
              <div className='text-nowrap'>
                <span className=" text-[#E8C96A]">المكتبة الرقمية</span>
-              <span className="text-white pr-3">الذكية</span>
+              <span className="text-[white] pr-3">الذكية</span>
               </div>
             </h1>
 

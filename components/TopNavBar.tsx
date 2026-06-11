@@ -388,7 +388,7 @@ const TopNavBar = () => {
             <div className="flex items-center gap-2 2xl:gap-3">
               <Link href="/" className="flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white">
                 <Image
-                  src={isSolid ? '/logo-2.png' : '/logo-3.png'}
+                  src="/logo-3d-3d.png"
                   alt="المكتبة الرقمية"
                   height={240}
                   width={260}

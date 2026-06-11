@@ -133,8 +133,8 @@ const menuItemsData: MenuItem[] = [
   },
 ];
 
-const dropdownShell = 'border border-[#C29C41]/30 bg-white/[0.98] p-2 shadow-[0_18px_44px_rgba(10,37,64,0.15)] backdrop-blur-xl';
-const dropdownLink = 'block px-4 py-2.5 text-sm font-medium leading-relaxed text-[#334155] transition duration-300 hover:bg-[#F0F7FC] hover:text-[#C29C41] focus:bg-[#F0F7FC] focus:text-[#C29C41] focus:outline-none';
+const dropdownShell = 'rounded-[14px] border border-[#C29C41]/30 bg-white/[0.98] p-2 shadow-[0_18px_44px_rgba(10,37,64,0.15)] backdrop-blur-xl';
+const dropdownLink = 'block rounded-full px-4 py-2.5 text-sm font-medium leading-relaxed text-[#334155] transition duration-300 hover:bg-[#F0F7FC] hover:text-[#C29C41] focus:bg-[#F0F7FC] focus:text-[#C29C41] focus:outline-none';
 
 const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
@@ -245,7 +245,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
       <Link
         href={item.href ?? `#${item.id}`}
         className={cn(
-          'relative flex min-h-11 items-center gap-1 text-nowrap px-2 text-[0.82rem] font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:px-3 2xl:text-sm',
+          'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-2 text-[0.82rem] font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:px-3 2xl:text-sm',
           isScrolled
             ? cn('focus:ring-offset-white', isActive ? 'text-[#C29C41]' : 'text-[#0A2540] hover:text-[#C29C41]')
             : cn('focus:ring-offset-[#0A2540]', isActive ? 'text-[#E8C96A]' : 'text-white/88 hover:text-[#E8C96A]'),
@@ -284,7 +284,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
 
   if (!hasChildren) {
     return (
-      <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block min-h-12 border-b border-[#0369A1]/10 px-2 py-3 text-lg font-bold text-[#003652]">
+      <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block min-h-12 rounded-full border-b border-[#0369A1]/10 px-4 py-3 text-lg font-bold text-[#003652]">
         {item.label}
       </Link>
     );
@@ -295,7 +295,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex min-h-12 w-full items-center justify-between px-2 py-3 text-lg font-bold text-[#003652]"
+        className="flex min-h-12 w-full items-center justify-between rounded-full px-4 py-3 text-lg font-bold text-[#003652]"
       >
         {item.label}
         <LuChevronDown size={18} className={cn('text-[#C29C41] transition duration-300', open && 'rotate-180')} />
@@ -317,7 +317,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                   <button
                     type="button"
                     onClick={() => setExpandedChild(isExpanded ? null : child.href)}
-                    className="flex w-full items-center justify-between px-2 py-2.5 text-sm font-semibold text-[#475569]"
+                    className="flex w-full items-center justify-between rounded-full px-4 py-2.5 text-sm font-semibold text-[#475569]"
                   >
                     {child.label}
                     <LuChevronDown size={14} className={cn('text-[#C29C41] transition duration-300', isExpanded && 'rotate-180')} />
@@ -325,7 +325,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                   <div className={cn('overflow-hidden transition-all duration-300', isExpanded ? 'max-h-[440px] opacity-100' : 'max-h-0 opacity-0')}>
                     <div className="mr-4 border-r border-[#0369A1]/10 pr-2">
                       {child.subItems.map((sub) => (
-                        <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block px-2 py-2 text-sm text-[#64748B]">
+                        <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
                           {sub.label}
                         </Link>
                       ))}
@@ -335,7 +335,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
               );
             }
             return (
-              <Link key={child.href} href={child.href} onClick={onNavigate} className="block px-2 py-2.5 text-sm font-medium text-[#475569]">
+              <Link key={child.href} href={child.href} onClick={onNavigate} className="block rounded-full px-4 py-2.5 text-sm font-medium text-[#475569]">
                 {child.label}
               </Link>
             );
@@ -378,9 +378,9 @@ const TopNavBar = () => {
       >
         <nav
           className={cn(
-            'mx-auto max-w-[92rem] border transition-all duration-500',
+            'mx-auto max-w-[92rem] rounded-[14px] border transition-all duration-500',
             isSolid
-              ? 'corner-card border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
+              ? 'border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
               : 'border-white/15 bg-[#0A2540]/30 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.14)] backdrop-blur-md hover:border-[#C29C41]/35 hover:bg-[#0A2540]/55',
           )}
         >
@@ -414,7 +414,7 @@ const TopNavBar = () => {
                       placeholder="بحث..."
                       dir="rtl"
                       className={cn(
-                        'h-11 w-40 border pr-10 pl-4 text-sm font-medium outline-none transition duration-300 focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25',
+                        'h-11 w-40 rounded-full border pr-10 pl-4 text-sm font-medium outline-none transition duration-300 focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25',
                         isSolid
                           ? 'border-[#0369A1]/20 bg-[#F8FAFC] text-[#0A2540] placeholder:text-[#64748B]'
                           : 'border-white/16 bg-white/10 text-white placeholder:text-white/60',
@@ -430,7 +430,7 @@ const TopNavBar = () => {
                   href="/dashboard"
                   aria-label="لوحة التحكم"
                   className={cn(
-                    'group relative hidden h-11 shrink-0 items-center justify-center gap-2 border px-3 text-sm font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:flex',
+                    'group relative hidden h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-3 text-sm font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:flex',
                     isSolid
                       ? 'border-[#C29C41]/35 bg-[#FFF8E1] text-[#8A6A1D] shadow-[0_8px_22px_rgba(194,156,65,0.16)] hover:border-[#C29C41] hover:bg-[#C29C41] hover:text-[#0A2540] focus:ring-offset-white'
                       : 'border-[#E8C96A]/35 bg-[#E8C96A]/12 text-[#E8C96A] shadow-[0_10px_26px_rgba(0,0,0,0.12)] hover:border-[#E8C96A] hover:bg-[#E8C96A] hover:text-[#0A2540] focus:ring-offset-[#0A2540]',
@@ -440,7 +440,7 @@ const TopNavBar = () => {
                   <span className="hidden 2xl:inline">لوحة التحكم</span>
                   <span
                     className={cn(
-                      'pointer-events-none absolute top-full mt-3 whitespace-nowrap border px-3 py-1.5 text-xs font-bold opacity-0 shadow-[0_10px_24px_rgba(10,37,64,0.14)] transition duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 2xl:hidden',
+                      'pointer-events-none absolute top-full mt-3 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-bold opacity-0 shadow-[0_10px_24px_rgba(10,37,64,0.14)] transition duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 2xl:hidden',
                       isSolid
                         ? 'border-[#C29C41]/30 bg-white text-[#003652]'
                         : 'border-[#E8C96A]/30 bg-[#0A2540] text-white',
@@ -470,7 +470,7 @@ const TopNavBar = () => {
                 <button
                   type="button"
                   className={cn(
-                    'flex h-11 w-11 items-center justify-center border transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:hidden',
+                    'flex h-11 w-11 items-center justify-center rounded-full border transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:hidden',
                     isSolid
                       ? 'border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] focus:ring-offset-white'
                       : 'border-white/20 bg-white/10 text-white focus:ring-offset-[#0A2540]',
@@ -496,7 +496,7 @@ const TopNavBar = () => {
 
       <aside
         className={cn(
-          'fixed bottom-0 right-0 top-0 z-[110] w-[86%] max-w-sm overflow-y-auto border-l border-[#C29C41]/30 bg-white p-6 shadow-2xl transition-transform duration-500 lg:hidden',
+          'fixed bottom-0 right-0 top-0 z-[110] w-[86%] max-w-sm overflow-y-auto rounded-l-[14px] border-l border-[#C29C41]/30 bg-white p-6 shadow-2xl transition-transform duration-500 lg:hidden',
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
         )}
         aria-label="القائمة الرئيسية"
@@ -510,7 +510,7 @@ const TopNavBar = () => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex h-10 w-10 items-center justify-center border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652]"
             aria-label="إغلاق القائمة"
           >
             <LuX size={20} />
@@ -523,7 +523,7 @@ const TopNavBar = () => {
             type="text"
             placeholder="بحث..."
             dir="rtl"
-            className="h-12 w-full border border-[#0369A1]/20 bg-[#F8FAFC] pr-10 pl-4 text-sm outline-none transition duration-300 placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
+            className="h-12 w-full rounded-full border border-[#0369A1]/20 bg-[#F8FAFC] pr-10 pl-4 text-sm outline-none transition duration-300 placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
           />
           <LuSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C29C41]" />
         </label>
@@ -531,7 +531,7 @@ const TopNavBar = () => {
         <Link
           href="/dashboard"
           onClick={() => setMobileMenuOpen(false)}
-          className="mb-4 flex min-h-12 items-center justify-between border border-[#C29C41]/35 bg-[#FFF8E1] px-4 py-3 text-sm font-bold text-[#003652] transition duration-200 hover:bg-[#F0F7FC] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+          className="mb-4 flex min-h-12 items-center justify-between rounded-full border border-[#C29C41]/35 bg-[#FFF8E1] px-4 py-3 text-sm font-bold text-[#003652] transition duration-200 hover:bg-[#F0F7FC] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
         >
           <span>لوحة التحكم</span>
           <MdDashboardCustomize className="h-6 w-6 text-[#8A6A1D]" />

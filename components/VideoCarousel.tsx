@@ -131,13 +131,13 @@ const VideoCarousel = () => {
           >
             <button
               onClick={prev}
-              className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
               <LuChevronRight size={18} />
             </button>
             <button
               onClick={next}
-              className="flex h-11 w-11 items-center justify-center border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
               <LuChevronLeft size={18} />
             </button>
@@ -163,7 +163,7 @@ const VideoCarousel = () => {
               className="flex-shrink-0"
               style={{ width: CARD_WIDTH }}
             >
-              <div className="group corner-card relative overflow-hidden border border-[#C29C41]/30 bg-white/88 shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)]">
+              <div className="group corner-card relative overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-white/88 shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)]">
                 {/* Gold top strip */}
                 <div
                   className="h-[3px] opacity-0 transition-opacity duration-400 group-hover:opacity-100"
@@ -171,7 +171,7 @@ const VideoCarousel = () => {
                 />
 
                 {/* Video / Thumbnail area */}
-                <div className="relative aspect-video bg-[#0a2540] overflow-hidden">
+                <div className="relative aspect-video overflow-hidden bg-[#0a2540]">
                   <AnimatePresence mode="wait">
                     {playingId === video.id ? (
                       <motion.iframe

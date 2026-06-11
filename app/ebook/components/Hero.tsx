@@ -529,7 +529,7 @@ const Hero = () => {
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="#latest-pub"
-                className="engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
+                className="engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
               >
                 تصفح الإصدارات
                 <LuChevronLeft className="h-4 w-4" />
@@ -537,7 +537,7 @@ const Hero = () => {
 
               <Link
                 href="#about"
-                className="inline-flex h-12 cursor-pointer items-center justify-center gap-3 border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
+                className="inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
               >
                 البحث حسب القطاع
                 <LuSearch className="h-4 w-4" />
@@ -551,7 +551,7 @@ const Hero = () => {
             type="button"
             aria-label="Previous slide"
             onClick={() => goToSlide(activeIndex - 1, { x: 0.16, y: 0.5 })}
-            className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <LuChevronRight className="h-5 w-5" />
           </button>
@@ -560,7 +560,7 @@ const Hero = () => {
             type="button"
             aria-label="Next slide"
             onClick={() => goToSlide(activeIndex + 1, { x: 0.84, y: 0.5 })}
-            className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <LuChevronLeft className="h-5 w-5" />
           </button>
@@ -572,7 +572,7 @@ const Hero = () => {
             type="button"
             aria-label="الشريحة السابقة"
             onClick={() => goToSlide(activeIndex - 1, { x: 0.16, y: 0.5 })}
-            className="hidden h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <LuChevronRight className="h-5 w-5" />
           </button>
@@ -586,7 +586,7 @@ const Hero = () => {
                 aria-label={`عرض الصورة ${index + 1}`}
                 aria-current={index === activeIndex ? 'true' : undefined}
                 onClick={() => goToSlide(index, { x: 0.5, y: 0.9 })}
-                className="hero-progress-segment h-1.5 max-w-28 flex-1 cursor-pointer overflow-hidden bg-white/24 transition duration-300 hover:bg-white/38 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                className="hero-progress-segment h-1.5 max-w-28 flex-1 cursor-pointer overflow-hidden rounded-full bg-white/24 transition duration-300 hover:bg-white/38 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
               >
                 <span
                   key={`${transitionId}-${index}`}
@@ -600,7 +600,7 @@ const Hero = () => {
             type="button"
             aria-label="الشريحة التالية"
             onClick={() => goToSlide(activeIndex + 1, { x: 0.84, y: 0.5 })}
-            className="hidden h-11 w-11 cursor-pointer items-center justify-center border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <LuChevronLeft className="h-5 w-5" />
           </button>

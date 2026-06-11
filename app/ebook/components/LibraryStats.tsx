@@ -86,7 +86,7 @@ const StatCard = ({ stat, index }: { stat: (typeof stats)[number]; index: number
     >
       <div className="absolute inset-0 translate-y-4 bg-[#0A2540]/10 blur-2xl transition duration-500 group-hover:translate-y-6 group-hover:bg-[#0A2540]/16" aria-hidden />
 
-      <div className="relative z-10 h-full overflow-hidden bg-[linear-gradient(180deg,rgba(255,252,244,0.92)_0%,rgba(255,248,225,0.84)_48%,rgba(255,255,255,0.96)_100%)] px-6 py-7 shadow-[0_18px_38px_rgba(10,37,64,0.14)] transition duration-500 group-hover:shadow-[0_30px_60px_rgba(10,37,64,0.18)]">
+      <div className="relative z-10 h-full overflow-hidden rounded-[14px] bg-[linear-gradient(180deg,rgba(255,252,244,0.92)_0%,rgba(255,248,225,0.84)_48%,rgba(255,255,255,0.96)_100%)] px-6 py-7 shadow-[0_18px_38px_rgba(10,37,64,0.14)] transition duration-500 group-hover:shadow-[0_30px_60px_rgba(10,37,64,0.18)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(194,156,65,0.18),transparent_46%),radial-gradient(circle_at_bottom_left,rgba(3,105,161,0.08),transparent_42%)]" aria-hidden />
         <div className="absolute inset-y-0 right-0 w-2 bg-gradient-to-b from-[#C29C41] via-[#F7E5A9] to-[#0A2540]" aria-hidden />
 

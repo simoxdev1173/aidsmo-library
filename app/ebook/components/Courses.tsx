@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { LuChevronLeft } from 'react-icons/lu';
 
 const primaryButton =
-  'engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
+  'engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
 
 const darkButton =
-  'inline-flex h-12 cursor-pointer items-center justify-center gap-3 border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
+  'inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
 
 const LibraryNews = () => {
   return (
@@ -62,7 +62,7 @@ const LibraryNews = () => {
           {/* Big parchment card */}
           <Link
             href="#latest-pub"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden border border-[#C29C41]/35 bg-[#FFF8E8]/95 p-7 shadow-[0_22px_58px_rgba(10,37,64,0.09)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 hover:shadow-[0_28px_76px_rgba(10,37,64,0.14)] md:p-8 lg:row-span-2"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/35 bg-[#FFF8E8]/95 p-7 shadow-[0_22px_58px_rgba(10,37,64,0.09)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 hover:shadow-[0_28px_76px_rgba(10,37,64,0.14)] md:p-8 lg:row-span-2"
           >
             <div>
               <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#9A7421]">
@@ -87,7 +87,7 @@ const LibraryNews = () => {
           {/* Top image card */}
           <Link
             href="/catalog/industry"
-            className="corner-frame group relative overflow-hidden border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
+            className="corner-frame group relative overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
           >
             <Image
               src="/industry-informations-bg.png"
@@ -113,7 +113,7 @@ const LibraryNews = () => {
           {/* Smart assistant card */}
           <Link
             href="#chatbot"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden border border-[#C29C41]/30 bg-[#0A2540] p-7 text-white shadow-[0_24px_68px_rgba(10,37,64,0.16)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 md:p-8 lg:row-span-2"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0A2540] p-7 text-white shadow-[0_24px_68px_rgba(10,37,64,0.16)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 md:p-8 lg:row-span-2"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_16%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_78%_82%,rgba(14,165,233,0.12),transparent_30%)]"
@@ -143,7 +143,7 @@ const LibraryNews = () => {
           {/* Main blue sector card */}
           <Link
             href="/catalog/standardization"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden border border-[#C29C41]/30 bg-[#0B4E84] p-7 text-white shadow-[0_24px_68px_rgba(10,37,64,0.15)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 md:p-8 lg:row-span-2"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0B4E84] p-7 text-white shadow-[0_24px_68px_rgba(10,37,64,0.15)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 md:p-8 lg:row-span-2"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(232,201,106,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]"
@@ -173,7 +173,7 @@ const LibraryNews = () => {
           {/* Bottom image card */}
           <Link
             href="/catalog/mining"
-            className="corner-frame group relative overflow-hidden border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
+            className="corner-frame group relative overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
           >
             <Image
               src="/industry-bg.png"
@@ -197,7 +197,7 @@ const LibraryNews = () => {
           {/* Bottom image card */}
           <Link
             href="/catalog/industrial-info"
-            className="corner-frame group relative overflow-hidden border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
+            className="corner-frame group relative overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)]"
           >
             <Image
               src="/standardization-bg.png"

@@ -196,14 +196,14 @@ function LibraryCarouselRow({ row }: { row: LibraryRow }) {
             type="button"
             onClick={onPrev}
             aria-label={`السابق: ${row.title}`}
-            className="flex h-10 w-10 items-center justify-center border border-[#C29C41]/30 bg-white/72 text-[#0369A1] shadow-sm backdrop-blur transition duration-200 hover:border-[#C29C41]/65 hover:bg-[#FFF8E1] hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/30 bg-white/72 text-[#0369A1] shadow-sm backdrop-blur transition duration-200 hover:border-[#C29C41]/65 hover:bg-[#FFF8E1] hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <FaChevronRight className="h-4 w-4" />
           </button>
           <Link
             href={row.href}
             aria-label={`عرض المزيد: ${row.title}`}
-            className="border border-[#C29C41]/35 bg-[#FFF8E1] px-4 py-2 text-sm font-bold text-[#7A5C10] shadow-sm transition duration-200 hover:border-[#C29C41]/70 hover:bg-[#F7E5A9] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="rounded-full border border-[#C29C41]/35 bg-[#FFF8E1] px-4 py-2 text-sm font-bold text-[#7A5C10] shadow-sm transition duration-200 hover:border-[#C29C41]/70 hover:bg-[#F7E5A9] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             عرض المزيد
           </Link>
@@ -211,7 +211,7 @@ function LibraryCarouselRow({ row }: { row: LibraryRow }) {
             type="button"
             onClick={onNext}
             aria-label={`التالي: ${row.title}`}
-            className="flex h-10 w-10 items-center justify-center border border-[#C29C41]/30 bg-white/72 text-[#0369A1] shadow-sm backdrop-blur transition duration-200 hover:border-[#C29C41]/65 hover:bg-[#FFF8E1] hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/30 bg-white/72 text-[#0369A1] shadow-sm backdrop-blur transition duration-200 hover:border-[#C29C41]/65 hover:bg-[#FFF8E1] hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <FaChevronLeft className="h-4 w-4" />
           </button>

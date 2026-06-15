@@ -74,6 +74,7 @@ const menuItemsData: MenuItem[] = [
             label: 'الانفوجرافيك',
             href: '/info/statistics/infographics',
             subItems: [
+              { label: '2023', href: '/info/statistics/infographics/2023' },
               { label: '2024', href: '/info/statistics/infographics/2024' },
               { label: '2025', href: '/info/statistics/infographics/2025' },
               { label: '2026', href: '/info/statistics/infographics/2026' },

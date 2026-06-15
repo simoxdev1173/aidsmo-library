@@ -11,7 +11,7 @@ export default function IndustrialInfographicsPage({
     <StandardizationInternalPage
       searchParams={searchParams}
       config={{
-        slug: ['infographics', 'infographics-2024', 'infographics-2025', 'infographics-2026'],
+        slug: ['infographics', 'infographics-2023', 'infographics-2024', 'infographics-2025', 'infographics-2026'],
         resetHref: '/info/statistics/infographics',
         assistantScope: 'محتوى المعلومات الصناعية',
         eyebrow: 'المعلومات الصناعية / الإحصاءات الصناعية',

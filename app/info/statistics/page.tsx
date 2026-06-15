@@ -17,6 +17,7 @@ export default function IndustrialStatisticsPage({
           'indicators-booklet',
           'statistics-bulletin',
           'infographics',
+          'infographics-2023',
           'infographics-2024',
           'infographics-2025',
           'infographics-2026',

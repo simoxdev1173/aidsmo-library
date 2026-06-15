@@ -4,6 +4,10 @@ import StandardizationInternalPage from '@/app/standardization/_components/Stand
 export const dynamic = 'force-dynamic';
 
 const yearConfig = {
+  '2023': {
+    slug: 'infographics-2023',
+    title: 'الإنفوجرافيك الصناعي 2023',
+  },
   '2024': {
     slug: 'infographics-2024',
     title: 'الإنفوجرافيك الصناعي 2024',

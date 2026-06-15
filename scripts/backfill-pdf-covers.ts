@@ -1,17 +1,18 @@
 import { prisma } from "@/lib/prisma";
 import { createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
+import { primaryDocumentFilePath } from "@/lib/document-files";
 import { resolvePublicUploadFilePath } from "@/lib/uploads";
 
 async function main() {
   const entries = await prisma.libraryEntry.findMany({
     where: {
       coverImagePath: null,
-      filePath: { not: null },
     },
     select: {
       id: true,
       title: true,
       filePath: true,
+      documentFiles: true,
     },
     orderBy: { updatedAt: "desc" },
   });
@@ -20,7 +21,8 @@ async function main() {
   let skipped = 0;
 
   for (const entry of entries) {
-    const absolutePdfPath = await resolvePublicUploadFilePath(entry.filePath);
+    const primaryFilePath = primaryDocumentFilePath(entry.documentFiles, entry.filePath);
+    const absolutePdfPath = await resolvePublicUploadFilePath(primaryFilePath);
 
     if (!absolutePdfPath) {
       skipped += 1;
@@ -29,7 +31,7 @@ async function main() {
     }
 
     try {
-      const coverImagePath = await createPdfCoverFromPublicPath(entry.filePath);
+      const coverImagePath = await createPdfCoverFromPublicPath(primaryFilePath);
 
       if (!coverImagePath) {
         skipped += 1;

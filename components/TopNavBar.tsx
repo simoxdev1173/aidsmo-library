@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuMenu, LuSearch, LuX } from 'react-icons/lu';
 import { MdDashboardCustomize } from 'react-icons/md';
 
-type SubItem = { label: string; href: string };
+type SubItem = { label: string; href: string; subItems?: SubItem[] };
 type ChildItem = { label: string; href: string; subItems?: SubItem[] };
 type GroupDef = { title: string; items: ChildItem[] };
 type MenuItem = {
@@ -70,7 +70,15 @@ const menuItemsData: MenuItem[] = [
           { label: 'تقرير الصناعة العربية', href: '/info/statistics/arab-industry-report' },
           { label: 'كتيب المؤشرات الاقتصادية والصناعية', href: '/info/statistics/indicators-booklet' },
           { label: 'نشرة الإحصاءات الصناعية', href: '/info/statistics/bulletin' },
-          { label: 'الانفوجرافيك', href: '/info/statistics/infographics' },
+          {
+            label: 'الانفوجرافيك',
+            href: '/info/statistics/infographics',
+            subItems: [
+              { label: '2024', href: '/info/statistics/infographics/2024' },
+              { label: '2025', href: '/info/statistics/infographics/2025' },
+              { label: '2026', href: '/info/statistics/infographics/2026' },
+            ],
+          },
         ],
       },
       { label: 'مؤتمرات وندوات', href: '/info/conferences' },
@@ -136,6 +144,45 @@ const menuItemsData: MenuItem[] = [
 const dropdownShell = 'rounded-[14px] border border-[#C29C41]/30 bg-white/[0.98] p-2 shadow-[0_18px_44px_rgba(10,37,64,0.15)] backdrop-blur-xl';
 const dropdownLink = 'block rounded-full px-4 py-2.5 text-sm font-medium leading-relaxed text-[#334155] transition duration-300 hover:bg-[#F0F7FC] hover:text-[#C29C41] focus:bg-[#F0F7FC] focus:text-[#C29C41] focus:outline-none';
 
+const NestedFlyoutItems = ({ items }: { items: SubItem[] }) => {
+  const [expandedHref, setExpandedHref] = useState<string | null>(null);
+
+  return (
+    <>
+      {items.map((item) => (
+        <div key={item.href}>
+          {item.subItems ? (
+            <div
+              className="relative"
+              onMouseEnter={() => setExpandedHref(item.href)}
+              onMouseLeave={() => setExpandedHref(null)}
+            >
+              <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
+                <Link href={item.href} className="flex-1">{item.label}</Link>
+                <LuChevronLeft size={14} className="text-[#C29C41]" />
+              </div>
+              <div
+                className={cn(
+                  'absolute left-0 top-0 z-50 -translate-x-full pl-2 transition duration-300',
+                  expandedHref === item.href ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0',
+                )}
+              >
+                <div className={cn('min-w-[180px]', dropdownShell)}>
+                  <NestedFlyoutItems items={item.subItems} />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Link href={item.href} className={dropdownLink}>
+              {item.label}
+            </Link>
+          )}
+        </div>
+      ))}
+    </>
+  );
+};
+
 const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   return (
@@ -159,11 +206,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
                 )}
               >
                 <div className={cn('min-w-[250px]', dropdownShell)}>
-                  {item.subItems.map((sub) => (
-                    <Link key={sub.href} href={sub.href} className={dropdownLink}>
-                      {sub.label}
-                    </Link>
-                  ))}
+                  <NestedFlyoutItems items={item.subItems} />
                 </div>
               </div>
             </div>
@@ -273,6 +316,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
 const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () => void }) => {
   const [open, setOpen] = useState(false);
   const [expandedChild, setExpandedChild] = useState<string | null>(null);
+  const [expandedSubChild, setExpandedSubChild] = useState<string | null>(null);
   const hasChildren = item.children || item.groups;
 
   const allChildren: (ChildItem & { isGroupHeader?: boolean; groupTitle?: string })[] =
@@ -324,11 +368,44 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                   </button>
                   <div className={cn('overflow-hidden transition-all duration-300', isExpanded ? 'max-h-[440px] opacity-100' : 'max-h-0 opacity-0')}>
                     <div className="mr-4 border-r border-[#0369A1]/10 pr-2">
-                      {child.subItems.map((sub) => (
-                        <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
-                          {sub.label}
-                        </Link>
-                      ))}
+                      {child.subItems.map((sub) => {
+                        if (sub.subItems && sub.subItems.length > 0) {
+                          const isSubExpanded = expandedSubChild === sub.href;
+
+                          return (
+                            <div key={sub.href}>
+                              <div className="flex items-center gap-1 rounded-full">
+                                <Link href={sub.href} onClick={onNavigate} className="block flex-1 rounded-full px-4 py-2 text-sm font-semibold text-[#475569]">
+                                  {sub.label}
+                                </Link>
+                                <button
+                                  type="button"
+                                  onClick={() => setExpandedSubChild(isSubExpanded ? null : sub.href)}
+                                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#C29C41]"
+                                  aria-label={`${sub.label} submenu`}
+                                >
+                                  <LuChevronDown size={14} className={cn('transition duration-300', isSubExpanded && 'rotate-180')} />
+                                </button>
+                              </div>
+                              <div className={cn('overflow-hidden transition-all duration-300', isSubExpanded ? 'max-h-44 opacity-100' : 'max-h-0 opacity-0')}>
+                                <div className="mr-4 border-r border-[#C29C41]/20 pr-2">
+                                  {sub.subItems.map((nested) => (
+                                    <Link key={nested.href} href={nested.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
+                                      {nested.label}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
+                            {sub.label}
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

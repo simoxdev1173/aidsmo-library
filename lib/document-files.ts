@@ -23,3 +23,7 @@ export function parseDocumentFilesInput(value: FormDataEntryValue | null) {
     return [];
   }
 }
+
+export function primaryDocumentFilePath(value: unknown, fallback?: string | null) {
+  return documentFilesValue(value, fallback)[0] ?? null;
+}

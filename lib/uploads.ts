@@ -95,9 +95,21 @@ function extensionFor(file: File) {
   return "jpg";
 }
 
-function validateUpload(file: File, folder: UploadFolder) {
-  if (!allowedMimeTypes[folder].has(file.type)) {
-    throw new Error(folder === "documents" ? "The document must be a PDF." : "Unsupported image type.");
+function isPdfUpload(file: File, bytes: Buffer) {
+  const hasPdfMime = file.type === "application/pdf";
+  const hasPdfExtension = file.name.toLowerCase().endsWith(".pdf");
+  const hasPdfSignature = bytes.subarray(0, 5).toString("ascii") === "%PDF-";
+
+  return hasPdfSignature && (hasPdfMime || hasPdfExtension || !file.type || file.type === "application/octet-stream");
+}
+
+function validateUpload(file: File, folder: UploadFolder, bytes: Buffer) {
+  if (folder === "documents") {
+    if (!isPdfUpload(file, bytes)) {
+      throw new Error("The document must be a PDF.");
+    }
+  } else if (!allowedMimeTypes[folder].has(file.type)) {
+    throw new Error("Unsupported image type.");
   }
 
   if (file.size > maxFileSize[folder]) {
@@ -110,12 +122,13 @@ export async function readUpload(file: File | null, folder: UploadFolder) {
     return null;
   }
 
-  validateUpload(file, folder);
+  const bytes = Buffer.from(await file.arrayBuffer());
+  validateUpload(file, folder, bytes);
 
   return {
     file,
-    bytes: Buffer.from(await file.arrayBuffer()),
-    extension: extensionFor(file),
+    bytes,
+    extension: folder === "documents" ? "pdf" : extensionFor(file),
   };
 }
 

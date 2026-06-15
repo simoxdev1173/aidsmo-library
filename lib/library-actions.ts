@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { readUpload, saveUploadBytes } from "@/lib/uploads";
 import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
-import { MAX_DOCUMENT_FILES, documentFilesValue, parseDocumentFilesInput } from "@/lib/document-files";
+import { MAX_DOCUMENT_FILES, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath } from "@/lib/document-files";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -421,8 +421,7 @@ export async function generateEntryCoverAction(id: string) {
     redirect("/dashboard/entries");
   }
 
-  const documentFiles = documentFilesValue(entry.documentFiles, entry.filePath);
-  const primaryFilePath = documentFiles[0] ?? null;
+  const primaryFilePath = primaryDocumentFilePath(entry.documentFiles, entry.filePath);
 
   if (entry.coverImagePath || !primaryFilePath) {
     redirect(`/dashboard/entries/${id}?cover=skipped`);

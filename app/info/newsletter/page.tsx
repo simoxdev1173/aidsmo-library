@@ -11,7 +11,7 @@ export default function IndustrialNewsletterPage({
     <StandardizationInternalPage
       searchParams={searchParams}
       config={{
-        slug: 'newsletter',
+        slug: ['newsletter', 'newsletter-2024', 'newsletter-2025', 'newsletter-2026'],
         assistantScope: 'محتوى المعلومات الصناعية',
         eyebrow: 'المعلومات الصناعية / النشرة الدورية',
         title: 'النشرة الدورية',

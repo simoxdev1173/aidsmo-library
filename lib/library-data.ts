@@ -53,7 +53,10 @@ export async function getDashboardStats() {
 
 export async function getCategoryOptions() {
   return prisma.category.findMany({
-    where: { isNavVisible: true, children: { none: {} } },
+    where: {
+      isNavVisible: true,
+      OR: [{ children: { none: {} } }, { entries: { some: {} } }],
+    },
     orderBy: [{ order: "asc" }, { name: "asc" }],
     select: {
       id: true,

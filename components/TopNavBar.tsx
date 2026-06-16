@@ -84,7 +84,15 @@ const menuItemsData: MenuItem[] = [
       },
       { label: 'مؤتمرات وندوات', href: '/info/conferences' },
       { label: 'مجلة التنمية الصناعية', href: '/info/magazine' },
-      { label: 'النشرة الدورية', href: '/info/newsletter' },
+      {
+        label: 'النشرة الدورية',
+        href: '/info/newsletter',
+        subItems: [
+          { label: '2024', href: '/info/newsletter/2024' },
+          { label: '2025', href: '/info/newsletter/2025' },
+          { label: '2026', href: '/info/newsletter/2026' },
+        ],
+      },
       { label: 'الاصدارات', href: '/info/publications' },
     ],
   },

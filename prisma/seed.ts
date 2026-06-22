@@ -44,7 +44,7 @@ const children = [
   { parentSlug: "geology", name: "الصناعة التعدينية", slug: "mining-industry", order: 32, navHref: "/catalog/mining-industry" },
   { parentSlug: "industrial-info", name: "الإحصاءات الصناعية", slug: "industrial-statistics", order: 40, navHref: "/info/statistics" },
   { parentSlug: "industrial-statistics", name: "تقرير الصناعة العربية", slug: "arab-industry-report", order: 401, navHref: "/info/statistics/arab-industry-report" },
-  { parentSlug: "industrial-statistics", name: "كتيب المؤشرات الاقتصادية والصناعية", slug: "indicators-booklet", order: 402, navHref: "/info/statistics/indicators-booklet" },
+  { parentSlug: "industrial-statistics", name: "كتيب المؤشرات الاقتصادية و الصناعية في الدول العربية", slug: "indicators-booklet", order: 402, navHref: "/info/statistics/indicators-booklet" },
   { parentSlug: "industrial-statistics", name: "نشرة الإحصاءات الصناعية", slug: "statistics-bulletin", order: 403, navHref: "/info/statistics/bulletin" },
   { parentSlug: "industrial-statistics", name: "الانفوجرافيك", slug: "infographics", order: 404, navHref: "/info/statistics/infographics" },
   { parentSlug: "infographics", name: "2023", slug: "infographics-2023", order: 4041, navHref: "/info/statistics/infographics/2023" },

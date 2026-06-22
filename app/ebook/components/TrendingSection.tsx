@@ -40,7 +40,7 @@ const libraryRows: LibraryRow[] = [
     href: '/catalog/industry',
     Icon: FaBookOpen,
     items: [
-      { id: 'trend-1', title: 'المؤشرات الاقتصادية والصناعية في الدول العربية', meta: 'إحصاءات وتقارير', type: 'تقرير', cover: '/industry-covers/b-1.jpg', href: '/catalog/industry' },
+      { id: 'trend-1', title: 'كتيب المؤشرات الاقتصادية و الصناعية في الدول العربية', meta: 'إحصاءات وتقارير', type: 'تقرير', cover: '/industry-covers/b-1.jpg', href: '/catalog/industry' },
       { id: 'trend-2', title: 'إعادة تأهيل المناجم والمحاجر القديمة', meta: 'التعدين', type: 'دراسة', cover: '/latest-cover/b-1.png', href: '/catalog/mining' },
       { id: 'trend-3', title: 'التنمية الصناعية العربية', meta: 'الصناعة', type: 'مجلة', cover: '/trendingSection/t-3.png', href: '/catalog/industry' },
       { id: 'trend-4', title: 'الدليل العربي للمواصفات والجودة', meta: 'التقييس', type: 'دليل', cover: '/bookCovers/i-2-1.png', href: '/catalog/standardization' },
@@ -65,7 +65,7 @@ const libraryRows: LibraryRow[] = [
       { id: 'industry-5', title: 'خريطة التكامل الصناعي العربي', meta: 'استراتيجيات', type: 'كتاب', cover: '/industry-covers/b-3-2.jpg', href: '/catalog/industry' },
       { id: 'industry-6', title: 'الابتكار في المنشآت الصناعية', meta: 'فعاليات وأنشطة', type: 'بحث', cover: '/trendingSection/t-10.png', href: '/catalog/industry' },
       { id: 'industry-7', title: 'تقرير الصناعة العربية', meta: 'إحصاءات صناعية', type: 'تقرير', cover: '/trendingSection/t-1.png', href: '/catalog/industry' },
-      { id: 'industry-8', title: 'كتيب المؤشرات الاقتصادية والصناعية', meta: 'مؤشرات', type: 'كتيب', cover: '/trendingSection/t-2.jpg', href: '/catalog/industry' },
+      { id: 'industry-8', title: 'كتيب المؤشرات الاقتصادية و الصناعية في الدول العربية', meta: 'مؤشرات', type: 'كتيب', cover: '/trendingSection/t-2.jpg', href: '/catalog/industry' },
       { id: 'industry-9', title: 'مجلة التنمية الصناعية', meta: 'مجلة متخصصة', type: 'مجلة', cover: '/trendingSection/t-4.jpg', href: '/catalog/industry' },
     ],
   },
@@ -111,7 +111,7 @@ const libraryRows: LibraryRow[] = [
     Icon: FaChartPie,
     items: [
       { id: 'info-1', title: 'تقرير الصناعة العربية', meta: 'إحصاءات صناعية', type: 'تقرير', cover: '/trendingSection/t-1.png', href: '/catalog/industrial-info' },
-      { id: 'info-2', title: 'كتيب المؤشرات الاقتصادية والصناعية', meta: 'مؤشرات', type: 'كتيب', cover: '/trendingSection/t-2.jpg', href: '/catalog/industrial-info' },
+      { id: 'info-2', title: 'كتيب المؤشرات الاقتصادية و الصناعية في الدول العربية', meta: 'مؤشرات', type: 'كتيب', cover: '/trendingSection/t-2.jpg', href: '/catalog/industrial-info' },
       { id: 'info-3', title: 'مجلة التنمية الصناعية', meta: 'مجلة متخصصة', type: 'مجلة', cover: '/trendingSection/t-4.jpg', href: '/catalog/industrial-info' },
       { id: 'info-4', title: 'النشرة الدورية للمعلومات الصناعية', meta: 'نشرات', type: 'نشرة', cover: '/trendingSection/t-5.png', href: '/catalog/industrial-info' },
       { id: 'info-5', title: 'الإنفوجرافيك الصناعي', meta: 'مرئيات وبيانات', type: 'ملف', cover: '/trendingSection/t-6.png', href: '/catalog/industrial-info' },

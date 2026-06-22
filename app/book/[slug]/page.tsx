@@ -91,7 +91,7 @@ export default async function BookPage({
 
           <div className="mt-8 flex flex-wrap gap-3">
             {primaryDocument ? (
-              <a href={primaryDocument} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center gap-2 rounded-md bg-[#0369A1] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#003652]">
+              <a href={primaryDocument.path} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center gap-2 rounded-md bg-[#0369A1] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#003652]">
                 <HiOutlineEye className="h-5 w-5" />
                 اطّلاع
               </a>
@@ -113,13 +113,13 @@ export default async function BookPage({
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {documentFiles.map((file, index) => (
                   <a
-                    key={file}
-                    href={file}
+                    key={file.path}
+                    href={file.path}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex min-h-12 items-center justify-between gap-3 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] px-3 py-2 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#C29C41] hover:bg-[#FFF8E1]"
                   >
-                    <span>{index === 0 ? 'الملف الأساسي' : `ملف PDF ${index + 1}`}</span>
+                    <span>{file.title || (index === 0 ? 'الملف الأساسي' : `ملف PDF ${index + 1}`)}</span>
                     <HiOutlineEye className="h-5 w-5 shrink-0" />
                   </a>
                 ))}

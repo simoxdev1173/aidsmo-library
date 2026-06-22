@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { readUpload, saveUploadBytes } from "@/lib/uploads";
 import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
-import { MAX_DOCUMENT_FILES, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath } from "@/lib/document-files";
+import { createDocumentFile, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath } from "@/lib/document-files";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -179,25 +179,26 @@ function imageList(value: unknown) {
   return value.filter((item): item is string => typeof item === "string" && item.startsWith("/uploads/"));
 }
 
-async function saveDocumentUploads(formData: FormData, availableSlots = MAX_DOCUMENT_FILES) {
-  const files = formData
-    .getAll("documents")
-    .filter((file): file is File => file instanceof File && file.size > 0);
+async function saveDocumentUploads(formData: FormData) {
+  const fileEntries = formData.getAll("documents");
+  const titleEntries = formData.getAll("documentUploadTitles");
+  const uploads: Awaited<ReturnType<typeof readUpload>>[] = [];
+  const titles: (FormDataEntryValue | null)[] = [];
 
-  if (files.length > availableSlots) {
-    throw new Error(`PDF files are limited to ${MAX_DOCUMENT_FILES}.`);
+  for (let index = 0; index < fileEntries.length; index += 1) {
+    const file = fileEntries[index];
+    if (file instanceof File && file.size > 0) {
+      uploads.push(await readUpload(file, "documents"));
+      titles.push(titleEntries[index] ?? null);
+    }
   }
 
-  const uploads = [];
-  for (const file of files) {
-    uploads.push(await readUpload(file, "documents"));
-  }
-
-  const savedFiles: string[] = [];
-  for (const upload of uploads) {
+  const savedFiles = [];
+  for (const [index, upload] of uploads.entries()) {
     const savedPath = await saveUploadBytes(upload, "documents");
-    if (savedPath) {
-      savedFiles.push(savedPath);
+    const documentFile = savedPath ? createDocumentFile(savedPath, titles[index]) : null;
+    if (documentFile) {
+      savedFiles.push(documentFile);
     }
   }
 
@@ -205,12 +206,6 @@ async function saveDocumentUploads(formData: FormData, availableSlots = MAX_DOCU
     uploads,
     files: savedFiles,
   };
-}
-
-function assertDocumentLimit(files: string[]) {
-  if (files.length > MAX_DOCUMENT_FILES) {
-    throw new Error(`PDF files are limited to ${MAX_DOCUMENT_FILES}.`);
-  }
 }
 
 async function saveEventImages(formData: FormData, existingImages: string[] = []) {
@@ -279,10 +274,9 @@ export async function createEntryAction(formData: FormData) {
     const coverUpload = await readUpload(coverFile, "covers");
     const documentUploads = await saveDocumentUploads(formData);
     const documentFiles = documentFilesValue(documentUploads.files);
-    assertDocumentLimit(documentFiles);
     const eventImages = isEvent ? await saveEventImages(formData) : [];
     const dates = isEvent ? eventDates(formData) : { startDate: null, endDate: null };
-    const filePath = documentFiles[0] ?? null;
+    const filePath = documentFiles[0]?.path ?? null;
     const uploadedCoverImagePath = isEvent ? eventImages[0] ?? null : await saveUploadBytes(coverUpload, "covers");
     const primaryUpload = documentUploads.uploads[0] ?? null;
     const coverGeneration = uploadedCoverImagePath || isEvent
@@ -353,13 +347,11 @@ export async function updateEntryAction(id: string, formData: FormData) {
     const coverFile = isEvent ? null : (formData.get("cover") as File | null);
     const coverUpload = await readUpload(coverFile, "covers");
     const existingDocumentFiles = parseDocumentFilesInput(formData.get("documentFilesExisting"));
-    assertDocumentLimit(existingDocumentFiles);
-    const documentUploads = await saveDocumentUploads(formData, MAX_DOCUMENT_FILES - existingDocumentFiles.length);
+    const documentUploads = await saveDocumentUploads(formData);
     const documentFiles = documentFilesValue([...existingDocumentFiles, ...documentUploads.files], existing.filePath);
-    assertDocumentLimit(documentFiles);
     const eventImages = isEvent ? await saveEventImages(formData, imageList(existing.eventImages)) : imageList(existing.eventImages);
     const dates = isEvent ? eventDates(formData) : { startDate: existing.eventStartDate, endDate: existing.eventEndDate };
-    const filePath = documentFiles[0] ?? null;
+    const filePath = documentFiles[0]?.path ?? null;
     const uploadedCoverImagePath = isEvent ? eventImages[0] ?? existing.coverImagePath : await saveUploadBytes(coverUpload, "covers");
     const primaryUpload = existingDocumentFiles.length === 0 ? documentUploads.uploads[0] ?? null : null;
     const coverGeneration =

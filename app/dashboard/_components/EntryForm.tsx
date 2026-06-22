@@ -9,7 +9,7 @@ import EntryTypedFields from '@/app/dashboard/_components/EntryTypedFields';
 import { FileField, FormBusyOverlay, SubmitButton } from '@/app/dashboard/_components/FormFeedback';
 import { createEntryAction, updateEntryAction } from '@/lib/library-actions';
 import { categoryPath } from '@/lib/library-labels';
-import { MAX_DOCUMENT_FILES, documentFilesValue } from '@/lib/document-files';
+import { type DocumentFile, documentFilesValue } from '@/lib/document-files';
 
 type CategoryOption = {
   id: string;
@@ -26,7 +26,7 @@ type EntryFormValue = {
   notes: string | null;
   coverImagePath: string | null;
   filePath: string | null;
-  documentFiles: string[];
+  documentFiles: DocumentFile[];
   publisher: string | null;
   author: string | null;
   year: string | null;
@@ -67,13 +67,12 @@ function labelClass() {
 function DocumentFilesField({
   files,
 }: {
-  files: string[];
+  files: unknown;
 }) {
   const initialFiles = documentFilesValue(files);
   const [existingFiles, setExistingFiles] = useState(initialFiles);
   const [uploadSlots, setUploadSlots] = useState(initialFiles.length === 0 ? [0] : []);
   const totalSlots = existingFiles.length + uploadSlots.length;
-  const canAdd = totalSlots < MAX_DOCUMENT_FILES;
 
   function moveFile(index: number, direction: -1 | 1) {
     setExistingFiles((current) => {
@@ -86,6 +85,17 @@ function DocumentFilesField({
     });
   }
 
+  function updateExistingTitle(path: string, title: string) {
+    setExistingFiles((current) => current.map((file) => (file.path === path ? { ...file, title } : file)));
+  }
+
+  function addUploadSlots(count: number) {
+    setUploadSlots((current) => {
+      const start = Date.now();
+      return [...current, ...Array.from({ length: count }, (_, index) => start + index)];
+    });
+  }
+
   return (
     <section className="rounded-lg border border-[#E2E8F0] bg-white p-4">
       <input type="hidden" name="documentFilesExisting" value={JSON.stringify(existingFiles)} />
@@ -94,24 +104,35 @@ function DocumentFilesField({
         <div>
           <h3 className="text-sm font-bold text-[#334155]">ملفات PDF</h3>
           <p className="mt-1 text-xs leading-5 text-[#64748B]">
-            يمكن إضافة حتى {MAX_DOCUMENT_FILES} ملفات. الملف الأول يستخدم كملف أساسي ولإنشاء الغلاف تلقائيا.
+            يمكن إضافة أي عدد من ملفات PDF. العنوان اختياري، والملف الأول يستخدم كملف أساسي ولإنشاء الغلاف تلقائيا.
           </p>
         </div>
         <span className="rounded-full bg-[#F0F7FC] px-3 py-1 text-xs font-bold text-[#0369A1]">
-          {totalSlots}/{MAX_DOCUMENT_FILES}
+          {totalSlots} PDF
         </span>
       </div>
 
       {existingFiles.length > 0 && (
         <div className="mb-4 space-y-2">
           {existingFiles.map((file, index) => (
-            <div key={file} className="grid gap-2 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] p-3 sm:grid-cols-[1fr_auto] sm:items-center">
-              <a href={file} target="_blank" rel="noopener noreferrer" className="min-w-0 text-sm font-bold text-[#0369A1] hover:text-[#003652]">
-                <span className="block truncate" dir="ltr">{file.split('/').pop()}</span>
+            <div key={file.path} className="grid gap-3 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] p-3 sm:grid-cols-[1fr_auto] sm:items-center">
+              <div className="min-w-0">
+                <a href={file.path} target="_blank" rel="noopener noreferrer" className="min-w-0 text-sm font-bold text-[#0369A1] hover:text-[#003652]">
+                  <span className="block truncate" dir="ltr">{file.path.split('/').pop()}</span>
+                </a>
                 <span className="mt-1 block text-xs font-semibold text-[#64748B]">
                   {index === 0 ? 'الملف الأساسي' : `ملف PDF ${index + 1}`}
                 </span>
-              </a>
+                <label className="mt-3 block">
+                  <span className="mb-1 block text-xs font-bold text-[#475569]">عنوان الملف (اختياري)</span>
+                  <input
+                    value={file.title ?? ''}
+                    onChange={(event) => updateExistingTitle(file.path, event.target.value)}
+                    placeholder="اتركه فارغا لاستخدام التسمية الافتراضية"
+                    className={fieldClass()}
+                  />
+                </label>
+              </div>
               <div className="flex items-center gap-1">
                 <button
                   type="button"
@@ -133,7 +154,7 @@ function DocumentFilesField({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setExistingFiles((current) => current.filter((item) => item !== file))}
+                  onClick={() => setExistingFiles((current) => current.filter((item) => item.path !== file.path))}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 transition duration-200 hover:bg-red-100"
                   aria-label="حذف ملف PDF"
                 >
@@ -149,13 +170,21 @@ function DocumentFilesField({
         {uploadSlots.map((slot, index) => (
           <div key={slot} className="rounded-md border border-dashed border-[#CBD5E1] bg-[#F8FAFC] p-3">
             <div className="flex items-start justify-between gap-3">
-              <div className="flex-1">
+              <div className="grid flex-1 gap-3">
                 <FileField
                   name="documents"
                   label={existingFiles.length + index === 0 ? 'ملف PDF الأساسي' : `إضافة ملف PDF ${existingFiles.length + index + 1}`}
                   accept="application/pdf"
                   hint="PDF فقط. الحد الأقصى 50MB لكل ملف."
                 />
+                <label className="block">
+                  <span className="mb-2 block text-sm font-bold text-[#334155]">عنوان الملف (اختياري)</span>
+                  <input
+                    name="documentUploadTitles"
+                    placeholder="مثال: الجزء الأول أو الملحق التقني"
+                    className={fieldClass()}
+                  />
+                </label>
               </div>
               {uploadSlots.length > 1 && (
                 <button
@@ -172,16 +201,24 @@ function DocumentFilesField({
         ))}
       </div>
 
-      {canAdd && (
+      <div className="mt-4 flex flex-wrap gap-2">
         <button
           type="button"
-          onClick={() => setUploadSlots((current) => [...current, Date.now()])}
-          className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#0369A1]/35 bg-[#F0F7FC] px-4 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#0369A1] hover:bg-[#0369A1] hover:text-white"
+          onClick={() => addUploadSlots(1)}
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#0369A1]/35 bg-[#F0F7FC] px-4 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#0369A1] hover:bg-[#0369A1] hover:text-white"
         >
           <HiOutlineDocumentPlus className="h-5 w-5" />
           إضافة PDF
         </button>
-      )}
+        <button
+          type="button"
+          onClick={() => addUploadSlots(5)}
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#CBD5E1] bg-white px-4 text-sm font-bold text-[#334155] transition duration-200 hover:border-[#0369A1] hover:text-[#0369A1]"
+        >
+          <HiOutlineDocumentPlus className="h-5 w-5" />
+          إضافة 5 ملفات
+        </button>
+      </div>
     </section>
   );
 }
@@ -346,20 +383,7 @@ export default function EntryForm({
     const documentInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="documents"]'));
     const coverInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="cover"]'));
     const eventImageInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="eventImages"]'));
-    const existingInput = form.querySelector<HTMLInputElement>('input[name="documentFilesExisting"]');
-    let existingFiles: string[] = [];
-
-    try {
-      existingFiles = documentFilesValue(existingInput?.value ? JSON.parse(existingInput.value) : []);
-    } catch {
-      existingFiles = [];
-    }
-
     const selectedDocuments = documentInputs.flatMap((input) => Array.from(input.files ?? []));
-
-    if (existingFiles.length + selectedDocuments.length > MAX_DOCUMENT_FILES) {
-      return `يمكن إضافة ${MAX_DOCUMENT_FILES} ملفات PDF كحد أقصى.`;
-    }
 
     const oversizedPdf = selectedDocuments.find((file) => file.size > PDF_MAX_BYTES);
     if (oversizedPdf) {

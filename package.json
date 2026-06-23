@@ -16,6 +16,7 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",
+    "pdfs:count-pages": "tsx scripts/count-pdf-pages.ts",
     "covers:backfill": "tsx scripts/backfill-pdf-covers.ts"
   },
   "prisma": {

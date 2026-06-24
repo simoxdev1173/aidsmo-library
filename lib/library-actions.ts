@@ -43,7 +43,7 @@ function getActionError(error: unknown) {
     return error.message;
   }
 
-  return "Something went wrong. Please try again.";
+  return "تعذر إكمال العملية. يرجى المحاولة مرة أخرى، وإذا استمرت المشكلة تواصل مع مسؤول النظام.";
 }
 
 type CoverGenerationResult = {
@@ -157,7 +157,7 @@ function optionalDate(formData: FormData, key: string) {
 
   const date = new Date(`${value}T00:00:00.000Z`);
   if (Number.isNaN(date.getTime())) {
-    throw new Error("Invalid event date.");
+    throw new Error("تاريخ الفعالية غير صحيح. يرجى مراجعة تاريخ البداية أو النهاية.");
   }
 
   return date;
@@ -168,7 +168,7 @@ function eventDates(formData: FormData) {
   const endDate = optionalDate(formData, "eventEndDate");
 
   if (startDate && endDate && endDate < startDate) {
-    throw new Error("Event end date must be after the start date.");
+    throw new Error("تاريخ نهاية الفعالية يجب أن يكون بعد تاريخ البداية.");
   }
 
   return { startDate, endDate };
@@ -182,28 +182,29 @@ function imageList(value: unknown) {
 async function saveDocumentUploads(formData: FormData) {
   const fileEntries = formData.getAll("documents");
   const titleEntries = formData.getAll("documentUploadTitles");
-  const uploads: Awaited<ReturnType<typeof readUpload>>[] = [];
-  const titles: (FormDataEntryValue | null)[] = [];
+  let primaryUpload: Awaited<ReturnType<typeof readUpload>> = null;
+  const savedFiles = [];
 
   for (let index = 0; index < fileEntries.length; index += 1) {
     const file = fileEntries[index];
-    if (file instanceof File && file.size > 0) {
-      uploads.push(await readUpload(file, "documents"));
-      titles.push(titleEntries[index] ?? null);
+    if (!(file instanceof File) || file.size === 0) {
+      continue;
     }
-  }
 
-  const savedFiles = [];
-  for (const [index, upload] of uploads.entries()) {
+    const upload = await readUpload(file, "documents");
+    if (!primaryUpload) {
+      primaryUpload = upload;
+    }
+
     const savedPath = await saveUploadBytes(upload, "documents");
-    const documentFile = savedPath ? createDocumentFile(savedPath, titles[index]) : null;
+    const documentFile = savedPath ? createDocumentFile(savedPath, titleEntries[index] ?? null) : null;
     if (documentFile) {
       savedFiles.push(documentFile);
     }
   }
 
   return {
-    uploads,
+    primaryUpload,
     files: savedFiles,
   };
 }
@@ -218,7 +219,7 @@ async function saveEventImages(formData: FormData, existingImages: string[] = []
   }
 
   if (existingImages.length + files.length > 3) {
-    throw new Error("Event images are limited to 3 images.");
+    throw new Error("يمكن رفع 3 صور فقط للفعالية. احذف صورة قديمة أو اختر عددا أقل من الصور.");
   }
 
   const savedImages: string[] = [];
@@ -239,7 +240,7 @@ export async function loginAction(formData: FormData) {
   try {
     admin = await authenticateAdmin(text(formData, "email"), text(formData, "password"));
   } catch {
-    redirect(errorUrl("/dashboard/login", "Could not reach the database. Please check the server connection and try again."));
+    redirect(errorUrl("/dashboard/login", "تعذر الاتصال بقاعدة البيانات. يرجى التحقق من اتصال الخادم ثم المحاولة مرة أخرى."));
   }
 
   if (!admin) {
@@ -278,7 +279,7 @@ export async function createEntryAction(formData: FormData) {
     const dates = isEvent ? eventDates(formData) : { startDate: null, endDate: null };
     const filePath = documentFiles[0]?.path ?? null;
     const uploadedCoverImagePath = isEvent ? eventImages[0] ?? null : await saveUploadBytes(coverUpload, "covers");
-    const primaryUpload = documentUploads.uploads[0] ?? null;
+    const primaryUpload = documentUploads.primaryUpload;
     const coverGeneration = uploadedCoverImagePath || isEvent
       ? { path: null, failed: false }
       : await tryCreatePdfCover(primaryUpload?.bytes, `new entry "${title}"`, filePath);
@@ -353,7 +354,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
     const dates = isEvent ? eventDates(formData) : { startDate: existing.eventStartDate, endDate: existing.eventEndDate };
     const filePath = documentFiles[0]?.path ?? null;
     const uploadedCoverImagePath = isEvent ? eventImages[0] ?? existing.coverImagePath : await saveUploadBytes(coverUpload, "covers");
-    const primaryUpload = existingDocumentFiles.length === 0 ? documentUploads.uploads[0] ?? null : null;
+    const primaryUpload = existingDocumentFiles.length === 0 ? documentUploads.primaryUpload : null;
     const coverGeneration =
       uploadedCoverImagePath || existing.coverImagePath || isEvent
         ? { path: null, failed: false }

@@ -53,7 +53,6 @@ const eventCategorySlugs = new Set([
   'training-plan-2026',
 ]);
 
-const PDF_MAX_BYTES = 50 * 1024 * 1024;
 const IMAGE_MAX_BYTES = 10 * 1024 * 1024;
 
 function fieldClass() {
@@ -175,7 +174,7 @@ function DocumentFilesField({
                   name="documents"
                   label={existingFiles.length + index === 0 ? 'ملف PDF الأساسي' : `إضافة ملف PDF ${existingFiles.length + index + 1}`}
                   accept="application/pdf"
-                  hint="PDF فقط. الحد الأقصى 50MB لكل ملف."
+                  hint="PDF فقط. يمكن رفع ملفات كبيرة، وقد يستغرق الحفظ وقتا أطول حسب سرعة الاتصال."
                 />
                 <label className="block">
                   <span className="mb-2 block text-sm font-bold text-[#334155]">عنوان الملف (اختياري)</span>
@@ -221,6 +220,11 @@ function DocumentFilesField({
       </div>
     </section>
   );
+}
+
+function isProbablyPdf(file: File) {
+  const fileName = file.name.toLowerCase();
+  return file.type === 'application/pdf' || fileName.endsWith('.pdf') || !file.type || file.type === 'application/octet-stream';
 }
 
 function isEventCategory(category?: CategoryOption) {
@@ -385,9 +389,9 @@ export default function EntryForm({
     const eventImageInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="eventImages"]'));
     const selectedDocuments = documentInputs.flatMap((input) => Array.from(input.files ?? []));
 
-    const oversizedPdf = selectedDocuments.find((file) => file.size > PDF_MAX_BYTES);
-    if (oversizedPdf) {
-      return `ملف PDF "${oversizedPdf.name}" يتجاوز 50MB. اختر ملفا أصغر.`;
+    const invalidPdf = selectedDocuments.find((file) => !isProbablyPdf(file));
+    if (invalidPdf) {
+      return `الملف "${invalidPdf.name}" ليس ملف PDF. يرجى اختيار ملف بصيغة PDF.`;
     }
 
     const selectedImages = [...coverInputs, ...eventImageInputs].flatMap((input) => Array.from(input.files ?? []));

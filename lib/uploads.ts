@@ -76,10 +76,11 @@ const allowedMimeTypes: Record<UploadFolder, Set<string>> = {
   events: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
 };
 
-const maxFileSize: Record<UploadFolder, number> = {
-  covers: 10 * 1024 * 1024,
-  documents: 50 * 1024 * 1024,
-  events: 10 * 1024 * 1024,
+const maxImageFileSize = 10 * 1024 * 1024;
+
+const maxFileSize: Partial<Record<UploadFolder, number>> = {
+  covers: maxImageFileSize,
+  events: maxImageFileSize,
 };
 
 function extensionFor(file: File) {
@@ -106,14 +107,15 @@ function isPdfUpload(file: File, bytes: Buffer) {
 function validateUpload(file: File, folder: UploadFolder, bytes: Buffer) {
   if (folder === "documents") {
     if (!isPdfUpload(file, bytes)) {
-      throw new Error("The document must be a PDF.");
+      throw new Error("يرجى اختيار ملف PDF صالح. تأكد من أن الملف يفتح بشكل طبيعي وأن امتداده PDF.");
     }
   } else if (!allowedMimeTypes[folder].has(file.type)) {
-    throw new Error("Unsupported image type.");
+    throw new Error("نوع الصورة غير مدعوم. الصيغ المسموحة هي JPG أو PNG أو WebP أو AVIF.");
   }
 
-  if (file.size > maxFileSize[folder]) {
-    throw new Error(folder === "documents" ? "PDF must be 50MB or smaller." : "Image must be 10MB or smaller.");
+  const maxSize = maxFileSize[folder];
+  if (maxSize && file.size > maxSize) {
+    throw new Error("حجم الصورة يتجاوز 10MB. يرجى ضغط الصورة أو اختيار صورة أصغر.");
   }
 }
 

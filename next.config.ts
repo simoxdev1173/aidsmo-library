@@ -1,4 +1,6 @@
-import type { NextConfig } from "next";
+import type { NextConfig, SizeLimit } from "next";
+
+const serverActionBodySizeLimit = (process.env.SERVER_ACTION_BODY_SIZE_LIMIT ?? '512mb') as SizeLimit;
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['@napi-rs/canvas'],
@@ -12,7 +14,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '60mb',
+      bodySizeLimit: serverActionBodySizeLimit,
     },
   },
   images: {

@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 type CategoryTreeItem = {
@@ -226,4 +227,144 @@ export async function getStandardizationPageData(
       years,
     },
   };
+}
+
+export type TrendingItem = {
+  id: string;
+  title: string;
+  meta: string;
+  type: string;
+  cover: string | null;
+  href: string;
+};
+
+export type TrendingRow = {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  iconKey: string;
+  items: TrendingItem[];
+};
+
+const TRENDING_SECTORS = [
+  { slug: "industry", title: "الصناعة", description: "تقارير ومراجع حول التنمية، سلاسل القيمة، والتنافسية الصناعية.", href: "/catalog/industry" },
+  { slug: "standardization", title: "التقييس والجودة", description: "أدلة ومصطلحات ومراجع تساعد على فهم المواصفات والجودة.", href: "/catalog/standardization" },
+  { slug: "mining", title: "التعدين", description: "مراجع جيولوجية ودراسات حول الموارد المعدنية والاستدامة.", href: "/catalog/mining" },
+  { slug: "industrial-info", title: "المعلومات الصناعية", description: "إحصاءات ونشرات ومرئيات تساند البحث واتخاذ القرار.", href: "/catalog/industrial-info" },
+] as const;
+
+const TRENDING_ROW_LIMIT = 9;
+const TRENDING_PER_SECTOR = 3;
+
+const ENTRY_TYPE_LABEL: Record<string, string> = {
+  BOOK: "كتاب",
+  PAGE: "صفحة",
+  OTHER: "وثيقة",
+  EVENT: "فعالية",
+};
+
+function shuffle<T>(items: T[]) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+// Randomised, sector-grouped shelves for the homepage. Prefers entries that
+// have a cover so the shelf stays visually rich, but keeps the selection random.
+export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
+  // Opt this shelf into per-request rendering so the random selection refreshes.
+  await connection();
+
+  const [categories, entries] = await Promise.all([
+    prisma.category.findMany({ select: { id: true, parentId: true, name: true, slug: true } }),
+    prisma.libraryEntry.findMany({
+      where: { status: "PUBLISHED" },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        coverImagePath: true,
+        tag: true,
+        year: true,
+        entryType: true,
+        categoryId: true,
+      },
+    }),
+  ]);
+
+  const categoryById = new Map(categories.map((category) => [category.id, category]));
+
+  const topLevelSlug = (categoryId: string | null) => {
+    let current = categoryId ? categoryById.get(categoryId) : undefined;
+    let slug: string | null = null;
+    while (current) {
+      slug = current.slug;
+      current = current.parentId ? categoryById.get(current.parentId) : undefined;
+    }
+    return slug;
+  };
+
+  type Entry = (typeof entries)[number];
+
+  const grouped = new Map<string, Entry[]>();
+  for (const entry of entries) {
+    const slug = topLevelSlug(entry.categoryId);
+    if (!slug) continue;
+    const bucket = grouped.get(slug);
+    if (bucket) bucket.push(entry);
+    else grouped.set(slug, [entry]);
+  }
+
+  const toItem = (entry: Entry): TrendingItem => ({
+    id: entry.id,
+    title: entry.title,
+    meta: entry.tag ?? categoryById.get(entry.categoryId)?.name ?? "AIDSMO",
+    type: entry.year ?? ENTRY_TYPE_LABEL[entry.entryType] ?? "وثيقة",
+    cover: entry.coverImagePath,
+    href: `/book/${entry.slug}`,
+  });
+
+  // Cover-bearing entries first (still shuffled), then the rest — random but polished.
+  const pick = (pool: Entry[], limit: number) => {
+    const withCover = shuffle(pool.filter((entry) => entry.coverImagePath));
+    const withoutCover = shuffle(pool.filter((entry) => !entry.coverImagePath));
+    return [...withCover, ...withoutCover].slice(0, limit);
+  };
+
+  const rows: TrendingRow[] = [];
+
+  // Mixed "trending" shelf: a handful from every sector so it feels varied.
+  const trendingPool = TRENDING_SECTORS.flatMap((sector) =>
+    pick(grouped.get(sector.slug) ?? [], TRENDING_PER_SECTOR),
+  );
+  const trendingItems = shuffle(trendingPool).slice(0, TRENDING_ROW_LIMIT).map(toItem);
+  if (trendingItems.length > 0) {
+    rows.push({
+      id: "trending",
+      title: "العناوين الرائجة",
+      description: "مختارات متجددة من مختلف قطاعات المكتبة الرقمية.",
+      href: "/catalog/industrial-info",
+      iconKey: "trending",
+      items: trendingItems,
+    });
+  }
+
+  for (const sector of TRENDING_SECTORS) {
+    const items = pick(grouped.get(sector.slug) ?? [], TRENDING_ROW_LIMIT).map(toItem);
+    if (items.length === 0) continue;
+    rows.push({
+      id: sector.slug,
+      title: sector.title,
+      description: sector.description,
+      href: sector.href,
+      iconKey: sector.slug,
+      items,
+    });
+  }
+
+  return rows;
 }

@@ -67,10 +67,11 @@ const children = [
   { parentSlug: "archive-org", name: "تأسيس المنظمة", slug: "archive-org-founding", order: 611, navHref: "/archive/org/founding" },
   { parentSlug: "archive-org", name: "اتفاقيات الانشاء", slug: "archive-org-agreements", order: 612, navHref: "/archive/org/agreements" },
   { parentSlug: "archive-org", name: "النظام الداخلي", slug: "archive-org-bylaws", order: 613, navHref: "/archive/org/bylaws" },
-  { parentSlug: "archive-org", name: "اللوائح الداخلية", slug: "archive-org-regulations", order: 614, navHref: "/archive/org/regulations" },
+  { parentSlug: "archive-org", name: "اللوائح الداخلية والأنظمة", slug: "archive-org-regulations", order: 614, navHref: "/archive/org/regulations" },
   { parentSlug: "archive-org", name: "مذكرات التفاهم واتفاقيات", slug: "archive-org-mou", order: 615, navHref: "/archive/org/mou" },
   { parentSlug: "archive-org", name: "المجلس التنفيذي", slug: "archive-org-executive-board", order: 616, navHref: "/archive/org/executive-board" },
   { parentSlug: "archive-org", name: "الجمعية العامة", slug: "archive-org-general-assembly", order: 617, navHref: "/archive/org/general-assembly" },
+  { parentSlug: "archive-org", name: "النظام الأساسي و الداخلي للمحكمة الإدارية", slug: "archive-org-administrative-court", order: 618, navHref: "/archive/org/administrative-court" },
   { parentSlug: "archive", name: "جامعة الدول العربية", slug: "archive-league", order: 62, navHref: "/archive/league/summit" },
   { parentSlug: "archive-league", name: "القمة العربية", slug: "archive-league-summit", order: 621, navHref: "/archive/league/summit" },
   { parentSlug: "archive-league-summit", name: "قرارات مجلس الجامعة على المستوى الوزاري", slug: "archive-league-summit-council", order: 6211, navHref: "/archive/league/summit/council" },
@@ -80,6 +81,8 @@ const children = [
   { parentSlug: "archive-league", name: "لجنة المنظمات والتنسيق", slug: "archive-league-coordination", order: 623, navHref: "/archive/league/coordination" },
   { parentSlug: "archive-league", name: "لجنة التنسيق العليا للعمل العربي المشترك", slug: "archive-league-joint-action", order: 624, navHref: "/archive/league/joint-action" },
   { parentSlug: "archive-league", name: "اللوائح والأنظمة", slug: "archive-league-regulations", order: 625, navHref: "/archive/league/regulations" },
+  { parentSlug: "archive-league", name: "النظام الداخلي لمجلس الجامعة الدول العربية", slug: "archive-league-council-bylaws", order: 626, navHref: "/archive/league/council-bylaws" },
+  { parentSlug: "archive-league", name: "ميثاق جامعة الدول العربية و ملحقاته", slug: "archive-league-charter", order: 627, navHref: "/archive/league/charter" },
 ];
 
 const hiddenCategorySlugs = [

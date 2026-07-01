@@ -264,6 +264,35 @@ const ENTRY_TYPE_LABEL: Record<string, string> = {
   EVENT: "فعالية",
 };
 
+// Mining titles live outside this library, so they are curated by hand and
+// their covers are served from the source library (arabpfm.org).
+const MINING_ITEMS: TrendingItem[] = [
+  {
+    id: "mining-guideline-system",
+    title: "النظام الاسترشادي التعديني للدول العربية",
+    meta: "الصناعة التعدينية",
+    type: "2026",
+    cover: "https://api-library.arabpfm.org/storage/Photos_Etudes/q1LcOoaw9aiIBaxtOAPgDpwn8pYkDZBY9YiosLmr.jpg",
+    href: "/catalog/mining",
+  },
+  {
+    id: "mining-energy-transition-roadmap",
+    title: "خارطة الطريق الاسترشادية لمعادن الانتقال الطاقي بالمنطقة العربية",
+    meta: "الطاقة",
+    type: "2026",
+    cover: "https://api-library.arabpfm.org/storage/Photos_Etudes/fqkn13vnWyay90raGUkZVOhsVXNA02Xn2N1D2E0h.jpg",
+    href: "/catalog/mining",
+  },
+  {
+    id: "mining-rehabilitation",
+    title: "إعادة تأهيل المناجم والمحاجر القديمة لتحقيق تنمية مستدامة",
+    meta: "الصناعة التعدينية",
+    type: "2026",
+    cover: "https://api-library.arabpfm.org/storage/Photos_Etudes/DmJgEppKt9MLH2n5C2KuMa6vm3qAjBZPquBvgmk9.jpg",
+    href: "/catalog/mining",
+  },
+];
+
 function shuffle<T>(items: T[]) {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -335,13 +364,25 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
     return [...withCover, ...withoutCover].slice(0, limit);
   };
 
+  // Mining is curated by hand; every other sector draws random entries from the DB.
+  const sectorItems = new Map<string, TrendingItem[]>();
+  for (const sector of TRENDING_SECTORS) {
+    sectorItems.set(
+      sector.slug,
+      sector.slug === "mining"
+        ? MINING_ITEMS
+        : pick(grouped.get(sector.slug) ?? [], TRENDING_ROW_LIMIT).map(toItem),
+    );
+  }
+
   const rows: TrendingRow[] = [];
 
   // Mixed "trending" shelf: a handful from every sector so it feels varied.
-  const trendingPool = TRENDING_SECTORS.flatMap((sector) =>
-    pick(grouped.get(sector.slug) ?? [], TRENDING_PER_SECTOR),
-  );
-  const trendingItems = shuffle(trendingPool).slice(0, TRENDING_ROW_LIMIT).map(toItem);
+  const trendingItems = shuffle(
+    TRENDING_SECTORS.flatMap((sector) =>
+      shuffle(sectorItems.get(sector.slug) ?? []).slice(0, TRENDING_PER_SECTOR),
+    ),
+  ).slice(0, TRENDING_ROW_LIMIT);
   if (trendingItems.length > 0) {
     rows.push({
       id: "trending",
@@ -354,7 +395,7 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
   }
 
   for (const sector of TRENDING_SECTORS) {
-    const items = pick(grouped.get(sector.slug) ?? [], TRENDING_ROW_LIMIT).map(toItem);
+    const items = sectorItems.get(sector.slug) ?? [];
     if (items.length === 0) continue;
     rows.push({
       id: sector.slug,

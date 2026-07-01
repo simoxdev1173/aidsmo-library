@@ -129,6 +129,7 @@ async function uniqueCategorySlug(baseValue: string, currentId?: string) {
 
 const eventCategorySlugs = new Set([
   "industry-events",
+  "industry-sme",
   "conferences",
   "standardization-training-courses",
   "standardization-workshops-events",

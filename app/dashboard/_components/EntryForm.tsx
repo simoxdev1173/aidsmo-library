@@ -43,6 +43,7 @@ type EntryFormValue = {
 
 const eventCategorySlugs = new Set([
   'industry-events',
+  'industry-sme',
   'conferences',
   'standardization-training-courses',
   'standardization-workshops-events',

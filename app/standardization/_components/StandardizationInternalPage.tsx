@@ -161,7 +161,7 @@ function AiPromptPanel({ title, scope = 'هذه الصفحة' }: { title: string
           <div className="absolute inset-2 rounded-full border border-[#C29C41]/35" aria-hidden />
           <div className="absolute inset-6 rounded-full border border-white/10" aria-hidden />
           <Image
-            src="/ai.png"
+            src="/ai-assistant.png"
             alt="المساعد الذكي للمكتبة"
             width={224}
             height={224}

@@ -89,7 +89,7 @@ const ChatbotWidget = () => {
                 className="flex items-start gap-3"
               >
                 <div className="h-8 w-8 rounded-full bg-[#022A4E] border border-[#C29C41]/30 flex items-center justify-center shrink-0 overflow-hidden relative">
-                  <Image src="/ai.png" alt="المساعد الذكي" width={24} height={24} className="object-contain" />
+                  <Image src="/ai-assistant.png" alt="المساعد الذكي" width={28} height={28} className="object-contain" />
                 </div>
                 <div 
                   className="bg-white px-4 py-3 rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed"
@@ -180,7 +180,7 @@ const ChatbotWidget = () => {
               className="relative"
             >
                
-                  <Image src="/ai.png" alt="المساعد الذكي" width={44} height={44} className="object-fill" />
+                  <Image src="/ai-assistant.png" alt="المساعد الذكي" width={52} height={52} className="object-contain" />
                 
               {/* Notification dot */}
               <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">

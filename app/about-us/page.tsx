@@ -47,48 +47,41 @@ export default function AboutPage() {
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#0A2540]">
       {/* ─── Hero ─── */}
-      <section className="relative min-h-[78vh] overflow-hidden bg-[#0A2540] pt-32 text-white md:pt-36">
+      <section className="relative h-screen min-h-[640px] w-full overflow-hidden bg-[#0A2540] text-white">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-55"
+          className="absolute inset-0 h-full w-full object-cover"
         >
           <source src="/hero-video-3.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-l from-[#0A2540]/96 via-[#0369A1]/72 to-[#0A2540]/90" />
-        <div
-          className="absolute inset-0 opacity-[0.055]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)',
-            backgroundSize: '84px 84px',
-          }}
-          aria-hidden
-        />
-        <div className="absolute inset-x-0 bottom-0 h-1 brass-gradient" aria-hidden />
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(78vh-9rem)] max-w-7xl items-center px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="grid w-full gap-10 lg:grid-cols-[1fr_420px] lg:items-end">
-            <div className="max-w-4xl">
-              <h1 className="mt-6 font-academic text-3xl font-bold leading-tight md:text-5xl">
+        {/* Light, localized wash — just enough to seat the panel, video stays visible */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/72 via-[#0A2540]/8 to-transparent" aria-hidden />
+        <div className="absolute inset-x-0 top-0 z-10 h-1.5 brass-gradient" aria-hidden />
+
+        <div className="relative z-10 flex h-full items-end px-4 pb-16 pt-32 sm:px-6 lg:px-8 lg:pb-20 lg:pt-40">
+          <div className="mx-auto w-full max-w-7xl">
+            <div className="max-w-2xl rounded-[22px] border border-white/15 bg-[#071D2F]/55 p-7 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl md:p-9">
+              <h1 className="font-academic text-3xl font-bold leading-tight md:text-5xl">
                 من نحن
               </h1>
-              <p className="mt-7 max-w-3xl font-academic text-xl leading-10 text-white/82 md:text-2xl">
+              <p className="mt-6 max-w-3xl font-academic text-lg leading-9 text-white/82 md:text-xl">
                 منصة رائدة أعدّتها المنظمة العربية للتنمية الصناعية والتقييس والتعدين، تهدف إلى جمع المعرفة الصناعية والتقنية وتنظيمها بطريقة ذكية ومتاحة للجميع.
               </p>
-              <div className="mt-9 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/catalog/industry"
-                  className="engraved brass-gradient inline-flex h-12 items-center gap-2 border border-[#C29C41] px-6 text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                  className="engraved brass-gradient inline-flex h-12 items-center gap-2 rounded-full border border-[#C29C41] px-6 text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
                 >
                   استكشاف المكتبة
                   <HiOutlineArrowLeft className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/#chatbot"
-                  className="inline-flex h-12 items-center border border-white/24 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                  className="inline-flex h-12 items-center rounded-full border border-white/24 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
                 >
                   اسأل المساعد الذكي
                 </Link>
@@ -110,12 +103,8 @@ export default function AboutPage() {
         </p>
 
         <h2 className="font-display mt-4  text-lg font-bold uppercase tracking-[0.22em] text-[#C29C41]">
-          تحويل أرشيف المعرفة إلى تجربة بحث واستكشاف
+          نحوّل أرشيف المعرفة إلى تجربة بحث حديثة
         </h2>
-
-        <div className="mt-6 [--divider-bg:#FFFFFF]">
-          <div className="ornate-divider" aria-hidden />
-        </div>
 
         <div className="mt-8 space-y-5 font-academic text-lg leading-8 text-[#475569]">
           <p>
@@ -134,10 +123,10 @@ export default function AboutPage() {
       </div>
 
       {/* Image */}
-      <div className="corner-frame relative overflow-hidden border border-[#C29C41]/35 bg-[#F0F7FC] h-full">
+      <div className="relative h-full overflow-hidden rounded-[22px] border border-[#C29C41]/30 bg-[#F0F7FC] shadow-[0_24px_64px_rgba(10,37,64,0.14)]">
         <Image
-          src="/library-3d-scene.png"
-          alt="واجهة ثلاثية الأبعاد للمكتبة الرقمية الذكية"
+          src="/hero0cover-4.png"
+          alt="مساحة بحث هادئة في المكتبة الرقمية الذكية"
           width={900}
           height={700}
           className="h-full min-h-[500px] w-full object-cover"
@@ -166,7 +155,7 @@ export default function AboutPage() {
             {pillars.map((pillar) => {
               const Icon = pillar.Icon;
               return (
-                <article key={pillar.title} className="group corner-card academic-card p-6">
+                <article key={pillar.title} className="group academic-card rounded-[18px] p-6">
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white text-[#C29C41] transition duration-300 group-hover:border-[#0369A1]/35 group-hover:text-[#0369A1]">
                     <Icon className="h-7 w-7" />
                   </div>
@@ -196,7 +185,7 @@ export default function AboutPage() {
               {chapters.map((chapter) => (
                 <article
                   key={chapter.number}
-                  className="grid gap-5 border border-[#0369A1]/14 bg-[#F8FAFC] p-5 md:grid-cols-[90px_1fr] md:p-6"
+                  className="grid gap-5 rounded-[18px] border border-[#0369A1]/14 bg-[#F8FAFC] p-5 md:grid-cols-[90px_1fr] md:p-6"
                 >
                   <div className="font-display text-4xl font-bold text-[#C29C41]">{chapter.number}</div>
                   <div>

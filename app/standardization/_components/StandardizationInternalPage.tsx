@@ -1,4 +1,4 @@
-﻿import Image from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
@@ -6,7 +6,6 @@ import {
   HiOutlineArrowLeft,
   HiOutlineBookOpen,
   HiOutlineCalendarDays,
-  HiOutlineChatBubbleLeftRight,
   HiOutlineChevronDown,
   HiOutlineDocumentText,
   HiOutlineLanguage,
@@ -74,14 +73,61 @@ function SelectField({
       <select
         name={name}
         defaultValue={value}
-        className="h-14 w-full cursor-pointer appearance-none rounded-md border border-[#D9E3EE] bg-white px-3 pb-2 pt-6 text-sm font-bold text-[#334155] shadow-sm outline-none transition duration-200 hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
+        className="h-14 w-full cursor-pointer appearance-none rounded-full border border-[#D9E3EE] bg-white px-4 pb-2 pt-6 text-sm font-bold text-[#334155] shadow-sm outline-none transition duration-200 hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>{option.label}</option>
         ))}
       </select>
-      <HiOutlineChevronDown className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64748B] transition duration-200 group-focus-within:text-[#0369A1]" />
+      <HiOutlineChevronDown className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64748B] transition duration-200 group-focus-within:text-[#0369A1]" />
     </label>
+  );
+}
+
+// Poster cover: the publication's cover IS the top of the card, edge to edge —
+// no containing box. A base scrim carries the section label; the whole card
+// lifts and the cover zooms under a light sweep on hover.
+function CardCover({
+  src,
+  alt,
+  category,
+  featured,
+  optimize,
+}: {
+  src: string;
+  alt: string;
+  category: string;
+  featured: boolean;
+  optimize: boolean;
+}) {
+  return (
+    <div className="relative aspect-[3/4] overflow-hidden bg-[#EAF3F8]">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 90vw"
+        className="object-cover transition duration-700 ease-out group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+        unoptimized={optimize}
+      />
+      {/* hairline inset frame keeps the cover crisp against the card */}
+      <div className="pointer-events-none absolute inset-0 z-10 ring-1 ring-inset ring-black/5 transition duration-300 group-hover:ring-[#C29C41]/35" aria-hidden />
+      {/* light sweep on hover */}
+      <div className="pointer-events-none absolute -inset-y-10 -left-24 z-20 w-16 rotate-12 bg-white/25 blur-md transition duration-[900ms] ease-out group-hover:translate-x-[145%] motion-reduce:hidden" aria-hidden />
+      {/* base scrim */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-2/5 bg-gradient-to-t from-[#071D2F]/88 via-[#071D2F]/24 to-transparent" aria-hidden />
+
+      <span className="absolute inset-x-4 bottom-3 z-20 block max-w-[calc(100%-2rem)] truncate rounded-full bg-white/12 px-3 py-1 text-[0.7rem] font-bold text-white shadow-sm ring-1 ring-white/25 backdrop-blur-md">
+        {category}
+      </span>
+
+      {featured && (
+        <span className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-full bg-[#E8C96A] px-3 py-1.5 text-xs font-bold text-[#071D2F] shadow-[0_6px_16px_rgba(232,201,106,0.4)]">
+          <HiOutlineSparkles className="h-4 w-4" />
+          مميز
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -93,27 +139,62 @@ function AiPromptPanel({ title, scope = 'هذه الصفحة' }: { title: string
   ];
 
   return (
-    <section className="mt-10 overflow-hidden border border-[#C29C41]/28 bg-[#071D2F] text-white shadow-[0_22px_70px_rgba(10,37,64,0.16)]">
-      <div className="grid gap-6 p-5 md:grid-cols-[1fr_auto] md:items-center md:p-7">
-        <div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#C29C41]/35 bg-[#C29C41]/12 text-[#E8C96A]">
-            <HiOutlineChatBubbleLeftRight className="h-6 w-6" />
-          </div>
-          <h2 className="mt-4 text-2xl font-bold text-white">اسأل المساعد الذكي عن هذه الصفحة</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-7 text-white/72">
-            استخدم الأسئلة المقترحة لتضييق البحث أو استخراج ملخص سريع من {scope}.
-          </p>
+    <section className="relative mt-12 overflow-hidden rounded-[22px] border border-[#C29C41]/30 bg-[#071D2F] text-white shadow-[0_26px_80px_rgba(10,37,64,0.22)]">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.2]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(125,211,252,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(232,201,106,0.12) 1px, transparent 1px)',
+          backgroundSize: '46px 46px',
+        }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_88%_22%,rgba(232,201,106,0.2),transparent_40%),radial-gradient(circle_at_10%_92%,rgba(14,165,233,0.16),transparent_42%)]"
+        aria-hidden
+      />
+
+      <div className="relative grid gap-8 p-6 md:grid-cols-[240px_1fr] md:items-center md:gap-10 md:p-10">
+        {/* Mascot stage — sits on the right in RTL */}
+        <div className="relative mx-auto flex h-44 w-44 items-center justify-center md:h-56 md:w-56">
+          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(232,201,106,0.32),transparent_66%)] blur-md" aria-hidden />
+          <div className="absolute inset-2 rounded-full border border-[#C29C41]/35" aria-hidden />
+          <div className="absolute inset-6 rounded-full border border-white/10" aria-hidden />
+          <Image
+            src="/ai.png"
+            alt="المساعد الذكي للمكتبة"
+            width={224}
+            height={224}
+            className="relative z-10 h-auto w-36 drop-shadow-[0_18px_34px_rgba(0,0,0,0.45)] [animation:research-float_6s_ease-in-out_infinite] motion-reduce:animate-none md:w-44"
+          />
         </div>
-        <div className="flex flex-wrap gap-2 md:max-w-xl md:justify-end">
-          {prompts.map((prompt) => (
-            <ChatbotPromptButton
-              key={prompt}
-              prompt={prompt}
-              className="rounded-full border border-white/12 bg-white/[0.07] px-4 py-2 text-sm font-bold text-white/82 transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/45 hover:bg-[#C29C41] hover:text-[#071D2F] active:translate-y-0"
-            >
-              {prompt}
-            </ChatbotPromptButton>
-          ))}
+
+        {/* Content + right-aligned prompt cards */}
+        <div className="text-right">
+          <h2 className="font-academic text-2xl font-bold leading-tight text-white md:text-3xl">
+            اسأل المساعد الذكي عن هذه الصفحة
+          </h2>
+          <p className="mt-3 max-w-2xl font-academic text-sm leading-8 text-white/72 md:text-base">
+            اختر سؤالاً للبدء، أو اطرح سؤالك الخاص في المحادثة.
+          </p>
+
+          <div className="mt-6 flex flex-col gap-3">
+            {prompts.map((prompt) => (
+              <ChatbotPromptButton
+                key={prompt}
+                prompt={prompt}
+                className="group/prompt flex w-full items-center gap-3 rounded-2xl border border-white/12 bg-white/[0.06] px-5 py-3.5 text-right shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/55 hover:bg-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/60 active:translate-y-0"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#C29C41]/40 bg-[#C29C41]/15 text-[#E8C96A] transition duration-200 group-hover/prompt:border-[#071D2F]/30 group-hover/prompt:bg-[#071D2F]/15 group-hover/prompt:text-[#071D2F]">
+                  <HiOutlineSparkles className="h-4 w-4" />
+                </span>
+                <span className="flex-1 text-sm font-bold leading-6 text-white/85 transition duration-200 group-hover/prompt:text-[#071D2F]">
+                  {prompt}
+                </span>
+                <HiOutlineArrowLeft className="h-4 w-4 shrink-0 text-[#E8C96A] transition duration-200 group-hover/prompt:-translate-x-1 group-hover/prompt:text-[#071D2F]" />
+              </ChatbotPromptButton>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -165,7 +246,7 @@ export default async function StandardizationInternalPage({
         </div>
         <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.76),rgba(3,105,161,0.38)_56%,rgba(7,29,47,0.66))]" aria-hidden />
 
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-36 sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8 lg:pb-20 lg:pt-40">
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-36 sm:px-6 lg:px-8 lg:pb-20 lg:pt-40">
           <div className="max-w-4xl">
             <p className="font-display text-xs font-bold uppercase tracking-[0.26em] text-[#E8C96A]">
               {config.eyebrow}
@@ -177,22 +258,20 @@ export default async function StandardizationInternalPage({
               {config.description}
             </p>
           </div>
-
-          
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-5 rounded-lg border border-[#D9E3EE] bg-white p-4 shadow-[0_18px_55px_rgba(10,37,64,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
+        <div className="grid gap-5 rounded-[18px] border border-[#D9E3EE] bg-white p-4 shadow-[0_18px_55px_rgba(10,37,64,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
           <form className="grid gap-3 md:grid-cols-[1.25fr_190px_190px_180px_auto]">
             <label className="relative block">
               <span className="sr-only">بحث</span>
-              <HiOutlineMagnifyingGlass className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#C29C41]" />
+              <HiOutlineMagnifyingGlass className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#C29C41]" />
               <input
                 name="q"
                 defaultValue={filters.q ?? ''}
                 placeholder="ابحث في العنوان، المؤلف، الناشر، أو الوصف"
-                className="h-14 w-full rounded-md border border-[#D9E3EE] bg-white pr-10 pl-3 text-sm font-semibold shadow-sm outline-none transition duration-200 placeholder:text-[#64748B] hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
+                className="h-14 w-full rounded-full border border-[#D9E3EE] bg-white pr-11 pl-4 text-sm font-semibold shadow-sm outline-none transition duration-200 placeholder:text-[#64748B] hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
               />
             </label>
 
@@ -217,39 +296,39 @@ export default async function StandardizationInternalPage({
               options={sortOptions}
             />
 
-            <button type="submit" className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#0369A1] px-5 text-sm font-bold text-white shadow-[0_10px_24px_rgba(3,105,161,0.18)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#003652] focus:outline-none focus:ring-2 focus:ring-[#C29C41] active:translate-y-0">
+            <button type="submit" className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#0369A1] px-6 text-sm font-bold text-white shadow-[0_10px_24px_rgba(3,105,161,0.18)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#003652] focus:outline-none focus:ring-2 focus:ring-[#C29C41] active:translate-y-0">
               <HiOutlineAdjustmentsHorizontal className="h-5 w-5" />
               تطبيق
             </button>
           </form>
 
           {hasFilters && (
-            <Link href={config.resetHref ?? data.category.navHref ?? `/catalog/${data.category.slug}`} className="inline-flex h-14 items-center justify-center rounded-md border border-[#C29C41]/45 px-4 text-sm font-bold text-[#8A6A1D] transition duration-200 hover:bg-[#FFF8E1]">
+            <Link href={config.resetHref ?? data.category.navHref ?? `/catalog/${data.category.slug}`} className="inline-flex h-14 items-center justify-center rounded-full border border-[#C29C41]/45 px-5 text-sm font-bold text-[#8A6A1D] transition duration-200 hover:bg-[#FFF8E1]">
               مسح الفلتر
             </Link>
           )}
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <div className="border border-[#D9E3EE] bg-white p-5">
+          <div className="rounded-[18px] border border-[#D9E3EE] bg-white p-5 shadow-[0_10px_30px_rgba(10,37,64,0.05)]">
             <p className="text-xs font-bold text-[#C29C41]">المدخلات</p>
             <p className="mt-2 text-3xl font-bold text-[#003652]">{data.entries.length}</p>
           </div>
-          <div className="border border-[#D9E3EE] bg-white p-5">
+          <div className="rounded-[18px] border border-[#D9E3EE] bg-white p-5 shadow-[0_10px_30px_rgba(10,37,64,0.05)]">
             <p className="text-xs font-bold text-[#C29C41]">المميزة</p>
             <p className="mt-2 text-3xl font-bold text-[#003652]">{featuredCount}</p>
           </div>
-          <div className="border border-[#D9E3EE] bg-white p-5">
+          <div className="rounded-[18px] border border-[#D9E3EE] bg-white p-5 shadow-[0_10px_30px_rgba(10,37,64,0.05)]">
             <p className="text-xs font-bold text-[#C29C41]">ملفات قابلة للاطلاع</p>
             <p className="mt-2 text-3xl font-bold text-[#003652]">{downloadableCount}</p>
           </div>
         </div>
 
         {data.entries.length > 0 ? (
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {data.entries.map((entry, index) => {
               const meta = [
-                { icon: HiOutlineDocumentText, label: entry.tag ?? entry.category.name },
+                { icon: HiOutlineDocumentText, label: fieldValue(entry.tag) },
                 { icon: HiOutlineCalendarDays, label: fieldValue(entry.year) },
                 { icon: HiOutlineLanguage, label: fieldValue(entry.language) },
                 { icon: HiOutlineBookOpen, label: entry.pageCount ? `${entry.pageCount} صفحة` : null },
@@ -259,60 +338,53 @@ export default async function StandardizationInternalPage({
                 <Link
                   key={entry.id}
                   href={`/book/${entry.slug}`}
-                  className="group grid overflow-hidden border border-[#D9E3EE] bg-white transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_26px_70px_rgba(10,37,64,0.13)]"
+                  className="group flex flex-col overflow-hidden rounded-[18px] border border-[#D9E3EE] bg-white shadow-[0_14px_42px_rgba(10,37,64,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-[#C29C41]/60 hover:shadow-[0_30px_74px_rgba(10,37,64,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-[#EAF3F8]">
-                    <Image
-                      src={entryImage(entry, index)}
-                      alt={entry.title}
-                      fill
-                      className="object-cover transition duration-700 group-hover:scale-[1.055]"
-                      unoptimized={Boolean(entry.coverImagePath)}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#071D2F]/64 via-transparent to-transparent" />
-                    {entry.featured && (
-                      <span className="absolute right-4 top-4 inline-flex items-center gap-1 bg-[#E8C96A] px-3 py-2 text-xs font-bold text-[#071D2F]">
-                        <HiOutlineSparkles className="h-4 w-4" />
-                        مميز
-                      </span>
-                    )}
-                  </div>
+                  <CardCover
+                    src={entryImage(entry, index)}
+                    alt={entry.title}
+                    category={categoryPath(entry.category)}
+                    featured={entry.featured}
+                    optimize={Boolean(entry.coverImagePath)}
+                  />
 
-                  <div className="p-5">
-                    <p className="text-xs font-bold text-[#C29C41]">{categoryPath(entry.category)}</p>
-                    <h2 className="mt-3 line-clamp-2 text-2xl font-bold leading-9 text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+                  <div className="flex flex-1 flex-col p-5">
+                    <h2 className="line-clamp-2 min-h-[4rem] text-xl font-bold leading-8 text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
                       {entry.title}
                     </h2>
                     {entry.description && (
-                      <div className="mt-4 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] p-3">
-                        <p className="text-[0.7rem] font-bold text-[#C29C41]">وصف مختصر</p>
-                        <p className="mt-2 line-clamp-3 text-sm leading-7 text-[#64748B]">{entry.description}</p>
-                      </div>
+                      <p className="mt-3 line-clamp-2 text-sm leading-7 text-[#64748B]">{entry.description}</p>
                     )}
 
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {meta.map((item) => {
-                        const Icon = item.icon;
-                        return (
-                          <span key={item.label} className="inline-flex items-center gap-1 border border-[#D9E3EE] bg-[#F8FAFC] px-2.5 py-1.5 text-xs font-bold text-[#475569]">
-                            <Icon className="h-4 w-4 text-[#0369A1]" />
-                            {item.label}
-                          </span>
-                        );
-                      })}
-                    </div>
+                    <div className="mt-auto pt-5">
+                      {meta.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {meta.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                              <span key={item.label} className="inline-flex items-center gap-1 rounded-full border border-[#D9E3EE] bg-[#F8FAFC] px-3 py-1.5 text-xs font-bold text-[#475569]">
+                                <Icon className="h-4 w-4 text-[#0369A1]" />
+                                {item.label}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
 
-                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#0369A1]">
-                      عرض التفاصيل
-                      <HiOutlineArrowLeft className="h-4 w-4 transition duration-200 group-hover:-translate-x-1" />
-                    </span>
+                      <div className="mt-5 border-t border-[#EEF3F8] pt-4">
+                        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#0369A1]">
+                          عرض التفاصيل
+                          <HiOutlineArrowLeft className="h-4 w-4 transition duration-200 group-hover:-translate-x-1" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </Link>
               );
             })}
           </div>
         ) : (
-          <div className="mt-8 grid overflow-hidden border border-[#D9E3EE] bg-white lg:grid-cols-[1fr_360px]">
+          <div className="mt-8 grid overflow-hidden rounded-[18px] border border-[#D9E3EE] bg-white lg:grid-cols-[1fr_360px]">
             <div className="p-8">
               <p className="text-xs font-bold text-[#C29C41]">لا توجد نتائج منشورة</p>
               <h2 className="mt-3 text-3xl font-bold text-[#003652]">هذه الصفحة جاهزة لاستقبال مدخلات لوحة التحكم</h2>
@@ -332,4 +404,3 @@ export default async function StandardizationInternalPage({
     </main>
   );
 }
-

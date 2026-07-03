@@ -8,8 +8,18 @@ import { LuCheck, LuChevronDown, LuSearch } from 'react-icons/lu';
 import EntryTypedFields from '@/app/dashboard/_components/EntryTypedFields';
 import { FileField, FormBusyOverlay, SubmitButton } from '@/app/dashboard/_components/FormFeedback';
 import { createEntryAction, updateEntryAction } from '@/lib/library-actions';
+import { countPdfPagesFromFile, countPdfPagesFromUrl } from '@/lib/pdf-pages-client';
 import { categoryPath } from '@/lib/library-labels';
 import { type DocumentFile, documentFilesValue } from '@/lib/document-files';
+
+type PdfSource = { kind: 'file'; file: File } | { kind: 'url'; url: string };
+
+export type PageCountStatus = {
+  phase: 'idle' | 'counting' | 'done';
+  done: number;
+  total: number;
+  failed: number;
+};
 
 type CategoryOption = {
   id: string;
@@ -66,13 +76,38 @@ function labelClass() {
 
 function DocumentFilesField({
   files,
+  onSourcesChange,
 }: {
   files: unknown;
+  onSourcesChange?: (sources: PdfSource[]) => void;
 }) {
   const initialFiles = documentFilesValue(files);
   const [existingFiles, setExistingFiles] = useState(initialFiles);
   const [uploadSlots, setUploadSlots] = useState(initialFiles.length === 0 ? [0] : []);
+  const containerRef = useRef<HTMLDivElement>(null);
   const totalSlots = existingFiles.length + uploadSlots.length;
+
+  // Reports the current set of PDFs (already-attached files + freshly picked
+  // uploads) up to the form so it can auto-count pages. Reading the file inputs
+  // straight from the DOM keeps them uncontrolled (so the server action still
+  // receives the actual files) while letting us see the selected File objects.
+  function emitSources(existingList: DocumentFile[]) {
+    if (!onSourcesChange) return;
+
+    const fileSources: PdfSource[] = [];
+    const container = containerRef.current;
+    if (container) {
+      const inputs = container.querySelectorAll<HTMLInputElement>('input[type="file"][name="documents"]');
+      inputs.forEach((input) => {
+        Array.from(input.files ?? []).forEach((file) => {
+          fileSources.push({ kind: 'file', file });
+        });
+      });
+    }
+
+    const urlSources: PdfSource[] = existingList.map((file) => ({ kind: 'url', url: file.path }));
+    onSourcesChange([...urlSources, ...fileSources]);
+  }
 
   function moveFile(index: number, direction: -1 | 1) {
     setExistingFiles((current) => {
@@ -97,7 +132,7 @@ function DocumentFilesField({
   }
 
   return (
-    <section className="rounded-lg border border-[#E2E8F0] bg-white p-4">
+    <section ref={containerRef} className="rounded-lg border border-[#E2E8F0] bg-white p-4">
       <input type="hidden" name="documentFilesExisting" value={JSON.stringify(existingFiles)} />
 
       <div className="mb-4 flex items-start justify-between gap-3">
@@ -154,7 +189,11 @@ function DocumentFilesField({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setExistingFiles((current) => current.filter((item) => item.path !== file.path))}
+                  onClick={() => {
+                    const next = existingFiles.filter((item) => item.path !== file.path);
+                    setExistingFiles(next);
+                    emitSources(next);
+                  }}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 transition duration-200 hover:bg-red-100"
                   aria-label="حذف ملف PDF"
                 >
@@ -176,6 +215,7 @@ function DocumentFilesField({
                   label={existingFiles.length + index === 0 ? 'ملف PDF الأساسي' : `إضافة ملف PDF ${existingFiles.length + index + 1}`}
                   accept="application/pdf"
                   hint="PDF فقط. يمكن رفع ملفات كبيرة، وقد يستغرق الحفظ وقتا أطول حسب سرعة الاتصال."
+                  onChange={() => emitSources(existingFiles)}
                 />
                 <label className="block">
                   <span className="mb-2 block text-sm font-bold text-[#334155]">عنوان الملف (اختياري)</span>
@@ -189,7 +229,11 @@ function DocumentFilesField({
               {uploadSlots.length > 1 && (
                 <button
                   type="button"
-                  onClick={() => setUploadSlots((current) => current.filter((item) => item !== slot))}
+                  onClick={() => {
+                    setUploadSlots((current) => current.filter((item) => item !== slot));
+                    // Re-count after the removed slot's input unmounts.
+                    requestAnimationFrame(() => emitSources(existingFiles));
+                  }}
                   className="mt-7 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-red-200 bg-white text-red-700 transition duration-200 hover:bg-red-50"
                   aria-label="إزالة خانة PDF"
                 >
@@ -319,6 +363,12 @@ export default function EntryForm({
   const formRef = useRef<HTMLFormElement>(null);
   const draftKey = `entry-form-draft:${entry?.id ?? 'new'}`;
   const [clientError, setClientError] = useState<string | null>(null);
+  const [pageCountStatus, setPageCountStatus] = useState<PageCountStatus>({ phase: 'idle', done: 0, total: 0, failed: 0 });
+  // Whether the admin typed the page count by hand. When true we never overwrite
+  // it with the automatic count. Reset whenever the set of PDFs changes.
+  const pageCountManualRef = useRef(false);
+  // Guards against overlapping counts: only the newest run may write results.
+  const countRunRef = useRef(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState(entry?.categoryId ?? '');
   const selectedCategory = useMemo(
     () => categories.find((category) => category.id === selectedCategoryId),
@@ -384,6 +434,58 @@ export default function EntryForm({
     window.sessionStorage.setItem(draftKey, JSON.stringify(values));
   }
 
+  function setPageCountFieldValue(value: string) {
+    const input = formRef.current?.querySelector<HTMLInputElement>('input[name="pageCount"]');
+    if (input) {
+      input.value = value;
+    }
+  }
+
+  // Counts the pages of every attached PDF in the browser and fills the page
+  // count field. Fully guarded: a failed file is skipped (not fatal), stale runs
+  // are discarded, and a manual value is never overwritten.
+  async function handlePdfSourcesChange(sources: PdfSource[]) {
+    pageCountManualRef.current = false;
+    const runId = countRunRef.current + 1;
+    countRunRef.current = runId;
+
+    if (sources.length === 0) {
+      setPageCountStatus({ phase: 'idle', done: 0, total: 0, failed: 0 });
+      setPageCountFieldValue('');
+      return;
+    }
+
+    setPageCountStatus({ phase: 'counting', done: 0, total: sources.length, failed: 0 });
+
+    let sum = 0;
+    let failed = 0;
+
+    for (let index = 0; index < sources.length; index += 1) {
+      const source = sources[index];
+      const result = source.kind === 'file'
+        ? await countPdfPagesFromFile(source.file)
+        : await countPdfPagesFromUrl(source.url);
+
+      // A newer file change started while we were counting: abandon this run.
+      if (countRunRef.current !== runId) return;
+
+      if (result.ok) {
+        sum += result.pages;
+      } else {
+        failed += 1;
+      }
+
+      setPageCountStatus({ phase: 'counting', done: index + 1, total: sources.length, failed });
+    }
+
+    if (countRunRef.current !== runId) return;
+
+    setPageCountStatus({ phase: 'done', done: sources.length, total: sources.length, failed });
+    if (!pageCountManualRef.current) {
+      setPageCountFieldValue(sum > 0 ? String(sum) : '');
+    }
+  }
+
   function validateFiles(form: HTMLFormElement) {
     const documentInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="documents"]'));
     const coverInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="file"][name="cover"]'));
@@ -408,7 +510,13 @@ export default function EntryForm({
     <form
       ref={formRef}
       action={action}
-      onChange={(event) => persistDraft(event.currentTarget)}
+      onChange={(event) => {
+        const target = event.target;
+        if (target instanceof HTMLInputElement && target.name === 'pageCount') {
+          pageCountManualRef.current = true;
+        }
+        persistDraft(event.currentTarget);
+      }}
       onSubmit={(event) => {
         const error = validateFiles(event.currentTarget);
         if (error) {
@@ -484,6 +592,7 @@ export default function EntryForm({
               year={entry?.year}
               language={entry?.language}
               pageCount={entry?.pageCount}
+              pageCountStatus={pageCountStatus}
             />
           )}
         </div>
@@ -553,7 +662,10 @@ export default function EntryForm({
                 />
               </label>
 
-              <DocumentFilesField files={entry?.documentFiles ?? documentFilesValue([], entry?.filePath)} />
+              <DocumentFilesField
+                files={entry?.documentFiles ?? documentFilesValue([], entry?.filePath)}
+                onSourcesChange={handlePdfSourcesChange}
+              />
             </>
           )}
         </aside>

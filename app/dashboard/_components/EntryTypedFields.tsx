@@ -1,5 +1,7 @@
 'use client';
 
+import type { PageCountStatus } from '@/app/dashboard/_components/EntryForm';
+
 type EntryTypedFieldsProps = {
   tag?: string | null;
   notes?: string | null;
@@ -8,6 +10,7 @@ type EntryTypedFieldsProps = {
   year?: string | null;
   language?: string | null;
   pageCount?: number | null;
+  pageCountStatus?: PageCountStatus;
 };
 
 function fieldClass() {
@@ -26,7 +29,12 @@ export default function EntryTypedFields({
   year,
   language,
   pageCount,
+  pageCountStatus,
 }: EntryTypedFieldsProps) {
+  const status = pageCountStatus ?? { phase: 'idle' as const, done: 0, total: 0, failed: 0 };
+  const isCounting = status.phase === 'counting';
+  const progress = status.total > 0 ? Math.round((status.done / status.total) * 100) : 0;
+
   return (
     <div className="space-y-5">
       <section className="rounded-lg border border-[#D9E3EE] bg-[#F8FAFC] p-4">
@@ -59,10 +67,42 @@ export default function EntryTypedFields({
           </label>
           <label className="block">
             <span className={labelClass()}>عدد الصفحات</span>
-            <input name="pageCount" type="number" min="1" defaultValue={pageCount ?? ''} placeholder="يُحسب تلقائيا" className={fieldClass()} />
-            <p className="mt-1.5 text-xs leading-5 text-[#64748B]">
-              اتركه فارغا ليُحسب مجموع صفحات ملفات PDF تلقائيا عند الحفظ، أو أدخل رقما لتجاوز الحساب.
-            </p>
+            <input
+              name="pageCount"
+              type="number"
+              min="1"
+              defaultValue={pageCount ?? ''}
+              placeholder={isCounting ? 'جاري حساب الصفحات...' : 'يُحسب تلقائيا'}
+              className={fieldClass()}
+            />
+            {isCounting ? (
+              <div className="mt-2" role="status" aria-live="polite">
+                <div className="mb-1 flex items-center justify-between text-xs font-bold text-[#0369A1]">
+                  <span>جاري حساب صفحات ملفات PDF...</span>
+                  <span dir="ltr">{status.done}/{status.total}</span>
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E2E8F0]">
+                  <div
+                    className="h-full rounded-full bg-[#0369A1] transition-[width] duration-300 ease-out"
+                    style={{ width: `${Math.max(progress, 6)}%` }}
+                  />
+                </div>
+              </div>
+            ) : status.phase === 'done' ? (
+              <p className="mt-1.5 text-xs font-semibold leading-5 text-green-700">
+                تم حساب عدد الصفحات تلقائيا من ملفات PDF.
+                {status.failed > 0 && (
+                  <span className="text-[#B45309]">
+                    {' '}
+                    (تعذر قراءة {status.failed} ملف، يمكنك تعديل الرقم يدويا.)
+                  </span>
+                )}
+              </p>
+            ) : (
+              <p className="mt-1.5 text-xs leading-5 text-[#64748B]">
+                يُحسب مجموع صفحات ملفات PDF تلقائيا عند رفعها، أو أدخل رقما لتجاوز الحساب.
+              </p>
+            )}
           </label>
         </div>
         <div className="mt-5 grid gap-5 md:grid-cols-2">

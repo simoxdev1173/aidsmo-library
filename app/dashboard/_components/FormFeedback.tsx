@@ -105,12 +105,14 @@ export function FileField({
   label,
   hint,
   multiple = false,
+  onChange,
 }: {
   name: string;
   accept: string;
   label: string;
   hint: string;
   multiple?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }) {
   const { pending } = useFormStatus();
 
@@ -123,6 +125,7 @@ export function FileField({
         accept={accept}
         multiple={multiple}
         disabled={pending}
+        onChange={onChange}
         className="block w-full cursor-pointer rounded-md border border-[#CBD5E1] bg-white text-sm text-[#475569] file:ml-3 file:cursor-pointer file:border-0 file:bg-[#0369A1] file:px-4 file:py-2.5 file:font-bold file:text-white disabled:cursor-wait disabled:opacity-70"
       />
       <p className="mt-2 text-xs leading-5 text-[#64748B]">{hint}</p>

@@ -6,9 +6,10 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "prisma generate",
+    "postinstall": "node scripts/copy-pdf-worker.mjs",
+    "predev": "prisma generate && node scripts/copy-pdf-worker.mjs",
     "dev": "next dev --turbopack",
-    "prebuild": "prisma generate",
+    "prebuild": "prisma generate && node scripts/copy-pdf-worker.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

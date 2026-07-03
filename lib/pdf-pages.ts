@@ -15,6 +15,11 @@ export async function countPdfPagesFromBytes(
   bytes: ArrayBuffer | Uint8Array | Buffer,
 ): Promise<number | null> {
   try {
+    // Import the worker module before getDocument so the bundler (Turbopack)
+    // includes it and PDF.js can resolve its worker. Without this, PDF.js falls
+    // back to a "fake worker" whose dynamic import fails at runtime, which also
+    // poisons later PDF.js calls in the same process (e.g. cover generation).
+    await import("pdfjs-dist/legacy/build/pdf.worker.mjs");
     const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
     const loadingTask = getDocument({
       data: new Uint8Array(bytes),

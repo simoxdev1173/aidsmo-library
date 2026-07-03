@@ -122,6 +122,32 @@ export async function getPublishedEntryBySlug(slug: string) {
   });
 }
 
+export async function getRelatedEntries(entry: { id: string; categoryId: string }, take = 6) {
+  const categories = await prisma.category.findMany({
+    select: { id: true, parentId: true },
+  });
+
+  let rootId = entry.categoryId;
+  let parentId = categories.find((category) => category.id === rootId)?.parentId ?? null;
+  while (parentId) {
+    rootId = parentId;
+    parentId = categories.find((category) => category.id === rootId)?.parentId ?? null;
+  }
+
+  const ids = collectDescendantCategoryIds(categories, rootId);
+
+  return prisma.libraryEntry.findMany({
+    where: {
+      status: "PUBLISHED",
+      categoryId: { in: ids },
+      NOT: { id: entry.id },
+    },
+    orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
+    take,
+    include: { category: { include: { parent: { include: { parent: true } } } } },
+  });
+}
+
 export async function getCategoryWithEntries(slug: string) {
   const categories = await prisma.category.findMany({
     include: { children: true, parent: true },

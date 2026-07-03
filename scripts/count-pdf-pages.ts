@@ -133,6 +133,57 @@ async function main() {
   console.log(`Total pages counting every entry file reference: ${formatNumber(totalPagesByEntryReferences)}`);
   console.log(`Manual database pageCount total: ${formatNumber(manualTotalPages)} from ${formatNumber(manualEntries.length)} entrie(s)`);
 
+  // Per-entry known page count: manual pageCount takes priority, otherwise the
+  // sum of successfully parsed PDF pages for that entry's files. Entries with
+  // neither (no pageCount and no readable file) are estimated using the
+  // average known page count, since some entries have no page data at all.
+  const entryFileErrors = new Map<string, boolean>();
+  for (const result of results) {
+    if (result.error) entryFileErrors.set(result.entryId, true);
+  }
+  const entryPdfTotals = new Map<string, number>();
+  for (const file of files) {
+    const pages = pagesByPath.get(file.publicPath);
+    if (pages != null) {
+      entryPdfTotals.set(file.entryId, (entryPdfTotals.get(file.entryId) ?? 0) + pages);
+    }
+  }
+
+  const knownPages: number[] = [];
+  const estimatedEntryIds: string[] = [];
+
+  for (const entry of entries) {
+    if (entry.pageCount != null) {
+      knownPages.push(entry.pageCount);
+      continue;
+    }
+
+    const hasFiles = documentFilesValue(entry.documentFiles, entry.filePath).length > 0;
+    const pdfTotal = entryPdfTotals.get(entry.id);
+
+    if (hasFiles && pdfTotal != null && !entryFileErrors.get(entry.id)) {
+      knownPages.push(pdfTotal);
+    } else {
+      estimatedEntryIds.push(entry.id);
+    }
+  }
+
+  const averageKnownPages = knownPages.length > 0
+    ? knownPages.reduce((sum, pages) => sum + pages, 0) / knownPages.length
+    : 0;
+  const estimatedPagesPerEntry = Math.round(averageKnownPages);
+  const estimatedTotal = estimatedEntryIds.length * estimatedPagesPerEntry;
+  const grandTotalPages = knownPages.reduce((sum, pages) => sum + pages, 0) + estimatedTotal;
+
+  console.log("");
+  console.log("Estimated grand total (all entries)");
+  console.log("------------------------------------");
+  console.log(`Entries with known page counts: ${formatNumber(knownPages.length)}`);
+  console.log(`Entries without any page data: ${formatNumber(estimatedEntryIds.length)}`);
+  console.log(`Average pages per known entry: ${formatNumber(estimatedPagesPerEntry)} (used as the estimate)`);
+  console.log(`Estimated pages for unknown entries: ${formatNumber(estimatedTotal)}`);
+  console.log(`Grand total pages (known + estimated): ${formatNumber(grandTotalPages)}`);
+
   if (failed.length > 0) {
     console.log("");
     console.log("Missing or unreadable PDFs");

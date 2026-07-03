@@ -7,7 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { readUpload, saveUploadBytes } from "@/lib/uploads";
 import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
-import { createDocumentFile, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath } from "@/lib/document-files";
+import { countPdfPagesFromBytes, countPdfPagesFromPublicPath } from "@/lib/pdf-pages";
+import { createDocumentFile, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath, type DocumentFile } from "@/lib/document-files";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -185,6 +186,10 @@ async function saveDocumentUploads(formData: FormData) {
   const titleEntries = formData.getAll("documentUploadTitles");
   let primaryUpload: Awaited<ReturnType<typeof readUpload>> = null;
   const savedFiles = [];
+  // Page counts for the freshly uploaded files, keyed by their saved public
+  // path. Counted from the in-memory bytes we already read for the upload, so
+  // no extra file I/O and no client-side work is involved.
+  const pagesByPath = new Map<string, number>();
 
   for (let index = 0; index < fileEntries.length; index += 1) {
     const file = fileEntries[index];
@@ -201,13 +206,57 @@ async function saveDocumentUploads(formData: FormData) {
     const documentFile = savedPath ? createDocumentFile(savedPath, titleEntries[index] ?? null) : null;
     if (documentFile) {
       savedFiles.push(documentFile);
+
+      if (upload) {
+        const pages = await countPdfPagesFromBytes(upload.bytes);
+        if (pages != null) {
+          pagesByPath.set(documentFile.path, pages);
+        }
+      }
     }
   }
 
   return {
     primaryUpload,
     files: savedFiles,
+    pagesByPath,
   };
+}
+
+// Auto-calculates the total number of pages across every PDF attached to an
+// entry. `manualPageCount` (a value the admin typed in the field) always wins
+// so existing/manually-curated counts are never overwritten. Page counts for
+// newly uploaded files come from `pagesByPath` (already in memory); any
+// remaining files are read from disk. Returns `fallback` when nothing could be
+// counted so we never clobber an existing value with null.
+async function resolveEntryPageCount(
+  documentFiles: DocumentFile[],
+  manualPageCount: number | null,
+  pagesByPath: Map<string, number>,
+  fallback: number | null,
+): Promise<number | null> {
+  if (manualPageCount != null) {
+    return manualPageCount;
+  }
+
+  if (documentFiles.length === 0) {
+    return fallback;
+  }
+
+  let total = 0;
+  let countedAny = false;
+
+  for (const file of documentFiles) {
+    const known = pagesByPath.get(file.path);
+    const pages = known != null ? known : await countPdfPagesFromPublicPath(file.path);
+
+    if (pages != null) {
+      total += pages;
+      countedAny = true;
+    }
+  }
+
+  return countedAny ? total : fallback;
 }
 
 async function saveEventImages(formData: FormData, existingImages: string[] = []) {
@@ -285,6 +334,9 @@ export async function createEntryAction(formData: FormData) {
       ? { path: null, failed: false }
       : await tryCreatePdfCover(primaryUpload?.bytes, `new entry "${title}"`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? coverGeneration.path;
+    const pageCount = isEvent
+      ? null
+      : await resolveEntryPageCount(documentFiles, optionalInt(formData, "pageCount"), documentUploads.pagesByPath, null);
     const slug = await uniqueEntrySlug(text(formData, "slug") || title);
 
     await prisma.libraryEntry.create({
@@ -304,7 +356,7 @@ export async function createEntryAction(formData: FormData) {
         author: isEvent ? null : optionalText(formData, "author"),
         year: isEvent ? null : optionalYearLabel(formData, "year"),
         language: text(formData, "language") || "العربية",
-        pageCount: isEvent ? null : optionalInt(formData, "pageCount"),
+        pageCount,
         eventStartDate: dates.startDate,
         eventEndDate: dates.endDate,
         eventLocation: isEvent ? optionalText(formData, "eventLocation") : null,
@@ -361,6 +413,9 @@ export async function updateEntryAction(id: string, formData: FormData) {
         ? { path: null, failed: false }
         : await tryCreatePdfCover(primaryUpload?.bytes, `entry "${existing.title}" (${id})`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? coverGeneration.path;
+    const pageCount = isEvent
+      ? existing.pageCount
+      : await resolveEntryPageCount(documentFiles, optionalInt(formData, "pageCount"), documentUploads.pagesByPath, existing.pageCount);
     const slug = await uniqueEntrySlug(text(formData, "slug") || title, id);
 
     await prisma.libraryEntry.update({
@@ -380,7 +435,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
         author: isEvent ? existing.author : optionalText(formData, "author"),
         year: isEvent ? existing.year : optionalYearLabel(formData, "year"),
         language: isEvent ? existing.language : text(formData, "language") || "العربية",
-        pageCount: isEvent ? existing.pageCount : optionalInt(formData, "pageCount"),
+        pageCount,
         eventStartDate: dates.startDate,
         eventEndDate: dates.endDate,
         eventLocation: isEvent ? optionalText(formData, "eventLocation") : existing.eventLocation,

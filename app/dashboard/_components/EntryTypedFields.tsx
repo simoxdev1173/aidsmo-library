@@ -59,7 +59,10 @@ export default function EntryTypedFields({
           </label>
           <label className="block">
             <span className={labelClass()}>عدد الصفحات</span>
-            <input name="pageCount" type="number" min="1" defaultValue={pageCount ?? ''} className={fieldClass()} />
+            <input name="pageCount" type="number" min="1" defaultValue={pageCount ?? ''} placeholder="يُحسب تلقائيا" className={fieldClass()} />
+            <p className="mt-1.5 text-xs leading-5 text-[#64748B]">
+              اتركه فارغا ليُحسب مجموع صفحات ملفات PDF تلقائيا عند الحفظ، أو أدخل رقما لتجاوز الحساب.
+            </p>
           </label>
         </div>
         <div className="mt-5 grid gap-5 md:grid-cols-2">

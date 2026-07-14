@@ -3,110 +3,124 @@
 import { cn } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuMenu, LuSearch, LuX } from 'react-icons/lu';
+import { useAppLocale, type AppLocale } from '@/lib/i18n/LocaleProvider';
 
-type SubItem = { label: string; href: string; subItems?: SubItem[] };
-type ChildItem = { label: string; href: string; subItems?: SubItem[] };
-type GroupDef = { title: string; items: ChildItem[] };
+type SubItem = { label: string; labelEn: string; href: string; subItems?: SubItem[] };
+type ChildItem = { label: string; labelEn: string; href: string; subItems?: SubItem[] };
+type GroupDef = { title: string; titleEn: string; items: ChildItem[] };
 type MenuItem = {
   id: string;
   label: string;
+  labelEn: string;
   href?: string;
   children?: ChildItem[];
   groups?: GroupDef[];
 };
 
+const pickLabel = (ar: string, en: string, locale: AppLocale) => (locale === 'en' ? en : ar);
+
 const menuItemsData: MenuItem[] = [
-  { id: 'home', label: 'الرئيسية', href: '/' },
-  { id: 'about', label: 'من نحن', href: '/about-us' },
+  { id: 'home', label: 'الرئيسية', labelEn: 'Home', href: '/' },
+  { id: 'about', label: 'من نحن', labelEn: 'About Us', href: '/about-us' },
   {
     id: 'industry',
     label: 'الصناعة',
+    labelEn: 'Industry',
     href: '/industry',
     children: [
-      { label: 'إستراتيجيات', href: '/industry/integration-strategy' },
-      { label: 'الصناعات الصغيرة والمتوسطة', href: '/industry/sme' },
-      { label: 'فعاليات وأنشطة', href: '/industry/events' },
-      { label: 'الدراسات والأدلة', href: '/industry/studies' , subItems: [
-           { label: 'الدراسات', href: '/industry/studies/studies' },
-        { label: 'الأدلة', href: '/industry/studies/guides' },
+      { label: 'إستراتيجيات', labelEn: 'Strategies', href: '/industry/integration-strategy' },
+      { label: 'الصناعات الصغيرة والمتوسطة', labelEn: 'Small & Medium Industries', href: '/industry/sme' },
+      { label: 'فعاليات وأنشطة', labelEn: 'Events & Activities', href: '/industry/events' },
+      { label: 'الدراسات والأدلة', labelEn: 'Studies & Guides', href: '/industry/studies' , subItems: [
+           { label: 'الدراسات', labelEn: 'Studies', href: '/industry/studies/studies' },
+        { label: 'الأدلة', labelEn: 'Guides', href: '/industry/studies/guides' },
         ],  },
     ],
   },
   {
     id: 'standardization',
     label: 'التقييس',
+    labelEn: 'Standardization',
     href: '/standardization',
     children: [
-      { label: 'دراسات', href: '/standardization/studies' },
-      { label: 'معاجم', href: '/standardization/glossaries' },
-      { label: 'أدلة', href: '/standardization/guides' },
-      { label: 'توجيهات', href: '/standardization/directives' },
-      { label: 'إستراتيجيات', href: '/standardization/strategies' },
-      { label: 'دورات تدريبية', href: '/standardization/training-courses' },
-      { label: 'ورش عمل', href: '/standardization/workshops' },
-      { label: 'ندوات', href: '/standardization/seminars' },
-      { label: 'إجتماعات', href: '/standardization/meetings' },
+      { label: 'دراسات', labelEn: 'Studies', href: '/standardization/studies' },
+      { label: 'معاجم', labelEn: 'Glossaries', href: '/standardization/glossaries' },
+      { label: 'أدلة', labelEn: 'Guides', href: '/standardization/guides' },
+      { label: 'توجيهات', labelEn: 'Directives', href: '/standardization/directives' },
+      { label: 'إستراتيجيات', labelEn: 'Strategies', href: '/standardization/strategies' },
+      { label: 'دورات تدريبية', labelEn: 'Training Courses', href: '/standardization/training-courses' },
+      { label: 'ورش عمل', labelEn: 'Workshops', href: '/standardization/workshops' },
+      { label: 'ندوات', labelEn: 'Seminars', href: '/standardization/seminars' },
+      { label: 'إجتماعات', labelEn: 'Meetings', href: '/standardization/meetings' },
     ],
   },
   {
     id: 'mining',
     label: 'التعدين',
+    labelEn: 'Mining',
     children: [
-      { label: 'المكتبة الرقمية للدراسات التعدينية العربية', href: 'https://arabmininglibrary.org/' },
+      { label: 'المكتبة الرقمية للدراسات التعدينية العربية', labelEn: 'Arab Mining Studies Digital Library', href: 'https://arabmininglibrary.org/' },
     ],
   },
   {
     id: 'industrial-info',
     href: '/info',
     label: 'المعلومات الصناعية',
+    labelEn: 'Industrial Information',
     children: [
       {
         label: 'الإحصاءات الصناعية',
+        labelEn: 'Industrial Statistics',
         href: '/info/statistics',
         subItems: [
-          { label: 'تقرير الصناعة العربية', href: '/info/statistics/arab-industry-report' },
-          { label: 'كتيب المؤشرات الاقتصادية والصناعية', href: '/info/statistics/indicators-booklet' },
-          { label: 'نشرة الإحصاءات الصناعية', href: '/info/statistics/bulletin' },
+          { label: 'تقرير الصناعة العربية', labelEn: 'Arab Industry Report', href: '/info/statistics/arab-industry-report' },
+          { label: 'كتيب المؤشرات الاقتصادية والصناعية', labelEn: 'Economic & Industrial Indicators Booklet', href: '/info/statistics/indicators-booklet' },
+          { label: 'نشرة الإحصاءات الصناعية', labelEn: 'Industrial Statistics Bulletin', href: '/info/statistics/bulletin' },
           {
             label: 'الانفوجرافيك',
+            labelEn: 'Infographics',
             href: '/info/statistics/infographics',
             subItems: [
-              { label: '2023', href: '/info/statistics/infographics/2023' },
-              { label: '2024', href: '/info/statistics/infographics/2024' },
-              { label: '2025', href: '/info/statistics/infographics/2025' },
-              { label: '2026', href: '/info/statistics/infographics/2026' },
+              { label: '2023', labelEn: '2023', href: '/info/statistics/infographics/2023' },
+              { label: '2024', labelEn: '2024', href: '/info/statistics/infographics/2024' },
+              { label: '2025', labelEn: '2025', href: '/info/statistics/infographics/2025' },
+              { label: '2026', labelEn: '2026', href: '/info/statistics/infographics/2026' },
             ],
           },
         ],
       },
-      { label: 'مؤتمرات وندوات', href: '/info/conferences' },
-      { label: 'مجلة التنمية الصناعية', href: '/info/magazine' },
+      { label: 'مؤتمرات وندوات', labelEn: 'Conferences & Seminars', href: '/info/conferences' },
+      { label: 'مجلة التنمية الصناعية', labelEn: 'Industrial Development Magazine', href: '/info/magazine' },
       {
         label: 'النشرة الدورية',
+        labelEn: 'Periodic Newsletter',
         href: '/info/newsletter',
         subItems: [
-          { label: '2024', href: '/info/newsletter/2024' },
-          { label: '2025', href: '/info/newsletter/2025' },
-          { label: '2026', href: '/info/newsletter/2026' },
+          { label: '2024', labelEn: '2024', href: '/info/newsletter/2024' },
+          { label: '2025', labelEn: '2025', href: '/info/newsletter/2025' },
+          { label: '2026', labelEn: '2026', href: '/info/newsletter/2026' },
         ],
       },
-      { label: 'الاصدارات', href: '/info/publications' },
+      { label: 'الاصدارات', labelEn: 'Publications', href: '/info/publications' },
     ],
   },
   {
     id: 'training',
     label: 'التدريب والاستشارات',
+    labelEn: 'Training & Consulting',
     children: [
-      { label: 'حول المعهد', href: '/training/about' },
+      { label: 'حول المعهد', labelEn: 'About the Institute', href: '/training/about' },
       {
         label: 'الخطة التدريبية',
+        labelEn: 'Training Plan',
         href: '/training/plan',
         subItems: [
-          { label: '2024', href: '/training/plan/2024' },
-          { label: '2025', href: '/training/plan/2025' },
-          { label: '2026', href: '/training/plan/2026' },
+          { label: '2024', labelEn: '2024', href: '/training/plan/2024' },
+          { label: '2025', labelEn: '2025', href: '/training/plan/2025' },
+          { label: '2026', labelEn: '2026', href: '/training/plan/2026' },
         ],
       },
     ],
@@ -114,38 +128,50 @@ const menuItemsData: MenuItem[] = [
   {
     id: 'archive',
     label: 'الأرشيف',
+    labelEn: 'Archive',
     groups: [
       {
         title: 'المنظمة العربية للتنمية الصناعية والتقييس والتعدين',
+        titleEn: 'Arab Industrial Development, Standardization and Mining Organization',
         items: [
-          { label: 'تأسيس المنظمة', href: '/archive/org/founding' },
-          { label: 'اتفاقيات الانشاء', href: '/archive/org/agreements' },
-          { label: 'النظام الداخلي', href: '/archive/org/bylaws' },
-          { label: 'اللوائح الداخلية والأنظمة', href: '/archive/org/regulations' },
-          { label: 'مذكرات التفاهم واتفاقيات', href: '/archive/org/mou' },
-          { label: 'المجلس التنفيذي', href: '/archive/org/executive-board' },
-          { label: 'الجمعية العامة', href: '/archive/org/general-assembly' },
-          { label: 'النظام الأساسي و الداخلي للمحكمة الإدارية', href: '/archive/org/administrative-court' },
+          { label: 'تأسيس المنظمة', labelEn: 'Founding of the Organization', href: '/archive/org/founding' },
+          { label: 'اتفاقيات الانشاء', labelEn: 'Founding Agreements', href: '/archive/org/agreements' },
+          { label: 'النظام الداخلي', labelEn: 'Bylaws', href: '/archive/org/bylaws' },
+          { label: 'اللوائح الداخلية والأنظمة', labelEn: 'Internal Regulations & Statutes', href: '/archive/org/regulations' },
+          { label: 'مذكرات التفاهم واتفاقيات', labelEn: 'Memoranda of Understanding & Agreements', href: '/archive/org/mou' },
+          { label: 'المجلس التنفيذي', labelEn: 'Executive Board', href: '/archive/org/executive-board' },
+          { label: 'الجمعية العامة', labelEn: 'General Assembly', href: '/archive/org/general-assembly' },
+          { label: 'النظام الأساسي و الداخلي للمحكمة الإدارية', labelEn: 'Administrative Court Statute & Bylaws', href: '/archive/org/administrative-court' },
         ],
       },
       {
         title: 'جامعة الدول العربية',
+        titleEn: 'League of Arab States',
         items: [
           {
             label: 'القمة العربية',
+            labelEn: 'Arab Summit',
             href: '/archive/league/summit',
             subItems: [
-              { label: 'قرارات مجلس الجامعة على المستوى الوزاري', href: '/archive/league/summit/council' },
-              { label: 'مجلس الجامعة على مستوى القمة', href: '/archive/league/summit/summit-council' },
-              { label: 'القمة العربية الاقتصادية والاجتماعية', href: '/archive/league/summit/economic-social' },
+              { label: 'قرارات مجلس الجامعة على المستوى الوزاري', labelEn: 'Ministerial-Level Council Resolutions', href: '/archive/league/summit/council' },
+              { label: 'مجلس الجامعة على مستوى القمة', labelEn: 'League Council at Summit Level', href: '/archive/league/summit/summit-council' },
+              { label: 'قرارات القمة الاقتصادية و التنموية و الاجتماعية', labelEn: 'Economic, Developmental & Social Summit Resolutions', href: '/archive/league/summit/economic-social' },
             ],
           },
-          { label: 'المجلس الاقتصادي والاجتماعي', href: '/archive/league/ecosoc' },
-          { label: 'لجنة المنظمات والتنسيق', href: '/archive/league/coordination' },
-          { label: 'لجنة التنسيق العليا للعمل العربي المشترك', href: '/archive/league/joint-action' },
-          { label: 'اللوائح والأنظمة', href: '/archive/league/regulations' },
-          { label: 'النظام الداخلي لمجلس الجامعة الدول العربية', href: '/archive/league/council-bylaws' },
-          { label: 'ميثاق جامعة الدول العربية و ملحقاته', href: '/archive/league/charter' },
+          { label: 'المجلس الاقتصادي والاجتماعي', labelEn: 'Economic & Social Council', href: '/archive/league/ecosoc' },
+          { label: 'لجنة المنظمات والتنسيق و المتابعة المنبثقة عن المجلس الاقتصادي و الاجتماعي', labelEn: 'Organizations, Coordination & Follow-up Committee', href: '/archive/league/coordination' },
+          { label: 'لجنة التنسيق العليا للعمل العربي المشترك', labelEn: 'Higher Coordination Committee for Joint Arab Action', href: '/archive/league/joint-action' },
+          { label: 'اللوائح والأنظمة', labelEn: 'Regulations & Statutes', href: '/archive/league/regulations' },
+          { label: 'النظام الداخلي لمجلس الجامعة الدول العربية', labelEn: 'Bylaws of the Council of the League of Arab States', href: '/archive/league/council-bylaws' },
+          { label: 'ميثاق جامعة الدول العربية و ملحقاته', labelEn: 'Charter of the League of Arab States and its Annexes', href: '/archive/league/charter' },
+          {
+            label: 'المحكمة الإدارية',
+            labelEn: 'Administrative Court',
+            href: '/archive/league/administrative-court',
+            subItems: [
+              { label: 'النظام الأساسي و الداخلي', labelEn: 'Statute & Bylaws', href: '/archive/league/administrative-court/statute' },
+            ],
+          },
         ],
       },
     ],
@@ -157,6 +183,7 @@ const dropdownLink = 'block rounded-full px-4 py-2.5 text-sm font-medium leading
 
 const NestedFlyoutItems = ({ items }: { items: SubItem[] }) => {
   const [expandedHref, setExpandedHref] = useState<string | null>(null);
+  const { locale } = useAppLocale();
 
   return (
     <>
@@ -169,7 +196,7 @@ const NestedFlyoutItems = ({ items }: { items: SubItem[] }) => {
               onMouseLeave={() => setExpandedHref(null)}
             >
               <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
-                <Link href={item.href} className="flex-1">{item.label}</Link>
+                <Link href={item.href} className="flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
                 <LuChevronLeft size={14} className="text-[#C29C41]" />
               </div>
               <div
@@ -185,7 +212,7 @@ const NestedFlyoutItems = ({ items }: { items: SubItem[] }) => {
             </div>
           ) : (
             <Link href={item.href} className={dropdownLink}>
-              {item.label}
+              {pickLabel(item.label, item.labelEn, locale)}
             </Link>
           )}
         </div>
@@ -196,6 +223,7 @@ const NestedFlyoutItems = ({ items }: { items: SubItem[] }) => {
 
 const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
+  const { locale } = useAppLocale();
   return (
     <div className={cn('min-w-[280px]', dropdownShell)}>
       {items.map((item, idx) => (
@@ -207,7 +235,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
               onMouseLeave={() => setExpandedIdx(null)}
             >
               <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
-                <Link href={item.href} className="flex-1">{item.label}</Link>
+                <Link href={item.href} className="flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
                 <LuChevronLeft size={14} className="text-[#C29C41]" />
               </div>
               <div
@@ -223,7 +251,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
             </div>
           ) : (
             <Link href={item.href} className={dropdownLink}>
-              {item.label}
+              {pickLabel(item.label, item.labelEn, locale)}
             </Link>
           )}
         </div>
@@ -234,6 +262,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
 
 const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
+  const { locale } = useAppLocale();
 
   return (
     <div className={cn('w-[min(680px,calc(100vw-2rem))]', dropdownShell)}>
@@ -241,7 +270,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
         {groups.map((group) => (
           <div key={group.title}>
             <p className="mb-2 border-b border-[#C29C41]/25 px-3 pb-2 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#C29C41]">
-              {group.title}
+              {pickLabel(group.title, group.titleEn, locale)}
             </p>
             {group.items.map((item) => (
               <div key={item.href}>
@@ -252,20 +281,20 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
                     onMouseLeave={() => setExpandedKey(null)}
                   >
                     <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
-                      <Link href={item.href} className="flex-1">{item.label}</Link>
+                      <Link href={item.href} className="flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
                       <LuChevronDown size={14} className={cn('text-[#C29C41] transition duration-300', expandedKey === item.href && 'rotate-180')} />
                     </div>
                     <div className={cn('overflow-hidden border-r border-[#C29C41]/20 pr-3 transition-all duration-300', expandedKey === item.href ? 'max-h-72 opacity-100' : 'max-h-0 opacity-0')}>
                       {item.subItems.map((sub) => (
                         <Link key={sub.href} href={sub.href} className="block px-4 py-2 text-xs font-medium leading-relaxed text-[#64748B] transition duration-200 hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:bg-[#F0F7FC] focus:text-[#0369A1] focus:outline-none">
-                          {sub.label}
+                          {pickLabel(sub.label, sub.labelEn, locale)}
                         </Link>
                       ))}
                     </div>
                   </div>
                 ) : (
                   <Link href={item.href} className={dropdownLink}>
-                    {item.label}
+                    {pickLabel(item.label, item.labelEn, locale)}
                   </Link>
                 )}
               </div>
@@ -277,15 +306,14 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   );
 };
 
-type Lang = 'ar' | 'en';
-
 const LanguageSwitcher = ({ isSolid, className }: { isSolid: boolean; className?: string }) => {
-  const [lang, setLang] = useState<Lang>('ar');
+  const { locale, setLocale } = useAppLocale();
+  const t = useTranslations('nav');
 
   return (
     <div
       role="group"
-      aria-label="اختيار اللغة"
+      aria-label={t('languageGroupLabel')}
       className={cn(
         'flex shrink-0 items-center gap-0.5 rounded-full border p-0.5 transition duration-300',
         isSolid ? 'border-[#0369A1]/20 bg-[#F8FAFC]' : 'border-white/18 bg-white/10',
@@ -296,11 +324,11 @@ const LanguageSwitcher = ({ isSolid, className }: { isSolid: boolean; className?
         <button
           key={option}
           type="button"
-          onClick={() => setLang(option)}
-          aria-pressed={lang === option}
+          onClick={() => setLocale(option)}
+          aria-pressed={locale === option}
           className={cn(
             'flex h-9 min-w-9 items-center justify-center rounded-full px-2.5 text-xs font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41]',
-            lang === option
+            locale === option
               ? 'bg-[#C29C41] text-[#0A2540] shadow-[0_4px_12px_rgba(194,156,65,0.32)]'
               : isSolid
                 ? 'text-[#64748B] hover:text-[#0A2540]'
@@ -318,6 +346,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hasDropdown = item.children || item.groups;
+  const { locale } = useAppLocale();
 
   const enter = () => {
     clearTimeout(timeout.current);
@@ -342,7 +371,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
             : cn('focus:ring-offset-[#0A2540]', isActive ? 'text-[#E8C96A]' : 'text-white/88 hover:text-[#E8C96A]'),
         )}
       >
-        {item.label}
+        {pickLabel(item.label, item.labelEn, locale)}
         {hasDropdown && <LuChevronDown size={15} className={cn('transition duration-300', open && 'rotate-180')} />}
       </Link>
 
@@ -366,18 +395,19 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
   const [expandedChild, setExpandedChild] = useState<string | null>(null);
   const [expandedSubChild, setExpandedSubChild] = useState<string | null>(null);
   const hasChildren = item.children || item.groups;
+  const { locale } = useAppLocale();
 
   const allChildren: (ChildItem & { isGroupHeader?: boolean; groupTitle?: string })[] =
     item.children
       ? item.children
       : item.groups
-        ? item.groups.flatMap((g) => [{ label: '', href: '', isGroupHeader: true, groupTitle: g.title }, ...g.items])
+        ? item.groups.flatMap((g) => [{ label: '', labelEn: '', href: '', isGroupHeader: true, groupTitle: pickLabel(g.title, g.titleEn, locale) }, ...g.items])
         : [];
 
   if (!hasChildren) {
     return (
       <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block min-h-12 rounded-full border-b border-[#0369A1]/10 px-4 py-3 text-lg font-bold text-[#003652]">
-        {item.label}
+        {pickLabel(item.label, item.labelEn, locale)}
       </Link>
     );
   }
@@ -389,7 +419,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
         onClick={() => setOpen(!open)}
         className="flex min-h-12 w-full items-center justify-between rounded-full px-4 py-3 text-lg font-bold text-[#003652]"
       >
-        {item.label}
+        {pickLabel(item.label, item.labelEn, locale)}
         <LuChevronDown size={18} className={cn('text-[#C29C41] transition duration-300', open && 'rotate-180')} />
       </button>
       <div className={cn('overflow-hidden transition-all duration-300', open ? 'max-h-[1400px] opacity-100' : 'max-h-0 opacity-0')}>
@@ -411,7 +441,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                     onClick={() => setExpandedChild(isExpanded ? null : child.href)}
                     className="flex w-full items-center justify-between rounded-full px-4 py-2.5 text-sm font-semibold text-[#475569]"
                   >
-                    {child.label}
+                    {pickLabel(child.label, child.labelEn, locale)}
                     <LuChevronDown size={14} className={cn('text-[#C29C41] transition duration-300', isExpanded && 'rotate-180')} />
                   </button>
                   <div className={cn('overflow-hidden transition-all duration-300', isExpanded ? 'max-h-[440px] opacity-100' : 'max-h-0 opacity-0')}>
@@ -424,13 +454,13 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                             <div key={sub.href}>
                               <div className="flex items-center gap-1 rounded-full">
                                 <Link href={sub.href} onClick={onNavigate} className="block flex-1 rounded-full px-4 py-2 text-sm font-semibold text-[#475569]">
-                                  {sub.label}
+                                  {pickLabel(sub.label, sub.labelEn, locale)}
                                 </Link>
                                 <button
                                   type="button"
                                   onClick={() => setExpandedSubChild(isSubExpanded ? null : sub.href)}
                                   className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#C29C41]"
-                                  aria-label={`${sub.label} submenu`}
+                                  aria-label={`${pickLabel(sub.label, sub.labelEn, locale)} submenu`}
                                 >
                                   <LuChevronDown size={14} className={cn('transition duration-300', isSubExpanded && 'rotate-180')} />
                                 </button>
@@ -439,7 +469,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                                 <div className="mr-4 border-r border-[#C29C41]/20 pr-2">
                                   {sub.subItems.map((nested) => (
                                     <Link key={nested.href} href={nested.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
-                                      {nested.label}
+                                      {pickLabel(nested.label, nested.labelEn, locale)}
                                     </Link>
                                   ))}
                                 </div>
@@ -450,7 +480,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
 
                         return (
                           <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
-                            {sub.label}
+                            {pickLabel(sub.label, sub.labelEn, locale)}
                           </Link>
                         );
                       })}
@@ -461,7 +491,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
             }
             return (
               <Link key={child.href} href={child.href} onClick={onNavigate} className="block rounded-full px-4 py-2.5 text-sm font-medium text-[#475569]">
-                {child.label}
+                {pickLabel(child.label, child.labelEn, locale)}
               </Link>
             );
           })}
@@ -476,6 +506,10 @@ const TopNavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const isSolid = isScrolled;
+  const { locale } = useAppLocale();
+  const t = useTranslations('nav');
+  const tHero = useTranslations('hero');
+  const tFooter = useTranslations('footer');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -514,7 +548,7 @@ const TopNavBar = () => {
               <Link href="/" className="flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white">
                 <Image
                   src="/logo-3d-3d.png"
-                  alt="المكتبة الرقمية"
+                  alt={tHero('logoAlt')}
                   height={240}
                   width={260}
                   className={cn('object-contain transition-all duration-500', isSolid ? 'h-12 w-auto' : 'h-14 w-auto md:h-16')}
@@ -533,11 +567,11 @@ const TopNavBar = () => {
               <div className="mr-auto flex shrink-0 items-center gap-2 2xl:gap-3 lg:mr-0">
                 <div className="hidden items-center 2xl:flex">
                   <label className="relative">
-                    <span className="sr-only">بحث</span>
+                    <span className="sr-only">{t('searchLabel')}</span>
                     <input
                       type="text"
-                      placeholder="بحث..."
-                      dir="rtl"
+                      placeholder={t('searchPlaceholder')}
+                      dir={locale === 'ar' ? 'rtl' : 'ltr'}
                       className={cn(
                         'h-11 w-40 rounded-full border pr-10 pl-4 text-sm font-medium outline-none transition duration-300 focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25',
                         isSolid
@@ -555,14 +589,14 @@ const TopNavBar = () => {
 
                 <Link
                   href="/dashboard/login"
-                  aria-label="تسجيل الدخول"
+                  aria-label={t('loginFull')}
                   className={cn(
                     'engraved brass-gradient hidden h-11 shrink-0 items-center justify-center rounded-full border border-[#C29C41] px-3.5 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 lg:flex',
                     isSolid ? 'focus:ring-offset-white' : 'focus:ring-offset-[#0A2540]',
                   )}
                 >
-                  <span className="2xl:hidden">دخول</span>
-                  <span className="hidden 2xl:inline">تسجيل الدخول</span>
+                  <span className="2xl:hidden">{t('loginShort')}</span>
+                  <span className="hidden 2xl:inline">{t('loginFull')}</span>
                 </Link>
 
                 <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
@@ -575,7 +609,7 @@ const TopNavBar = () => {
                 >
                   <Image
                     src="/aidsmo-logo.png"
-                    alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين"
+                    alt={tFooter('orgLogoAlt')}
                     height={160}
                     width={160}
                     className={cn('object-contain transition-all duration-500', isSolid ? 'h-9 w-auto' : 'h-10 w-auto 2xl:h-11')}
@@ -591,7 +625,7 @@ const TopNavBar = () => {
                       : 'border-white/20 bg-white/10 text-white focus:ring-offset-[#0A2540]',
                   )}
                   onClick={() => setMobileMenuOpen(true)}
-                  aria-label="فتح القائمة"
+                  aria-label={t('openMenu')}
                 >
                   <LuMenu size={24} />
                 </button>
@@ -614,30 +648,30 @@ const TopNavBar = () => {
           'fixed bottom-0 right-0 top-0 z-[110] w-[86%] max-w-sm overflow-y-auto rounded-l-[14px] border-l border-[#C29C41]/30 bg-white p-6 shadow-2xl transition-transform duration-500 lg:hidden',
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
         )}
-        aria-label="القائمة الرئيسية"
+        aria-label={t('mainMenuLabel')}
       >
         <div className="mb-6 flex items-center justify-between border-b border-[#C29C41]/25 pb-4">
           <div className="flex items-center gap-3">
-            <Image src="/logo-2.png" alt="المكتبة الرقمية" height={44} width={112} className="h-10 w-auto object-contain" />
+            <Image src="/logo-2.png" alt={tHero('logoAlt')} height={44} width={112} className="h-10 w-auto object-contain" />
             <span className="h-8 w-px bg-[#C29C41]/30" />
-            <Image src="/aidsmo-logo.png" alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين" height={40} width={40} className="h-10 w-auto object-contain" />
+            <Image src="/aidsmo-logo.png" alt={tFooter('orgLogoAlt')} height={40} width={40} className="h-10 w-auto object-contain" />
           </div>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(false)}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652]"
-            aria-label="إغلاق القائمة"
+            aria-label={t('closeMenu')}
           >
             <LuX size={20} />
           </button>
         </div>
 
         <label className="relative mb-5 block">
-          <span className="sr-only">بحث</span>
+          <span className="sr-only">{t('searchLabel')}</span>
           <input
             type="text"
-            placeholder="بحث..."
-            dir="rtl"
+            placeholder={t('searchPlaceholder')}
+            dir={locale === 'ar' ? 'rtl' : 'ltr'}
             className="h-12 w-full rounded-full border border-[#0369A1]/20 bg-[#F8FAFC] pr-10 pl-4 text-sm outline-none transition duration-300 placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
           />
           <LuSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C29C41]" />
@@ -649,7 +683,7 @@ const TopNavBar = () => {
             onClick={() => setMobileMenuOpen(false)}
             className="engraved brass-gradient flex min-h-12 flex-1 items-center justify-center rounded-full border border-[#C29C41] px-4 py-3 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-200 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
-            تسجيل الدخول
+            {t('loginFull')}
           </Link>
           <LanguageSwitcher isSolid />
         </div>

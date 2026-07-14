@@ -2,7 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { LuChevronLeft } from 'react-icons/lu';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 const primaryButton =
   'engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
@@ -11,12 +13,15 @@ const darkButton =
   'inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]';
 
 const LibraryNews = () => {
+  const t = useTranslations('services');
+  const { locale } = useAppLocale();
+
   return (
     <section
       id="library-services"
       className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24"
-      aria-label="خدمات المكتبة الرقمية"
-      dir="rtl"
+      aria-label={t('heading')}
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
     >
       <Image
         src="/background-01.png"
@@ -50,11 +55,11 @@ const LibraryNews = () => {
         
 
           <h2 className="academic-heading mt-3 text-3xl leading-tight text-[#0A2540] md:text-4xl">
-            خدمات المكتبة الرقمية
+            {t('heading')}
           </h2>
 
           <p className="mt-4 max-w-2xl text-nowrap font-academic text-lg leading-relaxed text-[#475569]">
-            مسارات عملية تساعدك على الوصول إلى الإصدارات، اختيار مجال البحث، أو طلب إرشاد سريع من المساعد الذكي.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -66,20 +71,20 @@ const LibraryNews = () => {
           >
             <div>
               <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#9A7421]">
-                أحدث الإصدارات
+                {t('latestKicker')}
               </p>
 
               <h3 className="mt-5 max-w-md font-academic text-2xl font-bold leading-[1.55] text-[#0A2540] md:text-3xl">
-                اكتشف المواد الجديدة في الصناعة والتقييس والتعدين
+                {t('latestTitle')}
               </h3>
 
               <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-[#64748B]">
-                تابع الإصدارات والدراسات المضافة حديثا داخل المكتبة الرقمية.
+                {t('latestDesc')}
               </p>
             </div>
 
             <span className={`${primaryButton} mt-7 w-fit`}>
-              عرض الإصدارات
+              {t('viewPublications')}
               <LuChevronLeft className="h-4 w-4" />
             </span>
           </Link>
@@ -91,7 +96,7 @@ const LibraryNews = () => {
           >
             <Image
               src="/industry-informations-bg.png"
-              alt="تصفح المكتبة الرقمية"
+              alt={t('browseByFieldAlt')}
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
               className="object-cover transition duration-700 group-hover:scale-105"
@@ -101,11 +106,11 @@ const LibraryNews = () => {
 
             <div className="absolute inset-x-6 bottom-6 text-right">
               <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#E8C96A]">
-                تصفح حسب المجال
+                {t('browseByFieldKicker')}
               </p>
 
               <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
-                انتقال مباشر إلى رفوف المكتبة
+                {t('browseByFieldTitle')}
               </p>
             </div>
           </Link>
@@ -122,20 +127,20 @@ const LibraryNews = () => {
 
             <div className="relative z-10">
               <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#E8C96A]">
-                المساعد الذكي
+                {t('assistantKicker')}
               </p>
 
               <h3 className="mt-5 max-w-md font-academic text-2xl font-bold leading-[1.55] text-white md:text-3xl">
-                اسأل عن الإصدارات والقطاعات واحصل على إرشاد فوري
+                {t('assistantTitle')}
               </h3>
 
               <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-white/72">
-                يساعدك في تضييق البحث والوصول إلى المواد المناسبة بسرعة.
+                {t('assistantDesc')}
               </p>
             </div>
 
             <span className={`${primaryButton} relative z-10 mt-7 w-fit`}>
-              اسأل المساعد
+              {t('askAssistant')}
               <LuChevronLeft className="h-4 w-4" />
             </span>
           </Link>
@@ -152,20 +157,20 @@ const LibraryNews = () => {
 
             <div className="relative z-10">
               <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#E8C96A]">
-                مدخل القطاعات
+                {t('sectorsKicker')}
               </p>
 
               <h3 className="mt-5 max-w-lg font-academic text-2xl font-bold leading-[1.55] text-white md:text-3xl">
-                اختر مجال العمل وانتقل مباشرة إلى الرف الرقمي المناسب
+                {t('sectorsTitle')}
               </h3>
 
               <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-white/76">
-                الصناعة، التقييس، التعدين، والمعلومات الصناعية في مسار واضح.
+                {t('sectorsDesc')}
               </p>
             </div>
 
             <span className={`${darkButton} relative z-10 mt-7 w-fit`}>
-              ابدأ التصفح
+              {t('startBrowsing')}
               <LuChevronLeft className="h-4 w-4" />
             </span>
           </Link>
@@ -177,7 +182,7 @@ const LibraryNews = () => {
           >
             <Image
               src="/industry-bg.png"
-              alt="موارد التعدين"
+              alt={t('miningAlt')}
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
               className="object-cover transition duration-700 group-hover:scale-105"
@@ -186,10 +191,10 @@ const LibraryNews = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/88 via-[#0A2540]/34 to-transparent" />
 
             <div className="absolute inset-x-6 bottom-6 text-right">
-              
+
 
               <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
-                موارد فنية ودراسات متخصصة
+                {t('miningText')}
               </p>
             </div>
           </Link>
@@ -201,7 +206,7 @@ const LibraryNews = () => {
           >
             <Image
               src="/standardization-bg.png"
-              alt="المعلومات الصناعية"
+              alt={t('industrialInfoAlt')}
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
               className="object-cover transition duration-700 group-hover:scale-105"
@@ -210,9 +215,9 @@ const LibraryNews = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/88 via-[#0A2540]/34 to-transparent" />
 
             <div className="absolute inset-x-6 bottom-6 text-right">
-          
+
               <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
-                بيانات ومعرفة قابلة للاستكشاف
+                {t('industrialInfoText')}
               </p>
             </div>
           </Link>

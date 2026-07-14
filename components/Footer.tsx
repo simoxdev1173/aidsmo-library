@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { FormEvent, useState } from 'react';
 import {
   LuArrowUpLeft,
@@ -12,6 +13,7 @@ import {
   LuPhone,
   LuSearch,
 } from 'react-icons/lu';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 const bookImages = [
   '/trendingSection/t-12.jpg',
@@ -21,71 +23,73 @@ const bookImages = [
   '/trendingSection/t-3.png',
 ];
 
-const footerLinks = [
-  {
-    title: 'المكتبة الرقمية الذكية',
-    items: [
-      { label: 'الرئيسية', href: '/' },
-      { label: 'من نحن', href: '/about-us' },
-      { label: 'الدراسات والأدلة', href: '/industry/studies' },
-      { label: 'الإصدارات', href: '/info/publications' },
-    ],
-  },
-  {
-    title: 'القطاعات',
-    items: [
-      { label: 'الصناعة', href: '/industry/integration-strategy' },
-      { label: 'التقييس', href: '/standardization/studies' },
-      { label: 'التعدين', href: 'https://arabmininglibrary.org/', external: true },
-      { label: 'المعلومات الصناعية', href: '/info/statistics' },
-    ],
-  },
-  {
-    title: 'خدمات ومعرفة',
-    items: [
-      { label: 'التدريب والاستشارات', href: '/training/about' },
-      { label: 'الأرشيف', href: '/archive/org/founding' },
-      { label: 'مجلة التنمية الصناعية', href: '/info/magazine' },
-      { label: 'موقع المنظمة', href: 'https://aidsmo.org', external: true },
-    ],
-  },
-];
-
-const contactLinks = [
-  {
-    label: 'الهاتف',
-    value: '00212537274500',
-    href: 'tel:+212537274500',
-    icon: LuPhone,
-    dir: 'ltr' as const,
-  },
-  {
-    label: 'البريد الإلكتروني',
-    value: 'aidsmo@aidsmo.org',
-    href: 'mailto:aidsmo@aidsmo.org',
-    icon: LuMail,
-    dir: 'ltr' as const,
-  },
-  {
-    label: 'المقر',
-    value: 'الرباط، المملكة المغربية',
-    href: 'https://maps.google.com/?q=33.8511,-6.9863',
-    icon: LuMapPin,
-    external: true,
-  },
-];
-
-const quickActions = [
-  { label: 'استكشف المكتبة', href: '/', icon: LuBookOpen },
-  { label: 'ابدأ البحث', href: '/#search', icon: LuSearch },
-];
-
 const Footer = () => {
   const year = new Date().getFullYear();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { locale } = useAppLocale();
+  const t = useTranslations('footer');
+
+  const footerLinks = [
+    {
+      title: t('group1Title'),
+      items: [
+        { label: t('home'), href: '/' },
+        { label: t('about'), href: '/about-us' },
+        { label: t('studiesAndGuides'), href: '/industry/studies' },
+        { label: t('publications'), href: '/info/publications' },
+      ],
+    },
+    {
+      title: t('group2Title'),
+      items: [
+        { label: t('industry'), href: '/industry/integration-strategy' },
+        { label: t('standardization'), href: '/standardization/studies' },
+        { label: t('mining'), href: 'https://arabmininglibrary.org/', external: true },
+        { label: t('industrialInfo'), href: '/info/statistics' },
+      ],
+    },
+    {
+      title: t('group3Title'),
+      items: [
+        { label: t('trainingConsulting'), href: '/training/about' },
+        { label: t('archive'), href: '/archive/org/founding' },
+        { label: t('magazine'), href: '/info/magazine' },
+        { label: t('orgWebsite'), href: 'https://aidsmo.org', external: true },
+      ],
+    },
+  ];
+
+  const contactLinks = [
+    {
+      label: t('phoneLabel'),
+      value: '00212537274500',
+      href: 'tel:+212537274500',
+      icon: LuPhone,
+      dir: 'ltr' as const,
+    },
+    {
+      label: t('emailContactLabel'),
+      value: 'aidsmo@aidsmo.org',
+      href: 'mailto:aidsmo@aidsmo.org',
+      icon: LuMail,
+      dir: 'ltr' as const,
+    },
+    {
+      label: t('addressLabel'),
+      value: t('addressValue'),
+      href: 'https://maps.google.com/?q=33.8511,-6.9863',
+      icon: LuMapPin,
+      external: true,
+    },
+  ];
+
+  const quickActions = [
+    { label: t('exploreLibrary'), href: '/', icon: LuBookOpen },
+    { label: t('startSearch'), href: '/#search', icon: LuSearch },
+  ];
 
   const validateEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -94,12 +98,12 @@ const Footer = () => {
     setError('');
 
     if (!email.trim()) {
-      setError('يرجى إدخال البريد الإلكتروني');
+      setError(t('errorRequired'));
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('يرجى إدخال بريد إلكتروني صحيح');
+      setError(t('errorInvalid'));
       return;
     }
 
@@ -110,14 +114,14 @@ const Footer = () => {
       setIsSuccess(true);
       setEmail('');
     } catch {
-      setError('حدث خطأ، يرجى المحاولة مرة أخرى');
+      setError(t('errorGeneric'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <footer dir="rtl" className="relative overflow-hidden bg-[#F7F0E1] text-[#0A2540]">
+    <footer dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] text-[#0A2540]">
       <Image
         src="/background-01.png"
         alt=""
@@ -142,24 +146,24 @@ const Footer = () => {
         <section className="grid gap-7 rounded-[14px] border border-[#C6A346]/35 bg-white/88 p-5 shadow-[0_22px_58px_rgba(10,37,64,0.1)] backdrop-blur-sm md:p-7 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div>
             <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#C6A346]">
-              النشرة البريدية
+              {t('newsletterKicker')}
             </p>
             <h2 className="academic-heading mt-3 text-3xl leading-tight md:text-4xl">
-              ابقَ على اتصال بآخر مستجدات المكتبة الرقمية
+              {t('newsletterHeading')}
             </h2>
             <p className="mt-4 max-w-2xl font-academic text-lg leading-relaxed text-[#475569]">
-              تصلك أحدث المجلات والتقارير والإصدارات فور نشرها، في مساحة واحدة مختصرة ومباشرة.
+              {t('newsletterSubtitle')}
             </p>
 
             <div className="mt-6 max-w-2xl">
               {isSuccess ? (
                 <div className="rounded-[14px] border border-[#C6A346]/35 bg-[#FFF8E1] p-4 text-center font-bold text-[#003652]">
-                  تم الاشتراك بنجاح. شكرا لك.
+                  {t('subscribeSuccess')}
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate>
                   <label htmlFor="footer-newsletter-email" className="sr-only">
-                    البريد الإلكتروني
+                    {t('emailLabel')}
                   </label>
                   <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="flex-1">
@@ -172,8 +176,9 @@ const Footer = () => {
                           setEmail(event.target.value);
                           if (error) setError('');
                         }}
-                        className="h-12 w-full rounded-full border border-[#C6A346]/35 bg-[#FFFCF4] px-4 text-right text-[#0A2540] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C6A346] focus:outline-none focus:ring-2 focus:ring-[#C6A346]/30"
-                        placeholder="أدخل بريدك الإلكتروني"
+                        dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                        className={`h-12 w-full rounded-full border border-[#C6A346]/35 bg-[#FFFCF4] px-4 ${locale === 'ar' ? 'text-right' : 'text-left'} text-[#0A2540] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C6A346] focus:outline-none focus:ring-2 focus:ring-[#C6A346]/30`}
+                        placeholder={t('emailPlaceholder')}
                         aria-invalid={Boolean(error)}
                         aria-describedby={error ? 'footer-newsletter-error' : undefined}
                       />
@@ -189,7 +194,7 @@ const Footer = () => {
                       disabled={isSubmitting}
                       className="engraved h-12 shrink-0 cursor-pointer rounded-full border border-[#C6A346] bg-[#C6A346] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(198,163,70,0.2)] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-white"
                     >
-                      {isSubmitting ? 'جاري الإرسال...' : 'اشترك الآن'}
+                      {isSubmitting ? t('subscribing') : t('subscribe')}
                     </button>
                   </div>
                 </form>
@@ -197,7 +202,7 @@ const Footer = () => {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
-              {['محتوى حصري', 'تحديثات مستمرة', 'مجاني 100%'].map((item) => (
+              {[t('badge1'), t('badge2'), t('badge3')].map((item) => (
                 <div key={item} className="inline-flex items-center gap-2 rounded-full border border-[#C6A346]/30 bg-[#FFF8E1] px-3 py-2 text-sm font-semibold text-[#334155]">
                   <span className="h-2 w-2 rounded-full bg-[#C6A346]" aria-hidden />
                   {item}
@@ -216,7 +221,7 @@ const Footer = () => {
                         {bookImages.map((image, index) => (
                           <Image
                             key={`${image}-${set}-${index}`}
-                            alt="صورة كتاب"
+                            alt={t('bookImageAlt')}
                             src={image}
                             width={190}
                             height={190}
@@ -238,7 +243,7 @@ const Footer = () => {
             <div className="flex flex-wrap items-center gap-4">
               <Image
                 src="/logo-3.png"
-                alt="المكتبة الرقمية"
+                alt={t('brand')}
                 width={190}
                 height={92}
                 className="h-16 w-auto object-contain"
@@ -252,7 +257,7 @@ const Footer = () => {
               >
                 <Image
                   src="/aidsmo-logo.png"
-                  alt="المنظمة العربية للتنمية الصناعية والتقييس والتعدين"
+                  alt={t('orgLogoAlt')}
                   width={150}
                   height={80}
                   className="h-12 w-auto object-contain transition duration-300 group-hover/logo:scale-[1.03]"
@@ -261,7 +266,7 @@ const Footer = () => {
             </div>
 
             <p className="mt-5 max-w-xl font-academic text-lg leading-[1.8] text-[#475569]">
-              منصة عربية تنظم المعرفة الصناعية والتقنية وتتيحها للباحثين وصناع القرار.
+              {t('aboutText')}
             </p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -337,9 +342,9 @@ const Footer = () => {
 
         <div className="mt-5 flex flex-col gap-3 border-t border-[#C6A346]/30 pt-5 text-sm text-[#64748B] md:flex-row md:items-center md:justify-between">
           <p>
-            © {year} المنظمة العربية للتنمية الصناعية والتقييس والتعدين. جميع الحقوق محفوظة.
+            © {year} {t('copyright')}
           </p>
-          <p className="font-bold text-[#8B681C]">المكتبة الرقمية الذكية</p>
+          <p className="font-bold text-[#8B681C]">{t('brand')}</p>
         </div>
       </div>
     </footer>

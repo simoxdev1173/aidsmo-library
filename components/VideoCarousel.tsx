@@ -1,8 +1,10 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { LuChevronLeft, LuChevronRight, LuPlay } from 'react-icons/lu';
 import Image from 'next/image';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 type Video = {
   id: string;
@@ -27,6 +29,8 @@ const CARD_WIDTH = 420;
 const GAP = 24;
 
 const VideoCarousel = () => {
+  const t = useTranslations('videos');
+  const { locale } = useAppLocale();
   const [videos, setVideos] = useState<Video[]>(initialVideos);
   const [activeIndex, setActiveIndex] = useState(0);
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -84,7 +88,7 @@ const VideoCarousel = () => {
   const translateX = activeIndex * (CARD_WIDTH + GAP);
 
   return (
-    <section dir="rtl" className="relative overflow-hidden bg-[#F7F0E1] py-20 md:py-28">
+    <section dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] py-20 md:py-28">
       <Image
         src="/standardization-bg.png"
         alt=""
@@ -117,7 +121,7 @@ const VideoCarousel = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="academic-heading text-4xl leading-tight md:text-5xl"
             >
-              الفيديوهات
+              {t('heading')}
             </motion.h2>
           </div>
 
@@ -131,12 +135,14 @@ const VideoCarousel = () => {
           >
             <button
               onClick={prev}
+              aria-label={t('prevAria')}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
               <LuChevronRight size={18} />
             </button>
             <button
               onClick={next}
+              aria-label={t('nextAria')}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
               <LuChevronLeft size={18} />

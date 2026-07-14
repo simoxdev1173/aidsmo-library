@@ -1,5 +1,6 @@
 import { getTrendingLibraryRows } from '@/lib/library-data';
 import LibraryCarouselRow from './TrendingCarousel';
+import TrendingIntro from './TrendingIntro';
 
 export default async function TrendingBooks() {
   const libraryRows = await getTrendingLibraryRows();
@@ -9,7 +10,7 @@ export default async function TrendingBooks() {
   }
 
   return (
-    <section id="projects" className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24" dir="rtl">
+    <section id="projects" className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.18]"
         style={{
@@ -24,14 +25,7 @@ export default async function TrendingBooks() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-12 max-w-3xl text-center">
-          <h2 className="academic-heading text-4xl leading-tight md:text-5xl">
-            رائج في المكتبة الرقمية
-          </h2>
-          <p className="mx-auto mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#475569]">
-            رفوف متحركة تجمع العناوين الأكثر طلبا حسب قطاعات المكتبة الرئيسية، مع بطاقات كتب أكثر عمقا وسلاسة.
-          </p>
-        </div>
+        <TrendingIntro />
 
         <div className="space-y-0">
           {libraryRows.map((row) => (

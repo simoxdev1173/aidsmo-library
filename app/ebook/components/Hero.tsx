@@ -2,12 +2,14 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   LuChevronLeft,
   LuChevronRight,
   LuSearch,
 } from 'react-icons/lu';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 const AUTO_INTERVAL = 6200;
 const TRANSITION_MS = 1500;
@@ -17,29 +19,10 @@ type RippleCenter = {
   y: number;
 };
 
-const heroContent = {
-  
-  title: 'المكتبة الرقمية الذكية',
-  subtitle:
-    'منصة رقمية عربية متخصصة تعنى بجمع وتنظيم وإتاحة الدراسات الفنية والأبحاث العلمية التي تزخر بها المنظمة في مجالات الصناعة والتقييس والتعدين.',
-};
-
 const heroImages = [
-  {
-    image:
-      'hero0cover-1.png',
-    alt: 'رفوف مكتبة حديثة مليئة بالكتب',
-  },
-  {
-    image:
-      'hero0cover-2.png',
-    alt: 'ممر مكتبة جامعية مع رفوف كتب عالية',
-  },
-  {
-    image:
-      'hero0cover-4.png',
-    alt: 'كتاب مفتوح على مكتب بحث هادئ',
-  },
+  { image: 'hero0cover-1.png', altKey: 'slide1Alt' as const },
+  { image: 'hero0cover-2.png', altKey: 'slide2Alt' as const },
+  { image: 'hero0cover-4.png', altKey: 'slide3Alt' as const },
 ];
 
 const autoRippleCenters: RippleCenter[] = [
@@ -49,7 +32,7 @@ const autoRippleCenters: RippleCenter[] = [
 ];
 
 type WebGlHeroSliderProps = {
-  images: typeof heroImages;
+  images: { image: string; alt: string }[];
   fromIndex: number;
   toIndex: number;
   transitionId: number;
@@ -438,11 +421,14 @@ const WebGlHeroSlider = ({
 };
 
 const Hero = () => {
+  const t = useTranslations('hero');
+  const { locale } = useAppLocale();
   const [activeIndex, setActiveIndex] = useState(0);
   const [fromIndex, setFromIndex] = useState(0);
   const [transitionId, setTransitionId] = useState(0);
   const [rippleCenter, setRippleCenter] = useState<RippleCenter>(autoRippleCenters[0]);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const slidesWithAlt = heroImages.map((slide) => ({ image: slide.image, alt: t(slide.altKey) }));
 
   const goToSlide = useCallback(
     (targetIndex: number, center?: RippleCenter) => {
@@ -483,10 +469,10 @@ const Hero = () => {
   }, [activeIndex, goToSlide, prefersReducedMotion]);
 
   return (
-    <section className="relative overflow-hidden bg-[#0A2540] pt-24 md:pt-28" dir="rtl">
+    <section className="relative overflow-hidden bg-[#0A2540] pt-24 md:pt-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="corner-frame relative min-h-[760px] w-full overflow-hidden bg-[#0A2540] shadow-[0_28px_90px_rgba(10,37,64,0.2)]">
         <WebGlHeroSlider
-          images={heroImages}
+          images={slidesWithAlt}
           fromIndex={fromIndex}
           toIndex={activeIndex}
           transitionId={transitionId}
@@ -504,26 +490,26 @@ const Hero = () => {
             <div className="mb-8 flex items-center gap-4">
               <Image
                 src="/logo-3d-3d.png"
-                alt="المكتبة الرقمية"
+                alt={t('logoAlt')}
                 width={420}
                 height={420}
                 className="h-20 w-20 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-34"
                 priority
               />
-           
-              
+
+
             </div>
 
             <h1 className="font-academic text-5xl font-bold leading-[1.1] text-white md:text-6xl lg:text-7xl">
-             
+
              <div className='text-nowrap'>
-               <span className=" text-[#E8C96A]">المكتبة الرقمية</span>
-              <span className="text-[white] pr-3">الذكية</span>
+               <span className=" text-[#E8C96A]">{t('titleAccent')}</span>
+              <span className="text-[white] pr-3">{t('titleRest')}</span>
               </div>
             </h1>
 
             <p className="mt-8 max-w-2xl font-academic text-xl leading-[2.05] text-white/86 md:text-2xl">
-              {heroContent.subtitle}
+              {t('subtitle')}
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -531,7 +517,7 @@ const Hero = () => {
                 href="#latest-pub"
                 className="engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
               >
-                تصفح الإصدارات
+                {t('browsePublications')}
                 <LuChevronLeft className="h-4 w-4" />
               </Link>
 
@@ -539,7 +525,7 @@ const Hero = () => {
                 href="#about"
                 className="inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
               >
-                البحث حسب القطاع
+                {t('searchBySector')}
                 <LuSearch className="h-4 w-4" />
               </Link>
             </div>
@@ -549,7 +535,7 @@ const Hero = () => {
         <div className="pointer-events-none absolute inset-x-5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-between gap-4">
           <button
             type="button"
-            aria-label="Previous slide"
+            aria-label={t('prevSlide')}
             onClick={() => goToSlide(activeIndex - 1, { x: 0.16, y: 0.5 })}
             className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
@@ -558,7 +544,7 @@ const Hero = () => {
 
           <button
             type="button"
-            aria-label="Next slide"
+            aria-label={t('nextSlide')}
             onClick={() => goToSlide(activeIndex + 1, { x: 0.84, y: 0.5 })}
             className="pointer-events-auto flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
@@ -567,23 +553,23 @@ const Hero = () => {
         </div>
 
         <div className="absolute bottom-5 left-5 right-5 z-20 flex items-center justify-center gap-4">
-          
+
           <button
             type="button"
-            aria-label="الشريحة السابقة"
+            aria-label={t('prevSlide')}
             onClick={() => goToSlide(activeIndex - 1, { x: 0.16, y: 0.5 })}
             className="hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <LuChevronRight className="h-5 w-5" />
           </button>
-        
 
-          <div className="flex w-full max-w-md items-center justify-center gap-2 px-2 sm:px-6" aria-label="شرائح العرض">
+
+          <div className="flex w-full max-w-md items-center justify-center gap-2 px-2 sm:px-6" aria-label={t('slidesLabel')}>
             {heroImages.map((slide, index) => (
               <button
                 key={slide.image}
                 type="button"
-                aria-label={`عرض الصورة ${index + 1}`}
+                aria-label={`${t('showSlide')} ${index + 1}`}
                 aria-current={index === activeIndex ? 'true' : undefined}
                 onClick={() => goToSlide(index, { x: 0.5, y: 0.9 })}
                 className="hero-progress-segment h-1.5 max-w-28 flex-1 cursor-pointer overflow-hidden rounded-full bg-white/24 transition duration-300 hover:bg-white/38 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
@@ -598,7 +584,7 @@ const Hero = () => {
           </div>
               <button
             type="button"
-            aria-label="الشريحة التالية"
+            aria-label={t('nextSlide')}
             onClick={() => goToSlide(activeIndex + 1, { x: 0.84, y: 0.5 })}
             className="hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >

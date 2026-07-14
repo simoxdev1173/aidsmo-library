@@ -76,13 +76,15 @@ const children = [
   { parentSlug: "archive-league", name: "القمة العربية", slug: "archive-league-summit", order: 621, navHref: "/archive/league/summit" },
   { parentSlug: "archive-league-summit", name: "قرارات مجلس الجامعة على المستوى الوزاري", slug: "archive-league-summit-council", order: 6211, navHref: "/archive/league/summit/council" },
   { parentSlug: "archive-league-summit", name: "مجلس الجامعة على مستوى القمة", slug: "archive-league-summit-council-summit", order: 6212, navHref: "/archive/league/summit/summit-council" },
-  { parentSlug: "archive-league-summit", name: "القمة العربية الاقتصادية والاجتماعية", slug: "archive-league-summit-economic-social", order: 6213, navHref: "/archive/league/summit/economic-social" },
+  { parentSlug: "archive-league-summit", name: "قرارات القمة الاقتصادية و التنموية و الاجتماعية", slug: "archive-league-summit-economic-social", order: 6213, navHref: "/archive/league/summit/economic-social" },
   { parentSlug: "archive-league", name: "المجلس الاقتصادي والاجتماعي", slug: "archive-league-ecosoc", order: 622, navHref: "/archive/league/ecosoc" },
-  { parentSlug: "archive-league", name: "لجنة المنظمات والتنسيق", slug: "archive-league-coordination", order: 623, navHref: "/archive/league/coordination" },
+  { parentSlug: "archive-league", name: "لجنة المنظمات والتنسيق و المتابعة المنبثقة عن المجلس الاقتصادي و الاجتماعي", slug: "archive-league-coordination", order: 623, navHref: "/archive/league/coordination" },
   { parentSlug: "archive-league", name: "لجنة التنسيق العليا للعمل العربي المشترك", slug: "archive-league-joint-action", order: 624, navHref: "/archive/league/joint-action" },
   { parentSlug: "archive-league", name: "اللوائح والأنظمة", slug: "archive-league-regulations", order: 625, navHref: "/archive/league/regulations" },
   { parentSlug: "archive-league", name: "النظام الداخلي لمجلس الجامعة الدول العربية", slug: "archive-league-council-bylaws", order: 626, navHref: "/archive/league/council-bylaws" },
   { parentSlug: "archive-league", name: "ميثاق جامعة الدول العربية و ملحقاته", slug: "archive-league-charter", order: 627, navHref: "/archive/league/charter" },
+  { parentSlug: "archive-league", name: "المحكمة الإدارية", slug: "archive-league-administrative-court", order: 628, navHref: "/archive/league/administrative-court" },
+  { parentSlug: "archive-league-administrative-court", name: "النظام الأساسي و الداخلي", slug: "archive-league-administrative-court-statute", order: 6281, navHref: "/archive/league/administrative-court/statute" },
 ];
 
 const hiddenCategorySlugs = [

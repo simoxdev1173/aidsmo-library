@@ -1,9 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { IconType } from 'react-icons';
 import { FaBookOpen, FaFileAlt, FaFlask, FaNewspaper } from 'react-icons/fa';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 const useCountUp = (target: number, duration = 2000) => {
   const [value, setValue] = useState(0);
@@ -39,39 +41,19 @@ const useCountUp = (target: number, duration = 2000) => {
   return { value, ref };
 };
 
-const stats: Array<{
+const statsData: Array<{
   num: number;
   suffix: string;
-  label: string;
+  labelKey: 'magazines' | 'books' | 'studies' | 'reports';
   Icon: IconType;
 }> = [
-  {
-    num: 17,
-    suffix: '+',
-    label: 'مجلة متخصصة',
-    Icon: FaNewspaper,
-  },
-  {
-    num: 350,
-    suffix: '+',
-    label: 'كتاب رقمي',
-    Icon: FaBookOpen,
-  },
-  {
-    num: 140,
-    suffix: '+',
-    label: 'بحث ودراسة',
-    Icon: FaFlask,
-  },
-  {
-    num: 90,
-    suffix: '+',
-    label: 'تقرير صناعي',
-    Icon: FaFileAlt,
-  },
+  { num: 17, suffix: '+', labelKey: 'magazines', Icon: FaNewspaper },
+  { num: 350, suffix: '+', labelKey: 'books', Icon: FaBookOpen },
+  { num: 140, suffix: '+', labelKey: 'studies', Icon: FaFlask },
+  { num: 90, suffix: '+', labelKey: 'reports', Icon: FaFileAlt },
 ];
 
-const StatCard = ({ stat, index }: { stat: (typeof stats)[number]; index: number }) => {
+const StatCard = ({ stat, index, label }: { stat: (typeof statsData)[number]; index: number; label: string }) => {
   const { value, ref } = useCountUp(stat.num, 2300);
   const Icon = stat.Icon;
 
@@ -96,7 +78,7 @@ const StatCard = ({ stat, index }: { stat: (typeof stats)[number]; index: number
           </div>
 
           <p className="mt-6 text-xl font-bold leading-relaxed text-[#003652]">
-            {stat.label}
+            {label}
           </p>
 
           <div className="mt-8 flex items-baseline justify-center gap-1" dir="ltr">
@@ -114,8 +96,11 @@ const StatCard = ({ stat, index }: { stat: (typeof stats)[number]; index: number
 };
 
 const LibraryStats = () => {
+  const t = useTranslations('stats');
+  const { locale } = useAppLocale();
+
   return (
-    <section className="relative overflow-hidden bg-[#F7F0E1] py-16 text-[#0A2540] md:py-24" dir="rtl">
+    <section className="relative overflow-hidden bg-[#F7F0E1] py-16 text-[#0A2540] md:py-24" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <Image
              src="/standardization-bg.png"
              alt=""
@@ -140,16 +125,16 @@ const LibraryStats = () => {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl text-center">
           <h2 className="academic-heading text-4xl leading-tight md:text-5xl">
-            أرقام تعكس ثراء مكتبتنا
+            {t('heading')}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#003652]">
-            حصيلة معرفية منظمة تجمع الإصدارات والدراسات والتقارير في تجربة رقمية قابلة للاستكشاف.
+            {t('subtitle')}
           </p>
         </div>
 
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 [perspective:1200px]">
-          {stats.map((stat, index) => (
-            <StatCard key={stat.label} stat={stat} index={index} />
+          {statsData.map((stat, index) => (
+            <StatCard key={stat.labelKey} stat={stat} index={index} label={t(stat.labelKey)} />
           ))}
         </div>
       </div>

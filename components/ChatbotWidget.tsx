@@ -2,10 +2,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslations } from 'next-intl';
 import { LuX, LuMic, LuSend } from 'react-icons/lu';
 import Image from 'next/image';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 const ChatbotWidget = () => {
+  const t = useTranslations('chatbotWidget');
+  const { locale } = useAppLocale();
+  const isRtl = locale === 'ar';
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   
@@ -34,7 +39,7 @@ const ChatbotWidget = () => {
   }, []);
 
   return (
-    <div dir="rtl" className="fixed bottom-6 right-6 z-50">
+    <div dir={isRtl ? 'rtl' : 'ltr'} className="fixed bottom-6 right-6 z-50">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -63,17 +68,16 @@ const ChatbotWidget = () => {
               />
               
               <div className="flex items-center gap-3">
-                
+
                 <div>
-                  <h3 className="font-bold text-white text-sm">المساعد
-                     الآلي </h3>
+                  <h3 className="font-bold text-white text-sm">{t('title')}</h3>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-                aria-label="إغلاق المحادثة"
+                aria-label={t('closeChat')}
               >
                 <LuX size={20} />
               </button>
@@ -89,13 +93,13 @@ const ChatbotWidget = () => {
                 className="flex items-start gap-3"
               >
                 <div className="h-8 w-8 rounded-full bg-[#022A4E] border border-[#C29C41]/30 flex items-center justify-center shrink-0 overflow-hidden relative">
-                  <Image src="/ai-assistant.png" alt="المساعد الذكي" width={28} height={28} className="object-contain" />
+                  <Image src="/ai-assistant.png" alt={t('assistantAlt')} width={28} height={28} className="object-contain" />
                 </div>
-                <div 
-                  className="bg-white px-4 py-3 rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed"
+                <div
+                  className={`bg-white px-4 py-3 shadow-sm text-sm leading-relaxed rounded-2xl ${isRtl ? 'rounded-tr-none' : 'rounded-tl-none'}`}
                   style={{ color: '#022A4E' }}
                 >
-                  أهلاً بك! أنا مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟
+                  {t('welcomeMessage')}
                 </div>
               </motion.div>
             </div>
@@ -110,9 +114,9 @@ const ChatbotWidget = () => {
                 }}
               >
                 {/* Audio Button */}
-                <button 
+                <button
                   className="p-2.5 text-[#0369A1] hover:text-[#C29C41] hover:bg-[#0369A1]/5 rounded-xl transition-colors shrink-0"
-                  aria-label="إدخال صوتي"
+                  aria-label={t('voiceInput')}
                 >
                   <LuMic size={20} />
                 </button>
@@ -122,14 +126,15 @@ const ChatbotWidget = () => {
                   ref={textareaRef}
                   value={message}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
-                  placeholder="اكتب رسالتك هنا..."
+                  placeholder={t('placeholder')}
+                  dir={isRtl ? 'rtl' : 'ltr'}
                   className="flex-1 bg-transparent border-none outline-none resize-none text-sm py-2.5 px-1 max-h-[120px]"
                   style={{ color: '#022A4E', minHeight: '44px' }}
                   rows={1}
                 />
 
                 {/* Send Button */}
-                <motion.button 
+                <motion.button
                   whileTap={{ scale: 0.95 }}
                   className="p-2.5 rounded-xl shrink-0 transition-colors flex items-center justify-center"
                   style={{
@@ -137,7 +142,7 @@ const ChatbotWidget = () => {
                     color: message.trim() ? '#0a1628' : '#94a3b8',
                     cursor: message.trim() ? 'pointer' : 'default'
                   }}
-                  aria-label="Send Message"
+                  aria-label={t('sendMessage')}
                 >
                   <LuSend size={18} className="rtl:-scale-x-100" />
                 </motion.button>
@@ -157,7 +162,7 @@ const ChatbotWidget = () => {
           background: 'linear-gradient(135deg, #022A4E 0%, #034582 100%)',
           border: '2px solid #C29C41',
         }}
-        aria-label="Toggle Chat"
+        aria-label={t('toggleChat')}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -180,7 +185,7 @@ const ChatbotWidget = () => {
               className="relative"
             >
                
-                  <Image src="/ai-assistant.png" alt="المساعد الذكي" width={52} height={52} className="object-contain" />
+                  <Image src="/ai-assistant.png" alt={t('assistantAlt')} width={52} height={52} className="object-contain" />
                 
               {/* Notification dot */}
               <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">

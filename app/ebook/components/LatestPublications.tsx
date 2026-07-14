@@ -2,43 +2,52 @@
 
 import React from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Book } from "./subComponents/Book";
+import { useAppLocale } from "@/lib/i18n/LocaleProvider";
 
-const latestBooks = [
+const latestBooksData = [
   {
     id: 1,
-    title: "التنمية الصناعية العربية",
-    category: "الصناعة",
+    titleKey: "book1Title",
+    categoryKey: "book1Category",
     images: ["/industry-covers/b-3.jpg", "/industry-covers/b-3-1.jpg", "/industry-covers/b-3-2.jpg"],
     spineColor: "#0369a1",
   },
   {
     id: 2,
-    title: "التنمية الصناعية العربية",
-    category: "التقييس",
+    titleKey: "book2Title",
+    categoryKey: "book2Category",
     images: ["/latest-cover/b-4.png", "/bookCovers/i-2-2.png", "/bookCovers/i-2-3.png"],
     spineColor: "#003652",
   },
   {
     id: 3,
-    title: "إعادة تأهيل المناجم والمحاجر القديمة",
-    category: "التعدين",
+    titleKey: "book3Title",
+    categoryKey: "book3Category",
     images: ["/latest-cover/b-1.png", "/latest-cover/b-2.png", "/latest-cover/b-3.png"],
     spineColor: "#003652",
   },
-];
+] as const;
 
 const LatestPublications = () => {
+  const t = useTranslations("latestPublications");
+  const { locale } = useAppLocale();
+  const latestBooks = latestBooksData.map((book) => ({
+    ...book,
+    title: t(book.titleKey),
+    category: t(book.categoryKey),
+  }));
+
   return (
-    <section className="relative overflow-hidden bg-[#F8F6ED] py-20 md:py-28" dir="rtl">
-   
-    
+    <section className="relative overflow-hidden bg-[#F8F6ED] py-20 md:py-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+
 
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
-            أحدث الإصدارات
+            {t('heading')}
           </h2>
 
           <p className="mt-5 flex flex-wrap items-center justify-center gap-3 text-sm font-semibold tracking-wide text-[#64748B]">
@@ -76,7 +85,7 @@ const LatestPublications = () => {
                   backOfCover={
                     <Image
                       src={book.images[1]}
-                      alt={`صفحة داخلية من ${book.title}`}
+                      alt={`${t('innerPageAlt')} ${book.title}`}
                       width={320}
                       height={480}
                       className="h-full w-full object-cover opacity-90"
@@ -85,7 +94,7 @@ const LatestPublications = () => {
                   content={
                     <Image
                       src={book.images[2]}
-                      alt={`محتوى ${book.title}`}
+                      alt={`${t('contentAlt')} ${book.title}`}
                       width={320}
                       height={480}
                       className="h-full w-full object-cover"

@@ -2,12 +2,14 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import {
   LuBookOpen,
   LuChevronLeft,
   LuMessageCircle,
   LuSparkles,
 } from 'react-icons/lu';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 const primaryButton =
   'engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-8 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#FFF8E8]';
@@ -22,10 +24,13 @@ function BrassDivider() {
 }
 
 function ChatbotVisualCard() {
+  const t = useTranslations('chatbotCta');
+  const { locale } = useAppLocale();
+  const isRtl = locale === 'ar';
   const books = [
-    { title: 'إدارة المعرفة', cover: '/bookCovers/i-2-1.png' },
-    { title: 'رأس المال الفكري', cover: '/latest-cover/b-4.png' },
-    { title: 'التحول الرقمي', cover: '/trendingSection/t-7.png' },
+    { title: t('book1'), cover: '/bookCovers/i-2-1.png' },
+    { title: t('book2'), cover: '/latest-cover/b-4.png' },
+    { title: t('book3'), cover: '/trendingSection/t-7.png' },
   ];
 
   return (
@@ -58,31 +63,31 @@ function ChatbotVisualCard() {
         ))}
       </div>
 
-      <div className="relative z-10 flex h-full flex-col justify-between p-7 text-right md:p-8">
+      <div className={`relative z-10 flex h-full flex-col justify-between p-7 md:p-8 ${isRtl ? 'text-right' : 'text-left'}`}>
         <div>
           <h3 className="max-w-xs font-academic text-xl font-bold leading-[1.45] text-white md:text-2xl">
-            هنا، المعرفة تجد إجاباتها.
+            {t('visualHeading')}
           </h3>
 
           <p className="mt-5 max-w-xs font-academic text-xs font-bold leading-relaxed text-[#E8C96A]">
-            ذكاء اصطناعي يفهم أسئلتك ويصل بك إلى ما تبحث عنه
+            {t('visualTag')}
           </p>
         </div>
 
-        <div className="mr-auto w-full max-w-[330px] rounded-[28px] border border-sky-300/32 bg-sky-300/[0.08] p-4 shadow-[0_0_44px_rgba(56,189,248,0.28)] backdrop-blur-md">
+        <div className={`w-full max-w-[330px] rounded-[28px] border border-sky-300/32 bg-sky-300/[0.08] p-4 shadow-[0_0_44px_rgba(56,189,248,0.28)] backdrop-blur-md ${isRtl ? 'mr-auto' : 'ml-auto'}`}>
 
 
           <div className="space-y-2.5">
             <div className="rounded-xl bg-white/88 px-3 py-2 text-xs font-semibold leading-relaxed text-[#0A2540]">
-              مرحباً، كيف يمكنني مساعدتك؟
+              {t('chatGreeting')}
             </div>
 
-            <div className="mr-auto max-w-[86%] rounded-xl bg-[#0B4E84]/88 px-3 py-2 text-xs font-semibold leading-relaxed text-white">
-              أريد كتباً في مجال معلومات صناعية
+            <div className={`max-w-[86%] rounded-xl bg-[#0B4E84]/88 px-3 py-2 text-xs font-semibold leading-relaxed text-white ${isRtl ? 'mr-auto' : 'ml-auto'}`}>
+              {t('chatUserMsg')}
             </div>
 
             <div className="rounded-xl bg-white/88 px-3 py-2 text-xs font-semibold leading-relaxed text-[#0A2540]">
-              إليك بعض الإصدارات المقترحة في مجال المعلومات الصناعية
+              {t('chatBotReply')}
             </div>
           </div>
 
@@ -114,12 +119,15 @@ function ChatbotVisualCard() {
 }
 
 export default function ChatbotCTA() {
+  const t = useTranslations('chatbotCta');
+  const { locale } = useAppLocale();
+
   return (
     <section
       id="smart-assistant"
       className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24"
-      dir="rtl"
-      aria-label="المساعد الذكي في المكتبة الرقمية"
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
+      aria-label={t('sectionLabel')}
     >
       <Image
         src="/background-01.png"
@@ -136,14 +144,14 @@ export default function ChatbotCTA() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-9 text-right">
+        <div className={`mb-9 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
           <h2 className="academic-heading text-3xl leading-tight text-[#0A2540] md:text-4xl">
-            مساعدك الذكي في المكتبة الرقمية
+            {t('heading')}
           </h2>
 
 
           <p className="mt-4 font-academic text-base leading-relaxed text-[#475569] md:text-lg">
-            تجربة بحث وإرشاد متقدمة تعينك على الوصول إلى المعرفة بسهولة وموثوقية
+            {t('subtitle')}
           </p>
         </div>
 
@@ -169,15 +177,15 @@ export default function ChatbotCTA() {
            
 
               <h3 className="mt-6 font-academic text-3xl font-bold leading-tight text-[#0A2540] md:text-4xl">
-                المساعد الذكي للمكتبة
+                {t('mainTitle')}
               </h3>
 
               <p className="mt-5 max-w-lg font-academic text-base leading-loose text-[#475569] md:text-lg">
-                اطرح أسئلتك حول الإصدارات والقطاعات واحصل على إرشاد سريع ودقيق داخل المكتبة الرقمية.
+                {t('mainDesc')}
               </p>
 
               <Link href="#chatbot" className={`${primaryButton} mt-8`}>
-                ابدأ المحادثة
+                {t('startChat')}
               </Link>
             </div>
           </div>
@@ -194,15 +202,15 @@ export default function ChatbotCTA() {
 
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
               <h3 className="font-academic text-2xl font-bold text-[#E8C96A]">
-                بحث فوري
+                {t('instantSearchTitle')}
               </h3>
 
               <p className="mt-5 max-w-[15rem] font-academic text-base leading-loose text-white/82">
-                احصل على إجابات دقيقة من مصادر موثوقة في المكتبة.
+                {t('instantSearchDesc')}
               </p>
 
               <span className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#E8C96A] transition duration-300 group-hover:text-white">
-                استكشف الإصدارات
+                {t('exploreIssues')}
                 <LuChevronLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
               </span>
             </div>
@@ -226,11 +234,11 @@ export default function ChatbotCTA() {
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
 
               <h3 className="font-academic text-2xl font-bold text-[#E8C96A]">
-                اقتراحات ذكية
+                {t('smartSuggestionsTitle')}
               </h3>
 
               <p className="mt-4 max-w-sm font-academic text-base leading-loose text-white/82">
-                توصيات مخصصة بناءً على اهتماماتك واحتياجاتك البحثية.
+                {t('smartSuggestionsDesc')}
               </p>
             </div>
           </Link>
@@ -248,11 +256,11 @@ export default function ChatbotCTA() {
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
 
               <h3 className="font-academic text-2xl font-bold text-[#E8C96A]">
-                وصول أسرع للمعلومة
+                {t('fasterAccessTitle')}
               </h3>
 
               <p className="mt-4 max-w-sm font-academic text-base leading-loose text-white/86">
-                مسارات مختصرة للوصول إلى الكتب والدوريات والبيانات ذات الصلة.
+                {t('fasterAccessDesc')}
               </p>
             </div>
           </Link>
@@ -268,11 +276,11 @@ export default function ChatbotCTA() {
 
               <div>
                 <h3 className="font-academic text-lg font-bold text-[#0A2540]">
-                  تجربة ذكية. معرفة أعمق.
+                  {t('stripTitle')}
                 </h3>
 
                 <p className="mt-1 font-academic text-base leading-relaxed text-[#475569]">
-                  المكتبة الرقمية بين يديك، والمساعد الذكي معك في كل خطوة.
+                  {t('stripDesc')}
                 </p>
               </div>
             </div>
@@ -281,7 +289,7 @@ export default function ChatbotCTA() {
               href="#chatbot"
               className="inline-flex h-11 items-center justify-center gap-3 rounded-full border border-[#C29C41]/45 bg-white/40 px-6 text-sm font-bold text-[#8B681C] transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
             >
-              كيف يعمل المساعد الذكي؟
+              {t('howItWorks')}
               <LuChevronLeft className="h-4 w-4" />
             </Link>
           </div>

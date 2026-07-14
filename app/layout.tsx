@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Amiri, Cinzel, Manrope, Readex_Pro } from 'next/font/google'
 import './globals.css'
 import SiteChrome from '@/components/SiteChrome';
+import LocaleProvider from '@/lib/i18n/LocaleProvider';
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
@@ -42,9 +43,11 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${manrope.variable} ${readexPro.variable} ${amiri.variable} ${cinzel.variable} font-arabic academic-atmosphere`}>
-        <SiteChrome>
-          {children}
-        </SiteChrome>
+        <LocaleProvider>
+          <SiteChrome>
+            {children}
+          </SiteChrome>
+        </LocaleProvider>
       </body>
     </html>
   )

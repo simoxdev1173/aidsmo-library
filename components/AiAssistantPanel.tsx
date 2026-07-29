@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { HiOutlineArrowLeft, HiOutlineSparkles } from 'react-icons/hi2';
+import { HiOutlineArrowLeft } from 'react-icons/hi2';
 import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 
 export default function AiAssistantPanel({
@@ -56,9 +56,6 @@ export default function AiAssistantPanel({
                 prompt={prompt}
                 className="group/prompt flex w-full items-center gap-3 rounded-2xl border border-white/12 bg-white/[0.06] px-5 py-3.5 text-right shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/55 hover:bg-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/60 active:translate-y-0"
               >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#C29C41]/40 bg-[#C29C41]/15 text-[#E8C96A] transition duration-200 group-hover/prompt:border-[#071D2F]/30 group-hover/prompt:bg-[#071D2F]/15 group-hover/prompt:text-[#071D2F]">
-                  <HiOutlineSparkles className="h-4 w-4" />
-                </span>
                 <span className="flex-1 text-sm font-bold leading-6 text-white/85 transition duration-200 group-hover/prompt:text-[#071D2F]">
                   {prompt}
                 </span>

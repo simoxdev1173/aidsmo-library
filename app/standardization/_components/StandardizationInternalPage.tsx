@@ -4,17 +4,15 @@ import { notFound } from 'next/navigation';
 import {
   HiOutlineAdjustmentsHorizontal,
   HiOutlineArrowLeft,
-  HiOutlineBookOpen,
-  HiOutlineCalendarDays,
-  HiOutlineChevronDown,
-  HiOutlineDocumentText,
-  HiOutlineLanguage,
   HiOutlineMagnifyingGlass,
   HiOutlineSparkles,
 } from 'react-icons/hi2';
 import { getStandardizationPageData } from '@/lib/library-data';
 import { categoryPath } from '@/lib/library-labels';
 import AiAssistantPanel from '@/components/AiAssistantPanel';
+import FilterSelect from '@/components/library/FilterSelect';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 type StandardizationPageConfig = {
   slug: string | string[];
@@ -54,39 +52,9 @@ const sortOptions = [
   { value: 'title', label: 'العنوان' },
 ];
 
-function SelectField({
-  name,
-  value,
-  options,
-  label,
-}: {
-  name: string;
-  value: string;
-  label: string;
-  options: { value: string; label: string }[];
-}) {
-  return (
-    <label className="group relative block">
-      <span className="pointer-events-none absolute right-3 top-2 text-[0.65rem] font-bold text-[#C29C41] transition duration-200 group-focus-within:text-[#0369A1]">
-        {label}
-      </span>
-      <select
-        name={name}
-        defaultValue={value}
-        className="h-14 w-full cursor-pointer appearance-none rounded-full border border-[#D9E3EE] bg-white px-4 pb-2 pt-6 text-sm font-bold text-[#334155] shadow-sm outline-none transition duration-200 hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>{option.label}</option>
-        ))}
-      </select>
-      <HiOutlineChevronDown className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64748B] transition duration-200 group-focus-within:text-[#0369A1]" />
-    </label>
-  );
-}
-
-// Poster cover: the publication's cover IS the top of the card, edge to edge —
-// no containing box. A base scrim carries the section label; the whole card
-// lifts and the cover zooms under a light sweep on hover.
+// The publication's cover IS the card — no surrounding box. It carries its
+// own rounded corners and shadow like a physical book resting on the page,
+// and lifts with a light sweep on hover.
 function CardCover({
   src,
   alt,
@@ -101,29 +69,27 @@ function CardCover({
   optimize: boolean;
 }) {
   return (
-    <div className="relative aspect-[3/4] overflow-hidden bg-[#EAF3F8]">
+    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#EAF3F8] shadow-[0_14px_34px_rgba(10,37,64,0.16)] ring-1 ring-black/5 transition duration-300 ease-out group-hover:-translate-y-1.5 group-hover:shadow-[0_26px_52px_rgba(10,37,64,0.24)] group-hover:ring-[#C29C41]/40">
       <Image
         src={src}
         alt={alt}
         fill
-        sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 90vw"
+        sizes="(min-width: 1280px) 300px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
         className="object-cover transition duration-700 ease-out group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         unoptimized={optimize}
       />
-      {/* hairline inset frame keeps the cover crisp against the card */}
-      <div className="pointer-events-none absolute inset-0 z-10 ring-1 ring-inset ring-black/5 transition duration-300 group-hover:ring-[#C29C41]/35" aria-hidden />
       {/* light sweep on hover */}
       <div className="pointer-events-none absolute -inset-y-10 -left-24 z-20 w-16 rotate-12 bg-white/25 blur-md transition duration-[900ms] ease-out group-hover:translate-x-[145%] motion-reduce:hidden" aria-hidden />
       {/* base scrim */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-2/5 bg-gradient-to-t from-[#071D2F]/88 via-[#071D2F]/24 to-transparent" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-[#071D2F]/92 via-[#071D2F]/28 to-transparent" aria-hidden />
 
-      <span className="absolute inset-x-4 bottom-3 z-20 block max-w-[calc(100%-2rem)] truncate rounded-full bg-white/12 px-3 py-1 text-[0.7rem] font-bold text-white shadow-sm ring-1 ring-white/25 backdrop-blur-md">
+      <span className="absolute inset-x-3 bottom-2.5 z-20 block max-w-[calc(100%-1.5rem)] truncate text-[0.68rem] font-bold text-white/90 drop-shadow-[0_1px_6px_rgba(7,29,47,0.9)]">
         {category}
       </span>
 
       {featured && (
-        <span className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-full bg-[#E8C96A] px-3 py-1.5 text-xs font-bold text-[#071D2F] shadow-[0_6px_16px_rgba(232,201,106,0.4)]">
-          <HiOutlineSparkles className="h-4 w-4" />
+        <span className="absolute end-2.5 top-2.5 z-20 inline-flex items-center gap-1 rounded-full bg-[#E8C96A] px-2.5 py-1 text-[0.68rem] font-bold text-[#071D2F] shadow-[0_6px_16px_rgba(232,201,106,0.4)]">
+          <HiOutlineSparkles className="h-3.5 w-3.5" />
           مميز
         </span>
       )}
@@ -172,8 +138,6 @@ export default async function StandardizationInternalPage({
 
   const activeSort = filters.sort || 'newest';
   const hasFilters = Boolean(filters.q || filters.tag || filters.year || filters.sort);
-  const featuredCount = data.entries.filter((entry) => entry.featured).length;
-  const downloadableCount = data.entries.filter((entry) => entry.filePath).length;
 
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#0A2540]">
@@ -199,83 +163,76 @@ export default async function StandardizationInternalPage({
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-5 rounded-[18px] border border-[#D9E3EE] bg-white p-4 shadow-[0_18px_55px_rgba(10,37,64,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
-          <form className="grid gap-3 md:grid-cols-[1.25fr_190px_190px_180px_auto]">
-            <label className="relative block">
-              <span className="sr-only">بحث</span>
-              <HiOutlineMagnifyingGlass className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#C29C41]" />
-              <input
-                name="q"
-                defaultValue={filters.q ?? ''}
-                placeholder="ابحث في العنوان، المؤلف، الناشر، أو الوصف"
-                className="h-14 w-full rounded-full border border-[#D9E3EE] bg-white pr-11 pl-4 text-sm font-semibold shadow-sm outline-none transition duration-200 placeholder:text-[#64748B] hover:border-[#C29C41]/55 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/15"
-              />
-            </label>
+        <div className="rounded-[20px] border border-[#E3EAF3] bg-white p-5 shadow-[0_18px_55px_rgba(10,37,64,0.07)]">
+          <form className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
+            <div className="space-y-1.5">
+              <label htmlFor="library-search" className="block ps-1 text-[0.68rem] font-bold text-[#8A6A1D]">
+                بحث
+              </label>
+              <div className="relative">
+                <HiOutlineMagnifyingGlass className="pointer-events-none absolute end-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C29C41]" />
+                <Input
+                  id="library-search"
+                  name="q"
+                  defaultValue={filters.q ?? ''}
+                  placeholder="ابحث في العنوان، المؤلف، الناشر، أو الوصف"
+                  className="pe-11"
+                />
+              </div>
+            </div>
 
-            <SelectField
-              name="tag"
-              value={filters.tag ?? ''}
-              label="الوسم"
-              options={[{ value: '', label: 'كل الوسوم' }, ...data.facets.tags.map((tag) => ({ value: tag, label: tag }))]}
-            />
-
-            <SelectField
+            <FilterSelect
               name="year"
-              value={filters.year ?? ''}
               label="السنة"
-              options={[{ value: '', label: 'كل السنوات' }, ...data.facets.years.map((year) => ({ value: year, label: year }))]}
+              defaultValue={filters.year ?? ''}
+              options={[
+                { value: '', label: 'كل السنوات' },
+                ...data.facets.years.map((year) => ({ value: year, label: year })),
+              ]}
             />
 
-            <SelectField
+            <FilterSelect
               name="sort"
-              value={activeSort}
               label="الترتيب"
+              defaultValue={activeSort}
               options={sortOptions}
             />
 
-            <button type="submit" className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#0369A1] px-6 text-sm font-bold text-white shadow-[0_10px_24px_rgba(3,105,161,0.18)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#003652] focus:outline-none focus:ring-2 focus:ring-[#C29C41] active:translate-y-0">
-              <HiOutlineAdjustmentsHorizontal className="h-5 w-5" />
-              تطبيق
-            </button>
+            <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1">
+              <Button type="submit" size="lg" className="h-13 flex-1 lg:flex-none">
+                <HiOutlineAdjustmentsHorizontal className="h-4 w-4" />
+                تطبيق
+              </Button>
+
+              {hasFilters && (
+                <Button asChild variant="outline" size="lg" className="h-13">
+                  <Link
+                    href={
+                      config.resetHref ??
+                      data.category.navHref ??
+                      `/catalog/${data.category.slug}`
+                    }
+                  >
+                    مسح
+                  </Link>
+                </Button>
+              )}
+            </div>
           </form>
-
-          {hasFilters && (
-            <Link href={config.resetHref ?? data.category.navHref ?? `/catalog/${data.category.slug}`} className="inline-flex h-14 items-center justify-center rounded-full border border-[#C29C41]/45 px-5 text-sm font-bold text-[#8A6A1D] transition duration-200 hover:bg-[#FFF8E1]">
-              مسح الفلتر
-            </Link>
-          )}
-        </div>
-
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <div className="rounded-[18px] border border-[#D9E3EE] bg-white p-5 shadow-[0_10px_30px_rgba(10,37,64,0.05)]">
-            <p className="text-xs font-bold text-[#C29C41]">المدخلات</p>
-            <p className="mt-2 text-3xl font-bold text-[#003652]">{data.entries.length}</p>
-          </div>
-          <div className="rounded-[18px] border border-[#D9E3EE] bg-white p-5 shadow-[0_10px_30px_rgba(10,37,64,0.05)]">
-            <p className="text-xs font-bold text-[#C29C41]">المميزة</p>
-            <p className="mt-2 text-3xl font-bold text-[#003652]">{featuredCount}</p>
-          </div>
-          <div className="rounded-[18px] border border-[#D9E3EE] bg-white p-5 shadow-[0_10px_30px_rgba(10,37,64,0.05)]">
-            <p className="text-xs font-bold text-[#C29C41]">ملفات قابلة للاطلاع</p>
-            <p className="mt-2 text-3xl font-bold text-[#003652]">{downloadableCount}</p>
-          </div>
         </div>
 
         {data.entries.length > 0 ? (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-x-5 gap-y-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {data.entries.map((entry, index) => {
-              const meta = [
-                { icon: HiOutlineDocumentText, label: fieldValue(entry.tag) },
-                { icon: HiOutlineCalendarDays, label: fieldValue(entry.year) },
-                { icon: HiOutlineLanguage, label: fieldValue(entry.language) },
-                { icon: HiOutlineBookOpen, label: entry.pageCount ? `${entry.pageCount} صفحة` : null },
-              ].filter((item): item is { icon: typeof HiOutlineDocumentText; label: string } => Boolean(item.label));
+              const metaLine = [fieldValue(entry.year), entry.pageCount ? `${entry.pageCount} صفحة` : null].filter(
+                (part): part is string => Boolean(part),
+              );
 
               return (
                 <Link
                   key={entry.id}
                   href={`/book/${entry.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-[18px] border border-[#D9E3EE] bg-white shadow-[0_14px_42px_rgba(10,37,64,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-[#C29C41]/60 hover:shadow-[0_30px_74px_rgba(10,37,64,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
+                  className="group flex flex-col focus-visible:outline-none"
                 >
                   <CardCover
                     src={entryImage(entry, index)}
@@ -285,35 +242,22 @@ export default async function StandardizationInternalPage({
                     optimize={Boolean(entry.coverImagePath)}
                   />
 
-                  <div className="flex flex-1 flex-col p-5">
-                    <h2 className="line-clamp-2 min-h-[4rem] text-xl font-bold leading-8 text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+                  <div className="flex flex-1 flex-col pt-4">
+                    <h2 className="line-clamp-2 min-h-[3rem] text-[0.95rem] font-bold leading-[1.6] text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
                       {entry.title}
                     </h2>
-                    {entry.description && (
-                      <p className="mt-3 line-clamp-2 text-sm leading-7 text-[#64748B]">{entry.description}</p>
+
+                    {metaLine.length > 0 && (
+                      <p className="mt-1.5 text-[0.72rem] font-semibold text-[#8B98A8]">
+                        {metaLine.join(' · ')}
+                      </p>
                     )}
 
-                    <div className="mt-auto pt-5">
-                      {meta.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {meta.map((item) => {
-                            const Icon = item.icon;
-                            return (
-                              <span key={item.label} className="inline-flex items-center gap-1 rounded-full border border-[#D9E3EE] bg-[#F8FAFC] px-3 py-1.5 text-xs font-bold text-[#475569]">
-                                <Icon className="h-4 w-4 text-[#0369A1]" />
-                                {item.label}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      <div className="mt-5 border-t border-[#EEF3F8] pt-4">
-                        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#0369A1]">
-                          عرض التفاصيل
-                          <HiOutlineArrowLeft className="h-4 w-4 transition duration-200 group-hover:-translate-x-1" />
-                        </span>
-                      </div>
+                    <div className="mt-3">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#f1dda0] to-[#C29C41] px-4 py-2 text-[0.72rem] font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_16px_rgba(194,156,65,0.24)] transition-all duration-300 group-hover:gap-2.5 group-hover:brightness-110 group-focus-visible:ring-2 group-focus-visible:ring-[#0369A1] group-focus-visible:ring-offset-2">
+                        عرض المحتوى
+                        <HiOutlineArrowLeft className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
+                      </span>
                     </div>
                   </div>
                 </Link>
@@ -326,7 +270,7 @@ export default async function StandardizationInternalPage({
               <p className="text-xs font-bold text-[#C29C41]">لا توجد نتائج منشورة</p>
               <h2 className="mt-3 text-3xl font-bold text-[#003652]">هذه الصفحة جاهزة لاستقبال مدخلات لوحة التحكم</h2>
               <p className="mt-4 max-w-2xl text-base leading-8 text-[#64748B]">
-                عند إضافة مدخل منشور ضمن هذا التصنيف ستظهر بطاقة تعرض الغلاف، العنوان، الوصف، الوسم، السنة، اللغة، عدد الصفحات، ورابط ملف PDF إن وجد.
+                عند إضافة مدخل منشور ضمن هذا التصنيف ستظهر بطاقة تعرض الغلاف، العنوان، الوصف، الوسم، السنة، عدد الصفحات، ورابط ملف PDF إن وجد.
               </p>
             </div>
             <div className="relative min-h-72 bg-[#EAF3F8]">

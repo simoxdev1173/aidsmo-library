@@ -365,7 +365,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
       <Link
         href={item.href ?? `#${item.id}`}
         className={cn(
-          'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-2 text-[0.82rem] font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:px-3 2xl:text-sm',
+          'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-2.5 text-[0.82rem] font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:px-4 2xl:text-sm',
           isScrolled
             ? cn('focus:ring-offset-white', isActive ? 'text-[#C29C41]' : 'text-[#0A2540] hover:text-[#C29C41]')
             : cn('focus:ring-offset-[#0A2540]', isActive ? 'text-[#E8C96A]' : 'text-white/88 hover:text-[#E8C96A]'),
@@ -531,13 +531,13 @@ const TopNavBar = () => {
     <>
       <header
         className={cn(
-          'fixed inset-x-0 z-[60] px-2 transition-all duration-500 md:px-4 2xl:px-6',
+          'fixed inset-x-0 z-[60] px-2 transition-all duration-500 md:px-3 2xl:px-4',
           isSolid ? 'top-3' : 'top-4',
         )}
       >
         <nav
           className={cn(
-            'mx-auto max-w-[92rem] overflow-x-clip rounded-[14px] border transition-all duration-500',
+            'mx-auto max-w-[108rem] overflow-x-clip rounded-[14px] border transition-all duration-500',
             isSolid
               ? 'border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
               : 'border-white/15 bg-[#0A2540]/30 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.14)] backdrop-blur-md hover:border-[#C29C41]/35 hover:bg-[#0A2540]/55',
@@ -558,7 +558,7 @@ const TopNavBar = () => {
 
               <div className={cn('hidden h-12 w-px shrink-0 lg:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
-              <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0 lg:flex">
+              <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex 2xl:gap-1.5">
                 {menuItemsData.map((item) => (
                   <NavItem key={item.id} item={item} isActive={activeSection === item.id} isScrolled={isSolid} />
                 ))}

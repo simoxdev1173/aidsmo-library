@@ -148,10 +148,10 @@ const Footer = () => {
             <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#C6A346]">
               {t('newsletterKicker')}
             </p>
-            <h2 className="academic-heading mt-3 text-3xl leading-tight md:text-4xl">
+            <h2 className="academic-heading mt-3 text-balance text-2xl leading-tight sm:text-3xl md:text-4xl">
               {t('newsletterHeading')}
             </h2>
-            <p className="mt-4 max-w-2xl font-academic text-lg leading-relaxed text-[#475569]">
+            <p className="mt-4 max-w-2xl text-pretty font-academic text-base leading-relaxed text-[#475569] sm:text-lg">
               {t('newsletterSubtitle')}
             </p>
 
@@ -192,7 +192,7 @@ const Footer = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="engraved h-12 shrink-0 cursor-pointer rounded-full border border-[#C6A346] bg-[#C6A346] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(198,163,70,0.2)] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-white"
+                      className="engraved h-12 w-full shrink-0 cursor-pointer rounded-full border border-[#C6A346] bg-[#C6A346] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(198,163,70,0.2)] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-white sm:w-auto"
                     >
                       {isSubmitting ? t('subscribing') : t('subscribe')}
                     </button>
@@ -212,7 +212,7 @@ const Footer = () => {
           </div>
 
           <div className="flex justify-center lg:justify-end">
-            <div className="h-[320px] overflow-hidden rounded-[14px] border border-[#C6A346]/28 bg-[#FFFCF4]/72 p-3 shadow-[0_16px_36px_rgba(10,37,64,0.08)]">
+            <div className="h-[280px] w-full max-w-sm overflow-hidden rounded-[14px] border border-[#C6A346]/28 bg-[#FFFCF4]/72 p-3 shadow-[0_16px_36px_rgba(10,37,64,0.08)] sm:h-[320px]">
               <div className="marquee grid grid-cols-2 place-items-center gap-3">
                 {[false, true].map((reverse) => (
                   <div key={String(reverse)} className={`${reverse ? 'marquee-reverse ' : ''}flex flex-col gap-5 overflow-hidden`}>
@@ -226,7 +226,7 @@ const Footer = () => {
                             width={190}
                             height={190}
                             sizes="190px"
-                            className="w-40 rounded-[14px] border border-[#C6A346]/25 object-cover shadow-sm md:w-44"
+                            className="w-28 rounded-[14px] border border-[#C6A346]/25 object-cover shadow-sm sm:w-40 md:w-44"
                           />
                         ))}
                       </div>

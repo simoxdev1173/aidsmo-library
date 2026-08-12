@@ -124,10 +124,10 @@ const LibraryStats = () => {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl text-center">
-          <h2 className="academic-heading text-4xl leading-tight md:text-5xl">
+          <h2 className="academic-heading text-balance text-3xl leading-tight sm:text-4xl md:text-5xl">
             {t('heading')}
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl font-academic text-xl leading-relaxed text-[#003652]">
+          <p className="mx-auto mt-5 max-w-2xl text-pretty font-academic text-lg leading-relaxed text-[#003652] sm:text-xl">
             {t('subtitle')}
           </p>
         </div>

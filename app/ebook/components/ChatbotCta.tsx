@@ -6,22 +6,11 @@ import { useTranslations } from 'next-intl';
 import {
   LuBookOpen,
   LuChevronLeft,
-  LuMessageCircle,
-  LuSparkles,
 } from 'react-icons/lu';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 const primaryButton =
-  'engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-8 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#FFF8E8]';
-
-function BrassDivider() {
-  return (
-    <div className="mt-3 flex items-center justify-end gap-3" aria-hidden>
-      <span className="h-px w-20 bg-[#C29C41]/55" />
-      <span className="h-1.5 w-1.5 rotate-45 border border-[#C29C41]" />
-    </div>
-  );
-}
+  'engraved brass-gradient inline-flex min-h-12 max-w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 py-3 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#FFF8E8] sm:px-8';
 
 function ChatbotVisualCard() {
   const t = useTranslations('chatbotCta');
@@ -63,7 +52,7 @@ function ChatbotVisualCard() {
         ))}
       </div>
 
-      <div className={`relative z-10 flex h-full flex-col justify-between p-7 md:p-8 ${isRtl ? 'text-right' : 'text-left'}`}>
+      <div className={`relative z-10 flex h-full flex-col justify-between p-5 sm:p-7 md:p-8 ${isRtl ? 'text-right' : 'text-left'}`}>
         <div>
           <h3 className="max-w-xs font-academic text-xl font-bold leading-[1.45] text-white md:text-2xl">
             {t('visualHeading')}
@@ -125,7 +114,7 @@ export default function ChatbotCTA() {
   return (
     <section
       id="smart-assistant"
-      className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24"
+      className="relative overflow-hidden bg-[#F7F0E1] py-14 sm:py-16 md:py-24"
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
       aria-label={t('sectionLabel')}
     >
@@ -145,7 +134,7 @@ export default function ChatbotCTA() {
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className={`mb-9 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
-          <h2 className="academic-heading text-3xl leading-tight text-[#0A2540] md:text-4xl">
+          <h2 className="academic-heading text-balance text-3xl leading-tight text-[#0A2540] md:text-4xl">
             {t('heading')}
           </h2>
 
@@ -157,7 +146,7 @@ export default function ChatbotCTA() {
 
         <div className="grid gap-4 lg:grid-cols-12 lg:grid-rows-[250px_250px]">
           {/* Main cream card */}
-          <div className="relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-7 text-center shadow-[0_18px_48px_rgba(10,37,64,0.1)] md:p-9 lg:col-span-5">
+          <div className="relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-5 text-center shadow-[0_18px_48px_rgba(10,37,64,0.1)] sm:p-7 md:p-9 lg:col-span-5">
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.18]"
               style={{

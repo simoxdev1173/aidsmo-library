@@ -35,6 +35,9 @@ export default function LocaleProvider({ children }: { children: React.ReactNode
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === 'ar' || stored === 'en') {
+      // The persisted preference is intentionally restored after hydration so
+      // the server and first client render both start with the Arabic default.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocaleState(stored);
     }
   }, []);

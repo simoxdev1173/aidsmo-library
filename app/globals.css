@@ -29,13 +29,38 @@
   --font-display: var(--font-cinzel);
 }
 
+html {
+  min-width: 0;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 /* Base font for Arabic */
 body {
+  min-width: 0;
+  min-height: 100dvh;
+  overflow-x: clip;
   font-family: var(--font-readex), 'Readex Pro', sans-serif;
   background:
     radial-gradient(ellipse at top, rgba(3, 105, 161, 0.1), transparent 48%),
     linear-gradient(180deg, #ffffff 0%, var(--library-paper-blue) 44%, #ffffff 100%);
   color: var(--library-ink);
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 /* Use Manrope for English/numbers if needed */

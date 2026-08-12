@@ -40,13 +40,13 @@ const LatestPublications = () => {
   }));
 
   return (
-    <section className="relative overflow-hidden bg-[#F8F6ED] py-20 md:py-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <section className="relative overflow-hidden bg-[#F8F6ED] py-16 sm:py-20 md:py-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
 
 
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-5xl">
+        <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-16">
+          <h2 className="academic-heading mt-4 text-balance text-3xl leading-tight sm:text-4xl md:text-5xl">
             {t('heading')}
           </h2>
 
@@ -62,7 +62,7 @@ const LatestPublications = () => {
          
         </div>
 
-        <div className="flex flex-wrap justify-center gap-20 md:gap-28">
+        <div className="flex flex-wrap justify-center gap-x-14 gap-y-16 sm:gap-x-20 md:gap-x-28">
           {latestBooks.map((book ,bID) => (
             <div key={book.id} className="group flex flex-col items-center">
               <div className="relative">

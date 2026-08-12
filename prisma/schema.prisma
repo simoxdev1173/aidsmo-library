@@ -20,6 +20,12 @@ enum EntryType {
   EVENT
 }
 
+enum ReadingStatus {
+  SAVED
+  READING
+  COMPLETED
+}
+
 model AdminUser {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -27,6 +33,94 @@ model AdminUser {
   passwordHash String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+// A public site visitor account — distinct from AdminUser, which is for
+// dashboard/staff access only.
+model User {
+  id            String            @id @default(cuid())
+  email         String?           @unique
+  name          String?
+  passwordHash  String?
+  emailVerified DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  libraryItems   UserLibraryItem[]
+  shelves        UserShelf[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model UserShelf {
+  id        String            @id @default(cuid())
+  userId    String
+  name      String
+  position  Int               @default(0)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     UserLibraryItem[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId, position])
+}
+
+model UserLibraryItem {
+  id           String        @id @default(cuid())
+  userId       String
+  entryId      String
+  shelfId      String?
+  status       ReadingStatus @default(SAVED)
+  progress     Int           @default(0)
+  position     Int           @default(0)
+  lastOpenedAt DateTime?
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entry        LibraryEntry  @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  shelf        UserShelf?    @relation(fields: [shelfId], references: [id], onDelete: SetNull)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@unique([userId, entryId])
+  @@index([userId, position])
+  @@index([shelfId, position])
 }
 
 model Category {
@@ -60,6 +154,9 @@ model LibraryEntry {
   coverImagePath String?
   filePath       String?
   documentFiles  Json        @default("[]")
+  driveCoverImagePath String?
+  driveFilePath       String?
+  driveDocumentFiles  Json    @default("[]")
   publisher      String?
   author         String?
   year           String?
@@ -69,6 +166,7 @@ model LibraryEntry {
   eventEndDate   DateTime?
   eventLocation  String?
   eventImages    Json        @default("[]")
+  driveEventImages Json       @default("[]")
   status         EntryStatus @default(DRAFT)
   featured       Boolean     @default(false)
   categoryId     String
@@ -76,6 +174,7 @@ model LibraryEntry {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   publishedAt    DateTime?
+  savedBy        UserLibraryItem[]
 
   @@index([categoryId])
   @@index([status])

@@ -8,8 +8,8 @@ import VideoCarousel from "@/components/VideoCarousel"
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#F8FAFC] text-[#0A2540]">
-      <main>
+    <div className="min-h-dvh w-full min-w-0 overflow-x-clip bg-[#F8FAFC] text-[#0A2540]">
+      <main className="min-w-0">
         <section id="home">
           <Hero />
         </section>

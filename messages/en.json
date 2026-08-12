@@ -114,7 +114,7 @@
     "title": "Smart Assistant",
     "closeChat": "Close chat",
     "assistantAlt": "Smart Assistant",
-    "welcomeMessage": "Welcome! I'm the digital library assistant. Describe what you're looking for and I'll search the index and surface the relevant publications with links.",
+    "welcomeMessage": "Welcome! I'm the digital library assistant. Describe what you're looking for and I'll search the library to answer your question.",
     "voiceInput": "Voice input",
     "placeholder": "Type your message here...",
     "sendMessage": "Send",
@@ -135,8 +135,7 @@
     "pagesCount": "{count} pages",
     "relevance": "Relevance {percent}%",
     "copy": "Copy",
-    "copied": "Copied",
-    "disclaimer": "Demo preview — results come from a fixed sample dataset."
+    "copied": "Copied"
   },
   "footer": {
     "newsletterKicker": "Newsletter",

@@ -469,8 +469,8 @@ const Hero = () => {
   }, [activeIndex, goToSlide, prefersReducedMotion]);
 
   return (
-    <section className="relative overflow-hidden bg-[#0A2540] pt-24 md:pt-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <div className="corner-frame relative min-h-[760px] w-full overflow-hidden bg-[#0A2540] shadow-[0_28px_90px_rgba(10,37,64,0.2)]">
+    <section className="relative overflow-hidden bg-[#0A2540] pt-20 sm:pt-24 md:pt-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="corner-frame relative min-h-[calc(100dvh-5rem)] w-full overflow-hidden bg-[#0A2540] shadow-[0_28px_90px_rgba(10,37,64,0.2)] sm:min-h-[calc(100dvh-6rem)]">
         <WebGlHeroSlider
           images={slidesWithAlt}
           fromIndex={fromIndex}
@@ -484,7 +484,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.1),transparent_30%)]" aria-hidden />
         <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />
 
-        <div className="relative z-10 mx-auto grid min-h-[760px] max-w-7xl items-center gap-10 px-6 py-12 sm:px-10 lg:grid-cols-[0.95fr_1.05fr] lg:px-14">
+        <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-5rem)] max-w-7xl items-center gap-10 px-5 py-16 sm:min-h-[calc(100dvh-6rem)] sm:px-10 lg:grid-cols-[0.95fr_1.05fr] lg:px-14">
      
           <div className="max-w-2xl justify-self-end text-white">
             <div className="mb-8 flex items-center gap-4">
@@ -500,22 +500,21 @@ const Hero = () => {
 
             </div>
 
-            <h1 className="font-academic text-5xl font-bold leading-[1.1] text-white md:text-6xl lg:text-7xl">
+            <div className="w-fit max-w-full">
+              <h1 className="whitespace-nowrap font-academic text-[clamp(1.5rem,6vw,4.5rem)] font-bold leading-[1.15] text-white">
+                <span className="text-[#E8C96A]">{t('titleAccent')}</span>
+                <span className="ms-2 text-white">{t('titleRest')}</span>
+              </h1>
 
-             <div className='text-nowrap'>
-               <span className=" text-[#E8C96A]">{t('titleAccent')}</span>
-              <span className="text-[white] pr-3">{t('titleRest')}</span>
-              </div>
-            </h1>
-
-            <p className="mt-8 max-w-2xl font-academic text-xl leading-[2.05] text-white/86 md:text-2xl">
-              {t('subtitle')}
-            </p>
+              <p className="mt-6 w-0 min-w-full text-pretty font-academic text-base leading-[1.85] text-white/86 sm:mt-8 sm:text-xl md:text-2xl">
+                {t('subtitle')}
+              </p>
+            </div>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="#latest-pub"
-                className="engraved brass-gradient inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
+                className="engraved brass-gradient inline-flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:px-7"
               >
                 {t('browsePublications')}
                 <LuChevronLeft className="h-4 w-4" />
@@ -523,7 +522,7 @@ const Hero = () => {
 
               <Link
                 href="#about"
-                className="inline-flex h-12 cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-7 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540]"
+                className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-5 text-center text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:px-7"
               >
                 {t('searchBySector')}
                 <LuSearch className="h-4 w-4" />
@@ -532,7 +531,7 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute inset-x-5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-between gap-4">
+        <div className="pointer-events-none absolute inset-x-5 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-between gap-4 sm:flex">
           <button
             type="button"
             aria-label={t('prevSlide')}
@@ -558,7 +557,7 @@ const Hero = () => {
             type="button"
             aria-label={t('prevSlide')}
             onClick={() => goToSlide(activeIndex - 1, { x: 0.16, y: 0.5 })}
-            className="hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41] sm:hidden"
           >
             <LuChevronRight className="h-5 w-5" />
           </button>
@@ -586,7 +585,7 @@ const Hero = () => {
             type="button"
             aria-label={t('nextSlide')}
             onClick={() => goToSlide(activeIndex + 1, { x: 0.84, y: 0.5 })}
-            className="hidden h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/28 bg-white/14 text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/24 focus:outline-none focus:ring-2 focus:ring-[#C29C41] sm:hidden"
           >
             <LuChevronLeft className="h-5 w-5" />
           </button>

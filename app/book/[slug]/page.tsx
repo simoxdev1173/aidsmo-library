@@ -16,6 +16,8 @@ import BookActions from '@/components/book/BookActions';
 import CommentsSection from '@/components/book/CommentsSection';
 import DocumentAskAiPopup from '@/components/book/DocumentAskAiPopup';
 import { documentFilesValue } from '@/lib/document-files';
+import { getUserSession } from '@/lib/user-auth';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
@@ -236,6 +238,14 @@ export default async function BookPage({
     notFound();
   }
 
+  const user = await getUserSession();
+  const savedItem = user
+    ? await prisma.userLibraryItem.findUnique({
+        where: { userId_entryId: { userId: user.id, entryId: entry.id } },
+        select: { id: true },
+      })
+    : null;
+
   const isBook = entry.entryType === 'BOOK';
   const isEvent = entry.entryType === 'EVENT';
   const sections = getContentSections(entry.contentSections);
@@ -360,7 +370,12 @@ export default async function BookPage({
                   تنزيل
                 </a>
               )}
-              <BookActions slug={entry.slug} />
+              <BookActions
+                entryId={entry.id}
+                slug={entry.slug}
+                initialSaved={Boolean(savedItem)}
+                isAuthenticated={Boolean(user)}
+              />
             </div>
           </div>
         </div>

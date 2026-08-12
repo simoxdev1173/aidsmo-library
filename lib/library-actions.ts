@@ -5,10 +5,11 @@ import { redirect } from "next/navigation";
 import { authenticateAdmin, createAdminSession, destroyAdminSession, requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
-import { readUpload, saveUploadBytes } from "@/lib/uploads";
+import { mirrorPublicUploadToDrive, readUpload, saveUploadCopies } from "@/lib/uploads";
 import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
 import { countPdfPagesFromBytes, countPdfPagesFromPublicPath } from "@/lib/pdf-pages";
 import { createDocumentFile, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath, type DocumentFile } from "@/lib/document-files";
+import { driveDocumentFilesValue, driveStoredFilesValue, type DriveDocumentFile } from "@/lib/drive-files";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -186,6 +187,7 @@ async function saveDocumentUploads(formData: FormData) {
   const titleEntries = formData.getAll("documentUploadTitles");
   let primaryUpload: Awaited<ReturnType<typeof readUpload>> = null;
   const savedFiles = [];
+  const driveFiles: DriveDocumentFile[] = [];
   // Page counts for the freshly uploaded files, keyed by their saved public
   // path. Counted from the in-memory bytes we already read for the upload, so
   // no extra file I/O and no client-side work is involved.
@@ -202,10 +204,13 @@ async function saveDocumentUploads(formData: FormData) {
       primaryUpload = upload;
     }
 
-    const savedPath = await saveUploadBytes(upload, "documents");
+    const { localPath: savedPath, driveFile } = await saveUploadCopies(upload, "documents");
     const documentFile = savedPath ? createDocumentFile(savedPath, titleEntries[index] ?? null) : null;
     if (documentFile) {
       savedFiles.push(documentFile);
+      if (driveFile) {
+        driveFiles.push({ ...driveFile, title: documentFile.title });
+      }
 
       if (upload) {
         const pages = await countPdfPagesFromBytes(upload.bytes);
@@ -219,6 +224,7 @@ async function saveDocumentUploads(formData: FormData) {
   return {
     primaryUpload,
     files: savedFiles,
+    driveFiles,
     pagesByPath,
   };
 }
@@ -259,13 +265,20 @@ async function resolveEntryPageCount(
   return countedAny ? total : fallback;
 }
 
-async function saveEventImages(formData: FormData, existingImages: string[] = []) {
+async function saveEventImages(
+  formData: FormData,
+  existingImages: string[] = [],
+  existingDriveImages: ReturnType<typeof driveStoredFilesValue> = [],
+) {
   const files = formData
     .getAll("eventImages")
     .filter((file): file is File => file instanceof File && file.size > 0);
 
   if (files.length === 0) {
-    return existingImages;
+    return {
+      images: existingImages,
+      driveImages: existingDriveImages.filter((file) => existingImages.includes(file.sourcePath)),
+    };
   }
 
   if (existingImages.length + files.length > 3) {
@@ -273,15 +286,23 @@ async function saveEventImages(formData: FormData, existingImages: string[] = []
   }
 
   const savedImages: string[] = [];
+  const savedDriveImages = [];
   for (const file of files) {
     const upload = await readUpload(file, "events");
-    const savedPath = await saveUploadBytes(upload, "events");
+    const { localPath: savedPath, driveFile } = await saveUploadCopies(upload, "events");
     if (savedPath) {
       savedImages.push(savedPath);
+      if (driveFile) savedDriveImages.push(driveFile);
     }
   }
 
-  return [...existingImages, ...savedImages];
+  return {
+    images: [...existingImages, ...savedImages],
+    driveImages: [
+      ...existingDriveImages.filter((file) => existingImages.includes(file.sourcePath)),
+      ...savedDriveImages,
+    ],
+  };
 }
 
 export async function loginAction(formData: FormData) {
@@ -325,15 +346,29 @@ export async function createEntryAction(formData: FormData) {
     const coverUpload = await readUpload(coverFile, "covers");
     const documentUploads = await saveDocumentUploads(formData);
     const documentFiles = documentFilesValue(documentUploads.files);
-    const eventImages = isEvent ? await saveEventImages(formData) : [];
+    const driveDocumentFiles = documentUploads.driveFiles;
+    const eventUploads = isEvent
+      ? await saveEventImages(formData)
+      : { images: [], driveImages: [] };
+    const eventImages = eventUploads.images;
     const dates = isEvent ? eventDates(formData) : { startDate: null, endDate: null };
     const filePath = documentFiles[0]?.path ?? null;
-    const uploadedCoverImagePath = isEvent ? eventImages[0] ?? null : await saveUploadBytes(coverUpload, "covers");
+    const coverCopies = isEvent
+      ? { localPath: null, driveFile: null }
+      : await saveUploadCopies(coverUpload, "covers");
+    const uploadedCoverImagePath = isEvent ? eventImages[0] ?? null : coverCopies.localPath;
     const primaryUpload = documentUploads.primaryUpload;
     const coverGeneration = uploadedCoverImagePath || isEvent
       ? { path: null, failed: false }
       : await tryCreatePdfCover(primaryUpload?.bytes, `new entry "${title}"`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? coverGeneration.path;
+    const generatedDriveCover = coverGeneration.path
+      ? await mirrorPublicUploadToDrive(coverGeneration.path, "covers")
+      : null;
+    const driveCoverImagePath = isEvent
+      ? eventUploads.driveImages[0]?.path ?? null
+      : coverCopies.driveFile?.path ?? generatedDriveCover?.path ?? null;
+    const driveFilePath = driveDocumentFiles.find((file) => file.sourcePath === filePath)?.path ?? null;
     const pageCount = isEvent
       ? null
       : await resolveEntryPageCount(documentFiles, optionalInt(formData, "pageCount"), documentUploads.pagesByPath, null);
@@ -352,6 +387,9 @@ export async function createEntryAction(formData: FormData) {
         coverImagePath,
         filePath,
         documentFiles,
+        driveCoverImagePath,
+        driveFilePath,
+        driveDocumentFiles,
         publisher: isEvent ? null : optionalText(formData, "publisher"),
         author: isEvent ? null : optionalText(formData, "author"),
         year: isEvent ? null : optionalYearLabel(formData, "year"),
@@ -361,6 +399,7 @@ export async function createEntryAction(formData: FormData) {
         eventEndDate: dates.endDate,
         eventLocation: isEvent ? optionalText(formData, "eventLocation") : null,
         eventImages,
+        driveEventImages: eventUploads.driveImages,
         status: status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
         featured: formData.get("featured") === "on",
         publishedAt: status === "PUBLISHED" ? new Date() : null,
@@ -403,16 +442,37 @@ export async function updateEntryAction(id: string, formData: FormData) {
     const existingDocumentFiles = parseDocumentFilesInput(formData.get("documentFilesExisting"));
     const documentUploads = await saveDocumentUploads(formData);
     const documentFiles = documentFilesValue([...existingDocumentFiles, ...documentUploads.files], existing.filePath);
-    const eventImages = isEvent ? await saveEventImages(formData, imageList(existing.eventImages)) : imageList(existing.eventImages);
+    const retainedDriveDocumentFiles = driveDocumentFilesValue(existing.driveDocumentFiles)
+      .filter((file) => existingDocumentFiles.some((localFile) => localFile.path === file.sourcePath))
+      .map((file) => ({
+        ...file,
+        title: existingDocumentFiles.find((localFile) => localFile.path === file.sourcePath)?.title ?? null,
+      }));
+    const driveDocumentFiles = [...retainedDriveDocumentFiles, ...documentUploads.driveFiles];
+    const existingEventImages = imageList(existing.eventImages);
+    const eventUploads = isEvent
+      ? await saveEventImages(formData, existingEventImages, driveStoredFilesValue(existing.driveEventImages))
+      : { images: existingEventImages, driveImages: driveStoredFilesValue(existing.driveEventImages) };
+    const eventImages = eventUploads.images;
     const dates = isEvent ? eventDates(formData) : { startDate: existing.eventStartDate, endDate: existing.eventEndDate };
     const filePath = documentFiles[0]?.path ?? null;
-    const uploadedCoverImagePath = isEvent ? eventImages[0] ?? existing.coverImagePath : await saveUploadBytes(coverUpload, "covers");
+    const coverCopies = isEvent
+      ? { localPath: null, driveFile: null }
+      : await saveUploadCopies(coverUpload, "covers");
+    const uploadedCoverImagePath = isEvent ? eventImages[0] ?? existing.coverImagePath : coverCopies.localPath;
     const primaryUpload = existingDocumentFiles.length === 0 ? documentUploads.primaryUpload : null;
     const coverGeneration =
       uploadedCoverImagePath || existing.coverImagePath || isEvent
         ? { path: null, failed: false }
         : await tryCreatePdfCover(primaryUpload?.bytes, `entry "${existing.title}" (${id})`, filePath);
     const coverImagePath = uploadedCoverImagePath ?? existing.coverImagePath ?? coverGeneration.path;
+    const generatedDriveCover = coverGeneration.path
+      ? await mirrorPublicUploadToDrive(coverGeneration.path, "covers")
+      : null;
+    const driveCoverImagePath = isEvent
+      ? eventUploads.driveImages[0]?.path ?? existing.driveCoverImagePath
+      : coverCopies.driveFile?.path ?? existing.driveCoverImagePath ?? generatedDriveCover?.path ?? null;
+    const driveFilePath = driveDocumentFiles.find((file) => file.sourcePath === filePath)?.path ?? null;
     const pageCount = isEvent
       ? existing.pageCount
       : await resolveEntryPageCount(documentFiles, optionalInt(formData, "pageCount"), documentUploads.pagesByPath, existing.pageCount);
@@ -431,6 +491,9 @@ export async function updateEntryAction(id: string, formData: FormData) {
         coverImagePath,
         filePath,
         documentFiles,
+        driveCoverImagePath,
+        driveFilePath,
+        driveDocumentFiles,
         publisher: isEvent ? existing.publisher : optionalText(formData, "publisher"),
         author: isEvent ? existing.author : optionalText(formData, "author"),
         year: isEvent ? existing.year : optionalYearLabel(formData, "year"),
@@ -440,6 +503,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
         eventEndDate: dates.endDate,
         eventLocation: isEvent ? optionalText(formData, "eventLocation") : existing.eventLocation,
         eventImages,
+        driveEventImages: eventUploads.driveImages,
         status: status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
         featured: formData.get("featured") === "on",
         publishedAt: status === "PUBLISHED" ? existing.publishedAt ?? new Date() : null,
@@ -463,7 +527,13 @@ export async function generateEntryCoverAction(id: string) {
 
   const entry = await prisma.libraryEntry.findUnique({
     where: { id },
-    select: { id: true, title: true, coverImagePath: true, filePath: true, documentFiles: true },
+    select: {
+      id: true,
+      title: true,
+      coverImagePath: true,
+      filePath: true,
+      documentFiles: true,
+    },
   });
 
   if (!entry) {
@@ -490,9 +560,10 @@ export async function generateEntryCoverAction(id: string) {
   }
 
   try {
+    const driveCover = await mirrorPublicUploadToDrive(coverImagePath, "covers");
     await prisma.libraryEntry.update({
       where: { id },
-      data: { coverImagePath },
+      data: { coverImagePath, driveCoverImagePath: driveCover.path },
     });
 
     revalidatePath("/");

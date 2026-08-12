@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
-import { access, mkdir, writeFile } from "fs/promises";
+import { access, mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
+import { uploadBytesToDrive, type DriveFolder } from "@/lib/google-drive";
 
 export function getUploadRoot() {
   const configured = process.env.UPLOAD_DIR;
@@ -68,7 +69,7 @@ export async function resolvePublicUploadFilePath(filePath: string | null | unde
   return null;
 }
 
-type UploadFolder = "covers" | "documents" | "events";
+export type UploadFolder = DriveFolder;
 
 const allowedMimeTypes: Record<UploadFolder, Set<string>> = {
   covers: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
@@ -153,4 +154,48 @@ export async function saveUploadBytes(
 
 export async function saveUpload(file: File | null, folder: UploadFolder) {
   return saveUploadBytes(await readUpload(file, folder), folder);
+}
+
+export async function saveUploadCopies(
+  upload: Awaited<ReturnType<typeof readUpload>>,
+  folder: UploadFolder,
+) {
+  const localPath = await saveUploadBytes(upload, folder);
+  if (!upload || !localPath) {
+    return { localPath: null, driveFile: null };
+  }
+
+  const driveFile = await uploadBytesToDrive({
+    bytes: upload.bytes,
+    folder,
+    mimeType: upload.file.type || (folder === "documents" ? "application/pdf" : "application/octet-stream"),
+    name: upload.file.name || path.basename(localPath),
+    sourcePath: localPath,
+  });
+
+  return { localPath, driveFile };
+}
+
+function mimeTypeForUploadPath(filePath: string) {
+  const extension = path.extname(filePath).toLowerCase();
+  if (extension === ".pdf") return "application/pdf";
+  if (extension === ".png") return "image/png";
+  if (extension === ".webp") return "image/webp";
+  if (extension === ".avif") return "image/avif";
+  return "image/jpeg";
+}
+
+export async function mirrorPublicUploadToDrive(filePath: string, folder: UploadFolder) {
+  const absolutePath = await resolvePublicUploadFilePath(filePath);
+  if (!absolutePath) {
+    throw new Error(`Local backup file is missing: ${filePath}`);
+  }
+
+  return uploadBytesToDrive({
+    bytes: await readFile(absolutePath),
+    folder,
+    mimeType: mimeTypeForUploadPath(filePath),
+    name: path.basename(filePath),
+    sourcePath: filePath,
+  });
 }

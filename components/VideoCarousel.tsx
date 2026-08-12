@@ -25,7 +25,7 @@ const initialVideos: Video[] = [
   
 ];
 
-const CARD_WIDTH = 420;
+const MAX_CARD_WIDTH = 420;
 const GAP = 24;
 
 const VideoCarousel = () => {
@@ -63,32 +63,36 @@ const VideoCarousel = () => {
 
   /* ── measure container ── */
   useEffect(() => {
-    const measure = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-    };
+    const container = containerRef.current;
+    if (!container) return;
+
+    const measure = () => setContainerWidth(container.clientWidth);
+    const observer = new ResizeObserver(measure);
     measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
+    observer.observe(container);
+    return () => observer.disconnect();
   }, []);
 
-  const visibleCards = Math.max(1, Math.floor(containerWidth / (CARD_WIDTH + GAP)));
+  const horizontalPadding = containerWidth >= 1024 ? 64 : containerWidth >= 640 ? 48 : 32;
+  const availableWidth = Math.max(240, containerWidth - horizontalPadding);
+  const cardWidth = Math.min(MAX_CARD_WIDTH, availableWidth);
+  const visibleCards = Math.max(1, Math.floor((availableWidth + GAP) / (cardWidth + GAP)));
   const maxIndex = Math.max(0, videos.length - visibleCards);
+  const visibleIndex = Math.min(activeIndex, maxIndex);
 
   /* ── looping nav ── */
   const prev = () => {
-    setActiveIndex((i) => (i <= 0 ? maxIndex : i - 1));
+    setActiveIndex(visibleIndex <= 0 ? maxIndex : visibleIndex - 1);
   };
 
   const next = () => {
-    setActiveIndex((i) => (i >= maxIndex ? 0 : i + 1));
+    setActiveIndex(visibleIndex >= maxIndex ? 0 : visibleIndex + 1);
   };
 
-  const translateX = activeIndex * (CARD_WIDTH + GAP);
+  const translateX = (locale === 'ar' ? 1 : -1) * visibleIndex * (cardWidth + GAP);
 
   return (
-    <section dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] py-20 md:py-28">
+    <section dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] py-16 sm:py-20 md:py-28">
       <Image
         src="/standardization-bg.png"
         alt=""
@@ -111,7 +115,7 @@ const VideoCarousel = () => {
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       {/* Section header */}
-      <div className="relative z-10 mx-auto mb-14 max-w-7xl px-6 lg:px-8">
+      <div className="relative z-10 mx-auto mb-10 max-w-7xl px-4 sm:mb-14 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 text-center sm:flex-row sm:items-end sm:justify-between">
           <div>
             <motion.h2
@@ -135,6 +139,7 @@ const VideoCarousel = () => {
           >
             <button
               onClick={prev}
+              type="button"
               aria-label={t('prevAria')}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
@@ -142,6 +147,7 @@ const VideoCarousel = () => {
             </button>
             <button
               onClick={next}
+              type="button"
               aria-label={t('nextAria')}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
             >
@@ -152,7 +158,7 @@ const VideoCarousel = () => {
       </div>
 
       {/* Carousel track */}
-      <div ref={containerRef} className="relative z-10 mx-auto max-w-7xl overflow-hidden px-6 lg:px-8">
+      <div ref={containerRef} className="relative z-10 mx-auto max-w-7xl overflow-hidden px-4 sm:px-6 lg:px-8">
         <motion.div
           className="flex"
           style={{ gap: GAP }}
@@ -167,7 +173,7 @@ const VideoCarousel = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               className="flex-shrink-0"
-              style={{ width: CARD_WIDTH }}
+              style={{ width: cardWidth }}
             >
               <div className="group corner-card relative overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-white/88 shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)]">
                 {/* Gold top strip */}
@@ -187,20 +193,26 @@ const VideoCarousel = () => {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
                         src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0`}
-                        title={video.title}
+                        title={video.title || (locale === 'ar' ? 'فيديو من المكتبة' : 'Library video')}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                         className="absolute inset-0 w-full h-full"
                       />
                     ) : (
-                      <motion.div
+                      <motion.button
+                        type="button"
                         key="thumb"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="absolute inset-0 cursor-pointer"
+                        className="absolute inset-0 w-full cursor-pointer text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#C29C41]"
                         onClick={() => setPlayingId(video.id)}
+                        aria-label={
+                          video.title
+                            ? `${locale === 'ar' ? 'تشغيل' : 'Play'}: ${video.title}`
+                            : locale === 'ar' ? 'تشغيل الفيديو' : 'Play video'
+                        }
                       >
                         {/* YouTube thumbnail */}
                         <Image
@@ -220,7 +232,7 @@ const VideoCarousel = () => {
                             <LuPlay size={22} className="mr-[-2px]" fill="white" />
                           </div>
                         </div>
-                      </motion.div>
+                      </motion.button>
                     )}
                   </AnimatePresence>
                 </div>
@@ -246,11 +258,14 @@ const VideoCarousel = () => {
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}
+            type="button"
             onClick={() => setActiveIndex(i)}
+            aria-label={`${locale === 'ar' ? 'عرض مجموعة الفيديو' : 'Show video group'} ${i + 1}`}
+            aria-current={visibleIndex === i ? 'true' : undefined}
             className="relative h-2 rounded-full transition-all duration-400"
             style={{
-              width: activeIndex === i ? 28 : 8,
-              backgroundColor: activeIndex === i ? '#C29C41' : 'rgba(194,156,65,0.2)',
+              width: visibleIndex === i ? 28 : 8,
+              backgroundColor: visibleIndex === i ? '#C29C41' : 'rgba(194,156,65,0.2)',
             }}
           />
         ))}

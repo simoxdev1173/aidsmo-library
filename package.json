@@ -18,15 +18,20 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",
     "pdfs:count-pages": "tsx scripts/count-pdf-pages.ts",
-    "covers:backfill": "tsx scripts/backfill-pdf-covers.ts"
+    "covers:backfill": "tsx scripts/backfill-pdf-covers.ts",
+    "drive:authorize": "tsx scripts/authorize-google-drive.ts",
+    "drive:migrate:check": "tsx scripts/migrate-uploads-to-drive.ts",
+    "drive:migrate": "tsx scripts/migrate-uploads-to-drive.ts --apply"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.3",
     "@napi-rs/canvas": "^1.0.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@radix-ui/react-popover": "^1.1.23",
     "@radix-ui/react-select": "^2.3.7",
     "@radix-ui/react-slot": "^1.3.3",
     "@radix-ui/react-tooltip": "^1.2.16",
@@ -36,9 +41,11 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^11.15.0",
     "google-translate-api-x": "^10.7.3",
+    "googleapis": "^174.0.1",
     "lucide-react": "^0.469.0",
     "motion": "^12.33.0",
     "next": "^16.1.6",
+    "next-auth": "^5.0.0-beta.32",
     "next-intl": "^4.13.1",
     "nextjs-toploader": "^3.9.17",
     "pdfjs-dist": "^6.0.227",
@@ -48,6 +55,8 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.71.1",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.4.0",
     "tsx": "^4.22.4",

@@ -78,7 +78,7 @@ function storedFileFromMetadata(
   };
 }
 
-async function findExistingDriveFile(sourcePath: string) {
+export async function findDriveFileBySourcePath(sourcePath: string) {
   const drive = driveClient();
   const response = await drive.files.list({
     q: `trashed = false and appProperties has { key='aidsmoSourcePath' and value='${escapeDriveQueryValue(sourcePath)}' }`,
@@ -100,7 +100,7 @@ export function isGoogleDriveConfigured() {
 }
 
 export async function uploadBytesToDrive(input: UploadToDriveInput) {
-  const existing = await findExistingDriveFile(input.sourcePath);
+  const existing = await findDriveFileBySourcePath(input.sourcePath);
   if (existing) {
     return existing;
   }

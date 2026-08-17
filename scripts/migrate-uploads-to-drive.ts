@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { documentFilesValue } from "../lib/document-files";
 import { driveDocumentFilesValue, driveStoredFilesValue } from "../lib/drive-files";
-import type { DriveFolder, DriveStoredFile } from "../lib/google-drive";
+import { findDriveFileBySourcePath, type DriveFolder, type DriveStoredFile } from "../lib/google-drive";
 import { prisma } from "../lib/prisma";
 import { mirrorPublicUploadToDrive, resolvePublicUploadFilePath } from "../lib/uploads";
 
@@ -9,6 +9,7 @@ const apply = process.argv.includes("--apply");
 const checkedPaths = new Set<string>();
 let uploaded = 0;
 let reused = 0;
+let staleRecords = 0;
 let missing = 0;
 let failedEntries = 0;
 
@@ -24,9 +25,18 @@ async function copyFile(
   existing: DriveStoredFile | null,
 ) {
   checkedPaths.add(sourcePath);
-  if (existing) {
+
+  // Database shadow fields may point at a previous Drive account. Only reuse a
+  // file when the currently authorized account can find its source-path marker.
+  const currentDriveFile = await findDriveFileBySourcePath(sourcePath);
+  if (currentDriveFile) {
     reused += 1;
-    return existing;
+    return currentDriveFile;
+  }
+
+  if (existing) {
+    staleRecords += 1;
+    console.log(`STALE DRIVE RECORD ${sourcePath} (${existing.fileId})`);
   }
 
   const localPath = await resolvePublicUploadFilePath(sourcePath);
@@ -133,7 +143,8 @@ async function main() {
   console.log(`Entries: ${entries.length}`);
   console.log(`Unique local paths checked: ${checkedPaths.size}`);
   console.log(`Uploaded this run: ${uploaded}`);
-  console.log(`Existing Drive records reused: ${reused}`);
+  console.log(`Files reused from the current Drive account: ${reused}`);
+  console.log(`Stale records from another/inaccessible Drive: ${staleRecords}`);
   console.log(`Missing local files: ${missing}`);
   console.log(`Entries not updated: ${failedEntries}`);
 

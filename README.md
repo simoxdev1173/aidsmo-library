@@ -99,6 +99,13 @@ with the `https://www.googleapis.com/auth/drive.file` scope. Do not reuse the
 visitor sign-in `AUTH_GOOGLE_*` client and do not use service-account keys for a
 personal Drive.
 
+For a personal Gmail account, configure the Google Auth Platform audience as
+External and publish it **In production** before generating the final refresh
+token. An External app left in Testing receives a refresh token that expires in
+seven days. A personal-use app can remain unverified, although Google may show
+an unverified-app warning during authorization. For a Google Workspace project,
+use an Internal audience when the Drive owner belongs to that organization.
+
 Add the OAuth client values to `.env`:
 
 ```env
@@ -116,6 +123,21 @@ Open the printed URL, sign in to the Drive owner account, and approve access.
 The command creates `AIDSMO Library/documents`, `covers`, and `events`, then
 prints the refresh token and folder IDs to add to `.env` and the production
 server's secret settings.
+
+### Replacing the Drive owner account
+
+If the previous Drive account is unavailable, create the Desktop OAuth client
+under a Google Cloud project you control and replace **all seven**
+`GOOGLE_DRIVE_*` values. Run `drive:authorize` with the new client ID and secret
+to generate the other five values; do not keep folder IDs or the refresh token
+from the previous account.
+
+After replacing the values, run the inventory and migration commands below on
+the server that still has the local upload volume. Stored Drive links from the
+previous account are treated as stale: files visible in the newly authorized
+Drive are reused, and the remaining files are uploaded again from local
+storage. The database shadow fields are updated only after an entry's files
+have been copied successfully.
 
 ## Database and file migration
 

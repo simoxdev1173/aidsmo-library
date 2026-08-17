@@ -6,12 +6,59 @@ import { prisma } from "../lib/prisma";
 import { mirrorPublicUploadToDrive, resolvePublicUploadFilePath } from "../lib/uploads";
 
 const apply = process.argv.includes("--apply");
+const uploadLimit = integerOption("--limit");
+const delayMs = integerOption("--delay-ms") ?? 0;
+const batchSize = integerOption("--batch-size") ?? 0;
+const batchDelayMs = integerOption("--batch-delay-ms") ?? delayMs;
 const checkedPaths = new Set<string>();
 let uploaded = 0;
 let reused = 0;
 let staleRecords = 0;
 let missing = 0;
 let failedEntries = 0;
+let driveOperations = 0;
+let stoppedAtLimit = false;
+
+class UploadLimitReached extends Error {
+  constructor() {
+    super("Upload limit reached");
+  }
+}
+
+function integerOption(name: string) {
+  const inline = process.argv.find((argument) => argument.startsWith(`${name}=`));
+  const optionIndex = process.argv.indexOf(name);
+  const rawValue = inline?.slice(name.length + 1)
+    ?? (optionIndex >= 0 ? process.argv[optionIndex + 1] : undefined);
+
+  if (rawValue === undefined) return null;
+
+  const value = Number(rawValue);
+  if (!Number.isSafeInteger(value) || value <= 0) {
+    throw new Error(`${name} must be a positive integer.`);
+  }
+
+  return value;
+}
+
+function sleep(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function paceDriveOperation() {
+  if (driveOperations > 0) {
+    const startsNewBatch = batchSize > 0 && driveOperations % batchSize === 0;
+    const waitMs = startsNewBatch ? Math.max(delayMs, batchDelayMs) : delayMs;
+
+    if (startsNewBatch && waitMs > 0) {
+      console.log(`PAUSE ${waitMs}ms after ${driveOperations} Drive file operations`);
+    }
+
+    if (waitMs > 0) await sleep(waitMs);
+  }
+
+  driveOperations += 1;
+}
 
 function localImagePaths(value: unknown) {
   return Array.isArray(value)
@@ -25,6 +72,7 @@ async function copyFile(
   existing: DriveStoredFile | null,
 ) {
   checkedPaths.add(sourcePath);
+  await paceDriveOperation();
 
   // Database shadow fields may point at a previous Drive account. Only reuse a
   // file when the currently authorized account can find its source-path marker.
@@ -51,6 +99,10 @@ async function copyFile(
     return null;
   }
 
+  if (uploadLimit !== null && uploaded >= uploadLimit) {
+    throw new UploadLimitReached();
+  }
+
   const driveFile = await mirrorPublicUploadToDrive(sourcePath, folder);
   uploaded += 1;
   console.log(`COPIED ${sourcePath} -> ${driveFile.path}`);
@@ -59,6 +111,8 @@ async function copyFile(
 
 async function main() {
   console.log(apply ? "Google Drive migration: APPLY mode" : "Google Drive migration: DRY RUN (no uploads or database writes)");
+  console.log(`Pacing: ${delayMs}ms between file operations${batchSize > 0 ? `; ${batchDelayMs}ms after each group of ${batchSize}` : ""}`);
+  if (uploadLimit !== null) console.log(`Upload limit: ${uploadLimit} new files this run`);
 
   const entries = await prisma.libraryEntry.findMany({
     orderBy: { createdAt: "asc" },
@@ -134,6 +188,12 @@ async function main() {
         });
       }
     } catch (error) {
+      if (error instanceof UploadLimitReached) {
+        stoppedAtLimit = true;
+        console.log(`UPLOAD LIMIT REACHED after ${uploaded} new files; rerun the same command to resume.`);
+        break;
+      }
+
       failedEntries += 1;
       console.error(`FAILED ${entry.id} (${entry.title})`, error);
     }
@@ -147,6 +207,7 @@ async function main() {
   console.log(`Stale records from another/inaccessible Drive: ${staleRecords}`);
   console.log(`Missing local files: ${missing}`);
   console.log(`Entries not updated: ${failedEntries}`);
+  console.log(`Stopped at upload limit: ${stoppedAtLimit ? "yes" : "no"}`);
 
   if (!apply) {
     console.log("\nRun with --apply only after OAuth and the database migration are configured.");

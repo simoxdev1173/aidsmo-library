@@ -161,6 +161,26 @@ the shadow fields:
 npm run drive:migrate
 ```
 
+For a personal Drive account, prefer the one-run throttled migration. It still
+processes every entry, but spaces Drive operations by one second and pauses for
+five seconds after each group of 25:
+
+```powershell
+npm run drive:migrate:throttled
+```
+
+To intentionally stop after 25 newly uploaded files, use `--limit`. Rerun the
+same command to resume; objects already uploaded are found by their source-path
+marker and are not duplicated:
+
+```powershell
+npm run drive:migrate -- --limit=25 --delay-ms=1000
+```
+
+Available pacing options are `--delay-ms`, `--batch-size`, and
+`--batch-delay-ms`. All values are positive integers in milliseconds, except
+`--batch-size`, which is a number of file operations.
+
 The migration is resumable. Each Drive object receives the original local path
 as an application property, and rerunning the command reuses that object rather
 than uploading a duplicate. Existing local files and legacy database paths are

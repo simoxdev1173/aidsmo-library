@@ -21,7 +21,8 @@
     "covers:backfill": "tsx scripts/backfill-pdf-covers.ts",
     "drive:authorize": "tsx scripts/authorize-google-drive.ts",
     "drive:migrate:check": "tsx scripts/migrate-uploads-to-drive.ts",
-    "drive:migrate": "tsx scripts/migrate-uploads-to-drive.ts --apply"
+    "drive:migrate": "tsx scripts/migrate-uploads-to-drive.ts --apply",
+    "drive:migrate:throttled": "tsx scripts/migrate-uploads-to-drive.ts --apply --delay-ms=1000 --batch-size=25 --batch-delay-ms=5000"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

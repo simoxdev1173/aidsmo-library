@@ -154,6 +154,11 @@ read-only inventory:
 npm run drive:migrate:check
 ```
 
+The inventory fetches the app-owned Drive file list in bulk and performs the
+path comparison locally, so the default check has no intentional delay. Pacing
+options remain available for troubleshooting but are not normally needed for
+verification.
+
 Only when the inventory reports no missing local files, copy them and populate
 the shadow fields:
 

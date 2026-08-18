@@ -27,6 +27,8 @@ const folderEnvironmentVariables: Record<DriveFolder, string> = {
   events: "GOOGLE_DRIVE_EVENTS_FOLDER_ID",
 };
 
+let cachedDriveClient: ReturnType<typeof google.drive> | null = null;
+
 function requiredEnvironmentVariable(name: string) {
   const value = process.env[name]?.trim();
   if (!value) {
@@ -36,6 +38,8 @@ function requiredEnvironmentVariable(name: string) {
 }
 
 function driveClient() {
+  if (cachedDriveClient) return cachedDriveClient;
+
   const auth = new google.auth.OAuth2(
     requiredEnvironmentVariable("GOOGLE_DRIVE_CLIENT_ID"),
     requiredEnvironmentVariable("GOOGLE_DRIVE_CLIENT_SECRET"),
@@ -45,7 +49,8 @@ function driveClient() {
     refresh_token: requiredEnvironmentVariable("GOOGLE_DRIVE_REFRESH_TOKEN"),
   });
 
-  return google.drive({ version: "v3", auth });
+  cachedDriveClient = google.drive({ version: "v3", auth });
+  return cachedDriveClient;
 }
 
 function escapeDriveQueryValue(value: string) {
@@ -88,6 +93,31 @@ export async function findDriveFileBySourcePath(sourcePath: string) {
 
   const file = response.data.files?.[0];
   return file ? storedFileFromMetadata(file, sourcePath) : null;
+}
+
+export async function listDriveFilesBySourcePath() {
+  const drive = driveClient();
+  const filesBySourcePath = new Map<string, DriveStoredFile>();
+  let pageToken: string | undefined;
+
+  do {
+    const response = await drive.files.list({
+      q: "trashed = false",
+      fields: "nextPageToken,files(id,name,mimeType,size,md5Checksum,webViewLink,appProperties)",
+      pageSize: 1000,
+      pageToken,
+    });
+
+    for (const file of response.data.files ?? []) {
+      const sourcePath = file.appProperties?.aidsmoSourcePath?.trim();
+      if (!sourcePath || filesBySourcePath.has(sourcePath)) continue;
+      filesBySourcePath.set(sourcePath, storedFileFromMetadata(file, sourcePath));
+    }
+
+    pageToken = response.data.nextPageToken ?? undefined;
+  } while (pageToken);
+
+  return filesBySourcePath;
 }
 
 export function isGoogleDriveConfigured() {

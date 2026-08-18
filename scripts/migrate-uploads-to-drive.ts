@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { documentFilesValue } from "../lib/document-files";
 import { driveDocumentFilesValue, driveStoredFilesValue } from "../lib/drive-files";
-import { findDriveFileBySourcePath, type DriveFolder, type DriveStoredFile } from "../lib/google-drive";
+import { listDriveFilesBySourcePath, type DriveFolder, type DriveStoredFile } from "../lib/google-drive";
 import { prisma } from "../lib/prisma";
 import { mirrorPublicUploadToDrive, resolvePublicUploadFilePath } from "../lib/uploads";
 
@@ -11,6 +11,7 @@ const delayMs = integerOption("--delay-ms") ?? 0;
 const batchSize = integerOption("--batch-size") ?? 0;
 const batchDelayMs = integerOption("--batch-delay-ms") ?? delayMs;
 const checkedPaths = new Set<string>();
+const currentDriveFilesBySourcePath = new Map<string, DriveStoredFile>();
 let uploaded = 0;
 let reused = 0;
 let staleRecords = 0;
@@ -132,7 +133,7 @@ async function copyFile(
 
   // Database shadow fields may point at a previous Drive account. Only reuse a
   // file when the currently authorized account can find its source-path marker.
-  const currentDriveFile = await findDriveFileBySourcePath(sourcePath);
+  const currentDriveFile = currentDriveFilesBySourcePath.get(sourcePath) ?? null;
   if (currentDriveFile) {
     reused += 1;
     return currentDriveFile;
@@ -160,6 +161,7 @@ async function copyFile(
   }
 
   const driveFile = await mirrorPublicUploadToDrive(sourcePath, folder);
+  currentDriveFilesBySourcePath.set(sourcePath, driveFile);
   uploaded += 1;
   console.log(`COPIED ${sourcePath} -> ${driveFile.path}`);
   return driveFile;
@@ -169,6 +171,13 @@ async function main() {
   console.log(apply ? "Google Drive migration: APPLY mode" : "Google Drive migration: DRY RUN (no uploads or database writes)");
   console.log(`Pacing: ${delayMs}ms between file operations${batchSize > 0 ? `; ${batchDelayMs}ms after each group of ${batchSize}` : ""}`);
   if (uploadLimit !== null) console.log(`Upload limit: ${uploadLimit} new files this run`);
+
+  console.log("Loading the current Google Drive inventory...");
+  const currentDriveFiles = await listDriveFilesBySourcePath();
+  for (const [sourcePath, file] of currentDriveFiles) {
+    currentDriveFilesBySourcePath.set(sourcePath, file);
+  }
+  console.log(`Current Drive files indexed: ${currentDriveFilesBySourcePath.size}`);
 
   const entries = await prisma.libraryEntry.findMany({
     orderBy: { createdAt: "asc" },

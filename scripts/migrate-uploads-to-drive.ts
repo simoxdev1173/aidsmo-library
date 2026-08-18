@@ -25,6 +25,62 @@ class UploadLimitReached extends Error {
   }
 }
 
+class MigrationAborted extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+function errorProperty(error: unknown, property: "code" | "status") {
+  if (!error || typeof error !== "object") return null;
+
+  const value = (error as Record<string, unknown>)[property];
+  if (typeof value === "string" || typeof value === "number") return value;
+
+  const cause = (error as Record<string, unknown>).cause;
+  if (cause && typeof cause === "object") {
+    const causeValue = (cause as Record<string, unknown>)[property];
+    if (typeof causeValue === "string" || typeof causeValue === "number") return causeValue;
+  }
+
+  return null;
+}
+
+function safeErrorSummary(error: unknown) {
+  const message = error instanceof Error ? error.message : "Unknown error";
+  const safeMessage = message
+    .replace(/1\/\/[A-Za-z0-9_-]+/g, "[REDACTED_REFRESH_TOKEN]")
+    .replace(/refresh_token\s*[=:]\s*[^\s,}]+/gi, "refresh_token=[REDACTED]");
+  const code = errorProperty(error, "code");
+  const status = errorProperty(error, "status");
+  const details = [code ? `code=${code}` : null, status ? `status=${status}` : null]
+    .filter(Boolean)
+    .join(", ");
+
+  return `${safeMessage}${details ? ` (${details})` : ""}`;
+}
+
+function shouldAbortForExternalFailure(error: unknown) {
+  const code = String(errorProperty(error, "code") ?? "").toUpperCase();
+  const status = Number(errorProperty(error, "status"));
+  const message = error instanceof Error ? error.message.toLowerCase() : "";
+
+  return [
+    "ETIMEDOUT",
+    "ECONNRESET",
+    "ECONNREFUSED",
+    "ENOTFOUND",
+    "EAI_AGAIN",
+    "UND_ERR_CONNECT_TIMEOUT",
+  ].includes(code)
+    || status === 401
+    || status === 408
+    || status === 429
+    || status >= 500
+    || message.includes("invalid_grant")
+    || message.includes("oauth2.googleapis.com/token");
+}
+
 function integerOption(name: string) {
   const inline = process.argv.find((argument) => argument.startsWith(`${name}=`));
   const optionIndex = process.argv.indexOf(name);
@@ -194,8 +250,14 @@ async function main() {
         break;
       }
 
+      if (shouldAbortForExternalFailure(error)) {
+        throw new MigrationAborted(
+          `Google Drive became unavailable while processing ${entry.id} (${entry.title}): ${safeErrorSummary(error)}`,
+        );
+      }
+
       failedEntries += 1;
-      console.error(`FAILED ${entry.id} (${entry.title})`, error);
+      console.error(`FAILED ${entry.id} (${entry.title}): ${safeErrorSummary(error)}`);
     }
   }
 
@@ -218,7 +280,7 @@ async function main() {
 
 main()
   .catch((error) => {
-    console.error(error);
+    console.error(`Migration aborted: ${safeErrorSummary(error)}`);
     process.exitCode = 1;
   })
   .finally(async () => {

@@ -204,7 +204,10 @@ const NestedFlyoutItems = ({ items }: { items: SubItem[] }) => {
               </div>
               <div
                 className={cn(
-                  'absolute left-0 top-0 z-50 -translate-x-full pl-2 transition duration-300',
+                  'absolute top-0 z-50 transition duration-300',
+                  locale === 'ar'
+                    ? 'left-0 -translate-x-full pl-2'
+                    : 'right-0 translate-x-full pr-2',
                   expandedHref === item.href ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0',
                 )}
               >
@@ -243,7 +246,10 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
               </div>
               <div
                 className={cn(
-                  'absolute left-0 top-0 z-50 -translate-x-full pl-2 transition duration-300',
+                  'absolute top-0 z-50 transition duration-300',
+                  locale === 'ar'
+                    ? 'left-0 -translate-x-full pl-2'
+                    : 'right-0 translate-x-full pr-2',
                   expandedIdx === idx ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0',
                 )}
               >
@@ -268,7 +274,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   const { locale } = useAppLocale();
 
   return (
-    <div className={cn('w-[min(680px,calc(100vw-2rem))]', dropdownShell)}>
+    <div className={cn('max-h-[calc(100dvh-7rem)] w-[min(680px,calc(100vw-2rem))] overflow-y-auto overscroll-contain', dropdownShell)}>
       <div className={cn('grid gap-4', groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
         {groups.map((group) => (
           <div key={group.title}>
@@ -390,7 +396,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
         <div
           className={cn(
             'absolute top-full z-50 pt-3 transition duration-300',
-            item.id === 'archive' ? 'left-0 right-auto' : 'right-0',
+            item.id === 'archive' ? 'end-0' : 'start-0',
             open ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0',
           )}
         >
@@ -669,28 +675,34 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
           )}
         >
           <div className="px-3 lg:px-4">
-            <div className="flex items-center gap-2 2xl:gap-3">
-              <Link href="/" className="flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white">
+            <div className="flex items-center justify-between gap-2 2xl:gap-3">
+              <Link
+                href="/"
+                className={cn(
+                  'flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white',
+                  isSolid ? 'h-12 w-20' : 'h-14 w-20 md:h-16 md:w-24',
+                )}
+              >
                 <Image
-                  src="/logo-3d-3d.png"
+                  src="/logo-2.png"
                   alt={tHero('logoAlt')}
                   height={240}
                   width={260}
-                  className={cn('object-contain transition-all duration-500', isSolid ? 'h-12 w-auto' : 'h-14 w-auto md:h-16')}
+                  className="h-full w-full object-contain transition-all duration-500"
                   priority
                 />
               </Link>
 
-              <div className={cn('hidden h-12 w-px shrink-0 xl:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+              <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
-              <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1.5">
+              <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 2xl:flex min-[1800px]:gap-1.5">
                 {menuItemsData.map((item) => (
                   <NavItem key={item.id} item={item} isActive={activeSection === item.id} isScrolled={isSolid} />
                 ))}
               </ul>
 
-              <div className="ms-auto flex shrink-0 items-center gap-2 xl:ms-0 2xl:gap-3">
-                <form action="/search" method="get" className="hidden items-center 2xl:flex">
+              <div className="flex shrink-0 items-center gap-2 min-[1800px]:gap-3">
+                <form action="/search" method="get" className="hidden items-center min-[1800px]:flex">
                   <label className="relative">
                     <span className="sr-only">{t('searchLabel')}</span>
                     <input
@@ -721,7 +733,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                 {user && (
                   <div
                     ref={accountMenuRef}
-                    className="relative hidden xl:block"
+                    className="relative hidden 2xl:block"
                     onBlurCapture={(event) => {
                       if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
                         setAccountMenuOpen(false);
@@ -744,7 +756,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                       )}
                     >
                       <UserAvatar user={user} className="size-9" />
-                      <span className="block max-w-24 truncate text-xs font-bold 2xl:max-w-32">{user.name}</span>
+                      <span className="block max-w-24 truncate text-xs font-bold min-[1800px]:max-w-32">{user.name}</span>
                       <LuChevronDown
                         size={14}
                         className={cn('shrink-0 text-[#C29C41] transition-transform duration-300 motion-reduce:transition-none', accountMenuOpen && 'rotate-180')}
@@ -799,9 +811,9 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                   </div>
                 )}
 
-                <LanguageSwitcher isSolid={isSolid} className="hidden xl:flex" />
+                <LanguageSwitcher isSolid={isSolid} className="hidden 2xl:flex" />
 
-                <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+                <div className={cn('hidden h-12 w-px shrink-0 min-[1800px]:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
 
                 {!user && (
                   <>
@@ -809,16 +821,16 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                       href="/login"
                       aria-label={t('loginFull')}
                       className={cn(
-                        'engraved brass-gradient hidden h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[#C29C41] px-3.5 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 xl:flex',
+                        'engraved brass-gradient hidden h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[#C29C41] px-3.5 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:flex',
                         isSolid ? 'focus:ring-offset-white' : 'focus:ring-offset-[#0A2540]',
                       )}
                     >
                       <LuUser size={16} />
-                      <span className="2xl:hidden">{t('loginShort')}</span>
-                      <span className="hidden 2xl:inline">{t('loginFull')}</span>
+                      <span className="min-[1800px]:hidden">{t('loginShort')}</span>
+                      <span className="hidden min-[1800px]:inline">{t('loginFull')}</span>
                     </Link>
 
-                    <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+                    <div className={cn('hidden h-12 w-px shrink-0 min-[1800px]:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
                   </>
                 )}
 
@@ -826,14 +838,14 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                   href="https://aidsmo.org"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hidden shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white 2xl:flex"
+                  className="hidden shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white min-[1800px]:flex"
                 >
                   <Image
                     src="/aidsmo-logo.png"
                     alt={tFooter('orgLogoAlt')}
                     height={160}
                     width={160}
-                    className={cn('object-contain transition-all duration-500', isSolid ? 'h-9 w-auto' : 'h-10 w-auto 2xl:h-11')}
+                    className={cn('object-contain transition-all duration-500', isSolid ? 'h-9 w-auto' : 'h-11 w-auto')}
                   />
                 </Link>
 
@@ -841,7 +853,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                   ref={mobileMenuButtonRef}
                   type="button"
                   className={cn(
-                    'flex h-11 w-11 items-center justify-center rounded-full border transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 xl:hidden',
+                    'flex h-11 w-11 items-center justify-center rounded-full border transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:hidden',
                     isSolid
                       ? 'border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] focus:ring-offset-white'
                       : 'border-white/20 bg-white/10 text-white focus:ring-offset-[#0A2540]',
@@ -864,7 +876,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
 
       <div
         className={cn(
-          'fixed inset-0 z-[100] bg-[#0A2540]/55 backdrop-blur-sm transition-opacity xl:hidden',
+          'fixed inset-0 z-[100] bg-[#0A2540]/55 backdrop-blur-sm transition-opacity 2xl:hidden',
           mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
         onClick={() => setMobileMenuOpen(false)}
@@ -874,7 +886,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
         ref={mobileMenuRef}
         id="mobile-site-menu"
         className={cn(
-          'fixed inset-y-0 right-0 z-[110] h-dvh w-[min(88vw,24rem)] max-w-full overscroll-contain overflow-y-auto rounded-l-[14px] border-l border-[#C29C41]/30 bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] shadow-2xl transition-transform duration-500 sm:p-6 xl:hidden',
+          'fixed inset-y-0 right-0 z-[110] h-dvh w-[min(92vw,26rem)] max-w-full overscroll-contain overflow-y-auto rounded-l-[14px] border-l border-[#C29C41]/30 bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] shadow-[-18px_0_60px_rgba(10,37,64,0.22)] transition-transform duration-500 sm:p-6 2xl:hidden',
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
         )}
         role="dialog"

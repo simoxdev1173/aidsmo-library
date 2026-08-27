@@ -19,6 +19,7 @@
     "prisma:seed": "prisma db seed",
     "pdfs:count-pages": "tsx scripts/count-pdf-pages.ts",
     "covers:backfill": "tsx scripts/backfill-pdf-covers.ts",
+    "documents:analyze": "tsx scripts/analyze-documents.ts",
     "drive:authorize": "tsx scripts/authorize-google-drive.ts",
     "drive:migrate:check": "tsx scripts/migrate-uploads-to-drive.ts",
     "drive:migrate": "tsx scripts/migrate-uploads-to-drive.ts --apply",
@@ -60,6 +61,7 @@
     "remark-gfm": "^4.0.1",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.4.0",
+    "tesseract.js": "^6.0.1",
     "tsx": "^4.22.4",
     "yup": "^1.7.1"
   },

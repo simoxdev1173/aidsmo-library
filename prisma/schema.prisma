@@ -26,6 +26,13 @@ enum ReadingStatus {
   COMPLETED
 }
 
+enum DocumentAnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model AdminUser {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -175,6 +182,7 @@ model LibraryEntry {
   updatedAt      DateTime    @updatedAt
   publishedAt    DateTime?
   savedBy        UserLibraryItem[]
+  documentAnalyses DocumentAnalysis[]
 
   @@index([categoryId])
   @@index([status])
@@ -182,4 +190,31 @@ model LibraryEntry {
   @@index([year])
   @@index([eventStartDate])
   @@index([featured])
+}
+
+model DocumentAnalysis {
+  id             String                 @id @default(cuid())
+  entryId        String
+  sourcePath     String
+  sourceTitle    String?
+  status         DocumentAnalysisStatus @default(PENDING)
+  summary        String?                @db.Text
+  questions      Json                   @default("[]")
+  extractedText  String?                @db.Text
+  sampledPages   Json                   @default("[]")
+  pageCount      Int?
+  extractionMode String?
+  provider       String?
+  model          String?
+  sourceChecksum String?
+  error          String?                @db.Text
+  generatedAt    DateTime?
+  entry          LibraryEntry           @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@unique([entryId, sourcePath])
+  @@index([entryId])
+  @@index([status])
+  @@index([sourceChecksum])
 }

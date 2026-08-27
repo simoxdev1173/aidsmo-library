@@ -82,15 +82,21 @@ In Coolify, add a persistent volume for the application:
 /app/public/uploads
 ```
 
-Without this volume, uploaded images and PDFs can disappear after a rebuild/redeploy because container filesystems are ephemeral.
+Without this volume, the local backup/fallback copies can disappear after a
+rebuild or redeploy because container filesystems are ephemeral. Files already
+mirrored to Google Drive remain available through Drive-first delivery.
 
 Local uploaded files are ignored by Git, so files uploaded on your local machine will not appear on the server automatically. Upload them again through the production dashboard, or copy them to the Coolify volume manually.
-# Google Drive shadow-storage phase
+# Google Drive primary delivery with local fallback
 
-The application can keep its existing files and database paths active while
-copying every upload to a personal Google Drive. The Drive fields are shadow
-metadata only during this phase; public pages continue reading `filePath`,
-`documentFiles`, `coverImagePath`, and `eventImages` from the server.
+The application keeps its existing `/uploads/...` URLs stable while serving
+matching files from a personal Google Drive through the application. PDF range
+requests are forwarded to Drive so the embedded reader can seek without
+downloading the entire document. Local files remain a fallback for paths that
+have not been migrated yet or during a temporary Drive failure.
+
+Responses include `X-AIDSMO-Storage: google-drive` when Drive served the file,
+or `X-AIDSMO-Storage: local-fallback` when the server volume was used.
 
 ## Personal Drive authorization
 
@@ -189,9 +195,83 @@ Available pacing options are `--delay-ms`, `--batch-size`, and
 The migration is resumable. Each Drive object receives the original local path
 as an application property, and rerunning the command reuses that object rather
 than uploading a duplicate. Existing local files and legacy database paths are
-never deleted or overwritten.
+never deleted or overwritten. Drive-only metadata updates also preserve each
+library entry's existing `updatedAt` value, so migration maintenance does not
+appear as an editorial update in the dashboard.
 
-New dashboard uploads are dual-written to local storage and Drive. The local
-path remains active, while the corresponding Drive link and metadata are saved
-in `driveFilePath`, `driveDocumentFiles`, `driveCoverImagePath`, and
+New dashboard uploads are dual-written to local storage and Drive. The stable
+local-style path remains the public URL, while its content is delivered from
+Drive first. The corresponding Drive link and metadata are saved in
+`driveFilePath`, `driveDocumentFiles`, `driveCoverImagePath`, and
 `driveEventImages`.
+
+## Arabic document summaries and Q&A
+
+The document-analysis batch creates one `DocumentAnalysis` row for every PDF
+attached to a catalog entry. Each row keeps:
+
+- an Arabic summary;
+- exactly four grounded question/answer pairs with supporting page numbers;
+- the extracted sampled-page text for later chatbot indexing;
+- page count, sampled-page numbers, extraction method, model, checksum, status,
+  and a resumable error message.
+
+The sampling rule is deterministic: pages 1–20, every 100th page, and the last
+20 pages, with duplicates removed. PDF text is used when it is usable. For a
+scan with too little embedded text, Tesseract.js renders and OCRs only the
+sampled pages with the Arabic and English language models. The first OCR run
+downloads those open-source language files; persist `.cache/tesseract` in
+production or set `TESSERACT_CACHE_PATH` to a persistent directory.
+
+Deploy the additive database migration first:
+
+```powershell
+npm run prisma:deploy
+```
+
+Inventory the work without downloading a PDF, calling an LLM, or changing a
+row:
+
+```powershell
+npm run documents:analyze
+```
+
+Start with a small, resumable Gemini free-tier batch:
+
+```powershell
+npm run documents:analyze -- --apply --provider=gemini --limit=10 --delay-ms=2000
+```
+
+Set `GEMINI_API_KEY` first. `gemini-3.1-flash-lite` is the configured default,
+and `GEMINI_MODEL` can change it without a code edit. Gemini's free tier has
+rate/daily limits and free-tier content may be used by Google to improve its
+products, so it should not be treated as a private local processor.
+
+For a fully local, zero-API-cost path, install Ollama, pull an Arabic-capable
+model once, and run:
+
+```powershell
+ollama pull qwen3:8b
+npm run documents:analyze -- --apply --provider=ollama --model=qwen3:8b --limit=10
+```
+
+Ollama generation and Tesseract OCR then stay on the machine. Model downloads
+still require disk space and the initial network transfer; local compute is the
+only ongoing cost. Use `--ocr=off` when the corpus is known to contain text
+layers, or `--ocr=always` to OCR every sampled page that lacks useful embedded
+text.
+
+Completed PDFs are skipped on later runs, while failed ones are retried. Useful
+targeting and editorial options are:
+
+```powershell
+npm run documents:analyze -- --apply --entry-id=ENTRY_ID --limit=1
+npm run documents:analyze -- --apply --source-path=/uploads/documents/FILE.pdf
+npm run documents:analyze -- --apply --force --limit=10
+npm run documents:analyze -- --apply --fill-descriptions --limit=10
+```
+
+`--fill-descriptions` only fills a blank `LibraryEntry.description` from the
+primary attached PDF; it never replaces an editor's description. Full sampled
+text remains in `DocumentAnalysis.extractedText`, ready for a later chunking and
+embedding step for the chatbot.

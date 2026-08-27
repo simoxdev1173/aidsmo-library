@@ -28,6 +28,13 @@ const folderEnvironmentVariables: Record<DriveFolder, string> = {
 };
 
 let cachedDriveClient: ReturnType<typeof google.drive> | null = null;
+let cachedDriveAuth: InstanceType<typeof google.auth.OAuth2> | null = null;
+
+const driveFileCache = new Map<
+  string,
+  { expiresAt: number; file: DriveStoredFile | null }
+>();
+const driveFileCacheTtlMs = 10 * 60 * 1000;
 
 function requiredEnvironmentVariable(name: string) {
   const value = process.env[name]?.trim();
@@ -37,8 +44,8 @@ function requiredEnvironmentVariable(name: string) {
   return value;
 }
 
-function driveClient() {
-  if (cachedDriveClient) return cachedDriveClient;
+function driveAuthClient() {
+  if (cachedDriveAuth) return cachedDriveAuth;
 
   const auth = new google.auth.OAuth2(
     requiredEnvironmentVariable("GOOGLE_DRIVE_CLIENT_ID"),
@@ -49,7 +56,14 @@ function driveClient() {
     refresh_token: requiredEnvironmentVariable("GOOGLE_DRIVE_REFRESH_TOKEN"),
   });
 
-  cachedDriveClient = google.drive({ version: "v3", auth });
+  cachedDriveAuth = auth;
+  return auth;
+}
+
+function driveClient() {
+  if (cachedDriveClient) return cachedDriveClient;
+
+  cachedDriveClient = google.drive({ version: "v3", auth: driveAuthClient() });
   return cachedDriveClient;
 }
 
@@ -84,6 +98,11 @@ function storedFileFromMetadata(
 }
 
 export async function findDriveFileBySourcePath(sourcePath: string) {
+  const cached = driveFileCache.get(sourcePath);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.file;
+  }
+
   const drive = driveClient();
   const response = await drive.files.list({
     q: `trashed = false and appProperties has { key='aidsmoSourcePath' and value='${escapeDriveQueryValue(sourcePath)}' }`,
@@ -92,7 +111,51 @@ export async function findDriveFileBySourcePath(sourcePath: string) {
   });
 
   const file = response.data.files?.[0];
-  return file ? storedFileFromMetadata(file, sourcePath) : null;
+  const storedFile = file ? storedFileFromMetadata(file, sourcePath) : null;
+  driveFileCache.set(sourcePath, {
+    expiresAt: Date.now() + driveFileCacheTtlMs,
+    file: storedFile,
+  });
+  return storedFile;
+}
+
+export async function downloadDriveFileBySourcePath(
+  sourcePath: string,
+  range?: string | null,
+) {
+  if (!sourcePath.startsWith("/uploads/")) {
+    return null;
+  }
+
+  const file = await findDriveFileBySourcePath(sourcePath);
+  if (!file) {
+    return null;
+  }
+
+  const accessToken = await driveAuthClient().getAccessToken();
+  if (!accessToken.token) {
+    throw new Error("Google Drive did not return an access token.");
+  }
+
+  const headers = new Headers({
+    Authorization: `Bearer ${accessToken.token}`,
+  });
+  if (range) {
+    headers.set("Range", range);
+  }
+
+  const response = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(file.fileId)}?alt=media`,
+    { headers },
+  );
+
+  if (!response.ok && response.status !== 416) {
+    throw new Error(
+      `Google Drive download failed for ${sourcePath} with status ${response.status}.`,
+    );
+  }
+
+  return { file, response };
 }
 
 export async function listDriveFilesBySourcePath() {
@@ -153,5 +216,10 @@ export async function uploadBytesToDrive(input: UploadToDriveInput) {
     fields: "id,name,mimeType,size,md5Checksum,webViewLink",
   });
 
-  return storedFileFromMetadata(response.data, input.sourcePath);
+  const storedFile = storedFileFromMetadata(response.data, input.sourcePath);
+  driveFileCache.set(input.sourcePath, {
+    expiresAt: Date.now() + driveFileCacheTtlMs,
+    file: storedFile,
+  });
+  return storedFile;
 }

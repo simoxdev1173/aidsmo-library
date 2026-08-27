@@ -3,6 +3,16 @@ import type { NextConfig, SizeLimit } from "next";
 const serverActionBodySizeLimit = (process.env.SERVER_ACTION_BODY_SIZE_LIMIT ?? '512mb') as SizeLimit;
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/uploads/:path*',
+          destination: '/api/storage/:path*',
+        },
+      ],
+    };
+  },
   serverExternalPackages: ['@napi-rs/canvas'],
   outputFileTracingIncludes: {
     '/*': [

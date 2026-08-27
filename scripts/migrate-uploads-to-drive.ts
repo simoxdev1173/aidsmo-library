@@ -249,6 +249,9 @@ async function main() {
             driveDocumentFiles: driveDocuments,
             driveCoverImagePath: driveCover?.path ?? entry.driveCoverImagePath,
             driveEventImages: driveEvents,
+            // Mirroring files is infrastructure maintenance, not a library content edit.
+            // Prisma's @updatedAt would otherwise make every migrated entry appear newly updated.
+            updatedAt: entry.updatedAt,
           },
         });
       }

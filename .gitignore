@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/.cache/
 
 # next.js
 /.next/
@@ -37,6 +38,9 @@ yarn-error.log*
 # local uploads
 /public/uploads/*
 !/public/uploads/.gitkeep
+
+# local database backups and timestamp rollback snapshots
+/db-backup/
 
 # generated database client
 /lib/generated/

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { HiOutlineArrowLeft, HiOutlineXMark } from 'react-icons/hi2';
 import ChatbotPromptButton from '@/components/ChatbotPromptButton';
+import type { DocumentChatContext } from '@/lib/document-chat';
 
 /**
  * A floating nudge anchored to the corner of the document preview, as if it
@@ -12,7 +13,13 @@ import ChatbotPromptButton from '@/components/ChatbotPromptButton';
  * Dismissing it only clears this render — it's a light nudge, not a setting
  * worth persisting.
  */
-export default function DocumentAskAiPopup({ title }: { title: string }) {
+export default function DocumentAskAiPopup({
+  title,
+  documentContext,
+}: {
+  title: string;
+  documentContext?: DocumentChatContext;
+}) {
   const [dismissed, setDismissed] = useState(false);
   const reduceMotion = useReducedMotion();
 
@@ -53,14 +60,17 @@ export default function DocumentAskAiPopup({ title }: { title: string }) {
 
               <div className="min-w-0 flex-1">
                 <p className="text-[0.82rem] font-bold leading-5 text-[#0A2540]">
-                  هل لديك سؤال حول هذا المستند؟
+                  {documentContext
+                    ? 'أعددنا لك أربعة أسئلة موثقة من هذه الوثيقة'
+                    : 'هل لديك سؤال حول هذا المستند؟'}
                 </p>
 
                 <ChatbotPromptButton
-                  prompt={`اشرح لي محتوى ${title}`}
+                  prompt={documentContext ? undefined : `اشرح لي محتوى ${title}`}
+                  documentContext={documentContext}
                   className="mt-2.5 inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#f1dda0] to-[#C29C41] px-4 text-[0.72rem] font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] transition-all duration-300 hover:brightness-110"
                 >
-                  اسأل المساعد
+                  {documentContext ? 'استكشف الأسئلة' : 'اسأل المساعد'}
                   <HiOutlineArrowLeft className="h-3.5 w-3.5" />
                 </ChatbotPromptButton>
               </div>

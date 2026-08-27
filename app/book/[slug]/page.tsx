@@ -16,6 +16,7 @@ import BookActions from '@/components/book/BookActions';
 import CommentsSection from '@/components/book/CommentsSection';
 import DocumentAskAiPopup from '@/components/book/DocumentAskAiPopup';
 import { documentFilesValue } from '@/lib/document-files';
+import { documentQuestionsValue, type DocumentChatContext } from '@/lib/document-chat';
 import { getUserSession } from '@/lib/user-auth';
 import { prisma } from '@/lib/prisma';
 
@@ -251,6 +252,13 @@ export default async function BookPage({
   const sections = getContentSections(entry.contentSections);
   const documentFiles = documentFilesValue(entry.documentFiles, entry.filePath);
   const primaryDocument = documentFiles[0] ?? null;
+  const primaryAnalysis = primaryDocument
+    ? entry.documentAnalyses.find((analysis) => analysis.sourcePath === primaryDocument.path)
+    : null;
+  const storedQuestions = documentQuestionsValue(primaryAnalysis?.questions);
+  const documentChatContext: DocumentChatContext | undefined = primaryDocument && storedQuestions.length > 0
+    ? { title: entry.title, sourcePath: primaryDocument.path, questions: storedQuestions }
+    : undefined;
 
   const topSlug = categoryTopSlug(entry.category);
   const spine = CATEGORY_SPINE[topSlug] ?? '#0369A1';
@@ -462,7 +470,7 @@ export default async function BookPage({
                 loading="lazy"
                 className="h-[420px] w-full rounded-lg border border-[#D9E3EE] bg-[#F4F8FB] sm:h-[600px]"
               />
-              <DocumentAskAiPopup title={entry.title} />
+              <DocumentAskAiPopup title={entry.title} documentContext={documentChatContext} />
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-[#D9E3EE] px-6 py-16 text-center">
@@ -506,11 +514,14 @@ export default async function BookPage({
 
         <AiAssistantPanel
           title={entry.title}
-          prompts={[
-            `لخص مدخل ${entry.title}`,
-            `ما أهم الكلمات المفتاحية في ${entry.title}؟`,
-            `اقترح أسئلة بحثية حول ${entry.title}`,
-          ]}
+          prompts={documentChatContext
+            ? documentChatContext.questions.map((item) => item.question)
+            : [
+                `لخص مدخل ${entry.title}`,
+                `ما أهم الكلمات المفتاحية في ${entry.title}؟`,
+                `اقترح أسئلة بحثية حول ${entry.title}`,
+              ]}
+          documentContext={documentChatContext}
         />
 
         {related.length > 0 && (

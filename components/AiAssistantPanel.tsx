@@ -1,13 +1,16 @@
 import Image from 'next/image';
 import { HiOutlineArrowLeft } from 'react-icons/hi2';
 import ChatbotPromptButton from '@/components/ChatbotPromptButton';
+import type { DocumentChatContext } from '@/lib/document-chat';
 
 export default function AiAssistantPanel({
   title,
   prompts,
+  documentContext,
 }: {
   title: string;
   prompts: string[];
+  documentContext?: DocumentChatContext;
 }) {
   return (
     <section className="relative mt-12 overflow-hidden rounded-[22px] border border-[#C29C41]/30 bg-[#071D2F] text-white shadow-[0_26px_80px_rgba(10,37,64,0.22)]">
@@ -54,6 +57,8 @@ export default function AiAssistantPanel({
               <ChatbotPromptButton
                 key={prompt}
                 prompt={prompt}
+                documentContext={documentContext}
+                autoAnswer={Boolean(documentContext)}
                 className="group/prompt flex w-full items-center gap-3 rounded-2xl border border-white/12 bg-white/[0.06] px-5 py-3.5 text-right shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/55 hover:bg-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/60 active:translate-y-0"
               >
                 <span className="flex-1 text-sm font-bold leading-6 text-white/85 transition duration-200 group-hover/prompt:text-[#071D2F]">

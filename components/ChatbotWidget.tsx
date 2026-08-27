@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -35,6 +36,11 @@ import {
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 import { cn } from '@/utils/cn';
 import type { AgentRun } from '@/components/chatbot/agent';
+import {
+  documentChatContextValue,
+  type DocumentChatContext,
+  type StoredDocumentQuestion,
+} from '@/lib/document-chat';
 
 type LightRagReference = {
   reference_id: string;
@@ -70,10 +76,22 @@ type ChatMessage =
       references: LightRagReference[];
       responseTime?: number;
       error?: string;
+      storedAnswer?: boolean;
+      sourcePages?: number[];
+      documentSourcePath?: string;
+      documentTitle?: string;
     };
 
 let messageCounter = 0;
 const nextId = () => `msg-${++messageCounter}`;
+
+function comparableQuestion(value: string) {
+  return value
+    .trim()
+    .toLocaleLowerCase('ar')
+    .replace(/[؟?]/g, '')
+    .replace(/\s+/g, ' ');
+}
 
 const progressCopy: Record<string, { en: string; ar: string }> = {
   extracting_keywords: { en: 'Understanding your question', ar: 'فهم سؤالك' },
@@ -556,6 +574,7 @@ function RetrievalState({ label, reduceMotion }: { label: string; reduceMotion: 
 const ChatbotWidget = () => {
   const t = useTranslations('chatbotWidget');
   const { locale } = useAppLocale();
+  const pathname = usePathname();
   const isRtl = locale === 'ar';
   const reduceMotion = useReducedMotion() ?? false;
 
@@ -567,6 +586,7 @@ const ChatbotWidget = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [voiceState, setVoiceState] = useState<VoiceState>('idle');
   const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [documentContext, setDocumentContext] = useState<(DocumentChatContext & { pathname: string }) | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -574,6 +594,7 @@ const ChatbotWidget = () => {
   const abortRef = useRef<AbortController | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const voiceSessionRef = useRef(0);
+  const activeDocumentContext = documentContext?.pathname === pathname ? documentContext : null;
 
   useEffect(() => {
     aliveRef.current = true;
@@ -614,10 +635,46 @@ const ChatbotWidget = () => {
     };
   }, [isOpen, isExpanded]);
 
+  const answerFromDocument = useCallback((
+    question: StoredDocumentQuestion,
+    contextOverride?: DocumentChatContext | null,
+  ) => {
+    const context = contextOverride ?? activeDocumentContext;
+    if (!context || (isBusy && !contextOverride)) return;
+
+    setMessage('');
+    setVoiceError(null);
+    setMessages((current) => [
+      ...current,
+      { id: nextId(), role: 'user', text: question.question },
+      {
+        id: nextId(),
+        role: 'assistant',
+        request: question.question,
+        text: question.answer,
+        status: 'done',
+        references: [],
+        storedAnswer: true,
+        sourcePages: question.sourcePages,
+        documentSourcePath: context.sourcePath,
+        documentTitle: context.title,
+      },
+    ]);
+    window.setTimeout(() => textareaRef.current?.focus(), 0);
+  }, [activeDocumentContext, isBusy]);
+
   const send = useCallback(
     async (raw: string) => {
       const text = raw.trim();
       if (!text || isBusy) return;
+
+      const storedQuestion = activeDocumentContext?.questions.find(
+        (item) => comparableQuestion(item.question) === comparableQuestion(text),
+      );
+      if (storedQuestion) {
+        answerFromDocument(storedQuestion);
+        return;
+      }
 
       voiceSessionRef.current += 1;
       recognitionRef.current?.abort();
@@ -762,23 +819,41 @@ const ChatbotWidget = () => {
         }
       }
     },
-    [isBusy, locale, messages],
+    [activeDocumentContext, answerFromDocument, isBusy, locale, messages],
   );
 
   useEffect(() => {
     const openFromPrompt = (event: Event) => {
-      const prompt =
-        event instanceof CustomEvent && typeof event.detail?.prompt === 'string'
-          ? event.detail.prompt
-          : '';
+      const detail = event instanceof CustomEvent && event.detail && typeof event.detail === 'object'
+        ? event.detail as Record<string, unknown>
+        : {};
+      const prompt = typeof detail.prompt === 'string' ? detail.prompt : '';
+      const context = documentChatContextValue(detail.documentContext);
+
       setIsOpen(true);
-      if (prompt) setMessage(prompt);
+      if (context) {
+        abortRef.current?.abort();
+        setIsBusy(false);
+        setDocumentContext({ ...context, pathname: window.location.pathname });
+        setMessages([]);
+        setMessage('');
+
+        if (detail.autoAnswer === true && prompt) {
+          const storedQuestion = context.questions.find(
+            (item) => comparableQuestion(item.question) === comparableQuestion(prompt),
+          );
+          if (storedQuestion) answerFromDocument(storedQuestion, context);
+        }
+      } else {
+        setDocumentContext(null);
+        if (prompt) setMessage(prompt);
+      }
       window.setTimeout(() => textareaRef.current?.focus(), 350);
     };
 
     window.addEventListener('aidsmo:open-chatbot', openFromPrompt);
     return () => window.removeEventListener('aidsmo:open-chatbot', openFromPrompt);
-  }, []);
+  }, [answerFromDocument]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -979,7 +1054,13 @@ const ChatbotWidget = () => {
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#4ade80] opacity-75" />
               <span className="relative inline-flex size-1.5 rounded-full bg-[#4ade80]" />
             </span>
-            {t('status')}
+            <span className="truncate">
+              {activeDocumentContext
+                ? locale === 'ar'
+                  ? `يقرأ الآن: ${activeDocumentContext.title}`
+                  : `Reading: ${activeDocumentContext.title}`
+                : t('status')}
+            </span>
           </p>
         </div>
 
@@ -1068,23 +1149,48 @@ const ChatbotWidget = () => {
                   />
                 </div>
                 <div className="rounded-2xl rounded-ss-none bg-white px-4 py-3 text-[0.82rem] leading-relaxed text-[#0A2540] shadow-sm">
-                  {t('welcomeMessage')}
+                  {activeDocumentContext
+                    ? locale === 'ar'
+                      ? 'اطلعتُ على الأسئلة المحفوظة لهذه الوثيقة. اختر سؤالاً وسأعرض إجابته الموثقة مباشرة، من دون انتظار توليد جديد.'
+                      : 'I have the saved questions for this document. Choose one to open its grounded answer instantly, without generating it again.'
+                    : t('welcomeMessage')}
                 </div>
               </div>
 
               <div>
-                <p className="mb-2 text-[0.7rem] font-bold text-[#475569]">{t('tryAsking')}</p>
+                <p className="mb-2 text-[0.7rem] font-bold text-[#475569]">
+                  {activeDocumentContext
+                    ? locale === 'ar' ? 'أسئلة مقترحة من الوثيقة' : 'Questions prepared from this document'
+                    : t('tryAsking')}
+                </p>
                 <div className="flex flex-col gap-2">
-                  {LOCAL_SUGGESTIONS.map((prompt) => (
-                    <button
-                      key={prompt.en}
-                      type="button"
-                      onClick={() => send(prompt[locale as keyof typeof prompt] || prompt.en)}
-                      className="rounded-2xl border border-[#0369A1]/16 bg-white px-4 py-2.5 text-start text-[0.75rem] font-medium text-[#0B4E84] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#0A2540]"
-                    >
-                      {prompt[locale as keyof typeof prompt] || prompt.en}
-                    </button>
-                  ))}
+                  {activeDocumentContext
+                    ? activeDocumentContext.questions.map((item, index) => (
+                        <button
+                          key={item.question}
+                          type="button"
+                          onClick={() => answerFromDocument(item)}
+                          className="group/question grid grid-cols-[2rem_1fr_auto] items-center gap-3 rounded-2xl border border-[#0B4E84]/14 bg-white px-3 py-3 text-start shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41] hover:bg-[#FFFBF0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
+                        >
+                          <span className="flex size-8 items-center justify-center rounded-xl bg-[#EAF4FA] text-[0.66rem] font-black text-[#0B4E84] transition-colors group-hover/question:bg-[#C29C41] group-hover/question:text-[#071D2F]">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <span className="text-[0.75rem] font-bold leading-5 text-[#0A2540]">
+                            {item.question}
+                          </span>
+                          <LuBookOpen className="size-3.5 text-[#C29C41]" aria-hidden />
+                        </button>
+                      ))
+                    : LOCAL_SUGGESTIONS.map((prompt) => (
+                        <button
+                          key={prompt.en}
+                          type="button"
+                          onClick={() => send(prompt[locale as keyof typeof prompt] || prompt.en)}
+                          className="rounded-2xl border border-[#0369A1]/16 bg-white px-4 py-2.5 text-start text-[0.75rem] font-medium text-[#0B4E84] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#0A2540]"
+                        >
+                          {prompt[locale as keyof typeof prompt] || prompt.en}
+                        </button>
+                      ))}
                 </div>
               </div>
             </motion.div>
@@ -1158,7 +1264,29 @@ const ChatbotWidget = () => {
                       <div className="px-4 py-4">
                         <StreamingAnswer text={entry.text} active={entry.status === 'streaming'} />
 
-                        {entry.status === 'done' && (
+                        {entry.storedAnswer && entry.sourcePages?.length > 0 && (
+                          <div className="mt-4 border-s-2 border-[#C29C41] bg-[#F8FBFD] px-3 py-2.5">
+                            <p className="text-[0.62rem] font-bold uppercase tracking-[0.08em] text-[#667B8D]">
+                              {locale === 'ar' ? 'موثقة في صفحات الوثيقة' : 'Grounded in document pages'}
+                            </p>
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                              {entry.sourcePages.map((page) => (
+                                <a
+                                  key={page}
+                                  href={`${entry.documentSourcePath}#page=${page}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 rounded-full border border-[#C29C41]/35 bg-white px-2.5 py-1 text-[0.64rem] font-bold text-[#0B4E84] transition hover:border-[#C29C41] hover:bg-[#FFF8E8]"
+                                >
+                                  <LuBookOpen className="size-3" aria-hidden />
+                                  {locale === 'ar' ? `صفحة ${page}` : `Page ${page}`}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {entry.status === 'done' && !entry.storedAnswer && (
                           <HardcodedBookSuggestions
                             docs={HARDCODED_BOOK_SUGGESTIONS}
                             locale={locale}
@@ -1223,20 +1351,36 @@ const ChatbotWidget = () => {
                       className="space-y-2 pt-0.5"
                     >
                       <p className="px-1 text-[0.65rem] font-bold text-[#52687A]">
-                        {locale === 'ar' ? 'يمكنك المتابعة بسؤال:' : 'Continue with a follow-up:'}
+                        {entry.storedAnswer
+                          ? locale === 'ar' ? 'تابع بسؤال آخر من الوثيقة:' : 'Open another document question:'
+                          : locale === 'ar' ? 'يمكنك المتابعة بسؤال:' : 'Continue with a follow-up:'}
                       </p>
                       <div className="flex flex-wrap gap-1.5">
-                        {getFollowUpSuggestions(locale).map((suggestion) => (
-                          <button
-                            key={suggestion}
-                            type="button"
-                            onClick={() => send(suggestion)}
-                            disabled={isBusy}
-                            className="rounded-xl border border-[#0369A1]/14 bg-white/90 px-3 py-2 text-start text-[0.68rem] font-semibold leading-snug text-[#0B4E84] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/70 hover:bg-[#FFF9EA] hover:text-[#0A2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:pointer-events-none disabled:opacity-50"
-                          >
-                            {suggestion}
-                          </button>
-                        ))}
+                        {entry.storedAnswer && activeDocumentContext
+                          ? activeDocumentContext.questions
+                              .filter((item) => item.question !== entry.request)
+                              .map((item) => (
+                                <button
+                                  key={item.question}
+                                  type="button"
+                                  onClick={() => answerFromDocument(item)}
+                                  disabled={isBusy}
+                                  className="rounded-xl border border-[#0369A1]/14 bg-white/90 px-3 py-2 text-start text-[0.68rem] font-semibold leading-snug text-[#0B4E84] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/70 hover:bg-[#FFF9EA] hover:text-[#0A2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:pointer-events-none disabled:opacity-50"
+                                >
+                                  {item.question}
+                                </button>
+                              ))
+                          : getFollowUpSuggestions(locale).map((suggestion) => (
+                              <button
+                                key={suggestion}
+                                type="button"
+                                onClick={() => send(suggestion)}
+                                disabled={isBusy}
+                                className="rounded-xl border border-[#0369A1]/14 bg-white/90 px-3 py-2 text-start text-[0.68rem] font-semibold leading-snug text-[#0B4E84] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/70 hover:bg-[#FFF9EA] hover:text-[#0A2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:pointer-events-none disabled:opacity-50"
+                              >
+                                {suggestion}
+                              </button>
+                            ))}
                       </div>
                     </motion.div>
                   )}

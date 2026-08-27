@@ -118,7 +118,14 @@ export async function getEntries(filters: {
 export async function getPublishedEntryBySlug(slug: string) {
   return prisma.libraryEntry.findFirst({
     where: { slug, status: "PUBLISHED" },
-    include: { category: { include: { parent: { include: { parent: true } } } } },
+    include: {
+      category: { include: { parent: { include: { parent: true } } } },
+      documentAnalyses: {
+        where: { status: "COMPLETED" },
+        select: { sourcePath: true, questions: true, generatedAt: true },
+        orderBy: { generatedAt: "desc" },
+      },
+    },
   });
 }
 

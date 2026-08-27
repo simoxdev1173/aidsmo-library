@@ -275,3 +275,10 @@ npm run documents:analyze -- --apply --fill-descriptions --limit=10
 primary attached PDF; it never replaces an editor's description. Full sampled
 text remains in `DocumentAnalysis.extractedText`, ready for a later chunking and
 embedding step for the chatbot.
+
+Completed analyses are also exposed on the matching public document page. The
+reader's AI panel shows the four stored questions; selecting one opens the
+global chat interface and displays the saved answer immediately with links to
+its supporting PDF pages. This stored-answer path does not make another Gemini
+request. Free-form questions continue through the existing `/api/chatbot`
+LightRAG integration.

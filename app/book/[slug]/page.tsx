@@ -272,8 +272,10 @@ export default async function BookPage({
   const eventDate = eventStart && eventEnd && eventStart !== eventEnd ? `${eventStart} — ${eventEnd}` : eventStart;
 
   const description = entry.description?.trim();
+  const generatedSummary = primaryAnalysis?.summary?.trim();
   const summary =
     description ||
+    generatedSummary ||
     composeSummary({
       typeLabel,
       demonstrative,

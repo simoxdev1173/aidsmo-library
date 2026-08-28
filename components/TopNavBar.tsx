@@ -684,7 +684,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                 )}
               >
                 <Image
-                  src="/logo-2.png"
+                  src="/logo-3d-3d.png"
                   alt={tHero('logoAlt')}
                   height={240}
                   width={260}

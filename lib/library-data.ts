@@ -122,7 +122,7 @@ export async function getPublishedEntryBySlug(slug: string) {
       category: { include: { parent: { include: { parent: true } } } },
       documentAnalyses: {
         where: { status: "COMPLETED" },
-        select: { sourcePath: true, questions: true, generatedAt: true },
+        select: { sourcePath: true, summary: true, questions: true, generatedAt: true },
         orderBy: { generatedAt: "desc" },
       },
     },

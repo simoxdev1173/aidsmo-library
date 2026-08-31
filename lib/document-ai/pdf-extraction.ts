@@ -43,6 +43,13 @@ function hasUsefulText(value: string) {
   return usefulCharacterCount(value) >= 80;
 }
 
+function getPdfJsWasmUrl() {
+  // PDF.js expects a trailing forward slash even when running on Windows.
+  // Its Node binary-data loader then appends files such as `jbig2.wasm`.
+  const wasmDirectory = path.join(process.cwd(), "node_modules", "pdfjs-dist", "wasm");
+  return `${wasmDirectory.replaceAll("\\", "/")}/`;
+}
+
 async function getOcrWorker() {
   if (ocrWorkerPromise) return ocrWorkerPromise;
 
@@ -111,6 +118,7 @@ export async function extractSampledPdfText(
     data: new Uint8Array(input),
     disableFontFace: true,
     useSystemFonts: true,
+    wasmUrl: getPdfJsWasmUrl(),
   });
   const pdf = (await loadingTask.promise) as unknown as PdfDocument;
 

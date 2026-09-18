@@ -10,7 +10,7 @@ export default async function TrendingBooks() {
   }
 
   return (
-    <section id="projects" className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24">
+    <section id="projects" className="relative overflow-hidden bg-[#F7F0E1] py-12 sm:py-14 lg:py-16">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.18]"
         style={{
@@ -24,7 +24,7 @@ export default async function TrendingBooks() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <TrendingIntro />
 
         <div className="space-y-0">

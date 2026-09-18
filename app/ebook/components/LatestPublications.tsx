@@ -40,17 +40,17 @@ const LatestPublications = () => {
   }));
 
   return (
-    <section className="relative overflow-hidden bg-[#F8F6ED] py-16 sm:py-20 md:py-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <section className="relative overflow-hidden bg-[#F8F6ED] py-12 sm:py-14 lg:py-16" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
 
 
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-16">
-          <h2 className="academic-heading mt-4 text-balance text-3xl leading-tight sm:text-4xl md:text-5xl">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto mb-9 max-w-2xl text-center sm:mb-11">
+          <h2 className="academic-heading mt-3 text-balance text-2xl leading-tight sm:text-3xl lg:text-4xl">
             {t('heading')}
           </h2>
 
-          <p className="mt-5 flex flex-wrap items-center justify-center gap-3 text-sm font-semibold tracking-wide text-[#64748B]">
+          <p className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold tracking-wide text-[#64748B]">
             {latestBooks.map((book, idx) => (
               <React.Fragment key={book.id}>
                 <span className="text-[#C29C41]">{book.category}</span>
@@ -62,11 +62,11 @@ const LatestPublications = () => {
          
         </div>
 
-        <div className="flex flex-wrap justify-center gap-x-14 gap-y-16 sm:gap-x-20 md:gap-x-28">
+        <div className="flex flex-wrap justify-center gap-x-10 gap-y-12 sm:gap-x-14 lg:gap-x-20">
           {latestBooks.map((book ,bID) => (
             <div key={book.id} className="group flex flex-col items-center">
               <div className="relative">
-                <span className="wax-seal absolute -right-7 -top-7 z-10 flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold text-[#0A2540]" aria-hidden>
+                <span className="wax-seal absolute -right-5 -top-5 z-10 flex h-12 w-12 items-center justify-center rounded-full text-base font-bold text-[#0A2540]" aria-hidden>
                   {bID > 0 ? 2026 : "2025"}
                 </span>
                 <Book
@@ -103,7 +103,7 @@ const LatestPublications = () => {
                 />
               </div>
 
-              <div className="mt-8 max-w-[260px] text-center">
+              <div className="mt-6 max-w-[230px] text-center">
                 <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#C29C41]">
                   {book.category}
                 </p>

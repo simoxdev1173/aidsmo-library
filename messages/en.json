@@ -31,7 +31,10 @@
     "magazines": "Specialized Magazines",
     "books": "Digital Books",
     "studies": "Research & Studies",
-    "reports": "Industrial Reports"
+    "reports": "Industrial Reports",
+    "scientificPapers": "Scientific Documents",
+    "numberedPapers": "Digitized Pages",
+    "memorandums": "Memoranda of Understanding"
   },
   "trending": {
     "heading": "Trending in the Digital Library",

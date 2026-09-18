@@ -28,7 +28,7 @@ const ROW_ICONS: Record<string, IconType> = {
 // These row headers are static copy defined in lib/library-data.ts, so they're
 // translated once here instead of round-tripping through the live translate API.
 const ROW_LABELS_EN: Record<string, { title: string; description: string }> = {
-  trending: { title: 'Trending Titles', description: "Fresh picks from across the digital library's sectors." },
+  trending: { title: 'Trending Titles', description: 'A rotating selection of publications from 2025 and 2026 across the digital library.' },
   industry: { title: 'Industry', description: 'Reports and references on development, value chains, and industrial competitiveness.' },
   standardization: { title: 'Standardization & Quality', description: 'Guides, terminology, and references to help understand standards and quality.' },
   mining: { title: 'Mining', description: 'Geological references and studies on mineral resources and sustainability.' },
@@ -149,10 +149,10 @@ function LibraryCard({ item, index }: { item: TrendingItem; index: number }) {
   return (
     <Link
       href={item.href}
-      className={`group block w-48 shrink-0 text-[#0A2540] outline-none [perspective:1100px] sm:w-56 lg:w-60 ${locale === 'ar' ? 'text-right' : 'text-left'}`}
+      className={`group block w-44 shrink-0 text-[#0A2540] outline-none [perspective:1100px] sm:w-48 lg:w-52 ${locale === 'ar' ? 'text-right' : 'text-left'}`}
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      <div className="relative mx-auto h-72 w-44 [transform-style:preserve-3d] transition duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] [animation:research-card-rise_700ms_cubic-bezier(0.19,1,0.22,1)_both] group-hover:[transform:rotateY(-10deg)_rotateX(5deg)_translateY(-12px)] group-focus-visible:[transform:rotateY(-10deg)_rotateX(5deg)_translateY(-12px)] motion-reduce:transform-none motion-reduce:transition-none sm:h-80 sm:w-52 lg:h-[22rem] lg:w-56">
+      <div className="relative mx-auto h-64 w-40 [transform-style:preserve-3d] transition duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] [animation:research-card-rise_700ms_cubic-bezier(0.19,1,0.22,1)_both] group-hover:[transform:rotateY(-8deg)_rotateX(4deg)_translateY(-8px)] group-focus-visible:[transform:rotateY(-8deg)_rotateX(4deg)_translateY(-8px)] motion-reduce:transform-none motion-reduce:transition-none sm:h-72 sm:w-44 lg:h-76 lg:w-48">
         <div className="absolute inset-0 translate-x-3 translate-y-4 bg-[#0A2540]/18 blur-xl transition duration-700 group-hover:translate-y-7 group-hover:bg-[#0A2540]/28" aria-hidden />
         <div className="absolute inset-y-3 right-[-10px] w-5 bg-gradient-to-l from-[#5A4217] via-[#C29C41] to-[#F7E5A9] shadow-[inset_3px_0_6px_rgba(10,37,64,0.22)] [transform:rotateY(72deg)] [transform-origin:left]" aria-hidden />
         <div className="absolute inset-0 overflow-hidden border border-[#C29C41]/35 bg-[#0A2540] shadow-[0_18px_34px_rgba(10,37,64,0.18)] [transform:translateZ(18px)]">
@@ -229,15 +229,15 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
       aria-labelledby={`${row.id}-heading`}
       aria-roledescription="carousel"
       dir={isRtl ? 'rtl' : 'ltr'}
-      className="relative border-t border-[#C29C41]/25 py-10 first:border-t-0 md:py-12"
+      className="relative border-t border-[#C29C41]/25 py-8 first:border-t-0 md:py-10"
     >
-      <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="flex items-start gap-4">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-[#C29C41]/40 bg-[#0A2540] text-[#F7E5A9] shadow-[0_12px_26px_rgba(10,37,64,0.18)]">
             <Icon className="h-5 w-5" />
           </span>
           <div>
-            <h3 id={`${row.id}-heading`} className="text-2xl font-bold leading-tight text-[#003652] md:text-3xl">
+            <h3 id={`${row.id}-heading`} className="text-xl font-bold leading-tight text-[#003652] md:text-2xl">
               {displayTitle}
             </h3>
             <p className="mt-2 max-w-2xl font-academic text-base leading-relaxed text-[#64748B]">{displayDescription}</p>
@@ -277,7 +277,7 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#F7F0E1] to-transparent" aria-hidden />
         <div
           ref={scrollerRef}
-          className="flex gap-8 overflow-x-auto overflow-y-visible px-2 pb-7 pt-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-6 overflow-x-auto overflow-y-visible px-2 pb-5 pt-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           style={{ scrollSnapType: 'x mandatory' }}
         >
           {displayItems.map((item, itemIndex) => (

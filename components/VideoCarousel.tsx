@@ -25,8 +25,8 @@ const initialVideos: Video[] = [
   
 ];
 
-const MAX_CARD_WIDTH = 420;
-const GAP = 24;
+const MAX_CARD_WIDTH = 360;
+const GAP = 18;
 
 const VideoCarousel = () => {
   const t = useTranslations('videos');
@@ -92,18 +92,18 @@ const VideoCarousel = () => {
   const translateX = (locale === 'ar' ? 1 : -1) * visibleIndex * (cardWidth + GAP);
 
   return (
-    <section dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] py-16 sm:py-20 md:py-28">
+    <section dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] py-12 sm:py-14 lg:py-16">
       <Image
         src="/standardization-bg.png"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[70] contrast-110 saturate-125"
+        className="object-cover opacity-[0.32] contrast-110 saturate-125"
         aria-hidden
       />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.74)_0%,rgba(247,240,225,0.46)_48%,rgba(255,252,244,0.82)_100%)]" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[70]"
+        className="pointer-events-none absolute inset-0 opacity-[0.16]"
         style={{
           backgroundImage:
             'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
@@ -115,15 +115,15 @@ const VideoCarousel = () => {
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       {/* Section header */}
-      <div className="relative z-10 mx-auto mb-10 max-w-7xl px-4 sm:mb-14 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-6 text-center sm:flex-row sm:items-end sm:justify-between">
+      <div className="relative z-10 mx-auto mb-8 max-w-6xl px-4 sm:mb-10 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-5 text-center sm:flex-row sm:items-end sm:justify-between">
           <div>
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="academic-heading text-4xl leading-tight md:text-5xl"
+              className="academic-heading text-2xl leading-tight sm:text-3xl lg:text-4xl"
             >
               {t('heading')}
             </motion.h2>
@@ -158,7 +158,7 @@ const VideoCarousel = () => {
       </div>
 
       {/* Carousel track */}
-      <div ref={containerRef} className="relative z-10 mx-auto max-w-7xl overflow-hidden px-4 sm:px-6 lg:px-8">
+      <div ref={containerRef} className="relative z-10 mx-auto max-w-6xl overflow-hidden px-4 sm:px-6 lg:px-8">
         <motion.div
           className="flex"
           style={{ gap: GAP }}
@@ -219,7 +219,7 @@ const VideoCarousel = () => {
                           src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
                           alt={video.title}
                           fill
-                          sizes="420px"
+                          sizes="360px"
                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
 
@@ -254,7 +254,7 @@ const VideoCarousel = () => {
       </div>
 
       {/* Progress dots */}
-      <div className="relative z-10 mt-10 flex items-center justify-center gap-2">
+      <div className="relative z-10 mt-7 flex items-center justify-center gap-2">
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}

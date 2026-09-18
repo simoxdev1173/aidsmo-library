@@ -19,7 +19,7 @@ const LibraryNews = () => {
   return (
     <section
       id="library-services"
-      className="relative overflow-hidden bg-[#F7F0E1] py-16 md:py-24"
+      className="relative overflow-hidden bg-[#F7F0E1] py-12 sm:py-14 lg:py-16"
       aria-label={t('heading')}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
     >
@@ -50,31 +50,31 @@ const LibraryNews = () => {
       <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 max-w-3xl">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 max-w-2xl">
         
 
-          <h2 className="academic-heading mt-3 text-3xl leading-tight text-[#0A2540] md:text-4xl">
+          <h2 className="academic-heading mt-3 text-2xl leading-tight text-[#0A2540] sm:text-3xl lg:text-4xl">
             {t('heading')}
           </h2>
 
-          <p className="mt-4 max-w-2xl text-pretty font-academic text-base leading-relaxed text-[#475569] sm:text-lg">
+          <p className="mt-3 max-w-xl text-pretty font-academic text-base leading-relaxed text-[#475569] sm:text-lg">
             {t('subtitle')}
           </p>
         </div>
 
-        <div className="grid gap-5 lg:auto-rows-[210px] lg:grid-cols-3">
+        <div className="grid gap-4 lg:auto-rows-[190px] lg:grid-cols-3">
           {/* Big parchment card */}
           <Link
             href="#latest-pub"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/35 bg-[#FFF8E8]/95 p-5 shadow-[0_22px_58px_rgba(10,37,64,0.09)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 hover:shadow-[0_28px_76px_rgba(10,37,64,0.14)] sm:p-7 md:p-8 lg:row-span-2"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/35 bg-[#FFF8E8]/95 p-5 shadow-[0_18px_44px_rgba(10,37,64,0.09)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)] sm:p-6 lg:row-span-2"
           >
             <div>
               <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#9A7421]">
                 {t('latestKicker')}
               </p>
 
-              <h3 className="mt-5 max-w-md font-academic text-2xl font-bold leading-[1.55] text-[#0A2540] md:text-3xl">
+              <h3 className="mt-4 max-w-md font-academic text-xl font-bold leading-[1.5] text-[#0A2540] sm:text-2xl">
                 {t('latestTitle')}
               </h3>
 
@@ -92,7 +92,7 @@ const LibraryNews = () => {
           {/* Top image card */}
           <Link
             href="/catalog/industry"
-            className="corner-frame group relative min-h-[240px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)] sm:min-h-[280px] lg:min-h-0"
+            className="corner-frame group relative min-h-[210px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_18px_44px_rgba(10,37,64,0.11)] sm:min-h-[230px] lg:min-h-0"
           >
             <Image
               src="/industry-informations-bg.png"
@@ -118,7 +118,7 @@ const LibraryNews = () => {
           {/* Smart assistant card */}
           <Link
             href="#chatbot"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0A2540] p-5 text-white shadow-[0_24px_68px_rgba(10,37,64,0.16)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 sm:p-7 md:p-8 lg:row-span-2"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0A2540] p-5 text-white shadow-[0_20px_52px_rgba(10,37,64,0.14)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 sm:p-6 lg:row-span-2"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_16%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_78%_82%,rgba(14,165,233,0.12),transparent_30%)]"
@@ -130,7 +130,7 @@ const LibraryNews = () => {
                 {t('assistantKicker')}
               </p>
 
-              <h3 className="mt-5 max-w-md font-academic text-2xl font-bold leading-[1.55] text-white md:text-3xl">
+              <h3 className="mt-4 max-w-md font-academic text-xl font-bold leading-[1.5] text-white sm:text-2xl">
                 {t('assistantTitle')}
               </h3>
 
@@ -148,7 +148,7 @@ const LibraryNews = () => {
           {/* Main blue sector card */}
           <Link
             href="/catalog/standardization"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0B4E84] p-5 text-white shadow-[0_24px_68px_rgba(10,37,64,0.15)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 sm:p-7 md:p-8 lg:row-span-2"
+            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0B4E84] p-5 text-white shadow-[0_20px_52px_rgba(10,37,64,0.14)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 sm:p-6 lg:row-span-2"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(232,201,106,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]"
@@ -160,7 +160,7 @@ const LibraryNews = () => {
                 {t('sectorsKicker')}
               </p>
 
-              <h3 className="mt-5 max-w-lg font-academic text-2xl font-bold leading-[1.55] text-white md:text-3xl">
+              <h3 className="mt-4 max-w-lg font-academic text-xl font-bold leading-[1.5] text-white sm:text-2xl">
                 {t('sectorsTitle')}
               </h3>
 
@@ -178,7 +178,7 @@ const LibraryNews = () => {
           {/* Bottom image card */}
           <Link
             href="/catalog/mining"
-            className="corner-frame group relative min-h-[240px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)] sm:min-h-[280px] lg:min-h-0"
+            className="corner-frame group relative min-h-[210px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_18px_44px_rgba(10,37,64,0.11)] sm:min-h-[230px] lg:min-h-0"
           >
             <Image
               src="/industry-bg.png"
@@ -202,7 +202,7 @@ const LibraryNews = () => {
           {/* Bottom image card */}
           <Link
             href="/catalog/industrial-info"
-            className="corner-frame group relative min-h-[240px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_22px_58px_rgba(10,37,64,0.12)] sm:min-h-[280px] lg:min-h-0"
+            className="corner-frame group relative min-h-[210px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_18px_44px_rgba(10,37,64,0.11)] sm:min-h-[230px] lg:min-h-0"
           >
             <Image
               src="/standardization-bg.png"

@@ -6,8 +6,16 @@ import {
   HiOutlineArrowLeft,
   HiOutlineArrowTopRightOnSquare,
   HiOutlineBookOpen,
+  HiOutlineBuildingOffice2,
+  HiOutlineCalendarDays,
+  HiOutlineDocumentText,
   HiOutlineEye,
+  HiOutlineLanguage,
+  HiOutlineSquares2X2,
+  HiOutlineTag,
+  HiOutlineUserCircle,
 } from 'react-icons/hi2';
+import type { IconType } from 'react-icons';
 import { getPublishedEntryBySlug, getRelatedEntries } from '@/lib/library-data';
 import { categoryPath } from '@/lib/library-labels';
 import AiAssistantPanel from '@/components/AiAssistantPanel';
@@ -15,6 +23,7 @@ import RelatedEntriesCarousel from '@/components/RelatedEntriesCarousel';
 import BookActions from '@/components/book/BookActions';
 import CommentsSection from '@/components/book/CommentsSection';
 import DocumentAskAiPopup from '@/components/book/DocumentAskAiPopup';
+import PdfPreview from '@/components/book/PdfPreview';
 import { documentFilesValue } from '@/lib/document-files';
 import { documentQuestionsValue, type DocumentChatContext } from '@/lib/document-chat';
 import { getUserSession } from '@/lib/user-auth';
@@ -102,16 +111,47 @@ function formatEventDate(value: Date | null) {
   return new Intl.DateTimeFormat('ar', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(value));
 }
 
-// One metadata cell in the facts grid: a quiet label over the value, marked
-// by a short gold rule instead of a card border — the same accent language
-// as the ornate divider, just quieter. Rows breathe in the grid instead of
-// being boxed individually.
-function FactCell({ label, value }: { label: string; value: string }) {
+// One field within the unified bibliographic record. Icons provide a second
+// scanning cue alongside the labels without relying on color alone.
+type EntryFact = {
+  label: string;
+  value: string;
+  icon: IconType;
+};
+
+function FactCell({ label, value, icon: Icon, compact = false }: EntryFact & { compact?: boolean }) {
   return (
-    <div className="border-t-2 border-[#C29C41]/25 pt-3">
-      <dt className="text-xs font-bold text-[#94A3B8]">{label}</dt>
-      <dd className="mt-1.5 text-[0.95rem] font-bold leading-6 text-[#0A2540]">{value}</dd>
+    <div className={`min-w-0 bg-white ${compact ? 'px-4 py-4 sm:flex-1' : 'px-5 py-5 sm:px-6'}`}>
+      <dt className="flex items-center gap-3 text-[0.7rem] font-bold text-[#64748B]">
+        <span
+          className={`flex shrink-0 items-center justify-center rounded-lg border border-[#C29C41]/25 bg-[#FFF8E8] text-[#9A7421] ${compact ? 'h-8 w-8' : 'h-10 w-10'}`}
+          aria-hidden
+        >
+          <Icon className={compact ? 'h-4 w-4' : 'h-5 w-5'} />
+        </span>
+        <span>{label}</span>
+      </dt>
+      <dd
+        className={`mt-1.5 break-words font-academic font-bold text-[#0A2540] ${compact ? 'ms-11 text-[0.95rem] leading-6' : 'ms-[3.25rem] text-[1.05rem] leading-7'}`}
+      >
+        {value}
+      </dd>
     </div>
+  );
+}
+
+function SummaryParagraph({ text }: { text: string }) {
+  const opening = text.match(/^(\S+)([\s\S]*)$/u);
+
+  return (
+    <p className="max-w-[70ch] whitespace-pre-line font-academic text-[1.1rem] leading-[2.15] text-[#334155]">
+      {opening ? (
+        <>
+          <span className="font-bold text-[#9A7421]">{opening[1]}</span>
+          {opening[2]}
+        </>
+      ) : text}
+    </p>
   );
 }
 
@@ -292,16 +332,26 @@ export default async function BookPage({
     });
 
   // Metadata list — type-aware, so an event is never described as a book.
-  const facts = [
-    { label: 'الناشر', value: entry.publisher },
-    { label: 'المؤلف', value: entry.author },
-    { label: 'التصنيف', value: categoryLabel },
-    { label: 'الوسم', value: entry.tag },
-    isEvent ? { label: 'التاريخ', value: eventDate } : { label: 'السنة', value: entry.year },
-    isEvent ? { label: 'المكان', value: entry.eventLocation } : null,
-    { label: 'اللغة', value: entry.language },
-    !isEvent && entry.pageCount ? { label: 'عدد الصفحات', value: `${entry.pageCount} صفحة` } : null,
-  ].filter((item): item is { label: string; value: string } => Boolean(item && item.value));
+  const identityFacts = [
+    { label: 'الناشر', value: entry.publisher, icon: HiOutlineBuildingOffice2 },
+    { label: 'المؤلف', value: entry.author, icon: HiOutlineUserCircle },
+  ].filter((item): item is EntryFact => Boolean(item.value));
+  const classificationFact: EntryFact = {
+    label: 'التصنيف',
+    value: categoryLabel,
+    icon: HiOutlineSquares2X2,
+  };
+  const compactFacts = [
+    { label: 'الوسم', value: entry.tag, icon: HiOutlineTag },
+    isEvent
+      ? { label: 'التاريخ', value: eventDate, icon: HiOutlineCalendarDays }
+      : { label: 'السنة', value: entry.year, icon: HiOutlineCalendarDays },
+    isEvent ? { label: 'المكان', value: entry.eventLocation, icon: HiOutlineBuildingOffice2 } : null,
+    { label: 'اللغة', value: entry.language, icon: HiOutlineLanguage },
+    !isEvent && entry.pageCount
+      ? { label: 'عدد الصفحات', value: `${entry.pageCount} صفحة`, icon: HiOutlineDocumentText }
+      : null,
+  ].filter((item): item is EntryFact => Boolean(item && item.value));
 
   const heroFacts = [year, entry.language, entry.pageCount ? `${entry.pageCount} صفحة` : null].filter(
     (item): item is string => Boolean(item),
@@ -404,7 +454,7 @@ export default async function BookPage({
             </div>
             <div className="min-w-0 flex-1">
               <SectionHeading>ملخص</SectionHeading>
-              <p className="dropcap max-w-[70ch] font-academic text-[1.1rem] leading-[2.15] text-[#334155]">{summary}</p>
+              <SummaryParagraph text={summary} />
             </div>
           </article>
         )}
@@ -413,11 +463,27 @@ export default async function BookPage({
             width the sidebar used to waste. */}
         <div className={summary ? 'mt-14' : ''}>
           <SectionHeading>بيانات المدخل</SectionHeading>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-3 lg:grid-cols-4">
-            {facts.map((fact) => (
-              <FactCell key={fact.label} label={fact.label} value={fact.value} />
-            ))}
-          </dl>
+          <div className="overflow-hidden rounded-2xl border border-[#C29C41]/25 bg-[#D9E3EE] shadow-[0_18px_48px_rgba(10,37,64,0.08)]">
+            {identityFacts.length > 0 && (
+              <dl className={`grid gap-px ${identityFacts.length > 1 ? 'sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]' : ''}`}>
+                {identityFacts.map((fact) => (
+                  <FactCell key={fact.label} {...fact} />
+                ))}
+              </dl>
+            )}
+
+            <dl className="mt-px">
+              <FactCell {...classificationFact} />
+            </dl>
+
+            {compactFacts.length > 0 && (
+              <dl className="mt-px grid grid-cols-2 gap-px sm:flex">
+                {compactFacts.map((fact) => (
+                  <FactCell key={fact.label} {...fact} compact />
+                ))}
+              </dl>
+            )}
+          </div>
         </div>
 
         {documentFiles.length > 1 && (
@@ -443,10 +509,10 @@ export default async function BookPage({
         {/* Document preview — skim the actual PDF without leaving the page */}
         <div className="mt-14">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="academic-heading text-xl">
-              معاينة الوثيقة
+            <h2 className="academic-heading flex flex-wrap items-center gap-3 text-xl">
+              <span>معاينة الوثيقة</span>
               {entry.pageCount ? (
-                <span className="ms-3 align-middle text-xs font-bold text-[#94A3B8]">
+                <span className="rounded-full border border-[#C29C41]/25 bg-[#FFF8E8] px-3 py-1 font-sans text-xs font-bold text-[#8A6A1D]">
                   {entry.pageCount} صفحة
                 </span>
               ) : null}
@@ -466,12 +532,7 @@ export default async function BookPage({
 
           {primaryDocument ? (
             <div className="relative">
-              <iframe
-                src={`${primaryDocument.path}#toolbar=0&view=FitH&navpanes=0`}
-                title={`معاينة: ${entry.title}`}
-                loading="lazy"
-                className="h-[420px] w-full rounded-lg border border-[#D9E3EE] bg-[#F4F8FB] sm:h-[600px]"
-              />
+              <PdfPreview src={primaryDocument.path} title={entry.title} />
               <DocumentAskAiPopup title={entry.title} documentContext={documentChatContext} />
             </div>
           ) : (

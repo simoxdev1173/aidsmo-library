@@ -5,8 +5,11 @@ import LatestPublications from "./ebook/components/LatestPublications"
 import LibraryStats from "./ebook/components/LibraryStats"
 import ChatbotCTA from "./ebook/components/ChatbotCta"
 import VideoCarousel from "@/components/VideoCarousel"
+import { getLibraryStats } from "@/lib/library-data"
 
-export default function Home() {
+export default async function Home() {
+  const libraryStats = await getLibraryStats()
+
   return (
     <div className="min-h-dvh w-full min-w-0 overflow-x-clip bg-[#F8FAFC] text-[#0A2540]">
       <main className="min-w-0">
@@ -15,7 +18,7 @@ export default function Home() {
         </section>
         
         <section>
-          <LibraryStats />
+          <LibraryStats stats={libraryStats} />
         </section>
         <Benefits />
         

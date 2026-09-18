@@ -48,7 +48,7 @@ export const Book = ({
         onMouseLeave={handleMouseLeave}
         style={{ rotateY: finalRotate }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={cn("relative w-52 h-80 transform-3d", className)}
+        className={cn("relative h-72 w-44 transform-3d sm:h-76 sm:w-48", className)}
       >
         {/* Cover flap — opens from right edge for RTL */}
         <motion.div

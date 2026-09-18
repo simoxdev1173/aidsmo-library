@@ -14,6 +14,10 @@
 /coverage
 /.cache/
 
+# Python tooling cache
+__pycache__/
+*.py[cod]
+
 # next.js
 /.next/
 /out/
@@ -38,6 +42,9 @@ yarn-error.log*
 # local uploads
 /public/uploads/*
 !/public/uploads/.gitkeep
+
+# generated PDF.js browser assets
+/public/pdfjs/
 
 # local database backups and timestamp rollback snapshots
 /db-backup/

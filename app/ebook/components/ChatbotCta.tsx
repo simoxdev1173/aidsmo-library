@@ -23,7 +23,7 @@ function ChatbotVisualCard() {
   ];
 
   return (
-    <div className="relative h-full min-h-[500px] overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071A2E] shadow-[0_22px_58px_rgba(10,37,64,0.16)]">
+    <div className="relative h-full min-h-[440px] overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071A2E] shadow-[0_20px_48px_rgba(10,37,64,0.15)]">
       <div
         className="absolute inset-0 bg-[radial-gradient(circle_at_78%_35%,rgba(14,165,233,0.22),transparent_34%),radial-gradient(circle_at_18%_78%,rgba(194,156,65,0.18),transparent_30%),linear-gradient(135deg,rgba(10,37,64,0.45),rgba(7,26,46,0.96))]"
         aria-hidden
@@ -114,7 +114,7 @@ export default function ChatbotCTA() {
   return (
     <section
       id="smart-assistant"
-      className="relative overflow-hidden bg-[#F7F0E1] py-14 sm:py-16 md:py-24"
+      className="relative overflow-hidden bg-[#F7F0E1] py-12 sm:py-14 lg:py-16"
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
       aria-label={t('sectionLabel')}
     >
@@ -132,21 +132,21 @@ export default function ChatbotCTA() {
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className={`mb-9 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
-          <h2 className="academic-heading text-balance text-3xl leading-tight text-[#0A2540] md:text-4xl">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className={`mb-8 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
+          <h2 className="academic-heading text-balance text-2xl leading-tight text-[#0A2540] sm:text-3xl lg:text-4xl">
             {t('heading')}
           </h2>
 
 
-          <p className="mt-4 font-academic text-base leading-relaxed text-[#475569] md:text-lg">
+          <p className="mt-3 max-w-2xl font-academic text-base leading-relaxed text-[#475569] sm:text-lg">
             {t('subtitle')}
           </p>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-12 lg:grid-rows-[250px_250px]">
+        <div className="grid gap-4 lg:grid-cols-12 lg:grid-rows-[220px_220px]">
           {/* Main cream card */}
-          <div className="relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-5 text-center shadow-[0_18px_48px_rgba(10,37,64,0.1)] sm:p-7 md:p-9 lg:col-span-5">
+          <div className="relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.1)] sm:p-6 lg:col-span-5">
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.18]"
               style={{
@@ -165,15 +165,15 @@ export default function ChatbotCTA() {
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
            
 
-              <h3 className="mt-6 font-academic text-3xl font-bold leading-tight text-[#0A2540] md:text-4xl">
+              <h3 className="mt-4 font-academic text-2xl font-bold leading-tight text-[#0A2540] sm:text-3xl">
                 {t('mainTitle')}
               </h3>
 
-              <p className="mt-5 max-w-lg font-academic text-base leading-loose text-[#475569] md:text-lg">
+              <p className="mt-3 max-w-lg font-academic text-sm leading-relaxed text-[#475569] sm:text-base">
                 {t('mainDesc')}
               </p>
 
-              <Link href="#chatbot" className={`${primaryButton} mt-8`}>
+              <Link href="#chatbot" className={`${primaryButton} mt-5`}>
                 {t('startChat')}
               </Link>
             </div>
@@ -182,7 +182,7 @@ export default function ChatbotCTA() {
           {/* Dark immediate search card */}
           <Link
             href="#chatbot"
-            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071D33] p-7 text-center shadow-[0_18px_48px_rgba(10,37,64,0.13)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-3"
+            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-3"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_20%,rgba(232,201,106,0.17),transparent_28%),linear-gradient(135deg,rgba(11,78,132,0.32),transparent_55%)]"
@@ -190,15 +190,15 @@ export default function ChatbotCTA() {
             />
 
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
-              <h3 className="font-academic text-2xl font-bold text-[#E8C96A]">
+              <h3 className="font-academic text-xl font-bold text-[#E8C96A]">
                 {t('instantSearchTitle')}
               </h3>
 
-              <p className="mt-5 max-w-[15rem] font-academic text-base leading-loose text-white/82">
+              <p className="mt-3 max-w-[15rem] font-academic text-sm leading-relaxed text-white/82 sm:text-base">
                 {t('instantSearchDesc')}
               </p>
 
-              <span className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#E8C96A] transition duration-300 group-hover:text-white">
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#E8C96A] transition duration-300 group-hover:text-white">
                 {t('exploreIssues')}
                 <LuChevronLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
               </span>
@@ -213,7 +213,7 @@ export default function ChatbotCTA() {
           {/* Bottom feature card 1 */}
           <Link
             href="#chatbot"
-            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#071D33] p-7 text-center shadow-[0_18px_48px_rgba(10,37,64,0.13)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
+            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_74%,rgba(125,211,252,0.14),transparent_28%)]"
@@ -222,11 +222,11 @@ export default function ChatbotCTA() {
 
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
 
-              <h3 className="font-academic text-2xl font-bold text-[#E8C96A]">
+              <h3 className="font-academic text-xl font-bold text-[#E8C96A]">
                 {t('smartSuggestionsTitle')}
               </h3>
 
-              <p className="mt-4 max-w-sm font-academic text-base leading-loose text-white/82">
+              <p className="mt-3 max-w-sm font-academic text-sm leading-relaxed text-white/82 sm:text-base">
                 {t('smartSuggestionsDesc')}
               </p>
             </div>
@@ -235,7 +235,7 @@ export default function ChatbotCTA() {
           {/* Bottom feature card 2 */}
           <Link
             href="/catalog/industry"
-            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#0B4E84] p-7 text-center shadow-[0_18px_48px_rgba(10,37,64,0.13)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
+            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#0B4E84] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_78%,rgba(255,255,255,0.13),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_60%)]"
@@ -244,11 +244,11 @@ export default function ChatbotCTA() {
 
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
 
-              <h3 className="font-academic text-2xl font-bold text-[#E8C96A]">
+              <h3 className="font-academic text-xl font-bold text-[#E8C96A]">
                 {t('fasterAccessTitle')}
               </h3>
 
-              <p className="mt-4 max-w-sm font-academic text-base leading-loose text-white/86">
+              <p className="mt-3 max-w-sm font-academic text-sm leading-relaxed text-white/86 sm:text-base">
                 {t('fasterAccessDesc')}
               </p>
             </div>

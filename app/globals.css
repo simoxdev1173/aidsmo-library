@@ -577,6 +577,33 @@ select {
   background-color: rgba(10, 37, 64, 0.34);
 }
 
+/* Branded document rail for the in-page PDF.js reader. */
+.pdf-document-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--library-gold) #dce6ee;
+}
+
+.pdf-document-scroll::-webkit-scrollbar {
+  width: 13px;
+}
+
+.pdf-document-scroll::-webkit-scrollbar-track {
+  background: #dce6ee;
+  border-inline-start: 1px solid rgba(10, 37, 64, 0.08);
+}
+
+.pdf-document-scroll::-webkit-scrollbar-thumb {
+  min-height: 52px;
+  border: 3px solid #dce6ee;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, var(--library-gold-light), var(--library-gold) 58%, #9a7421);
+}
+
+.pdf-document-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #f0d77e, #b68d2f 58%, #7d5d19);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

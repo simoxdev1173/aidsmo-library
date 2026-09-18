@@ -31,7 +31,10 @@
     "magazines": "مجلة متخصصة",
     "books": "كتاب رقمي",
     "studies": "بحث ودراسة",
-    "reports": "تقرير صناعي"
+    "reports": "تقرير صناعي",
+    "scientificPapers": "وثيقة علمية",
+    "numberedPapers": "صفحات مرقمنة",
+    "memorandums": "مذكرات تفاهم"
   },
   "trending": {
     "heading": "رائج في المكتبة الرقمية",

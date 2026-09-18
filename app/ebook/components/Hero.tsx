@@ -469,8 +469,8 @@ const Hero = () => {
   }, [activeIndex, goToSlide, prefersReducedMotion]);
 
   return (
-    <section className="relative overflow-hidden bg-[#0A2540] pt-20 sm:pt-24 md:pt-28" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <div className="corner-frame relative min-h-[calc(100dvh-5rem)] w-full overflow-hidden bg-[#0A2540] shadow-[0_28px_90px_rgba(10,37,64,0.2)] sm:min-h-[calc(100dvh-6rem)]">
+    <section className="relative overflow-hidden bg-[#0A2540] pt-18 sm:pt-20 lg:pt-24" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="corner-frame relative min-h-[clamp(34rem,72dvh,46rem)] w-full overflow-hidden bg-[#0A2540] shadow-[0_24px_72px_rgba(10,37,64,0.18)]">
         <WebGlHeroSlider
           images={slidesWithAlt}
           fromIndex={fromIndex}
@@ -484,16 +484,16 @@ const Hero = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.1),transparent_30%)]" aria-hidden />
         <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />
 
-        <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-5rem)] max-w-7xl items-center gap-10 px-5 py-16 sm:min-h-[calc(100dvh-6rem)] sm:px-10 lg:grid-cols-[0.95fr_1.05fr] lg:px-14">
+        <div className="relative z-10 mx-auto grid min-h-[clamp(34rem,72dvh,46rem)] max-w-6xl items-center gap-8 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
      
           <div className="max-w-2xl justify-self-end text-white">
-            <div className="mb-8 flex items-center gap-4">
+            <div className="mb-5 flex items-center gap-3 sm:mb-6">
               <Image
                 src="/logo-3d-3d.png"
                 alt={t('logoAlt')}
                 width={420}
                 height={420}
-                className="h-20 w-20 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-34"
+                className="h-16 w-16 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] sm:h-20 sm:w-24"
                 priority
               />
 
@@ -501,17 +501,17 @@ const Hero = () => {
             </div>
 
             <div className="w-fit max-w-full">
-              <h1 className="whitespace-nowrap font-academic text-[clamp(1.5rem,6vw,4.5rem)] font-bold leading-[1.15] text-white">
+              <h1 className="text-balance font-academic text-[clamp(1.65rem,4.4vw,3.5rem)] font-bold leading-[1.15] text-white sm:whitespace-nowrap">
                 <span className="text-[#E8C96A]">{t('titleAccent')}</span>
                 <span className="ms-2 text-white">{t('titleRest')}</span>
               </h1>
 
-              <p className="mt-6 w-0 min-w-full text-pretty font-academic text-base leading-[1.85] text-white/86 sm:mt-8 sm:text-xl md:text-2xl">
+              <p className="mt-4 w-0 min-w-full max-w-[58ch] text-pretty font-academic text-base leading-[1.75] text-white/86 sm:mt-6 sm:text-lg lg:text-xl">
                 {t('subtitle')}
               </p>
             </div>
 
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row">
               <Link
                 href="#latest-pub"
                 className="engraved brass-gradient inline-flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:px-7"

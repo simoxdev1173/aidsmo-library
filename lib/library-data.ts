@@ -429,7 +429,7 @@ const TRENDING_SECTORS = [
 ] as const;
 
 const TRENDING_ROW_LIMIT = 9;
-const RECENT_TRENDING_YEARS = new Set(["2025", "2026"]);
+const TRENDING_YEAR = "2026";
 
 const ENTRY_TYPE_LABEL: Record<string, string> = {
   BOOK: "كتاب",
@@ -484,7 +484,10 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
   const [categories, entries] = await Promise.all([
     prisma.category.findMany({ select: { id: true, parentId: true, name: true, slug: true } }),
     prisma.libraryEntry.findMany({
-      where: { status: "PUBLISHED" },
+      // Homepage shelves are visual browsing surfaces. Only include entries
+      // that can render a real cover, allowing older covered entries from the
+      // same sector to fill any slots a coverless upload would have occupied.
+      where: { status: "PUBLISHED", coverImagePath: { not: null } },
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       select: {
         id: true,
@@ -498,6 +501,10 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
       },
     }),
   ]);
+
+  // The database filter removes nulls; this also guards against legacy rows
+  // whose cover path is an empty or whitespace-only string.
+  const coveredEntries = entries.filter((entry) => Boolean(entry.coverImagePath?.trim()));
 
   const categoryById = new Map(categories.map((category) => [category.id, category]));
 
@@ -514,7 +521,7 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
   type Entry = (typeof entries)[number];
 
   const grouped = new Map<string, Entry[]>();
-  for (const entry of entries) {
+  for (const entry of coveredEntries) {
     const slug = topLevelSlug(entry.categoryId);
     if (!slug) continue;
     const bucket = grouped.get(slug);
@@ -533,6 +540,34 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
 
   const pickLatestUploads = (pool: Entry[], limit: number) => pool.slice(0, limit);
 
+  const pickDiversifiedTrending = (pool: Entry[], limit: number) => {
+    const byDepartment = new Map<string, Entry[]>();
+
+    for (const entry of pool) {
+      const department = topLevelSlug(entry.categoryId) ?? entry.categoryId;
+      const bucket = byDepartment.get(department);
+      if (bucket) bucket.push(entry);
+      else byDepartment.set(department, [entry]);
+    }
+
+    const buckets = shuffle(
+      Array.from(byDepartment.values(), (items) => shuffle(items)),
+    );
+    const selected: Entry[] = [];
+
+    // Take one random title per department in each pass so a large department
+    // cannot occupy the whole shelf merely because it has more publications.
+    while (selected.length < limit && buckets.some((bucket) => bucket.length > 0)) {
+      for (const bucket of shuffle(buckets)) {
+        const entry = bucket.pop();
+        if (entry) selected.push(entry);
+        if (selected.length === limit) break;
+      }
+    }
+
+    return selected;
+  };
+
   // Mining is curated by hand; every other sector keeps the database's latest-upload order.
   const sectorItems = new Map<string, TrendingItem[]>();
   for (const sector of TRENDING_SECTORS) {
@@ -546,17 +581,18 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
 
   const rows: TrendingRow[] = [];
 
-  // Refresh this shelf from recent publication years without tying it to upload order.
-  const trendingItems = shuffle(
-    entries.filter((entry) => RECENT_TRENDING_YEARS.has(entry.year?.trim() ?? "")),
+  // Trending is a fresh random selection from covered 2026 publications;
+  // category shelves below continue to use newest-upload order.
+  const trendingItems = pickDiversifiedTrending(
+    coveredEntries.filter((entry) => entry.year?.trim() === TRENDING_YEAR),
+    TRENDING_ROW_LIMIT,
   )
-    .slice(0, TRENDING_ROW_LIMIT)
     .map(toItem);
   if (trendingItems.length > 0) {
     rows.push({
       id: "trending",
       title: "العناوين الرائجة",
-      description: "مختارات متجددة من إصدارات عامي 2025 و2026 عبر قطاعات المكتبة الرقمية.",
+      description: "",
       href: "/library",
       iconKey: "trending",
       items: trendingItems,

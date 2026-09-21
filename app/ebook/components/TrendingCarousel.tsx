@@ -28,7 +28,7 @@ const ROW_ICONS: Record<string, IconType> = {
 // These row headers are static copy defined in lib/library-data.ts, so they're
 // translated once here instead of round-tripping through the live translate API.
 const ROW_LABELS_EN: Record<string, { title: string; description: string }> = {
-  trending: { title: 'Trending Titles', description: 'A rotating selection of publications from 2025 and 2026 across the digital library.' },
+  trending: { title: 'Trending Titles', description: '' },
   industry: { title: 'Industry', description: 'Reports and references on development, value chains, and industrial competitiveness.' },
   standardization: { title: 'Standardization & Quality', description: 'Guides, terminology, and references to help understand standards and quality.' },
   mining: { title: 'Mining', description: 'Geological references and studies on mineral resources and sustainability.' },
@@ -240,7 +240,9 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
             <h3 id={`${row.id}-heading`} className="text-xl font-bold leading-tight text-[#003652] md:text-2xl">
               {displayTitle}
             </h3>
-            <p className="mt-2 max-w-2xl font-academic text-base leading-relaxed text-[#64748B]">{displayDescription}</p>
+            {displayDescription && (
+              <p className="mt-2 max-w-2xl font-academic text-base leading-relaxed text-[#64748B]">{displayDescription}</p>
+            )}
             <p className="sr-only">{`1 ${t('rangeTo')} ${Math.min(total, 6)} ${t('rangeOf')} ${total}`}</p>
           </div>
         </div>

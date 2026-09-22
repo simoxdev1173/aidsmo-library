@@ -95,6 +95,8 @@ const LIBRARY_STAT_DEFINITIONS: Record<LibraryStatKey, LibraryStatDefinition> = 
 const VERIFIED_NUMBERED_PAGES_TOTAL = 97_421;
 const VERIFIED_SCIENTIFIC_DOCUMENTS_BASELINE = 1_000;
 const VERIFIED_MAGAZINES_TOTAL = 18;
+const VERIFIED_STUDIES_TOTAL = 32;
+const VERIFIED_INDUSTRIAL_REPORTS_TOTAL = 24;
 const VERIFIED_MEMORANDUMS_TOTAL = 58;
 
 function normalizeStatText(value: string | null | undefined) {
@@ -166,8 +168,8 @@ export async function getLibraryStats() {
   return {
     books: entries.filter((entry) => entry.entryType === "BOOK").length,
     magazines: Math.max(VERIFIED_MAGAZINES_TOTAL, countFor(LIBRARY_STAT_DEFINITIONS.magazines)),
-    studies: countFor(LIBRARY_STAT_DEFINITIONS.studies),
-    reports: countFor(LIBRARY_STAT_DEFINITIONS.reports),
+    studies: VERIFIED_STUDIES_TOTAL,
+    reports: VERIFIED_INDUSTRIAL_REPORTS_TOTAL,
     scientificPapers:
       VERIFIED_SCIENTIFIC_DOCUMENTS_BASELINE + countFor(LIBRARY_STAT_DEFINITIONS.scientificPapers),
     numberedPapers: VERIFIED_NUMBERED_PAGES_TOTAL,

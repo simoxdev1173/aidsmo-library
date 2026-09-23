@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { IconType } from 'react-icons';
-import { FaBookOpen, FaFileAlt, FaFlask, FaHandshake, FaNewspaper, FaRegFileAlt } from 'react-icons/fa';
+import { FaFileAlt, FaFlask, FaHandshake, FaNewspaper, FaRegFileAlt } from 'react-icons/fa';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 type LibraryStatsData = {
@@ -53,12 +53,11 @@ const useCountUp = (target: number, duration = 2000) => {
 
 const getStatsData = (stats: LibraryStatsData): Array<{
   num: number;
-  labelKey: 'magazines' | 'books' | 'studies' | 'reports' | 'scientificPapers' | 'numberedPapers' | 'memorandums';
+  labelKey: 'magazines' | 'studies' | 'reports' | 'scientificPapers' | 'numberedPapers' | 'memorandums';
   Icon: IconType;
 }> => [
   { num: stats.numberedPapers, labelKey: 'numberedPapers', Icon: FaRegFileAlt },
   { num: stats.magazines, labelKey: 'magazines', Icon: FaNewspaper },
-  { num: stats.books, labelKey: 'books', Icon: FaBookOpen },
   { num: stats.studies, labelKey: 'studies', Icon: FaFlask },
   { num: stats.reports, labelKey: 'reports', Icon: FaFileAlt },
   { num: stats.scientificPapers, labelKey: 'scientificPapers', Icon: FaFlask },

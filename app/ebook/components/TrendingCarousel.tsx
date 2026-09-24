@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fa';
 import type { TrendingItem, TrendingRow } from '@/lib/library-data';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
+import styles from './TrendingShelves.module.css';
 
 const ROW_ICONS: Record<string, IconType> = {
   trending: FaBookOpen,
@@ -140,51 +141,36 @@ function translateItem(item: TrendingItem): TrendingItem {
   return { ...item, title, meta, type };
 }
 
-function scrollByAmount(container: HTMLDivElement, amount: number) {
-  container.scrollBy({ left: amount, behavior: 'smooth' });
-}
+function LibraryCard({ item }: { item: TrendingItem }) {
+  const t = useTranslations('trendingRow');
+  const [failedCover, setFailedCover] = useState<string | null>(null);
+  const [loadedCover, setLoadedCover] = useState<string | null>(null);
+  const metadata = Array.from(new Set([item.meta.trim(), item.type.trim()].filter(Boolean)));
+  const showCover = Boolean(item.cover && failedCover !== item.cover);
+  const coverReady = loadedCover === item.cover;
 
-function LibraryCard({ item, index }: { item: TrendingItem; index: number }) {
-  const { locale } = useAppLocale();
   return (
-    <Link
-      href={item.href}
-      className={`group block w-44 shrink-0 text-[#0A2540] outline-none [perspective:1100px] sm:w-48 lg:w-52 ${locale === 'ar' ? 'text-right' : 'text-left'}`}
-      style={{ animationDelay: `${index * 60}ms` }}
-    >
-      <div className="relative mx-auto h-64 w-40 [transform-style:preserve-3d] transition duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] [animation:research-card-rise_700ms_cubic-bezier(0.19,1,0.22,1)_both] group-hover:[transform:rotateY(-8deg)_rotateX(4deg)_translateY(-8px)] group-focus-visible:[transform:rotateY(-8deg)_rotateX(4deg)_translateY(-8px)] motion-reduce:transform-none motion-reduce:transition-none sm:h-72 sm:w-44 lg:h-76 lg:w-48">
-        <div className="absolute inset-0 translate-x-3 translate-y-4 bg-[#0A2540]/18 blur-xl transition duration-700 group-hover:translate-y-7 group-hover:bg-[#0A2540]/28" aria-hidden />
-        <div className="absolute inset-y-3 right-[-10px] w-5 bg-gradient-to-l from-[#5A4217] via-[#C29C41] to-[#F7E5A9] shadow-[inset_3px_0_6px_rgba(10,37,64,0.22)] [transform:rotateY(72deg)] [transform-origin:left]" aria-hidden />
-        <div className="absolute inset-0 overflow-hidden border border-[#C29C41]/35 bg-[#0A2540] shadow-[0_18px_34px_rgba(10,37,64,0.18)] [transform:translateZ(18px)]">
-          {item.cover ? (
-            <Image
-              src={item.cover}
-              alt={item.title}
-              fill
-              sizes="(min-width: 1024px) 224px, (min-width: 640px) 208px, 176px"
-              className="relative z-10 object-cover transition duration-700 group-hover:scale-[1.055]"
-              unoptimized
-            />
-          ) : (
-            <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-b from-[#0A2540] to-[#12335A] px-4 text-center">
-              <span className="font-display text-[0.62rem] font-bold uppercase tracking-[0.24em] text-[#C29C41]">AIDSMO</span>
-              <span className="line-clamp-4 text-sm font-bold leading-6 text-[#F7E5A9]">{item.title}</span>
-              <span className="text-xs font-semibold text-white/55">{item.type}</span>
-            </div>
-          )}
-          <div className="absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-black/28 via-white/8 to-transparent" aria-hidden />
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#0A2540]/18 via-transparent to-white/10" aria-hidden />
-          <div className="absolute -inset-y-8 -left-16 z-30 w-12 rotate-12 bg-white/42 blur-md transition duration-700 group-hover:translate-x-64" aria-hidden />
-        </div>
+    <Link href={item.href} className={styles.book}>
+      <div className={styles.coverStage}>
+        {showCover && <div className={`${styles.coverSkeleton} ${coverReady ? styles.coverSkeletonReady : ''}`} aria-hidden="true"><span /></div>}
+        {showCover && item.cover ? (
+          <div className={styles.cover}>
+            <Image src={item.cover} alt="" fill sizes="(max-width: 640px) 180px, 220px"
+              className={`${styles.coverImage} ${coverReady ? styles.coverReady : ''}`}
+              unoptimized onLoad={() => setLoadedCover(item.cover)} onError={() => setFailedCover(item.cover)} />
+          </div>
+        ) : (
+          <div className={styles.fallback} aria-hidden="true">
+            <span>AIDSMO</span><FaBookOpen /><span>{item.title}</span>
+          </div>
+        )}
       </div>
-
-      <div className="mt-5 px-1">
-        <h3 className="line-clamp-2 min-h-[3.25rem] text-base font-bold leading-7 text-[#003652] transition duration-300 group-hover:text-[#9A7421] group-focus-visible:text-[#9A7421] sm:text-[1.05rem]">
-          {item.title}
-        </h3>
-        <p className="mt-1 line-clamp-1 text-xs font-semibold text-[#64748B]">
-          {item.meta} · {item.type}
-        </p>
+      <div className={styles.bookBody}>
+        <p className={styles.metadata}>{metadata.map((part, index) => (
+          <span key={part}>{index > 0 && <span className={styles.dot} aria-hidden="true">·</span>}<bdi>{part}</bdi></span>
+        ))}</p>
+        <h4 className={styles.bookTitle}>{item.title}</h4>
+        <span className={styles.openBook}>{t('openPublication')}<span aria-hidden="true">↗</span></span>
       </div>
     </Link>
   );
@@ -197,6 +183,7 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
   const Icon = ROW_ICONS[row.iconKey] ?? FaBookOpen;
   const total = row.items.length;
   const [, forceRerender] = useState(0);
+  const [position, setPosition] = useState({ first: 1, last: 1, prev: false, next: false });
 
   useEffect(() => {
     if (locale !== 'en') return;
@@ -208,87 +195,95 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
     fetchTranslations(texts).then(() => {
       if (!cancelled) forceRerender((n) => n + 1);
     });
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [locale, row.items]);
 
-  const isRtl = locale === 'ar';
-  const displayItems = locale === 'en' ? row.items.map(translateItem) : row.items;
-  const displayTitle = locale === 'en' ? ROW_LABELS_EN[row.id]?.title ?? row.title : row.title;
-  const displayDescription = locale === 'en' ? ROW_LABELS_EN[row.id]?.description ?? row.description : row.description;
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    let frame = 0;
+    const update = () => {
+      const bounds = scroller.getBoundingClientRect();
+      const cards = Array.from(scroller.children);
+      const visible = cards.flatMap((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const overlap = Math.min(rect.right, bounds.right) - Math.max(rect.left, bounds.left);
+        return overlap >= rect.width * .5 ? [index + 1] : [];
+      });
+      const offset = Math.abs(scroller.scrollLeft);
+      const next = {
+        first: visible[0] ?? 1,
+        last: visible.at(-1) ?? 1,
+        prev: offset > 4,
+        next: offset < scroller.scrollWidth - scroller.clientWidth - 4,
+      };
+      setPosition((current) => Object.keys(next).every((key) => current[key as keyof typeof current] === next[key as keyof typeof next]) ? current : next);
+    };
+    const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); };
+    const resize = new ResizeObserver(schedule);
+    resize.observe(scroller);
+    scroller.addEventListener('scroll', schedule, { passive: true });
+    schedule();
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      scroller.removeEventListener('scroll', schedule);
+    };
+  }, [locale, total]);
 
-  const onPrev = () => scrollerRef.current && scrollByAmount(scrollerRef.current, isRtl ? 660 : -660);
-  const onNext = () => scrollerRef.current && scrollByAmount(scrollerRef.current, isRtl ? -660 : 660);
+  const isRtl = locale === 'ar';
+  const displayItems = isRtl ? row.items : row.items.map(translateItem);
+  const displayTitle = isRtl ? row.title : ROW_LABELS_EN[row.id]?.title ?? row.title;
+  const displayDescription = isRtl ? row.description : ROW_LABELS_EN[row.id]?.description ?? row.description;
+  const move = (forward: boolean) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const step = (scroller.firstElementChild?.getBoundingClientRect().width ?? 240) + 24;
+    const count = Math.max(1, Math.floor(scroller.clientWidth / step));
+    scroller.scrollBy({
+      left: step * count * (forward ? 1 : -1) * (isRtl ? -1 : 1),
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  };
   const PrevIcon = isRtl ? FaChevronRight : FaChevronLeft;
   const NextIcon = isRtl ? FaChevronLeft : FaChevronRight;
 
   return (
-    <section
-      id={`shelf-${row.id}`}
-      aria-labelledby={`${row.id}-heading`}
-      aria-roledescription="carousel"
-      dir={isRtl ? 'rtl' : 'ltr'}
-      className="relative border-t border-[#C29C41]/25 py-8 first:border-t-0 md:py-10"
-    >
-      <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div className="flex items-start gap-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-[#C29C41]/40 bg-[#0A2540] text-[#F7E5A9] shadow-[0_12px_26px_rgba(10,37,64,0.18)]">
-            <Icon className="h-5 w-5" />
-          </span>
+    <section id={`shelf-${row.id}`} aria-labelledby={`${row.id}-heading`} dir={isRtl ? 'rtl' : 'ltr'} className={styles.shelf}>
+      <header className={styles.shelfHeader}>
+        <div className={styles.shelfIntro}>
+          <span className={styles.sectorIcon}><Icon aria-hidden="true" /></span>
           <div>
-            <h3 id={`${row.id}-heading`} className="text-xl font-bold leading-tight text-[#003652] md:text-2xl">
-              {displayTitle}
-            </h3>
-            {displayDescription && (
-              <p className="mt-2 max-w-2xl font-academic text-base leading-relaxed text-[#64748B]">{displayDescription}</p>
-            )}
-            <p className="sr-only">{`1 ${t('rangeTo')} ${Math.min(total, 6)} ${t('rangeOf')} ${total}`}</p>
+            <h3 id={`${row.id}-heading`} className={styles.shelfTitle}>{displayTitle}</h3>
+            {displayDescription && <p className={styles.shelfDescription}>{displayDescription}</p>}
           </div>
         </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onPrev}
-            aria-label={`${t('prevAria')}: ${displayTitle}`}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/30 bg-white/72 text-[#0369A1] shadow-sm backdrop-blur transition duration-200 hover:border-[#C29C41]/65 hover:bg-[#FFF8E1] hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
-          >
-            <PrevIcon className="h-4 w-4" />
-          </button>
-          <Link
-            href={row.href}
-            aria-label={`${t('viewMoreAria')}: ${displayTitle}`}
-            className="rounded-full border border-[#C29C41]/35 bg-[#FFF8E1] px-4 py-2 text-sm font-bold text-[#7A5C10] shadow-sm transition duration-200 hover:border-[#C29C41]/70 hover:bg-[#F7E5A9] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
-          >
-            {t('viewMore')}
-          </Link>
-          <button
-            type="button"
-            onClick={onNext}
-            aria-label={`${t('nextAria')}: ${displayTitle}`}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/30 bg-white/72 text-[#0369A1] shadow-sm backdrop-blur transition duration-200 hover:border-[#C29C41]/65 hover:bg-[#FFF8E1] hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
-          >
-            <NextIcon className="h-4 w-4" />
-          </button>
-        </div>
+        <Link href={row.href} className={styles.viewAll} aria-label={`${t('viewMoreAria')}: ${displayTitle}`}>
+          {t('viewMore')}<span aria-hidden="true">{isRtl ? '←' : '→'}</span>
+        </Link>
+      </header>
+      <div ref={scrollerRef} id={`${row.id}-books`} className={styles.scroller}
+        role="group" aria-label={displayTitle} tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.target !== event.currentTarget) return;
+          if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            event.preventDefault();
+            move(isRtl ? event.key === 'ArrowLeft' : event.key === 'ArrowRight');
+          }
+        }}>
+        {displayItems.map((item) => <article className={styles.slide} key={item.id}><LibraryCard item={item} /></article>)}
       </div>
-
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#F7F0E1] to-transparent" aria-hidden />
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#F7F0E1] to-transparent" aria-hidden />
-        <div
-          ref={scrollerRef}
-          className="flex gap-6 overflow-x-auto overflow-y-visible px-2 pb-5 pt-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-          style={{ scrollSnapType: 'x mandatory' }}
-        >
-          {displayItems.map((item, itemIndex) => (
-            <div key={item.id} style={{ scrollSnapAlign: 'start' }}>
-              <LibraryCard item={item} index={itemIndex} />
-            </div>
-          ))}
+      <footer className={styles.shelfFooter}>
+        <p className={styles.range} aria-live="polite" aria-atomic="true">
+          {position.first} {t('rangeTo')} {position.last} {t('rangeOf')} {total}
+        </p>
+        <div className={styles.controls}>
+          <button type="button" onClick={() => move(false)} disabled={!position.prev} aria-controls={`${row.id}-books`}
+            aria-label={`${t('prevAria')}: ${displayTitle}`}><PrevIcon aria-hidden="true" /></button>
+          <button type="button" onClick={() => move(true)} disabled={!position.next} aria-controls={`${row.id}-books`}
+            aria-label={`${t('nextAria')}: ${displayTitle}`}><NextIcon aria-hidden="true" /></button>
         </div>
-      </div>
+      </footer>
     </section>
   );
 }

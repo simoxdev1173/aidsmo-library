@@ -38,7 +38,15 @@
   },
   "trending": {
     "heading": "Trending in the Digital Library",
-    "subtitle": "Moving shelves gathering the most requested titles across the library's core sectors, with richer, smoother book cards."
+    "subtitle": "Explore publications by field and find references for your research.",
+    "browseSectors": "Browse by field",
+    "sectors": {
+      "trending": "Trending titles",
+      "industry": "Industry",
+      "standardization": "Standards & quality",
+      "mining": "Mining",
+      "industrial-info": "Industrial information"
+    }
   },
   "trendingRow": {
     "viewMore": "View More",
@@ -46,7 +54,8 @@
     "nextAria": "Next",
     "viewMoreAria": "View more",
     "rangeTo": "to",
-    "rangeOf": "of"
+    "rangeOf": "of",
+    "openPublication": "View publication"
   },
   "services": {
     "heading": "Digital Library Services",

@@ -662,16 +662,16 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
     <>
       <header
         className={cn(
-          'fixed inset-x-0 z-[60] px-2 transition-all duration-500 md:px-3 2xl:px-4',
-          isSolid ? 'top-3' : 'top-4',
+          'fixed inset-x-0 z-[60] transition-all duration-500',
+          isSolid ? 'top-3 px-2 md:px-3 2xl:px-4' : 'top-0 px-0',
         )}
       >
         <nav
           className={cn(
-            'mx-auto max-w-[108rem] overflow-visible rounded-[14px] border transition-all duration-500',
+            'mx-auto overflow-visible transition-all duration-500',
             isSolid
-              ? 'border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
-              : 'border-white/15 bg-[#0A2540]/30 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.14)] backdrop-blur-md hover:border-[#C29C41]/35 hover:bg-[#0A2540]/55',
+              ? 'max-w-[108rem] rounded-[14px] border border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
+              : 'max-w-none border-b border-[#C29C41]/30 bg-[#0A2540] py-1.5',
           )}
         >
           <div className="px-3 lg:px-4">
@@ -680,7 +680,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                 href="/"
                 className={cn(
                   'flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white',
-                  isSolid ? 'h-12 w-20' : 'h-14 w-20 md:h-16 md:w-24',
+                  isSolid ? 'h-12 w-20' : 'h-14 w-20 md:w-24',
                 )}
               >
                 <Image

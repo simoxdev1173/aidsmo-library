@@ -18,7 +18,8 @@ import {
 import type { IconType } from 'react-icons';
 import { getPublishedEntryBySlug, getRelatedEntries } from '@/lib/library-data';
 import { categoryPath } from '@/lib/library-labels';
-import AiAssistantPanel from '@/components/AiAssistantPanel';
+import BookSummary from '@/components/book/BookSummary';
+import styles from '@/components/book/BookReading.module.css';
 import RelatedEntriesCarousel from '@/components/RelatedEntriesCarousel';
 import BookActions from '@/components/book/BookActions';
 import CommentsSection from '@/components/book/CommentsSection';
@@ -121,7 +122,7 @@ type EntryFact = {
 
 function FactCell({ label, value, icon: Icon, compact = false }: EntryFact & { compact?: boolean }) {
   return (
-    <div className={`min-w-0 bg-white ${compact ? 'px-4 py-4 sm:flex-1' : 'px-5 py-5 sm:px-6'}`}>
+    <div className={`min-w-0 bg-[#fffdf8] ${compact ? 'px-4 py-4 sm:flex-1' : 'px-5 py-5 sm:px-6'}`}>
       <dt className="flex items-center gap-3 text-[0.7rem] font-bold text-[#64748B]">
         <span
           className={`flex shrink-0 items-center justify-center rounded-lg border border-[#C29C41]/25 bg-[#FFF8E8] text-[#9A7421] ${compact ? 'h-8 w-8' : 'h-10 w-10'}`}
@@ -140,37 +141,20 @@ function FactCell({ label, value, icon: Icon, compact = false }: EntryFact & { c
   );
 }
 
-function SummaryParagraph({ text }: { text: string }) {
-  const opening = text.match(/^(\S+)([\s\S]*)$/u);
-
-  return (
-    <p className="max-w-[70ch] whitespace-pre-line font-academic text-[1.1rem] leading-[2.15] text-[#334155]">
-      {opening ? (
-        <>
-          <span className="font-bold text-[#9A7421]">{opening[1]}</span>
-          {opening[2]}
-        </>
-      ) : text}
-    </p>
-  );
-}
-
 // A section label with a short, quiet gold rule underneath — standing in for
 // a card border, without the site's ornate-divider star glyph repeating down
 // the page.
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-6">
-      <h2 className="academic-heading text-xl">{children}</h2>
+      <h2 className="text-xl font-medium text-[#0A2540]">{children}</h2>
       <div className="mt-3 h-[3px] w-14 rounded-full bg-[#C29C41]" />
     </div>
   );
 }
 
-// The cover as a physical object resting on the page: gold corner brackets
-// in place of a card border, a tinted cast shadow, and a bound-edge sliver
-// where the pages would gather. Falls back to a quiet manuscript plate
-// (never a card either) when no scan has been generated yet.
+// Consistent cover proportions, a cast shadow, and a subtle bound edge.
+// Show a title plate when no cover scan is available.
 function CoverArt({
   src,
   title,
@@ -181,13 +165,13 @@ function CoverArt({
   spine: string;
 }) {
   return (
-    <div className="corner-frame w-44 sm:w-52">
+    <div className={styles.coverArt}>
       <div
         className="relative aspect-[3/4] overflow-hidden rounded-sm shadow-[0_28px_46px_-18px_rgba(10,37,64,0.55)]"
         style={{ background: `linear-gradient(160deg, #0A2540, ${spine})` }}
       >
         {src ? (
-          <Image src={src} alt={title} fill className="object-cover" unoptimized />
+          <Image src={src} alt={title} fill sizes="(max-width: 767px) 240px, 320px" className="object-cover object-top" unoptimized priority />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-between px-5 py-7 text-center">
             <span className="font-display text-[0.62rem] font-bold uppercase tracking-[0.3em] text-[#E8C96A]">
@@ -361,7 +345,7 @@ export default async function BookPage({
   const parentHref = `/catalog/${entry.category.parent?.slug ?? entry.category.slug}`;
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] text-[#0A2540]">
+    <main dir="rtl" className={styles.page}>
       {/* ─── Hero: the sector's own header backdrop, matching listing pages ─── */}
       <section className="relative overflow-hidden bg-[#071D2F] pt-28 text-white md:pt-32">
         <div className="absolute inset-0 opacity-[0.72]" aria-hidden>
@@ -380,11 +364,12 @@ export default async function BookPage({
             </Link>
           </nav>
 
-          <div className="mt-8 max-w-3xl">
+          <div className={styles.heroLayout}>
+          <div className="min-w-0">
             <span className="inline-flex items-center rounded-full bg-[#C29C41]/18 px-3 py-1 text-xs font-bold text-[#E8C96A] ring-1 ring-[#C29C41]/30">
               {typeLabel}
             </span>
-            <h1 className="mt-4 font-academic text-3xl font-bold leading-[1.25] md:text-[2.75rem]">
+            <h1 className={styles.heroTitle}>
               {entry.title}
             </h1>
 
@@ -402,13 +387,11 @@ export default async function BookPage({
             <div className="mt-7 flex flex-wrap gap-3">
               {primaryDocument ? (
                 <a
-                  href={primaryDocument.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#document-preview"
                   className="engraved brass-gradient inline-flex h-12 items-center gap-2 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_10px_24px_rgba(0,0,0,0.28)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#071D2F]"
                 >
                   <HiOutlineEye className="h-5 w-5" />
-                  اطّلاع على الملف
+                  اقرأ الوثيقة
                 </a>
               ) : (
                 <button
@@ -438,32 +421,34 @@ export default async function BookPage({
               />
             </div>
           </div>
+          <div className={styles.heroCover}>
+            <CoverArt src={entry.coverImagePath} title={entry.title} spine={spine} />
+          </div>
+          </div>
         </div>
       </section>
 
-      {/* ─── Body ─── */}
-      {/* Single flowing column — no sidebar. The entry's own facts read
-          better with the full page width to breathe in than boxed into a
-          narrow rail, and it keeps the reading order linear: cover with the
-          summary, then what the entry is, then the document itself. */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+      <nav className={styles.pageNav} aria-label="أقسام صفحة الإصدار">
+        <div className={styles.pageNavInner}>
+          <a href="#book-summary">الملخص</a>
+          <a href="#book-questions-heading">{documentChatContext ? 'أسئلة حول الوثيقة' : 'اسأل المساعد'}</a>
+          <a href="#book-details">بيانات الإصدار</a>
+          <a href="#document-preview">معاينة الوثيقة</a>
+        </div>
+      </nav>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className={styles.readingLayout}>
+        <div className="min-w-0">
         {summary && (
-          <article className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
-            <div className="mx-auto shrink-0 sm:mx-0">
-              <CoverArt src={entry.coverImagePath} title={entry.title} spine={spine} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <SectionHeading>ملخص</SectionHeading>
-              <SummaryParagraph text={summary} />
-            </div>
-          </article>
+          <BookSummary text={summary} title={entry.title} source={description ? 'editorial' : generatedSummary ? 'generated' : 'metadata'} documentContext={documentChatContext} />
         )}
 
         {/* Entry facts — a grid instead of a boxed list, so they use the
             width the sidebar used to waste. */}
-        <div className={summary ? 'mt-14' : ''}>
-          <SectionHeading>بيانات المدخل</SectionHeading>
-          <div className="overflow-hidden rounded-2xl border border-[#C29C41]/25 bg-[#D9E3EE] shadow-[0_18px_48px_rgba(10,37,64,0.08)]">
+        <div id="book-details" className={styles.sectionAnchor}>
+          <SectionHeading>بيانات الإصدار</SectionHeading>
+          <div className="overflow-hidden rounded-2xl border border-[#C29C41]/25 bg-[#e8dfcb]">
             {identityFacts.length > 0 && (
               <dl className={`grid gap-px ${identityFacts.length > 1 ? 'sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]' : ''}`}>
                 {identityFacts.map((fact) => (
@@ -488,7 +473,7 @@ export default async function BookPage({
 
         {documentFiles.length > 1 && (
           <div className="mt-14">
-            <SectionHeading>ملفات PDF المرفقة</SectionHeading>
+            <SectionHeading>الوثائق المرفقة</SectionHeading>
             <div className="grid gap-3 sm:grid-cols-2">
               {documentFiles.map((file, index) => (
                 <a
@@ -498,7 +483,7 @@ export default async function BookPage({
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center justify-between gap-3 border-t-2 border-[#C29C41]/25 pt-3 text-sm font-bold text-[#0369A1] transition duration-200 hover:text-[#8A6A1D]"
                 >
-                  <span className="truncate">{file.title || (index === 0 ? 'الملف الأساسي' : `ملف PDF ${index + 1}`)}</span>
+                  <span>وثيقة {index + 1}</span>
                   <HiOutlineEye className="h-5 w-5 shrink-0" />
                 </a>
               ))}
@@ -507,7 +492,7 @@ export default async function BookPage({
         )}
 
         {/* Document preview — skim the actual PDF without leaving the page */}
-        <div className="mt-14">
+        <div id="document-preview" className={styles.sectionAnchor}>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <h2 className="academic-heading flex flex-wrap items-center gap-3 text-xl">
               <span>معاينة الوثيقة</span>
@@ -573,19 +558,17 @@ export default async function BookPage({
           </span>
         </Link>
 
-        <CommentsSection />
+        </div>
+        <aside className={styles.coverSidebar} aria-label="غلاف الإصدار">
+          <div className={styles.stickyCover}>
+            <CoverArt src={entry.coverImagePath} title={entry.title} spine={spine} />
+            <p className={styles.sidebarTitle}>{entry.title}</p>
+            {primaryDocument && <a href="#document-preview" className={styles.sidebarRead}>اقرأ الوثيقة<HiOutlineBookOpen aria-hidden="true" /></a>}
+          </div>
+        </aside>
+        </div>
 
-        <AiAssistantPanel
-          title={entry.title}
-          prompts={documentChatContext
-            ? documentChatContext.questions.map((item) => item.question)
-            : [
-                `لخص مدخل ${entry.title}`,
-                `ما أهم الكلمات المفتاحية في ${entry.title}؟`,
-                `اقترح أسئلة بحثية حول ${entry.title}`,
-              ]}
-          documentContext={documentChatContext}
-        />
+        <CommentsSection />
 
         {related.length > 0 && (
           <div className="mt-12">

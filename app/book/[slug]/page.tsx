@@ -343,6 +343,19 @@ export default async function BookPage({
 
   const related = await getRelatedEntries(entry, 6);
   const parentHref = `/catalog/${entry.category.parent?.slug ?? entry.category.slug}`;
+  const [commentRows, commentCount, viewCount, ratingAggregate, ownRating] = await Promise.all([
+    prisma.documentComment.findMany({
+      where: { entryId: entry.id },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: 11,
+      select: { id: true, body: true, createdAt: true, userId: true, user: { select: { name: true, email: true } } },
+    }),
+    prisma.documentComment.count({ where: { entryId: entry.id } }),
+    prisma.documentView.count({ where: { entryId: entry.id } }),
+    prisma.documentRating.aggregate({ where: { entryId: entry.id }, _avg: { value: true }, _count: { value: true } }),
+    user ? prisma.documentRating.findUnique({ where: { entryId_userId: { entryId: entry.id, userId: user.id } }, select: { value: true } }) : Promise.resolve(null),
+  ]);
+  const visibleComments = commentRows.slice(0, 10);
 
   return (
     <main dir="rtl" className={styles.page}>
@@ -434,6 +447,7 @@ export default async function BookPage({
           <a href="#book-questions-heading">{documentChatContext ? 'أسئلة حول الوثيقة' : 'اسأل المساعد'}</a>
           <a href="#book-details">بيانات الإصدار</a>
           <a href="#document-preview">معاينة الوثيقة</a>
+          <a href="#document-discussion">آراء القراء</a>
         </div>
       </nav>
 
@@ -568,7 +582,24 @@ export default async function BookPage({
         </aside>
         </div>
 
-        <CommentsSection />
+        <CommentsSection
+          entryId={entry.id}
+          slug={entry.slug}
+          currentUser={user ? { id: user.id, name: user.name } : null}
+          initialComments={visibleComments.map((comment) => ({
+            id: comment.id,
+            name: comment.user.name?.trim() || comment.user.email?.split('@')[0] || 'قارئ',
+            body: comment.body,
+            createdAt: comment.createdAt.toISOString(),
+            mine: comment.userId === user?.id,
+          }))}
+          initialNextCursor={commentRows.length > 10 ? visibleComments.at(-1)?.id ?? null : null}
+          initialCommentCount={commentCount}
+          initialViewCount={viewCount}
+          initialRatingCount={ratingAggregate._count.value}
+          initialAverageRating={ratingAggregate._avg.value ?? 0}
+          initialUserRating={ownRating?.value ?? null}
+        />
 
         {related.length > 0 && (
           <div className="mt-12">

@@ -1,120 +1,93 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { Book } from "./subComponents/Book";
-import { useAppLocale } from "@/lib/i18n/LocaleProvider";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { LuArrowUpLeft } from 'react-icons/lu';
+import { Book } from './subComponents/Book';
+import { useAppLocale } from '@/lib/i18n/LocaleProvider';
+import styles from './LatestPublications.module.css';
 
-const latestBooksData = [
+const publications = [
   {
-    id: 1,
-    titleKey: "book1Title",
-    categoryKey: "book1Category",
-    images: ["/industry-covers/b-3.jpg", "/industry-covers/b-3-1.jpg", "/industry-covers/b-3-2.jpg"],
-    spineColor: "#0369a1",
+    id: 'industry-magazine-88',
+    titleKey: 'book1Title',
+    categoryKey: 'book1Category',
+    cover: '/industry-covers/b-3.jpg',
+    inside: '/latest-cover/previews/industry-88-1.webp',
+    preview: '/latest-cover/previews/industry-88-2.webp',
+    year: '2025',
+    color: '#0a2540',
+    href: '/catalog/industry',
   },
   {
-    id: 2,
-    titleKey: "book2Title",
-    categoryKey: "book2Category",
-    images: ["/latest-cover/b-4.png", "/bookCovers/i-2-2.png", "/bookCovers/i-2-3.png"],
-    spineColor: "#003652",
+    id: 'conformity-guide',
+    titleKey: 'book2Title',
+    categoryKey: 'book2Category',
+    cover: '/latest-cover/b-4.png',
+    inside: '/latest-cover/previews/conformity-guide-1.webp',
+    preview: '/latest-cover/previews/conformity-guide-2.webp',
+    year: '2026',
+    color: '#003652',
+    href: '/book/الدليل-الا-رشادي-العربي-لنماذج-تقييم-المطابقة',
   },
   {
-    id: 3,
-    titleKey: "book3Title",
-    categoryKey: "book3Category",
-    images: ["/latest-cover/b-1.png", "/latest-cover/b-2.png", "/latest-cover/b-3.png"],
-    spineColor: "#003652",
+    id: 'mine-rehabilitation',
+    titleKey: 'book3Title',
+    categoryKey: 'book3Category',
+    cover: '/latest-cover/b-1.png',
+    inside: '/latest-cover/previews/mine-rehabilitation-1.webp',
+    preview: '/latest-cover/previews/mine-rehabilitation-2.webp',
+    year: '2026',
+    color: '#005b58',
+    href: '/catalog/mining',
   },
 ] as const;
 
-const LatestPublications = () => {
-  const t = useTranslations("latestPublications");
+export default function LatestPublications() {
+  const t = useTranslations('latestPublications');
   const { locale } = useAppLocale();
-  const latestBooks = latestBooksData.map((book) => ({
-    ...book,
-    title: t(book.titleKey),
-    category: t(book.categoryKey),
-  }));
 
   return (
-    <section className="relative overflow-hidden bg-[#F8F6ED] py-12 sm:py-14 lg:py-16" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <section id="latest-publications" className={styles.section} dir={locale === 'ar' ? 'rtl' : 'ltr'} aria-labelledby="latest-publications-heading">
+      <div className={styles.container}>
+        <header className={styles.intro}>
+          <h2 id="latest-publications-heading" className={styles.heading}>{t('heading')}</h2>
+          <p className={styles.subtitle}>{t('previewHint')}</p>
+        </header>
 
-
-
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-9 max-w-2xl text-center sm:mb-11">
-          <h2 className="academic-heading mt-3 text-balance text-2xl leading-tight sm:text-3xl lg:text-4xl">
-            {t('heading')}
-          </h2>
-
-          <p className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold tracking-wide text-[#64748B]">
-            {latestBooks.map((book, idx) => (
-              <React.Fragment key={book.id}>
-                <span className="text-[#C29C41]">{book.category}</span>
-                {idx < latestBooks.length - 1 && <span className="text-[#C29C41]/50">-</span>}
-              </React.Fragment>
-            ))}
-          </p>
-
-         
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-x-10 gap-y-12 sm:gap-x-14 lg:gap-x-20">
-          {latestBooks.map((book ,bID) => (
-            <div key={book.id} className="group flex flex-col items-center">
-              <div className="relative">
-                <span className="wax-seal absolute -right-5 -top-5 z-10 flex h-12 w-12 items-center justify-center rounded-full text-base font-bold text-[#0A2540]" aria-hidden>
-                  {bID > 0 ? 2026 : "2025"}
-                </span>
-                <Book
-                  rtl={true}
-                  color={book.spineColor}
-                  className="shadow-2xl transition duration-500 group-hover:shadow-[0_24px_52px_rgba(10,37,64,0.18)]"
-                  cover={
-                    <Image
-                      src={book.images[0]}
-                      alt={book.title}
-                      width={320}
-                      height={480}
-                      className="h-full w-full rounded-sm object-cover"
-                    />
-                  }
-                  backOfCover={
-                    <Image
-                      src={book.images[1]}
-                      alt={`${t('innerPageAlt')} ${book.title}`}
-                      width={320}
-                      height={480}
-                      className="h-full w-full object-cover opacity-90"
-                    />
-                  }
-                  content={
-                    <Image
-                      src={book.images[2]}
-                      alt={`${t('contentAlt')} ${book.title}`}
-                      width={320}
-                      height={480}
-                      className="h-full w-full object-cover"
-                    />
-                  }
-                />
-              </div>
-
-              <div className="mt-6 max-w-[230px] text-center">
-                <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#C29C41]">
-                  {book.category}
-                </p>
-                <h3 className="mt-2 min-h-[3.2rem] text-lg font-bold leading-relaxed text-[#003652]">{book.title}</h3>
-              </div>
-            </div>
-          ))}
+        <div className={styles.grid}>
+          {publications.map((publication) => {
+            const title = t(publication.titleKey);
+            const category = t(publication.categoryKey);
+            return (
+              <article key={publication.id} className={styles.item}>
+                <div className={styles.stage}>
+                  <Book
+                    title={title}
+                    openLabel={t('openPreview')}
+                    closeLabel={t('closePreview')}
+                    rtl={locale === 'ar'}
+                    color={publication.color}
+                    cover={<Image src={publication.cover} alt="" width={420} height={630} className={styles.coverImage} sizes="(max-width: 640px) 192px, 212px" />}
+                    backOfCover={<Image src={publication.inside} alt="" width={900} height={1273} className={styles.coverImage} sizes="212px" />}
+                    content={
+                      <Image src={publication.preview} alt="" width={420} height={630} className={styles.coverImage} sizes="(max-width: 640px) 192px, 212px" />
+                    }
+                  />
+                </div>
+                <div className={styles.details}>
+                  <p className={styles.category}>{category} <span aria-hidden="true">·</span> <bdi>{publication.year}</bdi></p>
+                  <h3 className={styles.title}>{title}</h3>
+                  <Link href={publication.href} className={styles.link}>
+                    {t('browsePublication')}<LuArrowUpLeft aria-hidden="true" />
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
   );
-};
-
-export default LatestPublications;
+}

@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { LuChevronLeft } from 'react-icons/lu';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
+import styles from './LibraryServices.module.css';
 
 const primaryButton =
-  'engraved brass-gradient inline-flex min-h-12 max-w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 py-3 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:px-7';
+  'inline-flex min-h-11 max-w-full items-center justify-center gap-3 rounded-full border border-[#b88e36] bg-[#e8c96a] px-5 py-2.5 text-center text-[0.8rem] font-medium text-[#0A2540] shadow-[0_7px_18px_rgba(10,37,64,0.12)] sm:px-6';
 
 const darkButton =
-  'inline-flex min-h-12 max-w-full cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-5 py-3 text-center text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:px-7';
+  'inline-flex min-h-11 max-w-full items-center justify-center gap-3 rounded-full border border-[#e8c96a]/65 bg-white/10 px-5 py-2.5 text-center text-[0.8rem] font-medium text-white backdrop-blur-sm sm:px-6';
 
 const LibraryNews = () => {
   const t = useTranslations('services');
@@ -19,7 +20,7 @@ const LibraryNews = () => {
   return (
     <section
       id="library-services"
-      className="relative overflow-hidden bg-[#F7F0E1] py-12 sm:py-14 lg:py-16"
+      className="relative overflow-hidden bg-[#F7F0E1] py-16 sm:py-20 lg:py-24"
       aria-label={t('heading')}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
     >
@@ -28,88 +29,76 @@ const LibraryNews = () => {
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.34] contrast-110 saturate-125"
+        className="object-cover opacity-[0.28] contrast-110 saturate-110"
         aria-hidden
       />
 
       <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(247,240,225,0.94)_0%,rgba(247,240,225,0.74)_48%,rgba(247,240,225,0.96)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(247,240,225,0.94)_0%,rgba(247,240,225,0.82)_48%,rgba(247,240,225,0.96)_100%)]"
         aria-hidden
       />
 
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.22) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
-        }}
-        aria-hidden
-      />
-
-      <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
+      <div className="absolute inset-x-0 top-0 h-px bg-[#C29C41]/35" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 max-w-2xl">
-        
-
-          <h2 className="academic-heading mt-3 text-2xl leading-tight text-[#0A2540] sm:text-3xl lg:text-4xl">
+        <div className="mb-10 max-w-2xl sm:mb-12">
+          <h2 className="text-balance text-[1.7rem] font-medium leading-[1.6] text-[#0A2540] sm:text-[2rem] lg:text-[2.4rem]">
             {t('heading')}
           </h2>
 
-          <p className="mt-3 max-w-xl text-pretty font-academic text-base leading-relaxed text-[#475569] sm:text-lg">
+          <p className="mt-3 max-w-xl text-pretty text-sm leading-[1.9] text-[#59616a] sm:text-[0.95rem]">
             {t('subtitle')}
           </p>
         </div>
 
-        <div className="grid gap-4 lg:auto-rows-[190px] lg:grid-cols-3">
+        <div className="grid gap-4 lg:auto-rows-[205px] lg:grid-cols-3">
           {/* Big parchment card */}
           <Link
             href="#latest-pub"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/35 bg-[#FFF8E8]/95 p-5 shadow-[0_18px_44px_rgba(10,37,64,0.09)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)] sm:p-6 lg:row-span-2"
+            className={`${styles.card} group flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/35 bg-[#fffcf4]/95 p-6 shadow-[0_14px_36px_rgba(10,37,64,0.07)] backdrop-blur-sm sm:p-7 lg:row-span-2`}
           >
             <div>
-              <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#9A7421]">
+              <p className="text-xs font-medium text-[#805e1b]">
                 {t('latestKicker')}
               </p>
 
-              <h3 className="mt-4 max-w-md font-academic text-xl font-bold leading-[1.5] text-[#0A2540] sm:text-2xl">
+              <h3 className="mt-4 max-w-md text-xl font-medium leading-[1.7] text-[#0A2540] sm:text-[1.45rem]">
                 {t('latestTitle')}
               </h3>
 
-              <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-[#64748B]">
+              <p className="mt-3 max-w-md text-sm leading-[1.9] text-[#59616a]">
                 {t('latestDesc')}
               </p>
             </div>
 
             <span className={`${primaryButton} mt-7 w-fit`}>
               {t('viewPublications')}
-              <LuChevronLeft className="h-4 w-4" />
+              <LuChevronLeft className={`${styles.arrow} h-4 w-4`} />
             </span>
           </Link>
 
           {/* Top image card */}
           <Link
             href="/catalog/industry"
-            className="corner-frame group relative min-h-[210px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_18px_44px_rgba(10,37,64,0.11)] sm:min-h-[230px] lg:min-h-0"
+            className={`${styles.card} group min-h-[210px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
               src="/industry-informations-bg.png"
-              alt={t('browseByFieldAlt')}
+              alt=""
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
-              className="object-cover transition duration-700 group-hover:scale-105"
+              className={`${styles.image} object-cover`}
             />
 
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,37,64,0.12)_0%,rgba(10,37,64,0.54)_52%,rgba(10,37,64,0.88)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,37,64,0.12)_0%,rgba(10,37,64,0.55)_50%,rgba(10,37,64,0.9)_100%)]" aria-hidden="true" />
 
-            <div className="absolute inset-x-6 bottom-6 text-right">
-              <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#E8C96A]">
+            <div className="absolute inset-x-6 bottom-6 text-start">
+              <p className="text-xs font-medium text-[#E8C96A]">
                 {t('browseByFieldKicker')}
               </p>
 
-              <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
+              <p className="mt-2 max-w-xs text-lg font-medium leading-[1.7] text-white">
                 {t('browseByFieldTitle')}
               </p>
             </div>
@@ -118,82 +107,81 @@ const LibraryNews = () => {
           {/* Smart assistant card */}
           <Link
             href="#chatbot"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0A2540] p-5 text-white shadow-[0_20px_52px_rgba(10,37,64,0.14)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 sm:p-6 lg:row-span-2"
+            className={`${styles.card} group flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] p-6 text-white shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:p-7 lg:row-span-2`}
           >
             <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_16%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_78%_82%,rgba(14,165,233,0.12),transparent_30%)]"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(232,201,106,0.14),transparent_34%)]"
               aria-hidden
             />
 
             <div className="relative z-10">
-              <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#E8C96A]">
+              <p className="text-xs font-medium text-[#E8C96A]">
                 {t('assistantKicker')}
               </p>
 
-              <h3 className="mt-4 max-w-md font-academic text-xl font-bold leading-[1.5] text-white sm:text-2xl">
+              <h3 className="mt-4 max-w-md text-xl font-medium leading-[1.7] text-white sm:text-[1.45rem]">
                 {t('assistantTitle')}
               </h3>
 
-              <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-white/72">
+              <p className="mt-3 max-w-md text-sm leading-[1.9] text-white/75">
                 {t('assistantDesc')}
               </p>
             </div>
 
             <span className={`${primaryButton} relative z-10 mt-7 w-fit`}>
               {t('askAssistant')}
-              <LuChevronLeft className="h-4 w-4" />
+              <LuChevronLeft className={`${styles.arrow} h-4 w-4`} />
             </span>
           </Link>
 
           {/* Main blue sector card */}
           <Link
             href="/catalog/standardization"
-            className="corner-frame group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-[#0B4E84] p-5 text-white shadow-[0_20px_52px_rgba(10,37,64,0.14)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/70 sm:p-6 lg:row-span-2"
+            className={`${styles.card} group flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#003652] p-6 text-white shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:p-7 lg:row-span-2`}
           >
             <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(232,201,106,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_14%,rgba(232,201,106,0.13),transparent_36%)]"
               aria-hidden
             />
 
             <div className="relative z-10">
-              <p className="font-display text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#E8C96A]">
+              <p className="text-xs font-medium text-[#E8C96A]">
                 {t('sectorsKicker')}
               </p>
 
-              <h3 className="mt-4 max-w-lg font-academic text-xl font-bold leading-[1.5] text-white sm:text-2xl">
+              <h3 className="mt-4 max-w-lg text-xl font-medium leading-[1.7] text-white sm:text-[1.45rem]">
                 {t('sectorsTitle')}
               </h3>
 
-              <p className="mt-4 max-w-md font-academic text-base leading-relaxed text-white/76">
+              <p className="mt-3 max-w-md text-sm leading-[1.9] text-white/75">
                 {t('sectorsDesc')}
               </p>
             </div>
 
             <span className={`${darkButton} relative z-10 mt-7 w-fit`}>
               {t('startBrowsing')}
-              <LuChevronLeft className="h-4 w-4" />
+              <LuChevronLeft className={`${styles.arrow} h-4 w-4`} />
             </span>
           </Link>
 
           {/* Bottom image card */}
           <Link
             href="/catalog/mining"
-            className="corner-frame group relative min-h-[210px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_18px_44px_rgba(10,37,64,0.11)] sm:min-h-[230px] lg:min-h-0"
+            className={`${styles.card} group min-h-[210px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
               src="/industry-bg.png"
-              alt={t('miningAlt')}
+              alt=""
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
-              className="object-cover transition duration-700 group-hover:scale-105"
+              className={`${styles.image} object-cover`}
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/88 via-[#0A2540]/34 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/90 via-[#0A2540]/35 to-transparent" aria-hidden="true" />
 
-            <div className="absolute inset-x-6 bottom-6 text-right">
-
-
-              <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
+            <div className="absolute inset-x-6 bottom-6 text-start">
+              <p className="text-xs font-medium text-[#E8C96A]">{t('miningAlt')}</p>
+              <p className="mt-2 max-w-xs text-lg font-medium leading-[1.7] text-white">
                 {t('miningText')}
               </p>
             </div>
@@ -202,28 +190,27 @@ const LibraryNews = () => {
           {/* Bottom image card */}
           <Link
             href="/catalog/industrial-info"
-            className="corner-frame group relative min-h-[210px] overflow-hidden rounded-[14px] border border-[#C29C41]/25 bg-[#0A2540] shadow-[0_18px_44px_rgba(10,37,64,0.11)] sm:min-h-[230px] lg:min-h-0"
+            className={`${styles.card} group min-h-[210px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
               src="/standardization-bg.png"
-              alt={t('industrialInfoAlt')}
+              alt=""
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
-              className="object-cover transition duration-700 group-hover:scale-105"
+              className={`${styles.image} object-cover`}
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/88 via-[#0A2540]/34 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/90 via-[#0A2540]/35 to-transparent" aria-hidden="true" />
 
-            <div className="absolute inset-x-6 bottom-6 text-right">
-
-              <p className="mt-2 max-w-xs font-academic text-xl font-bold leading-relaxed text-white">
+            <div className="absolute inset-x-6 bottom-6 text-start">
+              <p className="text-xs font-medium text-[#E8C96A]">{t('industrialInfoAlt')}</p>
+              <p className="mt-2 max-w-xs text-lg font-medium leading-[1.7] text-white">
                 {t('industrialInfoText')}
               </p>
             </div>
           </Link>
         </div>
 
-        
       </div>
     </section>
   );

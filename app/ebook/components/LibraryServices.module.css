@@ -1,0 +1,58 @@
+.card {
+  position: relative;
+  isolation: isolate;
+  transition: transform 280ms cubic-bezier(.2,.8,.2,1), border-color 280ms ease, box-shadow 280ms ease;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset-inline: 22px;
+  bottom: 0;
+  height: 2px;
+  background: #e8c96a;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 320ms cubic-bezier(.2,.8,.2,1);
+  pointer-events: none;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgb(194 156 65 / 70%);
+  box-shadow: 0 22px 48px -24px rgb(10 37 64 / 34%);
+}
+
+.card:hover::after,
+.card:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.card:focus-visible {
+  outline: 2px solid #9a7421;
+  outline-offset: 4px;
+}
+
+.image {
+  transition: transform 700ms cubic-bezier(.2,.8,.2,1);
+}
+
+.card:hover .image,
+.card:focus-visible .image {
+  transform: scale(1.035);
+}
+
+.arrow {
+  transition: transform 260ms ease;
+}
+
+.card:hover .arrow,
+.card:focus-visible .arrow {
+  transform: translateX(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .card::after, .image, .arrow { transition: none; }
+  .card:hover, .card:focus-visible, .card:hover .image, .card:focus-visible .image, .card:hover .arrow, .card:focus-visible .arrow { transform: none; }
+}

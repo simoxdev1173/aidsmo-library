@@ -1,277 +1,112 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
+import { useRef, useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { LuChevronLeft, LuChevronRight, LuPlay } from 'react-icons/lu';
-import Image from 'next/image';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
+import styles from './VideoCarousel.module.css';
 
-type Video = {
-  id: string;
-  youtubeId: string;
-  title: string;
-};
+const videos = [
+  { id: 'Ccjv48W8mLQ', titleAr: 'فيديو ترويجي للمنظمة العربية للتنمية الصناعية والتقييس والتعدين', titleEn: 'Introducing the Arab Industrial Development, Standardization and Mining Organization' },
+  { id: '4t3-cEkVyqg', titleAr: 'دليل إضافة المنتجات مجانا داخل منصة APIP.online', titleEn: 'How to add products to APIP.online for free' },
+  { id: 'RaO0_lbLqLg', titleAr: 'APIP.online Platform presentation', titleEn: 'APIP.online platform presentation' },
+  { id: '8UMN3Q1waZY', titleAr: 'الفيديو الترويجي للمنصة العربية لمعادن المستقبل', titleEn: 'Introducing the Arab Future Minerals Platform' },
+  { id: 'Sd_NYSIrcBg', titleAr: 'فيديو إطلاق المنصة العربية لمعادن المستقبل', titleEn: 'Launch of the Arab Future Minerals Platform' },
+  { id: '-VhO3fZg-i8', titleAr: 'المنصة العربية لمعادن المستقبل', titleEn: 'The Arab Future Minerals Platform' },
+  { id: 'V365bLTljl0', titleAr: 'الفيديو التعريفي للمعهد', titleEn: 'Introducing the institute' },
+] as const;
 
-const initialVideos: Video[] = [
-  { id: '1', youtubeId: 'Ccjv48W8mLQ', title: '' },
-   { id: '2', youtubeId: '4t3-cEkVyqg', title: '' },
-  { id: '3', youtubeId: 'RaO0_lbLqLg', title: '' },
-  
-  { id: '4', youtubeId: '8UMN3Q1waZY', title: '' },
-  { id: '5', youtubeId: 'Sd_NYSIrcBg', title: '' },
-  { id: '6', youtubeId: '-VhO3fZg-i8', title: '' },
-  { id: '7', youtubeId: 'V365bLTljl0', title: '' },
-  
-  
-];
+function VideoImage({ id, large = false }: { id: string; large?: boolean }) {
+  const [useStandard, setUseStandard] = useState(!large);
+  const [failed, setFailed] = useState(false);
+  if (failed) return <span className={styles.imageFallback} aria-hidden="true" />;
+  return (
+    <Image src={`https://img.youtube.com/vi/${id}/${useStandard ? 'hqdefault' : 'maxresdefault'}.jpg`} alt="" fill unoptimized
+      className={styles.thumbnail}
+      onLoad={(event) => { if (!useStandard && event.currentTarget.naturalWidth < 320) setUseStandard(true); }}
+      onError={() => { if (!useStandard) setUseStandard(true); else setFailed(true); }} />
+  );
+}
 
-const MAX_CARD_WIDTH = 360;
-const GAP = 18;
-
-const VideoCarousel = () => {
+export default function VideoCarousel() {
   const t = useTranslations('videos');
   const { locale } = useAppLocale();
-  const [videos, setVideos] = useState<Video[]>(initialVideos);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
+  const [selected, setSelected] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const selectionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const video = videos[selected];
+  const title = locale === 'ar' ? video.titleAr : video.titleEn;
 
-  /* ── fetch titles from YouTube oEmbed ── */
-  useEffect(() => {
-    const fetchTitles = async () => {
-      const updated = await Promise.all(
-        initialVideos.map(async (video) => {
-          try {
-            const res = await fetch(
-              `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${video.youtubeId}&format=json`
-            );
-            if (res.ok) {
-              const data = await res.json();
-              return { ...video, title: data.title ?? '' };
-            }
-          } catch {
-            // fallback: keep empty title
-          }
-          return video;
-        })
-      );
-      setVideos(updated);
-    };
-    fetchTitles();
-  }, []);
-
-  /* ── measure container ── */
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const measure = () => setContainerWidth(container.clientWidth);
-    const observer = new ResizeObserver(measure);
-    measure();
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
-
-  const horizontalPadding = containerWidth >= 1024 ? 64 : containerWidth >= 640 ? 48 : 32;
-  const availableWidth = Math.max(240, containerWidth - horizontalPadding);
-  const cardWidth = Math.min(MAX_CARD_WIDTH, availableWidth);
-  const visibleCards = Math.max(1, Math.floor((availableWidth + GAP) / (cardWidth + GAP)));
-  const maxIndex = Math.max(0, videos.length - visibleCards);
-  const visibleIndex = Math.min(activeIndex, maxIndex);
-
-  /* ── looping nav ── */
-  const prev = () => {
-    setActiveIndex(visibleIndex <= 0 ? maxIndex : visibleIndex - 1);
+  const selectVideo = (index: number, focus = false) => {
+    const next = Math.max(0, Math.min(videos.length - 1, index));
+    if (next !== selected) { setSelected(next); setPlaying(false); }
+    const target = selectionRefs.current[next];
+    if (focus) target?.focus({ preventScroll: true });
+    target?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest', inline: 'nearest' });
   };
-
-  const next = () => {
-    setActiveIndex(visibleIndex >= maxIndex ? 0 : visibleIndex + 1);
-  };
-
-  const translateX = (locale === 'ar' ? 1 : -1) * visibleIndex * (cardWidth + GAP);
 
   return (
-    <section dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] py-12 sm:py-14 lg:py-16">
-      <Image
-        src="/standardization-bg.png"
-        alt=""
-        fill
-        sizes="100vw"
-        className="object-cover opacity-[0.32] contrast-110 saturate-125"
-        aria-hidden
-      />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.74)_0%,rgba(247,240,225,0.46)_48%,rgba(255,252,244,0.82)_100%)]" aria-hidden />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.16]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
-        }}
-        aria-hidden
-      />
-      <div className="absolute inset-x-0 top-0 h-1 brass-gradient" aria-hidden />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
-
-      {/* Section header */}
-      <div className="relative z-10 mx-auto mb-8 max-w-6xl px-4 sm:mb-10 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-5 text-center sm:flex-row sm:items-end sm:justify-between">
+    <section id="library-videos" dir={locale === 'ar' ? 'rtl' : 'ltr'} className={styles.section} aria-labelledby="library-videos-heading">
+      <Image src="/standardization-bg.png" alt="" fill sizes="100vw" className={styles.background} aria-hidden="true" />
+      <div className={styles.veil} aria-hidden="true" />
+      <div className={styles.container}>
+        <header className={styles.header}>
           <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="academic-heading text-2xl leading-tight sm:text-3xl lg:text-4xl"
-            >
-              {t('heading')}
-            </motion.h2>
+            <h2 id="library-videos-heading" className={styles.heading}>{t('heading')}</h2>
+            <p className={styles.subtitle}>{t('subtitle')}</p>
           </div>
+          <div className={styles.controls}>
+            <span className={styles.range}><bdi>{selected + 1}</bdi> {t('rangeOf')} {videos.length}</span>
+            <button type="button" onClick={() => selectVideo(selected - 1)} disabled={selected === 0} aria-label={t('prevAria')}>{locale === 'ar' ? <LuChevronRight /> : <LuChevronLeft />}</button>
+            <button type="button" onClick={() => selectVideo(selected + 1)} disabled={selected === videos.length - 1} aria-label={t('nextAria')}>{locale === 'ar' ? <LuChevronLeft /> : <LuChevronRight />}</button>
+          </div>
+        </header>
 
-          {/* Nav arrows — visible on white */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex items-center gap-3"
-          >
-            <button
-              onClick={prev}
-              type="button"
-              aria-label={t('prevAria')}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
-            >
-              <LuChevronRight size={18} />
-            </button>
-            <button
-              onClick={next}
-              type="button"
-              aria-label={t('nextAria')}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white/82 text-[#0a2540] shadow-sm backdrop-blur transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E1] hover:text-[#9A7421]"
-            >
-              <LuChevronLeft size={18} />
-            </button>
-          </motion.div>
+        <div className={styles.feature}>
+          <div className={styles.screen}>
+            {playing ? (
+              <iframe key={video.id} src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`} title={title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className={styles.player} />
+            ) : (
+              <button type="button" className={styles.poster} onClick={() => setPlaying(true)} aria-label={`${t('playVideo')}: ${title}`}>
+                <VideoImage key={video.id} id={video.id} large />
+                <span className={styles.playRing}><LuPlay aria-hidden="true" fill="currentColor" /></span>
+                <span className={styles.posterLabel}>{t('playVideo')}</span>
+              </button>
+            )}
+          </div>
+          <div className={styles.featureInfo}>
+            <div className={styles.featureCover} aria-hidden="true"><VideoImage key={video.id} id={video.id} large /></div>
+            <h3 className={styles.featureTitle} aria-live="polite">{title}</h3>
+            <div className={styles.featureActions}>
+              <button type="button" onClick={() => setPlaying((value) => !value)} className={styles.primaryAction}>
+                {playing ? t('closeVideo') : t('playVideo')}
+              </button>
+              <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer" className={styles.watchLink}>{t('watchOnYoutube')}</a>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Carousel track */}
-      <div ref={containerRef} className="relative z-10 mx-auto max-w-6xl overflow-hidden px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="flex"
-          style={{ gap: GAP }}
-          animate={{ x: translateX }}
-          transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-        >
-          {videos.map((video, idx) => (
-            <motion.div
-              key={video.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="flex-shrink-0"
-              style={{ width: cardWidth }}
-            >
-              <div className="group corner-card relative overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-white/88 shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)]">
-                {/* Gold top strip */}
-                <div
-                  className="h-[3px] opacity-0 transition-opacity duration-400 group-hover:opacity-100"
-                  style={{ background: 'linear-gradient(to left, #C29C41, #e8c96a, #C29C41)' }}
-                />
-
-                {/* Video / Thumbnail area */}
-                <div className="relative aspect-video overflow-hidden bg-[#0a2540]">
-                  <AnimatePresence mode="wait">
-                    {playingId === video.id ? (
-                      <motion.iframe
-                        key="iframe"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0`}
-                        title={video.title || (locale === 'ar' ? 'فيديو من المكتبة' : 'Library video')}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="absolute inset-0 w-full h-full"
-                      />
-                    ) : (
-                      <motion.button
-                        type="button"
-                        key="thumb"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute inset-0 w-full cursor-pointer text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#C29C41]"
-                        onClick={() => setPlayingId(video.id)}
-                        aria-label={
-                          video.title
-                            ? `${locale === 'ar' ? 'تشغيل' : 'Play'}: ${video.title}`
-                            : locale === 'ar' ? 'تشغيل الفيديو' : 'Play video'
-                        }
-                      >
-                        {/* YouTube thumbnail */}
-                        <Image
-                          src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
-                          alt={video.title}
-                          fill
-                          sizes="360px"
-                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-
-                        {/* Dark overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a2540]/70 via-[#0a2540]/15 to-transparent" />
-
-                        {/* Play button */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C29C41] text-white shadow-lg shadow-[#C29C41]/30 transition-all duration-400 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#C29C41]/40">
-                            <LuPlay size={22} className="mr-[-2px]" fill="white" />
-                          </div>
-                        </div>
-                      </motion.button>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Title */}
-                <div className="px-5 py-4">
-                  {video.title ? (
-                    <h3 className="text-sm font-bold text-[#0a2540] leading-relaxed line-clamp-2 transition-colors duration-300 group-hover:text-[#0C5B99]">
-                      {video.title}
-                    </h3>
-                  ) : (
-                    <div className="h-4 w-3/4 rounded bg-slate-100 animate-pulse" />
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Progress dots */}
-      <div className="relative z-10 mt-7 flex items-center justify-center gap-2">
-        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => setActiveIndex(i)}
-            aria-label={`${locale === 'ar' ? 'عرض مجموعة الفيديو' : 'Show video group'} ${i + 1}`}
-            aria-current={visibleIndex === i ? 'true' : undefined}
-            className="relative h-2 rounded-full transition-all duration-400"
-            style={{
-              width: visibleIndex === i ? 28 : 8,
-              backgroundColor: visibleIndex === i ? '#C29C41' : 'rgba(194,156,65,0.2)',
-            }}
-          />
-        ))}
+        <div className={styles.selectionHeader}><span>{t('carouselLabel')}</span><span className={styles.selectionLine} aria-hidden="true" /></div>
+        <div className={styles.filmstrip} role="group" aria-label={t('carouselLabel')}>
+          {videos.map((item, index) => {
+            const itemTitle = locale === 'ar' ? item.titleAr : item.titleEn;
+            return (
+              <button key={item.id} ref={(node) => { selectionRefs.current[index] = node; }} type="button" className={styles.selection}
+                aria-pressed={selected === index} onClick={() => selectVideo(index)}
+                onKeyDown={(event) => {
+                  const forward = locale === 'ar' ? 'ArrowLeft' : 'ArrowRight';
+                  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); selectVideo(index + (event.key === forward ? 1 : -1), true); }
+                  if (event.key === 'Home' || event.key === 'End') { event.preventDefault(); selectVideo(event.key === 'Home' ? 0 : videos.length - 1, true); }
+                }}>
+                <span className={styles.selectionImage}><VideoImage id={item.id} /><span className={styles.selectionIndicator}><LuPlay aria-hidden="true" fill="currentColor" /></span></span>
+                <span className={styles.selectionTitle}>{itemTitle}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
-};
-
-export default VideoCarousel;
+}

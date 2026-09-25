@@ -55,6 +55,8 @@ model User {
   sessions       Session[]
   libraryItems   UserLibraryItem[]
   shelves        UserShelf[]
+  documentComments DocumentComment[]
+  documentRatings  DocumentRating[]
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 }
@@ -183,6 +185,9 @@ model LibraryEntry {
   publishedAt    DateTime?
   savedBy        UserLibraryItem[]
   documentAnalyses DocumentAnalysis[]
+  comments       DocumentComment[]
+  ratings        DocumentRating[]
+  views          DocumentView[]
 
   @@index([categoryId])
   @@index([status])
@@ -217,4 +222,43 @@ model DocumentAnalysis {
   @@index([entryId])
   @@index([status])
   @@index([sourceChecksum])
+}
+
+model DocumentComment {
+  id        String       @id @default(cuid())
+  entryId   String
+  userId    String
+  body      String       @db.Text
+  entry     LibraryEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@index([entryId, createdAt])
+  @@index([userId, createdAt])
+}
+
+model DocumentRating {
+  id        String       @id @default(cuid())
+  entryId   String
+  userId    String
+  value     Int
+  entry     LibraryEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([entryId, userId])
+  @@index([entryId])
+}
+
+model DocumentView {
+  id        String       @id @default(cuid())
+  entryId   String
+  visitorId String
+  viewedOn  DateTime     @db.Date
+  entry     LibraryEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([entryId, visitorId, viewedOn])
+  @@index([entryId])
 }

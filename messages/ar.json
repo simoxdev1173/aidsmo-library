@@ -82,14 +82,19 @@
   },
   "latestPublications": {
     "heading": "أحدث الإصدارات",
-    "book1Title": "التنمية الصناعية العربية",
+    "book1Title": "التنمية الصناعية · 88",
     "book1Category": "الصناعة",
-    "book2Title": "التنمية الصناعية العربية",
+    "book2Title": "الدليل الإرشادي العربي لنماذج تقييم المطابقة",
     "book2Category": "التقييس",
-    "book3Title": "إعادة تأهيل المناجم والمحاجر القديمة",
+    "book3Title": "إعادة تأهيل المناجم والمحاجر القديمة لتحقيق تنمية مستدامة",
     "book3Category": "التعدين",
     "innerPageAlt": "صفحة داخلية من",
-    "contentAlt": "محتوى"
+    "contentAlt": "محتوى",
+    "previewHint": "افتح الغلاف لاستكشاف الإصدار، ثم انتقل إلى رفّه في المكتبة.",
+    "openPreview": "افتح الغلاف",
+    "closePreview": "أغلق الغلاف",
+    "browsePublication": "استكشف الإصدار",
+    "browseCategory": "تصفح المجال"
   },
   "chatbotCta": {
     "sectionLabel": "المساعد الذكي في المكتبة الرقمية",
@@ -120,7 +125,14 @@
   "videos": {
     "heading": "الفيديوهات",
     "prevAria": "الشريحة السابقة",
-    "nextAria": "الشريحة التالية"
+    "nextAria": "الشريحة التالية",
+    "subtitle": "شاهد مبادرات المنظمة ومنصاتها من داخل المكتبة.",
+    "rangeOf": "من",
+    "carouselLabel": "قائمة الفيديوهات",
+    "playVideo": "تشغيل",
+    "closeVideo": "إيقاف الفيديو",
+    "videoLabel": "فيديو",
+    "watchOnYoutube": "شاهده على يوتيوب"
   },
   "chatbotWidget": {
     "title": "المساعد الآلي",

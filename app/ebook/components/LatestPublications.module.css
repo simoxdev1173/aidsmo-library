@@ -1,0 +1,24 @@
+.section { background: #faf7ef; color: #0a2540; padding: clamp(56px, 6vw, 88px) 0; }
+.container { max-width: 1200px; margin-inline: auto; padding-inline: clamp(20px, 4vw, 44px); }
+.intro { max-width: 680px; margin: 0 auto 44px; text-align: center; }
+.heading { font-family: var(--font-readex), sans-serif; font-size: clamp(27px, 3vw, 39px); font-weight: 500; line-height: 1.6; }
+.subtitle { margin-top: 7px; color: #59616a; font-size: 13px; line-height: 1.9; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 40px); }
+.item { min-width: 0; display: flex; flex-direction: column; }
+.stage { position: relative; display: grid; place-items: center; height: 428px; padding-bottom: 36px; background: radial-gradient(ellipse at 50% 44%, #fffdf8 0%, #f1ead9 100%); border-radius: 120px 120px 8px 8px; border-bottom: 1px solid rgb(194 156 65 / 30%); }
+.stage::after { content: ''; position: absolute; width: min(70%, 230px); height: 10px; bottom: 58px; border-radius: 50%; background: rgb(10 37 64 / 16%); filter: blur(10px); pointer-events: none; }
+.stage > button { position: relative; z-index: 1; }
+.details { display: flex; flex-direction: column; flex: 1; align-items: flex-start; padding: 24px 6px 0; }
+.category { color: #805e1b; font-size: 12px; font-weight: 500; }
+.category span { padding-inline: 5px; color: #c29c41; }
+.title { margin: 9px 0 18px; font-family: var(--font-readex), sans-serif; font-size: clamp(16px, 1.5vw, 19px); font-weight: 500; line-height: 1.85; text-wrap: pretty; }
+.link { display: inline-flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 44px; margin-top: auto; padding-block: 8px; width: 100%; border-top: 1px solid rgb(194 156 65 / 30%); color: #805e1b; font-size: 12px; font-weight: 500; }
+.link svg { width: 16px; height: 16px; transition: transform 220ms ease; }
+.link:hover svg { transform: translate(-2px, -2px); }
+.section[dir='ltr'] .link svg { transform: rotate(90deg); }
+.link:focus-visible { outline: 2px solid #9a7421; outline-offset: 4px; }
+.coverImage { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+@media (max-width: 1000px) and (min-width: 768px) { .stage > button { width: 174px; height: 261px; } .stage { height: 378px; } }
+@media (max-width: 767px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; } .stage { height: 410px; } }
+@media (max-width: 560px) { .intro { text-align: start; margin-bottom: 28px; } .grid { grid-template-columns: minmax(0, 1fr); gap: 40px; } .stage { height: 390px; } .title { font-size: 18px; } }
+@media (prefers-reduced-motion: reduce) { .link svg { transition: none; } .link:hover svg { transform: none; } }

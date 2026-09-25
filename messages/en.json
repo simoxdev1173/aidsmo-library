@@ -82,14 +82,19 @@
   },
   "latestPublications": {
     "heading": "Latest Publications",
-    "book1Title": "Arab Industrial Development",
+    "book1Title": "Industrial Development · 88",
     "book1Category": "Industry",
-    "book2Title": "Arab Industrial Development",
+    "book2Title": "Arab Guide to Conformity Assessment Models",
     "book2Category": "Standardization",
-    "book3Title": "Rehabilitation of Old Mines and Quarries",
+    "book3Title": "Rehabilitating Old Mines and Quarries for Sustainable Development",
     "book3Category": "Mining",
     "innerPageAlt": "Inner page from",
-    "contentAlt": "Contents of"
+    "contentAlt": "Contents of",
+    "previewHint": "Open a cover to preview the publication, then explore it in the library.",
+    "openPreview": "Open cover",
+    "closePreview": "Close cover",
+    "browsePublication": "Explore publication",
+    "browseCategory": "Browse category"
   },
   "chatbotCta": {
     "sectionLabel": "Smart Assistant in the Digital Library",
@@ -120,7 +125,14 @@
   "videos": {
     "heading": "Videos",
     "prevAria": "Previous slide",
-    "nextAria": "Next slide"
+    "nextAria": "Next slide",
+    "subtitle": "Watch the organization's initiatives and platforms from the library.",
+    "rangeOf": "of",
+    "carouselLabel": "Video list",
+    "playVideo": "Play",
+    "closeVideo": "Stop video",
+    "videoLabel": "Video",
+    "watchOnYoutube": "Watch on YouTube"
   },
   "chatbotWidget": {
     "title": "Smart Assistant",

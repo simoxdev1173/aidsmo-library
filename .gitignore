@@ -49,6 +49,9 @@ yarn-error.log*
 # local database backups and timestamp rollback snapshots
 /db-backup/
 
+# Source PDFs cached by the homepage preview generator
+/.local/publication-pdfs/
+
 # generated database client
 /lib/generated/
 

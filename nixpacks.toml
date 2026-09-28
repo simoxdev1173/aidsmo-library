@@ -3,3 +3,4 @@ NIXPACKS_NODE_VERSION = "24"
 
 [phases.setup]
 nixPkgs = ["nodejs_24"]
+aptPkgs = ["libreoffice-writer", "libreoffice-impress", "fonts-noto-core"]

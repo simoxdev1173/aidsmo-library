@@ -87,6 +87,28 @@ rebuild or redeploy because container filesystems are ephemeral. Files already
 mirrored to Google Drive remain available through Drive-first delivery.
 
 Local uploaded files are ignored by Git, so files uploaded on your local machine will not appear on the server automatically. Upload them again through the production dashboard, or copy them to the Coolify volume manually.
+
+## Fill in missing document covers on Coolify
+
+Deploy this version of the application first. The Nixpacks configuration installs
+LibreOffice for Word (`.doc`, `.docx`) and PowerPoint (`.ppt`, `.pptx`) conversion.
+In the Coolify application terminal, run:
+
+```bash
+cd /app
+command -v soffice
+npm run covers:backfill
+```
+
+The command selects only entries whose `coverImagePath` is null. For each entry,
+it tries attached files in order, including the legacy `filePath`, and renders
+the first usable PDF or Office file. A second run is safe: entries with a cover
+are skipped by the database query. The final line reports generated, skipped,
+and failed counts; per-file errors show why a remaining entry could not be
+covered. Files must exist in the persistent `/app/public/uploads` volume or in
+the configured Google Drive backup. Generated covers are stored in that volume
+and mirrored to Drive when Drive is configured.
+
 # Google Drive primary delivery with local fallback
 
 The application keeps its existing `/uploads/...` URLs stable while serving

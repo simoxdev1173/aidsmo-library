@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
-import { primaryDocumentFilePath } from "@/lib/document-files";
-import { resolvePublicUploadFilePath } from "@/lib/uploads";
+import { createDocumentCoverFromPublicPath } from "@/lib/document-cover";
+import { documentFilesValue } from "@/lib/document-files";
+import { mirrorPublicUploadToDrive } from "@/lib/uploads";
+import { isGoogleDriveConfigured } from "@/lib/google-drive";
 
 async function main() {
   const entries = await prisma.libraryEntry.findMany({
@@ -19,41 +20,63 @@ async function main() {
 
   let generated = 0;
   let skipped = 0;
+  let failed = 0;
 
   for (const entry of entries) {
-    const primaryFilePath = primaryDocumentFilePath(entry.documentFiles, entry.filePath);
-    const absolutePdfPath = await resolvePublicUploadFilePath(primaryFilePath);
-
-    if (!absolutePdfPath) {
-      skipped += 1;
-      console.log(`Skipped missing PDF: ${entry.title}`);
+    const files = documentFilesValue(entry.documentFiles, entry.filePath);
+    if (entry.filePath && !files.some((file) => file.path === entry.filePath)) {
+      files.push({ path: entry.filePath, title: null });
+    }
+    if (files.length === 0) {
+      skipped++;
+      console.log(`Skipped (no document files): ${entry.title}`);
       continue;
     }
 
-    try {
-      const coverImagePath = await createPdfCoverFromPublicPath(primaryFilePath);
-
-      if (!coverImagePath) {
-        skipped += 1;
-        console.log(`Skipped unsupported path: ${entry.title}`);
-        continue;
+    let coverImagePath: string | null = null;
+    for (const file of files) {
+      try {
+        coverImagePath = await createDocumentCoverFromPublicPath(file.path);
+        if (coverImagePath) {
+          console.log(`Cover source: ${entry.title} <- ${file.path}`);
+          break;
+        }
+        console.log(`Unavailable or unsupported file: ${entry.title} (${file.path})`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.log(`File cover failed: ${entry.title} (${file.path}): ${message}`);
       }
+    }
 
-      await prisma.libraryEntry.update({
-        where: { id: entry.id },
-        data: { coverImagePath },
-      });
+    if (!coverImagePath) {
+      failed++;
+      console.log(`No usable cover source: ${entry.title}`);
+      continue;
+    }
 
-      generated += 1;
+    let driveCoverImagePath: string | null = null;
+    if (isGoogleDriveConfigured()) {
+      try {
+        driveCoverImagePath = (await mirrorPublicUploadToDrive(coverImagePath, "covers"))?.path ?? null;
+      } catch (error) {
+        console.log(`Drive mirror failed: ${entry.title} (${error instanceof Error ? error.message : String(error)})`);
+      }
+    }
+
+    const updated = await prisma.libraryEntry.updateMany({
+      where: { id: entry.id, coverImagePath: null },
+      data: { coverImagePath, ...(driveCoverImagePath ? { driveCoverImagePath } : {}) },
+    });
+    if (updated.count) {
+      generated++;
       console.log(`Generated cover: ${entry.title} -> ${coverImagePath}`);
-    } catch (error) {
-      skipped += 1;
-      const message = error instanceof Error ? error.message : "unknown error";
-      console.log(`Failed cover generation: ${entry.title} (${message})`);
+    } else {
+      skipped++;
+      console.log(`Skipped (cover added during run): ${entry.title}`);
     }
   }
 
-  console.log(`Done. Generated ${generated} cover(s), skipped ${skipped}.`);
+  console.log(`Done. Generated ${generated} cover(s), skipped ${skipped}, failed ${failed}.`);
 }
 
 main()

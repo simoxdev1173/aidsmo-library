@@ -7,9 +7,11 @@ import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/slug";
 import { mirrorPublicUploadToDrive, readUpload, saveUploadCopies } from "@/lib/uploads";
 import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
+import { createDocumentCoverFromPublicPath } from "@/lib/document-cover";
 import { countPdfPagesFromBytes, countPdfPagesFromPublicPath } from "@/lib/pdf-pages";
 import { createDocumentFile, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath, type DocumentFile } from "@/lib/document-files";
 import { driveDocumentFilesValue, driveStoredFilesValue, type DriveDocumentFile } from "@/lib/drive-files";
+import { isGoogleDriveConfigured } from "@/lib/google-drive";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -540,19 +542,24 @@ export async function generateEntryCoverAction(id: string) {
     redirect("/dashboard/entries");
   }
 
-  const primaryFilePath = primaryDocumentFilePath(entry.documentFiles, entry.filePath);
+  const coverSources = documentFilesValue(entry.documentFiles, entry.filePath);
+  if (entry.filePath && !coverSources.some((file) => file.path === entry.filePath)) {
+    coverSources.push({ path: entry.filePath, title: null });
+  }
 
-  if (entry.coverImagePath || !primaryFilePath) {
+  if (entry.coverImagePath || coverSources.length === 0) {
     redirect(`/dashboard/entries/${id}?cover=skipped`);
   }
 
   let coverImagePath: string | null = null;
 
-  try {
-    coverImagePath = await createPdfCoverFromPublicPath(primaryFilePath);
-  } catch (error) {
-    console.error(`PDF cover generation failed: existing entry "${entry.title}" (${id})`, error);
-    redirect(`/dashboard/entries/${id}?cover=failed`);
+  for (const file of coverSources) {
+    try {
+      coverImagePath = await createDocumentCoverFromPublicPath(file.path);
+      if (coverImagePath) break;
+    } catch (error) {
+      console.error(`Cover generation failed: existing entry "${entry.title}" (${id}), file ${file.path}`, error);
+    }
   }
 
   if (!coverImagePath) {
@@ -560,10 +567,17 @@ export async function generateEntryCoverAction(id: string) {
   }
 
   try {
-    const driveCover = await mirrorPublicUploadToDrive(coverImagePath, "covers");
+    let driveCoverImagePath: string | null = null;
+    if (isGoogleDriveConfigured()) {
+      try {
+        driveCoverImagePath = (await mirrorPublicUploadToDrive(coverImagePath, "covers"))?.path ?? null;
+      } catch (error) {
+        console.error(`Drive cover mirror failed: existing entry "${entry.title}" (${id})`, error);
+      }
+    }
     await prisma.libraryEntry.update({
       where: { id },
-      data: { coverImagePath, driveCoverImagePath: driveCover.path },
+      data: { coverImagePath, ...(driveCoverImagePath ? { driveCoverImagePath } : {}) },
     });
 
     revalidatePath("/");

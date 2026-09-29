@@ -29,12 +29,12 @@ const LibraryNews = () => {
         alt=""
         fill
         sizes="100vw"
-        className="object-cover"
+        className="scale-[1.04] object-cover blur-[5px] brightness-[0.85] saturate-[0.7]"
         aria-hidden
       />
 
       <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,230,0.34),rgba(255,248,230,0.25)_48%,rgba(255,248,230,0.32))]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,230,0.3),rgba(255,248,230,0.18)_48%,rgba(255,248,230,0.28))]"
         aria-hidden
       />
 

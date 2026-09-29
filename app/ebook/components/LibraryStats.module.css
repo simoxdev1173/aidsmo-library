@@ -7,7 +7,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: rgb(247 240 225 / 85%);
+  background: #382715;
   color: var(--ink);
   padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(3rem, 5vw, 4.5rem);
 }
@@ -19,8 +19,8 @@
 }
 .header { max-width: 720px; margin: 0 auto 2.5rem; text-align: center; }
 .heading {
-  color: #06243b;
-  text-shadow: 0 1px 2px rgb(255 252 244 / 90%), 0 0 18px rgb(255 252 244 / 65%);
+  color: #fff;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 70%);
   font-family: var(--font-readex), sans-serif;
   font-size: clamp(1.9rem, 3.2vw, 2.8rem);
   font-weight: 500;

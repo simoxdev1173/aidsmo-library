@@ -1,6 +1,6 @@
 .section { position: relative; isolation: isolate; overflow: hidden; padding: clamp(56px, 7vw, 96px) 0; background: #382715; color: #fff; }
-.background { object-fit: cover; }
-.veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(255 248 230 / 32%), rgb(255 248 230 / 24%) 48%, rgb(255 248 230 / 30%)); pointer-events: none; }
+.background { object-fit: cover; transform: scale(1.04); filter: blur(5px) brightness(.85) saturate(.7); }
+.veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(255 248 230 / 30%), rgb(255 248 230 / 18%) 48%, rgb(255 248 230 / 28%)); pointer-events: none; }
 .container { position: relative; max-width: 1280px; margin-inline: auto; padding-inline: clamp(20px, 4vw, 48px); }
 .header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
 .heading { font-family: var(--font-readex), sans-serif; font-size: clamp(28px, 3vw, 40px); font-weight: 500; line-height: 1.6; text-shadow: 0 2px 8px rgb(0 0 0 / 70%); }

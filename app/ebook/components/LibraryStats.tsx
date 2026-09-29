@@ -102,8 +102,8 @@ export default function LibraryStats({ stats }: { stats: LibraryStatsData }) {
 
   return (
     <section className={styles.section} dir={locale === 'ar' ? 'rtl' : 'ltr'} aria-labelledby="library-stats-heading">
-      <Image src="/standardization-bg.png" alt="" fill sizes="100vw" className="scale-[1.04] object-cover blur-[5px] brightness-[0.85] saturate-[0.7]" aria-hidden />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,230,0.3),rgba(255,248,230,0.18)_48%,rgba(255,248,230,0.28))]" aria-hidden />
+      <Image src="/standardization-bg.png" alt="" fill sizes="100vw" className="object-cover brightness-[0.9] saturate-[0.85]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,230,0.18),rgba(255,248,230,0.05)_48%,rgba(255,248,230,0.16))]" aria-hidden />
       <div className={styles.content}>
         <header className={styles.header}>
           <h2 id="library-stats-heading" className={styles.heading}>{t('heading')}</h2>

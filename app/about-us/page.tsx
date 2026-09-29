@@ -90,7 +90,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
+      {/* test deployement  */}
       {/* ─── Mission ─── */}
       <section className="relative bg-white py-20 md:py-28">
   <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

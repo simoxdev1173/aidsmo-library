@@ -121,25 +121,16 @@ const Footer = () => {
   };
 
   return (
-    <footer dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#F7F0E1] text-[#0A2540]">
+    <footer dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#382715] text-[#0A2540]">
       <Image
         src="/background-01.png"
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.34] contrast-110 saturate-125"
+        className="object-cover"
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,252,244,0.92)_0%,rgba(247,240,225,0.78)_78%,rgba(255,252,244,0.96)_100%)]" aria-hidden />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(10,37,64,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(198,163,70,0.22) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
-        }}
-        aria-hidden
-      />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,230,0.32),rgba(255,248,230,0.24)_48%,rgba(255,248,230,0.3))]" aria-hidden />
       <div className="absolute inset-x-0 top-0 h-1 bg-[#C6A346]" aria-hidden />
 
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
@@ -340,11 +331,11 @@ const Footer = () => {
           </div>
         </section>
 
-        <div className="mt-5 flex flex-col gap-3 border-t border-[#C6A346]/30 pt-5 text-sm text-[#64748B] md:flex-row md:items-center md:justify-between">
+        <div className="mt-5 flex flex-col gap-3 border-t border-white/45 pt-5 text-sm text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] md:flex-row md:items-center md:justify-between">
           <p>
             © {year} {t('copyright')}
           </p>
-          <p className="font-bold text-[#8B681C]">{t('brand')}</p>
+          <p className="font-bold text-white">{t('brand')}</p>
         </div>
       </div>
     </footer>

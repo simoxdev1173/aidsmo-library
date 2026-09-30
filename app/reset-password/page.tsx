@@ -29,7 +29,7 @@ export default async function ResetPasswordPage({
   const token = query.token?.trim() ?? '';
   const callbackUrl = query.callbackUrl?.startsWith('/') && !query.callbackUrl.startsWith('//')
     ? query.callbackUrl
-    : '/library';
+    : '/';
   const tokenIsValid = query.status !== 'invalid' && email && token
     ? await isPasswordResetTokenValid(email, token)
     : false;

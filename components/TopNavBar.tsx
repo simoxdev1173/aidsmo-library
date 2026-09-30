@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { LuBookMarked, LuChevronDown, LuChevronLeft, LuLogOut, LuMenu, LuSearch, LuUser, LuX } from 'react-icons/lu';
+import { LuBookMarked, LuChevronDown, LuChevronLeft, LuLogOut, LuMenu, LuSearch, LuSettings, LuUser, LuX } from 'react-icons/lu';
 import { useAppLocale, type AppLocale } from '@/lib/i18n/LocaleProvider';
 import { logoutUserAction } from '@/lib/user-actions';
 
@@ -198,9 +198,9 @@ const NestedFlyoutItems = ({ items }: { items: SubItem[] }) => {
               onMouseEnter={() => setExpandedHref(item.href)}
               onMouseLeave={() => setExpandedHref(null)}
             >
-              <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
-                <Link href={item.href} className="flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
-                <LuChevronLeft size={14} className="text-[#C29C41]" />
+              <div className={cn(dropdownLink, 'flex cursor-default items-center justify-between gap-4')}>
+                <Link href={item.href} className="min-w-0 flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
+                <LuChevronLeft size={14} className="shrink-0 text-[#C29C41]" />
               </div>
               <div
                 className={cn(
@@ -240,9 +240,9 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
               onMouseEnter={() => setExpandedIdx(idx)}
               onMouseLeave={() => setExpandedIdx(null)}
             >
-              <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
-                <Link href={item.href} className="flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
-                <LuChevronLeft size={14} className="text-[#C29C41]" />
+              <div className={cn(dropdownLink, 'flex cursor-default items-center justify-between gap-4')}>
+                <Link href={item.href} className="min-w-0 flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
+                <LuChevronLeft size={14} className="shrink-0 text-[#C29C41]" />
               </div>
               <div
                 className={cn(
@@ -289,9 +289,9 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
                     onMouseEnter={() => setExpandedKey(item.href)}
                     onMouseLeave={() => setExpandedKey(null)}
                   >
-                    <div className={cn('flex cursor-default items-center justify-between gap-4', dropdownLink)}>
-                      <Link href={item.href} className="flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
-                      <LuChevronDown size={14} className={cn('text-[#C29C41] transition duration-300', expandedKey === item.href && 'rotate-180')} />
+                    <div className={cn(dropdownLink, 'flex cursor-default items-center justify-between gap-4')}>
+                      <Link href={item.href} className="min-w-0 flex-1">{pickLabel(item.label, item.labelEn, locale)}</Link>
+                      <LuChevronDown size={14} className={cn('shrink-0 text-[#C29C41] transition duration-300', expandedKey === item.href && 'rotate-180')} />
                     </div>
                     <div className={cn('overflow-hidden border-r border-[#C29C41]/20 pr-3 transition-all duration-300', expandedKey === item.href ? 'max-h-72 opacity-100' : 'max-h-0 opacity-0')}>
                       {item.subItems.map((sub) => (
@@ -794,6 +794,15 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                             <span className="flex size-8 items-center justify-center rounded-lg bg-[#E8F2F8] text-[#0369A1]"><LuBookMarked size={16} /></span>
                             مكتبتي
                           </Link>
+                          <Link
+                            href="/profile"
+                            role="menuitem"
+                            onClick={() => setAccountMenuOpen(false)}
+                            className="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-[#0A2540] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:bg-[#F0F7FC] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/50"
+                          >
+                            <span className="flex size-8 items-center justify-center rounded-lg bg-[#E8F2F8] text-[#0369A1]"><LuSettings size={16} /></span>
+                            إعدادات الملف الشخصي
+                          </Link>
                           <div className="my-1 h-px bg-[#0A2540]/[0.07]" />
                           <form action={logoutUserAction}>
                             <button
@@ -961,7 +970,11 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                 <LuBookMarked size={16} />
                 مكتبتي
               </Link>
-              <form action={logoutUserAction} className="border-s border-[#0A2540]/10">
+              <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm font-bold text-[#0369A1] transition hover:bg-[#F0F7FC] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/50">
+                <LuSettings size={16} />
+                إعدادات الحساب
+              </Link>
+              <form action={logoutUserAction} className="col-span-2 border-t border-[#0A2540]/10">
                 <button type="submit" className="flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-bold text-[#9F2D2D] transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-200">
                   <LuLogOut size={16} />
                   تسجيل الخروج

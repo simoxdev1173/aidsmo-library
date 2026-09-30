@@ -11,7 +11,7 @@ function text(formData: FormData, key: string) {
   return typeof value === 'string' ? value.trim() : '';
 }
 
-function safeCallbackUrl(value: string, fallback = '/library') {
+function safeCallbackUrl(value: string, fallback = '/') {
   return value.startsWith('/') && !value.startsWith('//') ? value : fallback;
 }
 

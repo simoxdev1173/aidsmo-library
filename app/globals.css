@@ -604,6 +604,11 @@ select {
   background: linear-gradient(180deg, #f0d77e, #b68d2f 58%, #7d5d19);
 }
 
+/* Keep the 404 landing page within one screen without the shared site footer. */
+#main-content:has([data-error-page]) ~ footer {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

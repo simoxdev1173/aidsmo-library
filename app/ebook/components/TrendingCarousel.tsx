@@ -15,6 +15,7 @@ import {
   FaIndustry,
 } from 'react-icons/fa';
 import type { TrendingItem, TrendingRow } from '@/lib/library-data';
+import RatingBadge from '@/components/book/RatingBadge';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './TrendingShelves.module.css';
 
@@ -152,6 +153,7 @@ function LibraryCard({ item }: { item: TrendingItem }) {
   return (
     <Link href={item.href} className={styles.book}>
       <div className={styles.coverStage}>
+        {item.href.startsWith('/book/') && <RatingBadge rating={item.rating} />}
         {showCover && <div className={`${styles.coverSkeleton} ${coverReady ? styles.coverSkeletonReady : ''}`} aria-hidden="true"><span /></div>}
         {showCover && item.cover ? (
           <div className={styles.cover}>

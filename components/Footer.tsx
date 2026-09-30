@@ -80,7 +80,7 @@ const Footer = () => {
     {
       label: t('addressLabel'),
       value: t('addressValue'),
-      href: 'https://maps.google.com/?q=33.8511,-6.9863',
+      href: 'https://maps.app.goo.gl/fshY2hxzddXFWPT59',
       icon: LuMapPin,
       external: true,
     },
@@ -130,7 +130,7 @@ const Footer = () => {
         className="scale-[1.04] object-cover blur-[5px] brightness-[0.85] saturate-[0.7]"
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,230,0.3),rgba(255,248,230,0.18)_48%,rgba(255,248,230,0.28))]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(5,13,20,0.44)_0%,rgba(6,15,24,0.30)_48%,rgba(3,11,20,0.56)_100%)]" aria-hidden />
       <div className="absolute inset-x-0 top-0 h-1 bg-[#C6A346]" aria-hidden />
 
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">

@@ -27,7 +27,7 @@ export default async function ForgotPasswordPage({
   const query = await searchParams;
   const callbackUrl = query.callbackUrl?.startsWith('/') && !query.callbackUrl.startsWith('//')
     ? query.callbackUrl
-    : '/library';
+    : '/';
   const previewHref = process.env.NODE_ENV !== 'production' && query.previewToken && query.previewEmail
     ? `/reset-password?${new URLSearchParams({
       token: query.previewToken,

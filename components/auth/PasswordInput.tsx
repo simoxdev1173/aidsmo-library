@@ -16,7 +16,7 @@ export default function PasswordInput({
       <Input
         type={visible ? 'text' : 'password'}
         dir="ltr"
-        className={cn('pe-12 text-start', className)}
+        className={cn(className, 'pl-14 pr-4 text-left')}
         {...props}
       />
       <button
@@ -24,7 +24,7 @@ export default function PasswordInput({
         onClick={() => setVisible((current) => !current)}
         aria-label={visible ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'}
         aria-pressed={visible}
-        className="absolute end-2 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-xl text-[#64748B] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+        className="absolute left-2 top-1/2 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-xl text-[#64748B] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
       >
         {visible ? <LuEyeOff className="size-4.5" /> : <LuEye className="size-4.5" />}
       </button>

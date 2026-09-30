@@ -5,6 +5,7 @@ import {
   HiOutlineArrowLeftOnRectangle,
   HiOutlineBookOpen,
   HiOutlineHome,
+  HiOutlineArchiveBox,
   HiOutlineSquares2X2,
 } from 'react-icons/hi2';
 import { logoutAction } from '@/lib/library-actions';
@@ -13,6 +14,7 @@ import { cn } from '@/utils';
 const navItems = [
   { href: '/dashboard', label: 'لوحة التحكم', icon: HiOutlineSquares2X2 },
   { href: '/dashboard/entries', label: 'المداخل', icon: HiOutlineBookOpen },
+  { href: '/dashboard/archive', label: 'إدارة الأرشيف', icon: HiOutlineArchiveBox },
   { href: '/dashboard/other', label: 'إعدادات أخرى', icon: HiOutlineAdjustmentsHorizontal },
   { href: '/', label: 'عرض الموقع', icon: HiOutlineHome },
 ];

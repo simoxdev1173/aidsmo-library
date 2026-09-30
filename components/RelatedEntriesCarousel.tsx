@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import RatingBadge from '@/components/book/RatingBadge';
 
 export type RelatedEntry = {
   id: string;
@@ -11,6 +12,7 @@ export type RelatedEntry = {
   title: string;
   coverImagePath: string | null;
   categoryLabel: string;
+  rating?: { average: number; count: number };
 };
 
 function scrollByAmount(container: HTMLDivElement, amount: number) {
@@ -77,6 +79,7 @@ export default function RelatedEntriesCarousel({
               className="group flex w-36 shrink-0 flex-col sm:w-40"
             >
               <div className="relative aspect-[3/4] overflow-hidden rounded-[14px] border border-[#D9E3EE] bg-[#EAF3F8] shadow-[0_10px_28px_rgba(10,37,64,0.08)] transition duration-300 group-hover:-translate-y-1 group-hover:border-[#C29C41]/55 group-hover:shadow-[0_18px_40px_rgba(10,37,64,0.14)]">
+                <RatingBadge rating={item.rating} />
                 {item.coverImagePath ? (
                   <Image
                     src={item.coverImagePath}

@@ -411,7 +411,22 @@ export type TrendingItem = {
   type: string;
   cover: string | null;
   href: string;
+  rating?: { average: number; count: number };
 };
+
+export async function getRatingSummaries(entryIds: string[]) {
+  if (entryIds.length === 0) return new Map<string, { average: number; count: number }>();
+  const ratings = await prisma.documentRating.groupBy({
+    by: ["entryId"],
+    where: { entryId: { in: [...new Set(entryIds)] } },
+    _avg: { value: true },
+    _count: { value: true },
+  });
+  return new Map(ratings.map((rating) => [rating.entryId, {
+    average: rating._avg.value ?? 0,
+    count: rating._count.value,
+  }]));
+}
 
 export type TrendingRow = {
   id: string;
@@ -611,6 +626,11 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
       iconKey: sector.slug,
       items,
     });
+  }
+
+  const ratings = await getRatingSummaries(rows.flatMap((row) => row.items.map((item) => item.id)));
+  for (const row of rows) {
+    for (const item of row.items) item.rating = ratings.get(item.id);
   }
 
   return rows;

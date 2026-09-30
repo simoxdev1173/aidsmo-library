@@ -23,7 +23,7 @@ function validEmail(value: string) {
   return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-function safeCallbackUrl(value: string, fallback = '/library') {
+function safeCallbackUrl(value: string, fallback = '/') {
   return value.startsWith('/') && !value.startsWith('//') ? value : fallback;
 }
 

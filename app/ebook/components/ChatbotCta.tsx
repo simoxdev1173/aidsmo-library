@@ -114,7 +114,7 @@ export default function ChatbotCTA() {
   return (
     <section
       id="smart-assistant"
-      className="relative overflow-hidden bg-[#F7F0E1] py-12 sm:py-14 lg:py-16"
+      className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-16"
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
       aria-label={t('sectionLabel')}
     >
@@ -128,7 +128,7 @@ export default function ChatbotCTA() {
       />
 
       <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,250,240,0.96)_0%,rgba(247,240,225,0.88)_52%,rgba(255,250,240,0.98)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.88)_52%,rgba(255,255,255,0.98)_100%)]"
         aria-hidden
       />
 

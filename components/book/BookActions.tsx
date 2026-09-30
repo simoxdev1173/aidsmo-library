@@ -14,12 +14,10 @@ import { cn } from '@/utils/cn';
 
 export default function BookActions({
   entryId,
-  slug,
   initialSaved,
   isAuthenticated,
 }: {
   entryId: string;
-  slug: string;
   initialSaved: boolean;
   isAuthenticated: boolean;
 }) {
@@ -29,9 +27,15 @@ export default function BookActions({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  const redirectToLogin = () => {
+    const { pathname, search, hash } = window.location;
+    const callbackUrl = `${pathname}${search}${hash}`;
+    router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+  };
+
   const toggleSaved = () => {
     if (!isAuthenticated) {
-      router.push(`/login?callbackUrl=${encodeURIComponent(`/book/${slug}`)}`);
+      redirectToLogin();
       return;
     }
 
@@ -40,7 +44,7 @@ export default function BookActions({
       try {
         const result = await toggleSavedBookAction(entryId);
         if (result.requiresAuth) {
-          router.push(`/login?callbackUrl=${encodeURIComponent(`/book/${slug}`)}`);
+          redirectToLogin();
           return;
         }
         if (!result.ok) {

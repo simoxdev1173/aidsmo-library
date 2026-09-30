@@ -34,9 +34,23 @@ export default function VideoCarousel() {
   const { locale } = useAppLocale();
   const [selected, setSelected] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const filmstripRef = useRef<HTMLDivElement | null>(null);
   const selectionRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const video = videos[selected];
   const title = locale === 'ar' ? video.titleAr : video.titleEn;
+
+  const scrollVideos = (direction: -1 | 1) => {
+    const filmstrip = filmstripRef.current;
+    if (!filmstrip) return;
+    const firstCard = selectionRefs.current[0];
+    const gap = Number.parseFloat(window.getComputedStyle(filmstrip).columnGap) || 0;
+    const step = firstCard ? firstCard.offsetWidth + gap : filmstrip.clientWidth;
+    const visibleCards = Math.max(1, Math.floor(filmstrip.clientWidth / step));
+    filmstrip.scrollBy({
+      left: direction * (locale === 'ar' ? -1 : 1) * step * visibleCards,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+    });
+  };
 
   const selectVideo = (index: number, focus = false) => {
     const next = Math.max(0, Math.min(videos.length - 1, index));
@@ -49,7 +63,7 @@ export default function VideoCarousel() {
   return (
     <section id="library-videos" dir={locale === 'ar' ? 'rtl' : 'ltr'} className={styles.section} aria-labelledby="library-videos-heading">
       <Image src="/standardization-bg.png" alt="" fill sizes="100vw" className={styles.background} aria-hidden="true" />
-      <div className={styles.veil} aria-hidden="true" />
+      <div className={styles.darkOverlay} aria-hidden="true" />
       <div className={styles.container}>
         <header className={styles.header}>
           <div>
@@ -88,8 +102,19 @@ export default function VideoCarousel() {
           </div>
         </div>
 
-        <div className={styles.selectionHeader}><span>{t('carouselLabel')}</span><span className={styles.selectionLine} aria-hidden="true" /></div>
-        <div className={styles.filmstrip} role="group" aria-label={t('carouselLabel')}>
+        <div className={styles.selectionHeader}>
+          <span>{t('carouselLabel')}</span>
+          <span className={styles.selectionLine} aria-hidden="true" />
+          <div className={styles.controls}>
+            <button type="button" onClick={() => scrollVideos(-1)} aria-label={t('prevAria')} aria-controls="video-filmstrip">
+              {locale === 'ar' ? <LuChevronRight /> : <LuChevronLeft />}
+            </button>
+            <button type="button" onClick={() => scrollVideos(1)} aria-label={t('nextAria')} aria-controls="video-filmstrip">
+              {locale === 'ar' ? <LuChevronLeft /> : <LuChevronRight />}
+            </button>
+          </div>
+        </div>
+        <div id="video-filmstrip" ref={filmstripRef} className={styles.filmstrip} role="group" aria-label={t('carouselLabel')}>
           {videos.map((item, index) => {
             const itemTitle = locale === 'ar' ? item.titleAr : item.titleEn;
             return (

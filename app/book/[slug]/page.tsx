@@ -16,13 +16,14 @@ import {
   HiOutlineUserCircle,
 } from 'react-icons/hi2';
 import type { IconType } from 'react-icons';
-import { getPublishedEntryBySlug, getRelatedEntries } from '@/lib/library-data';
+import { getPublishedEntryBySlug, getRelatedEntries, getRatingSummaries } from '@/lib/library-data';
 import { categoryPath } from '@/lib/library-labels';
 import BookSummary from '@/components/book/BookSummary';
 import styles from '@/components/book/BookReading.module.css';
 import RelatedEntriesCarousel from '@/components/RelatedEntriesCarousel';
 import BookActions from '@/components/book/BookActions';
 import CommentsSection from '@/components/book/CommentsSection';
+import DocumentRating from '@/components/book/DocumentRating';
 import DocumentAskAiPopup from '@/components/book/DocumentAskAiPopup';
 import PdfPreview from '@/components/book/PdfPreview';
 import { documentFilesValue } from '@/lib/document-files';
@@ -342,6 +343,7 @@ export default async function BookPage({
   );
 
   const related = await getRelatedEntries(entry, 6);
+  const relatedRatings = await getRatingSummaries(related.map((item) => item.id));
   const parentHref = `/catalog/${entry.category.parent?.slug ?? entry.category.slug}`;
   const [commentRows, commentCount, viewCount, ratingAggregate, ownRating] = await Promise.all([
     prisma.documentComment.findMany({
@@ -397,6 +399,16 @@ export default async function BookPage({
               </p>
             )}
 
+            <DocumentRating
+              entryId={entry.id}
+              slug={entry.slug}
+              initialCount={ratingAggregate._count.value}
+              initialAverage={ratingAggregate._avg.value ?? 0}
+              initialUserRating={ownRating?.value ?? null}
+              initialViewCount={viewCount}
+              isAuthenticated={Boolean(user)}
+            />
+
             <div className="mt-7 flex flex-wrap gap-3">
               {primaryDocument ? (
                 <a
@@ -428,7 +440,6 @@ export default async function BookPage({
               )}
               <BookActions
                 entryId={entry.id}
-                slug={entry.slug}
                 initialSaved={Boolean(savedItem)}
                 isAuthenticated={Boolean(user)}
               />
@@ -595,10 +606,6 @@ export default async function BookPage({
           }))}
           initialNextCursor={commentRows.length > 10 ? visibleComments.at(-1)?.id ?? null : null}
           initialCommentCount={commentCount}
-          initialViewCount={viewCount}
-          initialRatingCount={ratingAggregate._count.value}
-          initialAverageRating={ratingAggregate._avg.value ?? 0}
-          initialUserRating={ownRating?.value ?? null}
         />
 
         {related.length > 0 && (
@@ -611,6 +618,7 @@ export default async function BookPage({
                 title: item.title,
                 coverImagePath: item.coverImagePath,
                 categoryLabel: categoryPath(item.category),
+                rating: relatedRatings.get(item.id),
               }))}
             />
           </div>

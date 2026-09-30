@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
-import { HiOutlineChatBubbleLeftRight, HiOutlineEye, HiStar, HiOutlineStar } from 'react-icons/hi2';
+import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2';
 import {
   addDocumentCommentAction,
   deleteDocumentCommentAction,
   moreDocumentCommentsAction,
-  rateDocumentAction,
-  registerDocumentViewAction,
 } from '@/lib/document-engagement-actions';
 
 type Comment = { id: string; name: string; body: string; createdAt: string; mine: boolean };
@@ -21,40 +19,22 @@ function formattedDate(value: string) {
   return new Intl.DateTimeFormat('ar', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(value));
 }
 
-export default function CommentsSection({ entryId, slug, currentUser, initialComments, initialNextCursor, initialCommentCount, initialViewCount, initialRatingCount, initialAverageRating, initialUserRating }: {
+export default function CommentsSection({ entryId, slug, currentUser, initialComments, initialNextCursor, initialCommentCount }: {
   entryId: string;
   slug: string;
   currentUser: { id: string; name: string } | null;
   initialComments: Comment[];
   initialNextCursor: string | null;
   initialCommentCount: number;
-  initialViewCount: number;
-  initialRatingCount: number;
-  initialAverageRating: number;
-  initialUserRating: number | null;
 }) {
   const [comments, setComments] = useState(initialComments);
   const [nextCursor, setNextCursor] = useState(initialNextCursor);
   const [commentCount, setCommentCount] = useState(initialCommentCount);
-  const [viewCount, setViewCount] = useState(initialViewCount);
-  const [ratingCount, setRatingCount] = useState(initialRatingCount);
-  const [averageRating, setAverageRating] = useState(initialAverageRating);
-  const [userRating, setUserRating] = useState(initialUserRating);
   const [body, setBody] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [ratingError, setRatingError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [ratingPending, startRatingTransition] = useTransition();
   const [morePending, startMoreTransition] = useTransition();
   const loginHref = `/login?callbackUrl=${encodeURIComponent(`/book/${slug}#document-discussion`)}`;
-
-  useEffect(() => {
-    let active = true;
-    void registerDocumentViewAction(entryId).then((result) => {
-      if (active && result.ok) setViewCount(result.count);
-    }).catch(() => { /* Keep the last known count if tracking is unavailable. */ });
-    return () => { active = false; };
-  }, [entryId]);
 
   const publish = (event: React.FormEvent) => {
     event.preventDefault();
@@ -71,24 +51,6 @@ export default function CommentsSection({ entryId, slug, currentUser, initialCom
         setBody('');
       } catch {
         setError('تعذر نشر التعليق. تحقق من اتصالك وحاول مجددا.');
-      }
-    });
-  };
-
-  const rate = (value: number) => {
-    setRatingError(null);
-    startRatingTransition(async () => {
-      try {
-        const result = await rateDocumentAction(entryId, value);
-        if (!result.ok) {
-          setRatingError(result.requiresAuth ? 'سجّل الدخول لتقييم الوثيقة.' : result.error ?? 'تعذر حفظ التقييم.');
-          return;
-        }
-        setUserRating(result.value ?? value);
-        setAverageRating(result.average ?? 0);
-        setRatingCount(result.count ?? 0);
-      } catch {
-        setRatingError('تعذر حفظ التقييم. حاول مجددا.');
       }
     });
   };
@@ -133,27 +95,7 @@ export default function CommentsSection({ entryId, slug, currentUser, initialCom
             <p className="mt-1 text-sm text-[#627080]">{commentCount.toLocaleString('ar')} {commentCount === 1 ? 'تعليق' : 'تعليقات'}</p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[#526072]">
-          <span className="inline-flex items-center gap-2"><HiOutlineEye className="h-5 w-5 text-[#9a7421]" aria-hidden="true" />{viewCount.toLocaleString('ar')} مشاهدة</span>
-          <span className="inline-flex items-center gap-2"><HiStar className="h-5 w-5 text-[#c29c41]" aria-hidden="true" />{ratingCount ? `${averageRating.toFixed(1)} من 5` : 'لم يُقيّم بعد'} <span className="text-xs text-[#78828a]">({ratingCount.toLocaleString('ar')})</span></span>
-        </div>
       </div>
-
-      <div className="mt-7 rounded-2xl bg-[#f5efdf] px-5 py-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
-        <div>
-          <h3 className="text-base font-medium text-[#0a2540]">قيّم هذه الوثيقة</h3>
-          <p className="mt-1 text-xs text-[#59616a]">{userRating ? 'يمكنك تغيير تقييمك في أي وقت.' : 'اختر من نجمة إلى خمس نجوم.'}</p>
-        </div>
-        <div className="mt-4 flex flex-wrap items-center gap-1 sm:mt-0" role="group" aria-label="تقييم الوثيقة">
-          {[1, 2, 3, 4, 5].map((value) => (
-            <button key={value} type="button" disabled={ratingPending} onClick={() => rate(value)} aria-label={`تقييم ${value} ${value === 1 ? 'نجمة' : 'نجوم'}`} aria-pressed={userRating === value} className="grid h-11 w-11 place-items-center rounded-lg text-[#b58c2d] transition hover:bg-[#e9ddc2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9a7421] disabled:opacity-60">
-              {value <= (userRating ?? 0) ? <HiStar className="h-7 w-7" aria-hidden="true" /> : <HiOutlineStar className="h-7 w-7" aria-hidden="true" />}
-            </button>
-          ))}
-        </div>
-        {!currentUser && <Link href={loginHref} className="mt-3 inline-block text-xs font-medium text-[#805e1b] underline-offset-4 hover:underline sm:mt-0">سجّل الدخول للتقييم</Link>}
-      </div>
-      {ratingError && <p role="alert" className="mt-3 text-sm text-red-700">{ratingError}</p>}
 
       {currentUser ? (
         <form onSubmit={publish} className="mt-7">

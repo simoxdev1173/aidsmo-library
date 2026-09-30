@@ -3,9 +3,11 @@
 import { cn } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { LuBookMarked, LuChevronDown, LuChevronLeft, LuLogOut, LuMenu, LuSearch, LuSettings, LuUser, LuX } from 'react-icons/lu';
+import PageLoading from '@/components/PageLoading';
 import { useAppLocale, type AppLocale } from '@/lib/i18n/LocaleProvider';
 import { logoutUserAction } from '@/lib/user-actions';
 
@@ -554,7 +556,9 @@ const UserAvatar = ({
 };
 
 const TopNavBar = ({ user }: { user: SiteUser }) => {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [navigationPending, setNavigationPending] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -567,6 +571,29 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
   const t = useTranslations('nav');
   const tHero = useTranslations('hero');
   const tFooter = useTranslations('footer');
+
+  useEffect(() => {
+    setNavigationPending(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!navigationPending) return;
+    const timeout = window.setTimeout(() => setNavigationPending(false), 15000);
+    return () => window.clearTimeout(timeout);
+  }, [navigationPending]);
+
+  const handleNavigationClick = (event: MouseEvent<HTMLElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
+    if (!link || !event.currentTarget.contains(link) || link.target === '_blank' || link.hasAttribute('download')) return;
+
+    const destination = new URL(link.href, window.location.href);
+    const current = new URL(window.location.href);
+    if (destination.origin !== current.origin || (destination.pathname === current.pathname && destination.search === current.search)) return;
+
+    setNavigationPending(true);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -660,7 +687,9 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
 
   return (
     <>
+      {navigationPending && <PageLoading />}
       <header
+        onClick={handleNavigationClick}
         className={cn(
           'fixed inset-x-0 z-[60] transition-all duration-500',
           isSolid ? 'top-3 px-2 md:px-3 2xl:px-4' : 'top-0 px-0',
@@ -892,6 +921,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
       />
 
       <aside
+        onClick={handleNavigationClick}
         ref={mobileMenuRef}
         id="mobile-site-menu"
         className={cn(

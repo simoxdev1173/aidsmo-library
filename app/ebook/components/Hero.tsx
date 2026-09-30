@@ -480,6 +480,7 @@ const Hero = () => {
           reducedMotion={prefersReducedMotion}
         />
 
+        <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,37,64,0.04)_0%,rgba(10,37,64,0.42)_44%,rgba(10,37,64,0.78)_100%)]" aria-hidden />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.1),transparent_30%)]" aria-hidden />
         <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />

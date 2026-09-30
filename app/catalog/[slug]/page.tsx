@@ -2,7 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { HiOutlineArrowLeft, HiOutlineBookOpen } from 'react-icons/hi2';
-import { getCategoryWithEntries } from '@/lib/library-data';
+import { getCategoryWithEntries, getRatingSummaries } from '@/lib/library-data';
+import RatingBadge from '@/components/book/RatingBadge';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,7 @@ export default async function CatalogPage({
   if (!data) {
     notFound();
   }
+  const ratings = await getRatingSummaries(data.entries.map((entry) => entry.id));
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#F8FAFC] pt-32 text-[#0A2540]">
@@ -41,6 +43,7 @@ export default async function CatalogPage({
               <Link key={entry.id} href={`/book/${entry.slug}`} className="group overflow-hidden rounded-lg border border-[#D9E3EE] bg-white transition duration-200 hover:border-[#C29C41]/60 hover:shadow-[0_16px_42px_rgba(10,37,64,0.10)]">
                 <div className="grid grid-cols-[120px_1fr] gap-4 p-4">
                   <div className="relative aspect-[3/4] overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
+                    <RatingBadge rating={ratings.get(entry.id)} />
                     {entry.coverImagePath ? (
                       <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover transition duration-300 group-hover:scale-[1.03]" unoptimized />
                     ) : (

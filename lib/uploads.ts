@@ -69,12 +69,13 @@ export async function resolvePublicUploadFilePath(filePath: string | null | unde
   return null;
 }
 
-export type UploadFolder = DriveFolder;
+export type UploadFolder = DriveFolder | "avatars";
 
 const allowedMimeTypes: Record<UploadFolder, Set<string>> = {
   covers: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
   documents: new Set(["application/pdf"]),
   events: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
+  avatars: new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]),
 };
 
 const maxImageFileSize = 10 * 1024 * 1024;
@@ -82,9 +83,14 @@ const maxImageFileSize = 10 * 1024 * 1024;
 const maxFileSize: Partial<Record<UploadFolder, number>> = {
   covers: maxImageFileSize,
   events: maxImageFileSize,
+  avatars: 2 * 1024 * 1024,
 };
 
 function extensionFor(file: File) {
+  if (file.type === "image/jpeg") return "jpg";
+  if (file.type === "image/png") return "png";
+  if (file.type === "image/webp") return "webp";
+  if (file.type === "image/avif") return "avif";
   const original = file.name.split(".").pop()?.toLowerCase();
   if (original && /^[a-z0-9]+$/.test(original)) {
     return original;
@@ -114,15 +120,31 @@ function validateUpload(file: File, folder: UploadFolder, bytes: Buffer) {
     throw new Error("نوع الصورة غير مدعوم. الصيغ المسموحة هي JPG أو PNG أو WebP أو AVIF.");
   }
 
+  if (folder === "avatars") {
+    const signature = file.type === "image/jpeg"
+      ? bytes.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff]))
+      : file.type === "image/png"
+        ? bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+        : file.type === "image/webp"
+          ? bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP"
+          : bytes.toString("ascii", 4, 8) === "ftyp" && /avif|avis/.test(bytes.toString("ascii", 8, 32));
+    if (!signature) throw new Error("ملف الصورة غير صالح.");
+  }
+
   const maxSize = maxFileSize[folder];
   if (maxSize && file.size > maxSize) {
-    throw new Error("حجم الصورة يتجاوز 10MB. يرجى ضغط الصورة أو اختيار صورة أصغر.");
+    throw new Error(folder === "avatars" ? "حجم الصورة يتجاوز 2MB." : "حجم الصورة يتجاوز 10MB. يرجى ضغط الصورة أو اختيار صورة أصغر.");
   }
 }
 
 export async function readUpload(file: File | null, folder: UploadFolder) {
   if (!file || file.size === 0) {
     return null;
+  }
+
+  const maxSize = maxFileSize[folder];
+  if (maxSize && file.size > maxSize) {
+    throw new Error(folder === "avatars" ? "حجم الصورة يتجاوز 2MB." : "حجم الصورة يتجاوز 10MB. يرجى ضغط الصورة أو اختيار صورة أصغر.");
   }
 
   const bytes = Buffer.from(await file.arrayBuffer());
@@ -158,7 +180,7 @@ export async function saveUpload(file: File | null, folder: UploadFolder) {
 
 export async function saveUploadCopies(
   upload: Awaited<ReturnType<typeof readUpload>>,
-  folder: UploadFolder,
+  folder: DriveFolder,
 ) {
   const localPath = await saveUploadBytes(upload, folder);
   if (!upload || !localPath) {
@@ -185,7 +207,7 @@ function mimeTypeForUploadPath(filePath: string) {
   return "image/jpeg";
 }
 
-export async function mirrorPublicUploadToDrive(filePath: string, folder: UploadFolder) {
+export async function mirrorPublicUploadToDrive(filePath: string, folder: DriveFolder) {
   const absolutePath = await resolvePublicUploadFilePath(filePath);
   if (!absolutePath) {
     throw new Error(`Local backup file is missing: ${filePath}`);

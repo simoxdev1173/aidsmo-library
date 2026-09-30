@@ -29,25 +29,22 @@ const LibraryNews = () => {
         alt=""
         fill
         sizes="100vw"
-        className="scale-[1.04] object-cover blur-[5px] brightness-[0.85] saturate-[0.7]"
+        className="scale-[1.04] object-cover brightness-[0.85] saturate-[0.7]"
         aria-hidden
       />
 
-      <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,230,0.3),rgba(255,248,230,0.18)_48%,rgba(255,248,230,0.28))]"
-        aria-hidden
-      />
+      <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
 
       <div className="absolute inset-x-0 top-0 h-px bg-[#C29C41]/35" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto w-[calc(100%-2rem)] max-w-6xl rounded-[18px] border border-[#C6A346]/35 bg-white/78 px-5 py-7 shadow-[0_22px_58px_rgba(10,37,64,0.16)] backdrop-blur-sm sm:px-7 sm:py-8 lg:px-9">
         <div className="mb-10 max-w-2xl sm:mb-12">
-          <h2 className="text-balance text-[1.7rem] font-medium leading-[1.6] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] sm:text-[2rem] lg:text-[2.4rem]">
+          <h2 className="text-balance text-[1.7rem] font-medium leading-[1.6] text-[#003652] sm:text-[2rem] lg:text-[2.4rem]">
             {t('heading')}
           </h2>
 
-          <p className="mt-3 max-w-xl text-pretty text-sm leading-[1.9] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] sm:text-[0.95rem]">
+          <p className="mt-3 max-w-xl text-pretty text-sm leading-[1.9] text-[#475569] sm:text-[0.95rem]">
             {t('subtitle')}
           </p>
         </div>

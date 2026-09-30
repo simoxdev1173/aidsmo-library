@@ -21,7 +21,7 @@ export default async function SignupPage({
   const query = await searchParams;
   const callbackUrl = query.callbackUrl?.startsWith('/') && !query.callbackUrl.startsWith('//')
     ? query.callbackUrl
-    : '/library';
+    : '/';
 
   if (user) redirect(callbackUrl);
 

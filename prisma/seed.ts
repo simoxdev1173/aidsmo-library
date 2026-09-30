@@ -2,6 +2,8 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../lib/generated/prisma/client";
 import { hashPassword } from "../lib/password";
+import { executiveBoardMembers } from "../lib/executive-board-data";
+import { generalAssemblyMembers } from "../lib/general-assembly-data";
 
 const adapter = new PrismaPg({
   connectionString:
@@ -152,6 +154,50 @@ async function seedCategories() {
   });
 }
 
+async function seedExecutiveBoardMembers() {
+  await prisma.executiveBoardMember.createMany({
+    data: executiveBoardMembers.map((member, index) => ({
+      slug: member.slug,
+      name: member.name,
+      sourceProfileName: member.sourceProfileName ?? null,
+      role: member.role ?? null,
+      ministry: member.ministry,
+      country: member.country,
+      imageUrl: member.imageUrl,
+      phone: member.phone ?? null,
+      fax: member.fax ?? null,
+      websiteUrl: member.websiteUrl,
+      vCardUrl: member.vCardUrl,
+      sourceNote: member.sourceNote ?? null,
+      sortOrder: (index + 1) * 10,
+      isActive: true,
+    })),
+    skipDuplicates: true,
+  });
+}
+
+async function seedGeneralAssemblyMembers() {
+  await prisma.generalAssemblyMember.createMany({
+    data: generalAssemblyMembers.map((member, index) => ({
+      slug: member.slug,
+      name: member.name,
+      sourceProfileName: member.sourceProfileName ?? null,
+      role: member.role,
+      ministry: member.ministry,
+      country: member.country,
+      imageUrl: member.imageUrl,
+      phone: member.phone ?? null,
+      fax: member.fax ?? null,
+      websiteUrl: member.websiteUrl,
+      vCardUrl: member.vCardUrl,
+      sourceNote: member.sourceNote ?? null,
+      sortOrder: (index + 1) * 10,
+      isActive: true,
+    })),
+    skipDuplicates: true,
+  });
+}
+
 async function seedEntries() {
   const category = await prisma.category.findUniqueOrThrow({
     where: { slug: "mining-industry" },
@@ -202,6 +248,8 @@ async function main() {
   await seedAdmin();
   await seedCategories();
   await seedEntries();
+  await seedExecutiveBoardMembers();
+  await seedGeneralAssemblyMembers();
 }
 
 main()

@@ -11,11 +11,12 @@ function tabHref(path: '/login' | '/signup', callbackUrl: string) {
 
 export default function AuthShell({
   mode,
-  callbackUrl = '/library',
+  callbackUrl = '/',
   title,
   description,
   children,
   showTabs = true,
+  showImage = true,
 }: {
   mode?: AuthMode;
   callbackUrl?: string;
@@ -23,13 +24,17 @@ export default function AuthShell({
   description: string;
   children: ReactNode;
   showTabs?: boolean;
+  showImage?: boolean;
 }) {
   return (
     <main dir="rtl" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#022A4E] via-[#073E68] to-[#0A2540] px-4 pb-16 pt-32 text-[#0A2540] sm:px-6 sm:pt-36">
       <div className="pointer-events-none absolute -start-32 top-12 size-[30rem] rounded-full bg-[#0369A1]/30 blur-[120px]" aria-hidden="true" />
       <div className="pointer-events-none absolute -end-24 bottom-0 size-[25rem] rounded-full bg-[#C29C41]/20 blur-[110px]" aria-hidden="true" />
 
-      <div className="relative mx-auto grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/15 bg-white shadow-[0_32px_90px_rgba(0,0,0,0.32)] lg:grid-cols-[1.12fr_0.88fr]">
+      <div className={cn(
+        'relative mx-auto grid w-full overflow-hidden rounded-[2rem] border border-white/15 bg-white shadow-[0_32px_90px_rgba(0,0,0,0.32)]',
+        showImage ? 'max-w-5xl lg:grid-cols-[1.12fr_0.88fr]' : 'max-w-6xl',
+      )}>
         <section className="px-5 py-7 sm:px-10 sm:py-10 lg:px-12" aria-labelledby="auth-title">
           <div className="flex items-center justify-between gap-4">
             <Link href="/" className="inline-flex items-center gap-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C29C41]">
@@ -76,7 +81,7 @@ export default function AuthShell({
           {children}
         </section>
 
-        <aside className="relative hidden min-h-full overflow-hidden bg-[#0A2540] lg:block" aria-label="المنظمة العربية للتنمية الصناعية والتقييس والتعدين">
+        {showImage && <aside className="relative hidden min-h-full overflow-hidden bg-[#0A2540] lg:block" aria-label="المنظمة العربية للتنمية الصناعية والتقييس والتعدين">
           <Image
             src="/section-4-card.png"
             alt="شعار المنظمة العربية للتنمية الصناعية والتقييس والتعدين في مشهد صناعي"
@@ -87,7 +92,7 @@ export default function AuthShell({
           />
           <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A2540]/20 via-transparent to-white/5" aria-hidden="true" />
           <span className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" aria-hidden="true" />
-        </aside>
+        </aside>}
       </div>
     </main>
   );

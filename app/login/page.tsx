@@ -22,7 +22,7 @@ export default async function LoginPage({
   const query = await searchParams;
   const callbackUrl = query.callbackUrl?.startsWith('/') && !query.callbackUrl.startsWith('//')
     ? query.callbackUrl
-    : '/library';
+    : '/';
 
   if (user) redirect(callbackUrl);
 

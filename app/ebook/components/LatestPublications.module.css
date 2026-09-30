@@ -1,4 +1,4 @@
-.section { background: #faf7ef; color: #0a2540; padding: clamp(56px, 6vw, 88px) 0; }
+.section { background: #fff; color: #0a2540; padding: clamp(56px, 6vw, 88px) 0; }
 .container { max-width: 1200px; margin-inline: auto; padding-inline: clamp(20px, 4vw, 44px); }
 .intro { max-width: 680px; margin: 0 auto 44px; text-align: center; }
 .heading { font-family: var(--font-readex), sans-serif; font-size: clamp(27px, 3vw, 39px); font-weight: 500; line-height: 1.6; }

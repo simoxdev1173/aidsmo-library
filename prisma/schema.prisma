@@ -197,6 +197,56 @@ model LibraryEntry {
   @@index([featured])
 }
 
+model ExecutiveBoardMember {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  name              String
+  sourceProfileName String?
+  role              String?
+  ministry          String
+  country           String
+  imageUrl          String?
+  phone             String?
+  fax               String?
+  email             String?
+  websiteUrl        String?
+  vCardUrl          String?
+  bio               String?  @db.Text
+  sourceNote        String?  @db.Text
+  sortOrder         Int      @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@index([country])
+}
+
+model GeneralAssemblyMember {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  name              String
+  sourceProfileName String?
+  role              String?
+  ministry          String
+  country           String
+  imageUrl          String?
+  phone             String?
+  fax               String?
+  email             String?
+  websiteUrl        String?
+  vCardUrl          String?
+  bio               String?  @db.Text
+  sourceNote        String?  @db.Text
+  sortOrder         Int      @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@index([country])
+}
+
 model DocumentAnalysis {
   id             String                 @id @default(cuid())
   entryId        String

@@ -47,6 +47,21 @@ export default async function EditEntryPage({
         </form>
       </div>
 
+      <dl className="flex flex-wrap gap-x-10 gap-y-4 rounded-lg border border-[#D9E3EE] bg-white p-4 text-sm">
+        <div>
+          <dt className="font-semibold text-[#64748B]">تاريخ الإنشاء</dt>
+          <dd className="mt-1 text-[#0A2540]">
+            <time dateTime={entry.createdAt.toISOString()}>{entry.createdAt.toLocaleString('ar-MA', { timeZone: 'Africa/Casablanca', dateStyle: 'medium', timeStyle: 'short' })}</time>
+          </dd>
+        </div>
+        <div>
+          <dt className="font-semibold text-[#64748B]">آخر تحديث</dt>
+          <dd className="mt-1 text-[#0A2540]">
+            <time dateTime={entry.updatedAt.toISOString()}>{entry.updatedAt.toLocaleString('ar-MA', { timeZone: 'Africa/Casablanca', dateStyle: 'medium', timeStyle: 'short' })}</time>
+          </dd>
+        </div>
+      </dl>
+
       {query.saved === '1' && (
         <Notice tone="success" title="تم الحفظ">
           تم الحفظ.

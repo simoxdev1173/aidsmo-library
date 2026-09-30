@@ -14,6 +14,7 @@ async function main() {
       title: true,
       filePath: true,
       documentFiles: true,
+      updatedAt: true,
     },
     orderBy: { updatedAt: "desc" },
   });
@@ -64,15 +65,17 @@ async function main() {
     }
 
     const updated = await prisma.libraryEntry.updateMany({
-      where: { id: entry.id, coverImagePath: null },
-      data: { coverImagePath, ...(driveCoverImagePath ? { driveCoverImagePath } : {}) },
+      where: { id: entry.id, coverImagePath: null, updatedAt: entry.updatedAt },
+      // Maintenance must not replace the editorial date. The timestamp guard
+      // also prevents overwriting an edit made while the cover was rendering.
+      data: { coverImagePath, updatedAt: entry.updatedAt, ...(driveCoverImagePath ? { driveCoverImagePath } : {}) },
     });
     if (updated.count) {
       generated++;
       console.log(`Generated cover: ${entry.title} -> ${coverImagePath}`);
     } else {
       skipped++;
-      console.log(`Skipped (cover added during run): ${entry.title}`);
+      console.log(`Skipped (entry changed during run): ${entry.title}`);
     }
   }
 

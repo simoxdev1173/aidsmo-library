@@ -88,7 +88,7 @@ export default async function EntriesPage({
                 <th className="px-4 py-3">التصنيف</th>
                 <th className="px-4 py-3">السنة</th>
                 <th className="px-4 py-3">الحالة</th>
-                <th className="px-4 py-3">آخر تحديث</th>
+                <th className="px-4 py-3">تاريخ الإنشاء</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
@@ -122,7 +122,9 @@ export default async function EntriesPage({
                   <td className="px-4 py-4">
                     <span className="rounded-full bg-[#F0F7FC] px-3 py-1 text-xs font-bold text-[#0369A1]">{statusLabel(entry.status)}</span>
                   </td>
-                  <td className="px-4 py-4 text-sm text-[#64748B]">{entry.updatedAt.toLocaleDateString('ar-MA')}</td>
+                  <td className="whitespace-nowrap px-4 py-4 text-sm text-[#64748B]">
+                    <time dateTime={entry.createdAt.toISOString()}>{entry.createdAt.toLocaleDateString('ar-MA', { timeZone: 'Africa/Casablanca' })}</time>
+                  </td>
                   <td className="px-4 py-4">
                     <Link href={`/dashboard/entries/${entry.id}`} className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#D9E3EE] text-[#0369A1] transition duration-200 hover:border-[#C29C41] hover:text-[#C29C41]">
                       <HiOutlinePencilSquare className="h-5 w-5" />

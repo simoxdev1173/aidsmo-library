@@ -56,7 +56,7 @@ export default async function DashboardPage() {
 
       <section className="rounded-lg border border-[#D9E3EE] bg-white">
         <div className="flex items-center justify-between border-b border-[#E2E8F0] px-5 py-4">
-          <h2 className="text-lg font-bold text-[#003652]">آخر التحديثات</h2>
+          <h2 className="text-lg font-bold text-[#003652]">أحدث الإضافات</h2>
           <Link href="/dashboard/entries" className="text-sm font-bold text-[#0369A1] hover:text-[#C29C41]">
             عرض الكل
           </Link>
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
         <div className="divide-y divide-[#E2E8F0]">
           {stats.recentEntries.length > 0 ? (
             stats.recentEntries.map((entry) => (
-              <Link key={entry.id} href={`/dashboard/entries/${entry.id}`} className="grid gap-3 px-5 py-4 transition duration-200 hover:bg-[#F8FAFC] md:grid-cols-[1fr_180px_120px]">
+              <Link key={entry.id} href={`/dashboard/entries/${entry.id}`} className="grid gap-3 px-5 py-4 transition duration-200 hover:bg-[#F8FAFC] md:grid-cols-[1fr_150px_120px_100px]">
                 <div className="flex items-center gap-3">
                   <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
                     {entry.coverImagePath ? (
@@ -80,6 +80,10 @@ export default async function DashboardPage() {
                 </div>
                 <p className="text-sm text-[#64748B]">{entry.author ?? 'بدون مؤلف'}</p>
                 <p className="text-sm font-bold text-[#0369A1]">{statusLabel(entry.status)}</p>
+                <div className="text-sm text-[#64748B]">
+                  <p className="mb-1 text-xs font-semibold">تاريخ الإنشاء</p>
+                  <time className="whitespace-nowrap" dateTime={entry.createdAt.toISOString()}>{entry.createdAt.toLocaleDateString('ar-MA', { timeZone: 'Africa/Casablanca' })}</time>
+                </div>
               </Link>
             ))
           ) : (

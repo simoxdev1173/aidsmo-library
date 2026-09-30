@@ -535,6 +535,7 @@ export async function generateEntryCoverAction(id: string) {
       coverImagePath: true,
       filePath: true,
       documentFiles: true,
+      updatedAt: true,
     },
   });
 
@@ -566,6 +567,7 @@ export async function generateEntryCoverAction(id: string) {
     redirect(`/dashboard/entries/${id}?cover=missing-pdf`);
   }
 
+  let coverSaved = false;
   try {
     let driveCoverImagePath: string | null = null;
     if (isGoogleDriveConfigured()) {
@@ -575,10 +577,13 @@ export async function generateEntryCoverAction(id: string) {
         console.error(`Drive cover mirror failed: existing entry "${entry.title}" (${id})`, error);
       }
     }
-    await prisma.libraryEntry.update({
-      where: { id },
-      data: { coverImagePath, ...(driveCoverImagePath ? { driveCoverImagePath } : {}) },
+    const updated = await prisma.libraryEntry.updateMany({
+      where: { id, coverImagePath: null, updatedAt: entry.updatedAt },
+      // Generating a cover is maintenance; preserve the editorial timestamp
+      // and skip this write if the entry changed while rendering.
+      data: { coverImagePath, updatedAt: entry.updatedAt, ...(driveCoverImagePath ? { driveCoverImagePath } : {}) },
     });
+    coverSaved = updated.count > 0;
 
     revalidatePath("/");
     revalidatePath("/dashboard");
@@ -589,7 +594,7 @@ export async function generateEntryCoverAction(id: string) {
     redirect(`/dashboard/entries/${id}?cover=failed`);
   }
 
-  redirect(`/dashboard/entries/${id}?saved=1&cover=generated`);
+  redirect(coverSaved ? `/dashboard/entries/${id}?saved=1&cover=generated` : `/dashboard/entries/${id}?cover=skipped`);
 }
 
 export async function deleteEntryAction(id: string) {

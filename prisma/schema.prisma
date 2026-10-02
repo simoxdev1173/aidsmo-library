@@ -312,3 +312,16 @@ model DocumentView {
   @@unique([entryId, visitorId, viewedOn])
   @@index([entryId])
 }
+
+model WebsiteFeedback {
+  id          String   @id @default(cuid())
+  experience  Int
+  performance Int
+  navigation  Int
+  readability Int
+  comment     String?  @db.Text
+  pagePath    String?  @db.VarChar(400)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}

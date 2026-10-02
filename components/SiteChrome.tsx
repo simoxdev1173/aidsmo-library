@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import LazyChatbotWidget from '@/components/LazyChatbotWidget';
+import WebsiteFeedbackWidget from '@/components/WebsiteFeedbackWidget';
 import Footer from '@/components/Footer';
 import TopNavBar from '@/components/TopNavBar';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
@@ -36,6 +37,7 @@ export default function SiteChrome({
             {children}
           </div>
           <LazyChatbotWidget />
+          <WebsiteFeedbackWidget />
           <Footer />
         </>
       )}

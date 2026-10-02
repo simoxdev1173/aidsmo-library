@@ -26,7 +26,7 @@ export default function IndustryPage({
         description:
           'مدخل موحد لإستراتيجيات الصناعة، الصناعات الصغيرة والمتوسطة، الفعاليات، الدراسات، والأدلة الصناعية.',
         accent: '#C29C41',
-        heroImage: '/industry-bg.png',
+        heroImage: '/industry-bg.webp',
       }}
     />
   );

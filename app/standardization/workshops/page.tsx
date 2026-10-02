@@ -17,7 +17,7 @@ export default function StandardizationWorkshopsPage({
         description:
           'مساحة لورش العمل المرتبطة بالمواصفات والجودة والمطابقة، مع مواد معرفية تدعم بناء القدرات الفنية والمؤسسية.',
         accent: '#C29C41',
-        heroImage: '/standardization-bg.png',
+        heroImage: '/standardization-bg.webp',
       }}
     />
   );

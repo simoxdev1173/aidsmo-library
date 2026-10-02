@@ -18,7 +18,7 @@ export default function IndustryGuidesPage({
         description:
           'أدلة تطبيقية ووثائق إرشادية تساعد الجهات الصناعية على التخطيط، التنفيذ، تحسين الأداء، وتطوير المشاريع.',
         accent: '#C29C41',
-        heroImage: '/industry-bg.png',
+        heroImage: '/industry-bg.webp',
       }}
     />
   );

@@ -18,7 +18,7 @@ export default function IndustryStudiesPage({
         description:
           'مساحة للدراسات والتحليلات المرتبطة بالقطاع الصناعي، التكامل العربي، سلاسل القيمة، والقدرات الإنتاجية.',
         accent: '#C29C41',
-        heroImage: '/industry-bg.png',
+        heroImage: '/industry-bg.webp',
       }}
     />
   );

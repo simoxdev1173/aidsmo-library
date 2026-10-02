@@ -18,7 +18,7 @@ export default function ArabIndustryReportPage({
         description:
           'صفحة مخصصة لتقارير الصناعة العربية وما تتضمنه من مؤشرات وتحليلات عن أداء القطاع الصناعي في الدول العربية.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

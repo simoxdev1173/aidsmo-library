@@ -17,7 +17,7 @@ export default function StandardizationGuidesPage({
         description:
           'أدلة تطبيقية ووثائق إرشادية تقدم مسارات واضحة للتعامل مع المواصفات القياسية، إجراءات المطابقة، وأنظمة إدارة الجودة.',
         accent: '#0A2540',
-        heroImage: '/standardization-bg.png',
+        heroImage: '/standardization-bg.webp',
       }}
     />
   );

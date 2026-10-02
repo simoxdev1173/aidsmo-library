@@ -27,7 +27,7 @@ export default async function ExecutiveBoardMemberPage({ params }: PageProps) {
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#0A2540]">
       <section className="relative border-b border-[#C29C41]/25 bg-[#071D2F] text-white">
-        <div className="absolute inset-0 opacity-35" aria-hidden><Image src="/standardization-bg.png" alt="" fill priority sizes="100vw" className="object-cover" /></div>
+        <div className="absolute inset-0 opacity-35" aria-hidden><Image src="/standardization-bg.webp" alt="" fill priority sizes="100vw" className="object-cover" /></div>
         <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.94),rgba(3,105,161,0.64)_55%,rgba(7,29,47,0.86))]" aria-hidden />
         <div className="relative mx-auto max-w-7xl px-4 pb-14 pt-36 sm:px-6 lg:px-8 lg:pb-16 lg:pt-40">
           <Link href="/archive/org/executive-board" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition-colors hover:border-[#E8C96A] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#E8C96A]"><HiOutlineArrowRight className="h-4 w-4" /> أعضاء المجلس التنفيذي</Link>

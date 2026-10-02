@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import ChatbotWidget from '@/components/ChatbotWidget';
+import LazyChatbotWidget from '@/components/LazyChatbotWidget';
 import Footer from '@/components/Footer';
 import TopNavBar from '@/components/TopNavBar';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
@@ -35,7 +35,7 @@ export default function SiteChrome({
           <div id="main-content" tabIndex={-1} className="min-w-0 outline-none">
             {children}
           </div>
-          <ChatbotWidget />
+          <LazyChatbotWidget />
           <Footer />
         </>
       )}

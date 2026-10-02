@@ -18,7 +18,7 @@ export default function IndustrialDevelopmentMagazinePage({
         description:
           'أعداد ومقالات مجلة التنمية الصناعية بما تقدمه من رؤى وتحليلات ومواد معرفية حول واقع الصناعة العربية.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

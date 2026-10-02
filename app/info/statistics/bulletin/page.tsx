@@ -18,7 +18,7 @@ export default function StatisticsBulletinPage({
         description:
           'نشرة دورية تجمع البيانات والإحصاءات الصناعية وتعرضها بطريقة تساعد الباحثين وصناع القرار على المتابعة السريعة.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

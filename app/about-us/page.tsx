@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import OptimizedHeroVideo from '@/components/OptimizedHeroVideo';
 import {
   HiOutlineArchiveBox,
   HiOutlineArrowLeft,
@@ -48,15 +49,7 @@ export default function AboutPage() {
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#0A2540]">
       {/* ─── Hero ─── */}
       <section className="relative h-screen min-h-[640px] w-full overflow-hidden bg-[#0A2540] text-white">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/hero-video-3.mp4" type="video/mp4" />
-        </video>
+        <OptimizedHeroVideo />
 
         {/* Light, localized wash — just enough to seat the panel, video stays visible */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/72 via-[#0A2540]/8 to-transparent" aria-hidden />
@@ -125,7 +118,7 @@ export default function AboutPage() {
       {/* Image */}
       <div className="relative h-full overflow-hidden rounded-[22px] border border-[#C29C41]/30 bg-[#F0F7FC] shadow-[0_24px_64px_rgba(10,37,64,0.14)]">
         <Image
-          src="/hero0cover-4.png"
+          src="/hero0cover-4.webp"
           alt="مساحة بحث هادئة في المكتبة الرقمية الذكية"
           width={900}
           height={700}

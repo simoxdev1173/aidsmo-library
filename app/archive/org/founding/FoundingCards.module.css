@@ -1,0 +1,35 @@
+.cardGrid > article {
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 420ms ease,
+    opacity 420ms ease,
+    box-shadow 420ms ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cardGrid:hover > article:not(:hover) {
+    filter: blur(0.8px);
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+
+  .cardGrid > article:hover {
+    z-index: 1;
+    transform: translateY(-4px) scale(1.045);
+    box-shadow: 0 24px 52px rgba(10, 37, 64, 0.15);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cardGrid:focus-within > article:not(:focus-within) {
+    filter: blur(0.8px);
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+
+  .cardGrid > article:focus-within {
+    z-index: 1;
+    transform: translateY(-4px) scale(1.045);
+    box-shadow: 0 24px 52px rgba(10, 37, 64, 0.15);
+  }
+}

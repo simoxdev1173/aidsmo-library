@@ -44,7 +44,7 @@ export default async function IndustrialNewsletterYearPage({
         description:
           'أرشيف سنوي للنشرات الدورية التي تلخص أبرز المستجدات والبيانات والمواد المرتبطة بالمعلومات الصناعية.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

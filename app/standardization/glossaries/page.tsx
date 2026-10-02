@@ -17,7 +17,7 @@ export default function StandardizationGlossariesPage({
         description:
           'فهارس لغوية ومراجع مصطلحية تساعد الباحثين والمهنيين على توحيد المفاهيم الفنية المرتبطة بالمواصفات والجودة والاعتماد.',
         accent: '#C29C41',
-        heroImage: '/standardization-bg.png',
+        heroImage: '/standardization-bg.webp',
       }}
     />
   );

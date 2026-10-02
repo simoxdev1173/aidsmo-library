@@ -48,7 +48,7 @@ export default async function IndustrialInfographicsYearPage({
         description:
           'مساحة للمواد البصرية التي تحول البيانات والمؤشرات الصناعية إلى عروض مختصرة وسهلة القراءة حسب سنة الإصدار.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

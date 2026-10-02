@@ -87,8 +87,8 @@ const Footer = () => {
   ];
 
   const quickActions = [
-    { label: t('exploreLibrary'), href: '/', icon: LuBookOpen },
-    { label: t('startSearch'), href: '/#search', icon: LuSearch },
+    { label: t('exploreLibrary'), href: '/#projects', icon: LuBookOpen },
+    { label: t('startSearch'), href: '/search', icon: LuSearch },
   ];
 
   const validateEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -123,7 +123,7 @@ const Footer = () => {
   return (
     <footer dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#382715] text-[#0A2540]">
       <Image
-        src="/background-01.png"
+        src="/background-01.webp"
         alt=""
         fill
         sizes="100vw"

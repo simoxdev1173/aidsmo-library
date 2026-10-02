@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { LuChevronLeft } from 'react-icons/lu';
+import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './LibraryServices.module.css';
 
@@ -25,7 +26,7 @@ const LibraryNews = () => {
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
     >
       <Image
-        src="/background-01.png"
+        src="/background-01.webp"
         alt=""
         fill
         sizes="100vw"
@@ -50,27 +51,27 @@ const LibraryNews = () => {
         </div>
 
         <div className="grid gap-4 lg:auto-rows-[205px] lg:grid-cols-3">
-          {/* Big parchment card */}
+          {/* Personal library card */}
           <Link
-            href="#latest-pub"
+            href="/library"
             className={`${styles.card} group flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/35 bg-[#fffcf4]/95 p-6 shadow-[0_14px_36px_rgba(10,37,64,0.07)] backdrop-blur-sm sm:p-7 lg:row-span-2`}
           >
             <div>
               <p className="text-xs font-medium text-[#805e1b]">
-                {t('latestKicker')}
+                {t('myLibraryKicker')}
               </p>
 
               <h3 className="mt-4 max-w-md text-xl font-medium leading-[1.7] text-[#0A2540] sm:text-[1.45rem]">
-                {t('latestTitle')}
+                {t('myLibraryTitle')}
               </h3>
 
               <p className="mt-3 max-w-md text-sm leading-[1.9] text-[#59616a]">
-                {t('latestDesc')}
+                {t('myLibraryDesc')}
               </p>
             </div>
 
             <span className={`${primaryButton} mt-7 w-fit`}>
-              {t('viewPublications')}
+              {t('openMyLibrary')}
               <LuChevronLeft className={`${styles.arrow} h-4 w-4`} />
             </span>
           </Link>
@@ -81,7 +82,7 @@ const LibraryNews = () => {
             className={`${styles.card} group min-h-[210px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
-              src="/industry-informations-bg.png"
+              src="/industry-informations-bg.webp"
               alt=""
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
@@ -102,16 +103,17 @@ const LibraryNews = () => {
           </Link>
 
           {/* Smart assistant card */}
-          <Link
-            href="#chatbot"
-            className={`${styles.card} group flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] p-6 text-white shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:p-7 lg:row-span-2`}
-          >
+          <div className={`${styles.card} group flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] p-6 text-white shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:p-7 lg:row-span-2`}>
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(232,201,106,0.14),transparent_34%)]"
               aria-hidden
             />
 
-            <div className="relative z-10">
+            <ChatbotPromptButton className="absolute inset-0 z-20 cursor-pointer rounded-[18px] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#E8C96A]">
+              <span className="sr-only">{t('askAssistant')}</span>
+            </ChatbotPromptButton>
+
+            <div className="pointer-events-none relative z-10">
               <p className="text-xs font-medium text-[#E8C96A]">
                 {t('assistantKicker')}
               </p>
@@ -125,11 +127,11 @@ const LibraryNews = () => {
               </p>
             </div>
 
-            <span className={`${primaryButton} relative z-10 mt-7 w-fit`}>
+            <span className={`${primaryButton} pointer-events-none relative z-10 mt-7 w-fit`}>
               {t('askAssistant')}
               <LuChevronLeft className={`${styles.arrow} h-4 w-4`} />
             </span>
-          </Link>
+          </div>
 
           {/* Main blue sector card */}
           <Link
@@ -167,7 +169,7 @@ const LibraryNews = () => {
             className={`${styles.card} group min-h-[210px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
-              src="/industry-bg.png"
+              src="/industry-bg.webp"
               alt=""
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
@@ -190,7 +192,7 @@ const LibraryNews = () => {
             className={`${styles.card} group min-h-[210px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
-              src="/standardization-bg.png"
+              src="/standardization-bg.webp"
               alt=""
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"

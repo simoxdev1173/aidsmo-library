@@ -62,7 +62,7 @@ export default function VideoCarousel() {
 
   return (
     <section id="library-videos" dir={locale === 'ar' ? 'rtl' : 'ltr'} className={styles.section} aria-labelledby="library-videos-heading">
-      <Image src="/standardization-bg.png" alt="" fill sizes="100vw" className={styles.background} aria-hidden="true" />
+      <Image src="/standardization-bg.webp" alt="" fill sizes="100vw" className={styles.background} aria-hidden="true" />
       <div className={styles.darkOverlay} aria-hidden="true" />
       <div className={styles.container}>
         <header className={styles.header}>

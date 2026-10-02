@@ -101,7 +101,7 @@ export default async function EntriesPage({
                         {entry.coverImagePath ? (
                           <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" unoptimized />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#0369A1]">PDF</div>
+                          <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#0369A1]">{entry.entryType === 'BOOK' ? 'كتاب' : 'ملف'}</div>
                         )}
                       </div>
                       <div>

@@ -81,12 +81,12 @@ const CATEGORY_SPINE: Record<string, string> = {
 // backdrop of the sector it belongs to. Mining has no dedicated art yet, so it
 // borrows the industry backdrop.
 const SECTOR_HERO: Record<string, string> = {
-  industry: '/industry-bg.png',
-  standardization: '/standardization-bg.png',
-  'industrial-info': '/industry-informations-bg.png',
-  mining: '/industry-bg.png',
+  industry: '/industry-bg.webp',
+  standardization: '/standardization-bg.webp',
+  'industrial-info': '/industry-informations-bg.webp',
+  mining: '/industry-bg.webp',
 };
-const DEFAULT_HERO = '/industry-bg.png';
+const DEFAULT_HERO = '/industry-bg.webp';
 
 function categoryTopSlug(category: EntryCategory) {
   return category.parent?.parent?.slug ?? category.parent?.slug ?? category.slug;

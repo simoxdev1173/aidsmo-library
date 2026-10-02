@@ -83,7 +83,7 @@ export default function AuthShell({
 
         {showImage && <aside className="relative hidden min-h-full overflow-hidden bg-[#0A2540] lg:block" aria-label="المنظمة العربية للتنمية الصناعية والتقييس والتعدين">
           <Image
-            src="/section-4-card.png"
+            src="/section-4-card.webp"
             alt="شعار المنظمة العربية للتنمية الصناعية والتقييس والتعدين في مشهد صناعي"
             fill
             priority

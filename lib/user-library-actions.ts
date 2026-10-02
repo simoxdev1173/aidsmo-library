@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { getUserSession, requireUser } from '@/lib/user-auth';
+import { publicEntryWhere } from '@/lib/public-entry-where';
 
 const VALID_STATUSES = ['SAVED', 'READING', 'COMPLETED'] as const;
 type ReadingStatusValue = (typeof VALID_STATUSES)[number];
@@ -24,7 +25,7 @@ export async function toggleSavedBookAction(entryId: string): Promise<ActionResu
   if (!user) return { ok: false, requiresAuth: true };
 
   const entry = await prisma.libraryEntry.findFirst({
-    where: { id: entryId, status: 'PUBLISHED' },
+    where: { id: entryId, AND: [publicEntryWhere] },
     select: { id: true, slug: true },
   });
   if (!entry) return { ok: false, error: 'هذا الإصدار غير متاح حاليا.' };

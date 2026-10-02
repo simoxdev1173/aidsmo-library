@@ -571,7 +571,7 @@ function RetrievalState({ label, reduceMotion }: { label: string; reduceMotion: 
 /* Widget                                                              */
 /* ------------------------------------------------------------------ */
 
-const ChatbotWidget = () => {
+const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string; documentContext?: DocumentChatContext; autoAnswer?: boolean } }) => {
   const t = useTranslations('chatbotWidget');
   const { locale } = useAppLocale();
   const pathname = usePathname();
@@ -594,6 +594,7 @@ const ChatbotWidget = () => {
   const abortRef = useRef<AbortController | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const voiceSessionRef = useRef(0);
+  const initialRequestHandledRef = useRef(false);
   const activeDocumentContext = documentContext?.pathname === pathname ? documentContext : null;
 
   useEffect(() => {
@@ -852,8 +853,12 @@ const ChatbotWidget = () => {
     };
 
     window.addEventListener('aidsmo:open-chatbot', openFromPrompt);
+    if (initialRequest && !initialRequestHandledRef.current) {
+      initialRequestHandledRef.current = true;
+      openFromPrompt(new CustomEvent('aidsmo:open-chatbot', { detail: initialRequest }));
+    }
     return () => window.removeEventListener('aidsmo:open-chatbot', openFromPrompt);
-  }, [answerFromDocument]);
+  }, [answerFromDocument, initialRequest]);
 
   useEffect(() => {
     if (!isOpen) return;

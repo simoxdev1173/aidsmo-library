@@ -49,7 +49,7 @@ const SubscribeToMail = () => {
   return (
     <section className="relative overflow-hidden bg-[#F7F0E1]" dir="rtl">
       <Image
-        src="/background-01.png"
+        src="/background-01.webp"
         alt=""
         fill
         sizes="100vw"

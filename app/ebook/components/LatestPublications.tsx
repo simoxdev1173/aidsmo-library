@@ -44,9 +44,12 @@ const publications = [
   },
 ] as const;
 
-export default function LatestPublications() {
+export default function LatestPublications({ showConformityGuide }: { showConformityGuide: boolean }) {
   const t = useTranslations('latestPublications');
   const { locale } = useAppLocale();
+  const visiblePublications = publications.filter((publication) =>
+    publication.id !== 'conformity-guide' || showConformityGuide,
+  );
 
   return (
     <section id="latest-publications" className={styles.section} dir={locale === 'ar' ? 'rtl' : 'ltr'} aria-labelledby="latest-publications-heading">
@@ -57,7 +60,7 @@ export default function LatestPublications() {
         </header>
 
         <div className={styles.grid}>
-          {publications.map((publication) => {
+          {visiblePublications.map((publication) => {
             const title = t(publication.titleKey);
             const category = t(publication.categoryKey);
             return (

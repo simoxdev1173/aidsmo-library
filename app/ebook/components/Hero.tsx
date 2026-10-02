@@ -20,9 +20,9 @@ type RippleCenter = {
 };
 
 const heroImages = [
-  { image: 'hero0cover-1.png', altKey: 'slide1Alt' as const },
-  { image: 'hero0cover-2.png', altKey: 'slide2Alt' as const },
-  { image: 'hero0cover-4.png', altKey: 'slide3Alt' as const },
+  { image: 'hero0cover-1.webp', altKey: 'slide1Alt' as const },
+  { image: 'hero0cover-2.webp', altKey: 'slide2Alt' as const },
+  { image: 'hero0cover-4.webp', altKey: 'slide3Alt' as const },
 ];
 
 const autoRippleCenters: RippleCenter[] = [

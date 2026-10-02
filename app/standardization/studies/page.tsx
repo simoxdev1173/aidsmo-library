@@ -17,7 +17,7 @@ export default function StandardizationStudiesPage({
         description:
           'مساحة منظمة للدراسات والتحليلات التي تتناول المواصفات، المطابقة، البنية التحتية للجودة، وتطوير منظومات القياس والاعتماد في الدول العربية.',
         accent: '#0369A1',
-        heroImage: '/standardization-bg.png',
+        heroImage: '/standardization-bg.webp',
       }}
     />
   );

@@ -17,7 +17,7 @@ export default function StandardizationDirectivesPage({
         description:
           'توجيهات عملية تساعد الجهات المختصة والمهنيين على تطبيق المواصفات، فهم متطلبات المطابقة، وتوحيد إجراءات الجودة في القطاعات الصناعية.',
         accent: '#0369A1',
-        heroImage: '/standardization-bg.png',
+        heroImage: '/standardization-bg.webp',
       }}
     />
   );

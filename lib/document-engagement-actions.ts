@@ -5,22 +5,23 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { getUserSession } from '@/lib/user-auth';
+import { publicEntryWhere } from '@/lib/public-entry-where';
 
 const VISITOR_COOKIE = 'aidsmo_visitor';
 const COMMENT_PAGE_SIZE = 10;
 
 type ActionResult = { ok: boolean; error?: string; requiresAuth?: boolean };
 
-async function publishedEntry(entryId: string) {
+async function publicEntry(entryId: string) {
   if (!entryId || entryId.length > 100) return null;
   return prisma.libraryEntry.findFirst({
-    where: { id: entryId, status: 'PUBLISHED' },
+    where: { id: entryId, AND: [publicEntryWhere] },
     select: { id: true, slug: true },
   });
 }
 
 export async function registerDocumentViewAction(entryId: string) {
-  const entry = await publishedEntry(entryId);
+  const entry = await publicEntry(entryId);
   if (!entry) return { ok: false, count: 0 };
 
   const cookieStore = await cookies();
@@ -50,7 +51,7 @@ export async function addDocumentCommentAction(entryId: string, text: string): P
 } }> {
   const user = await getUserSession();
   if (!user) return { ok: false, requiresAuth: true };
-  const entry = await publishedEntry(entryId);
+  const entry = await publicEntry(entryId);
   if (!entry) return { ok: false, error: 'هذا الإصدار غير متاح حاليا.' };
   const body = typeof text === 'string' ? text.trim().replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/gu, '') : '';
   if (body.length < 3 || body.length > 1000) return { ok: false, error: 'اكتب تعليقا بين 3 و1000 حرف.' };
@@ -75,7 +76,7 @@ export async function addDocumentCommentAction(entryId: string, text: string): P
 export async function rateDocumentAction(entryId: string, value: number): Promise<ActionResult & { average?: number; count?: number; value?: number }> {
   const user = await getUserSession();
   if (!user) return { ok: false, requiresAuth: true };
-  const entry = await publishedEntry(entryId);
+  const entry = await publicEntry(entryId);
   if (!entry) return { ok: false, error: 'هذا الإصدار غير متاح حاليا.' };
   if (!Number.isInteger(value) || value < 1 || value > 5) return { ok: false, error: 'اختر تقييما من نجمة إلى خمس نجوم.' };
 
@@ -92,7 +93,7 @@ export async function rateDocumentAction(entryId: string, value: number): Promis
 export async function deleteDocumentCommentAction(entryId: string, commentId: string): Promise<ActionResult> {
   const user = await getUserSession();
   if (!user) return { ok: false, requiresAuth: true };
-  const entry = await publishedEntry(entryId);
+  const entry = await publicEntry(entryId);
   if (!entry || !commentId || commentId.length > 100) return { ok: false, error: 'تعذر العثور على التعليق.' };
   const result = await prisma.documentComment.deleteMany({ where: { id: commentId, entryId, userId: user.id } });
   if (!result.count) return { ok: false, error: 'يمكنك حذف تعليقاتك فقط.' };
@@ -101,7 +102,7 @@ export async function deleteDocumentCommentAction(entryId: string, commentId: st
 }
 
 export async function moreDocumentCommentsAction(entryId: string, cursor: string) {
-  const entry = await publishedEntry(entryId);
+  const entry = await publicEntry(entryId);
   if (!entry || !cursor || cursor.length > 100) return { comments: [], nextCursor: null };
   const anchor = await prisma.documentComment.findFirst({ where: { id: cursor, entryId }, select: { id: true } });
   if (!anchor) return { comments: [], nextCursor: null };

@@ -18,7 +18,7 @@ export default function IndustryIntegrationStrategyPage({
         description:
           'مساحة للإستراتيجيات والرؤى التي تدعم التكامل الصناعي العربي، تطوير سلاسل القيمة، وتعزيز تنافسية القطاع الصناعي.',
         accent: '#C29C41',
-        heroImage: '/industry-bg.png',
+        heroImage: '/industry-bg.webp',
       }}
     />
   );

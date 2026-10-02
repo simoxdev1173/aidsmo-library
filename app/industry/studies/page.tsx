@@ -19,7 +19,7 @@ export default function IndustryStudiesIndexPage({
         description:
           'مدخل منظم للدراسات والأدلة التي تتناول التنمية الصناعية، السياسات القطاعية، أدوات التنفيذ، وممارسات التطوير.',
         accent: '#C29C41',
-        heroImage: '/industry-bg.png',
+        heroImage: '/industry-bg.webp',
       }}
     />
   );

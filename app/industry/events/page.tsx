@@ -18,7 +18,7 @@ export default function IndustryEventsPage({
         description:
           'مساحة للفعاليات والأنشطة الصناعية، مع مدخلات تساعد على متابعة البرامج والمبادرات والمواد المرتبطة بها.',
         accent: '#C29C41',
-        heroImage: '/industry-bg.png',
+        heroImage: '/industry-bg.webp',
       }}
     />
   );

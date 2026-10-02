@@ -55,17 +55,17 @@ const milestones = [
 const predecessors = [
   {
     name: 'المنظمة العربية للمواصفات والمقاييس',
-    image: '/archive/founding/logo-standards.webp',
+    image: '/archive/founding/logo-standards-complete.png',
     details: ['تاريخ الإنشاء: ديسمبر 1965', 'تاريخ مباشرة العمل: مارس 1968', 'المدينة: القاهرة – عمان'],
   },
   {
     name: 'مركز التنمية الصناعية للدول العربية',
-    image: '/archive/founding/logo-industrial-center.webp',
+    image: '/archive/founding/logo-industrial-center-complete.png',
     details: ['تاريخ الإنشاء: مايو 1968', 'تاريخ مباشرة العمل: يناير 1969', 'المدينة: القاهرة'],
   },
   {
     name: 'المنظمة العربية للثروة المعدنية',
-    image: '/archive/founding/logo-mineral-resources.webp',
+    image: '/archive/founding/logo-mineral-resources-complete.png',
     details: ['تاريخ الإنشاء: فبراير 1979', 'تاريخ مباشرة العمل: فبراير 1979', 'المدينة: الرباط'],
   },
 ] as const;
@@ -82,10 +82,10 @@ const industrialMiningOrganization = {
   details: ['تاريخ الإنشاء: سبتمبر 1988', 'تاريخ مباشرة العمل: يناير 1990', 'المدينة: بغداد', 'تاريخ مباشرة العمل: فبراير 1992', 'المدينة: الرباط'],
 } as const;
 
-function OrganizationHistoryNode({ name, image, details }: { name: string; image: string; details: readonly string[] }) {
+function OrganizationHistoryNode({ name, image, details, largeLogo = false }: { name: string; image: string; details: readonly string[]; largeLogo?: boolean }) {
   return (
     <article className="relative z-10 mx-auto flex max-w-[340px] flex-col items-center text-center">
-      <Image src={image} alt="" width={112} height={112} className="h-24 w-28 object-contain" />
+      <Image src={image} alt="" width={160} height={160} className={largeLogo ? 'h-36 w-40 object-contain' : 'h-24 w-28 object-contain'} />
       <h3 className="mt-2 font-academic text-base font-bold leading-7 text-[#003652]">{name}</h3>
       <ul className="mt-2 space-y-0.5 font-academic text-sm leading-6 text-[#475569]">
         {details.map((detail) => <li key={detail}>{detail}</li>)}
@@ -243,7 +243,7 @@ export default function FoundingPage() {
           <div className="overflow-hidden rounded-[22px] border border-[#DCE6EF] bg-white px-5 py-9 shadow-[0_12px_34px_rgba(10,37,64,0.055)] sm:px-8 lg:px-12">
             <div className="grid gap-10 lg:grid-cols-3 lg:gap-6">
               {predecessors.map((predecessor) => (
-                <OrganizationHistoryNode key={predecessor.name} {...predecessor} />
+                <OrganizationHistoryNode key={predecessor.name} {...predecessor} largeLogo />
               ))}
             </div>
 

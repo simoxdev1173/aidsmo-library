@@ -37,7 +37,7 @@ export default function FilterSelect({
   const submitted = value === ALL ? '' : value;
 
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-1.5">
       <span className="block ps-1 text-[0.68rem] font-bold text-[#8A6A1D]">{label}</span>
 
       <input type="hidden" name={name} value={submitted} />

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiOutlineArrowRight, HiOutlineHome } from 'react-icons/hi2';
+import { HiOutlineHome } from 'react-icons/hi2';
 
 export default function NotFoundLanding({ archive = false }: { archive?: boolean }) {
   return (
@@ -33,7 +33,6 @@ export default function NotFoundLanding({ archive = false }: { archive?: boolean
         >
           <HiOutlineHome className="size-5" aria-hidden="true" />
           العودة إلى الصفحة الرئيسية
-          <HiOutlineArrowRight className="size-4" aria-hidden="true" />
         </Link>
       </div>
     </main>

@@ -1,4 +1,5 @@
 import { connection } from "next/server";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { publicEntryWhere } from "@/lib/public-entry-where";
 
@@ -143,9 +144,7 @@ function categoryPath(
 }
 
 /** Counts the content represented by the public library statistics section. */
-export async function getLibraryStats() {
-  await connection();
-
+const getCachedLibraryStats = unstable_cache(async () => {
   const [categories, entries] = await Promise.all([
     prisma.category.findMany({ select: { id: true, parentId: true, slug: true, name: true } }),
     prisma.libraryEntry.findMany({
@@ -155,13 +154,18 @@ export async function getLibraryStats() {
   ]);
 
   const categoryById = new Map(categories.map((category) => [category.id, category]));
+  const searchableEntries = entries.map((entry) => ({
+    ...entry,
+    categoryPath: categoryPath(entry.categoryId, categoryById),
+    searchText: normalizeStatText(`${entry.title} ${entry.tag ?? ""}`),
+  }));
   const countFor = (definition: LibraryStatDefinition) =>
-    entries.filter((entry) => {
-      if (categoryPath(entry.categoryId, categoryById).some((category) => categoryMatchesStat(category, definition))) {
+    searchableEntries.filter((entry) => {
+      if (entry.categoryPath.some((category) => categoryMatchesStat(category, definition))) {
         return true;
       }
 
-      return definition.matchesEntryText(normalizeStatText(`${entry.title} ${entry.tag ?? ""}`));
+      return definition.matchesEntryText(entry.searchText);
     }).length;
 
   return {
@@ -173,6 +177,10 @@ export async function getLibraryStats() {
     numberedPapers: VERIFIED_NUMBERED_PAGES_TOTAL,
     memorandums: Math.max(VERIFIED_MEMORANDUMS_TOTAL, countFor(LIBRARY_STAT_DEFINITIONS.memorandums)),
   };
+}, ["public-library-stats-v1"], { tags: ["public-library-stats"], revalidate: 300 });
+
+export async function getLibraryStats() {
+  return getCachedLibraryStats();
 }
 
 export async function getDashboardStats() {

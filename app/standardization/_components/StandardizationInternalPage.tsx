@@ -165,7 +165,7 @@ export default async function StandardizationInternalPage({
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="rounded-[20px] border border-[#E3EAF3] bg-white p-5 shadow-[0_18px_55px_rgba(10,37,64,0.07)]">
           <form className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <label htmlFor="library-search" className="block ps-1 text-[0.68rem] font-bold text-[#8A6A1D]">
                 بحث
               </label>

@@ -174,11 +174,26 @@ export async function createShelfAction(nameValue: string): Promise<ActionResult
     orderBy: { position: 'desc' },
     select: { position: true },
   });
-  await prisma.userShelf.create({
+  const shelf = await prisma.userShelf.create({
     data: { userId: user.id, name, position: (lastShelf?.position ?? -1) + 1 },
   });
   refreshLibrary();
-  return { ok: true };
+  return { ok: true, shelf: { id: shelf.id, name: shelf.name, position: shelf.position, itemCount: 0 } };
+}
+
+export async function getLibraryShelvesAction() {
+  const user = await requireUser('/library');
+  const shelves = await prisma.userShelf.findMany({
+    where: { userId: user.id },
+    orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
+    select: { id: true, name: true, position: true, _count: { select: { items: true } } },
+  });
+  return shelves.map((shelf) => ({
+    id: shelf.id,
+    name: shelf.name,
+    position: shelf.position,
+    itemCount: shelf._count.items,
+  }));
 }
 
 export async function deleteShelfAction(shelfId: string): Promise<ActionResult> {

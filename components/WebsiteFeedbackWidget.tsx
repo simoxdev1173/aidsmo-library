@@ -25,9 +25,9 @@ const emptyAnswers: Answers = {
 
 const ratingLabels = ['ضعيف جداً', 'ضعيف', 'مقبول', 'جيد', 'ممتاز'];
 
-export default function WebsiteFeedbackWidget() {
+export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initiallyOpen);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>(emptyAnswers);
   const [comment, setComment] = useState('');
@@ -174,7 +174,7 @@ export default function WebsiteFeedbackWidget() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="feedback-title"
-            aria-describedby="feedback-description"
+            aria-describedby={hasStarted && !isComplete ? undefined : 'feedback-description'}
             dir="rtl"
             className={`relative max-h-[min(90dvh,760px)] w-full max-w-[520px] overflow-x-hidden overflow-y-auto rounded-t-[26px] border border-white/70 bg-[#FFFEFA] p-5 text-[#0A2540] shadow-[0_28px_100px_rgba(1,18,33,0.35)] sm:rounded-[26px] sm:p-7 ${styles.dialog}`}
           >
@@ -191,13 +191,13 @@ export default function WebsiteFeedbackWidget() {
               </button>
             </div>
 
-            <p id="feedback-description" className="mt-3 max-w-[42ch] text-sm leading-7 text-[#586779]">
-              {isComplete
-                ? 'تم تسجيل رأيك بنجاح. تساعدنا ملاحظاتك على تطوير تجربة المكتبة الرقمية.'
-                : hasStarted
-                  ? 'إجاباتك تساعدنا على تطوير تجربة المكتبة الرقمية.'
+            {(!hasStarted || isComplete) && (
+              <p id="feedback-description" className="mt-3 max-w-[42ch] text-sm leading-7 text-[#586779]">
+                {isComplete
+                  ? 'تم تسجيل رأيك بنجاح. تساعدنا ملاحظاتك على تطوير تجربة المكتبة الرقمية.'
                   : 'سيستغرق هذا الاستبيان نحو دقيقتين من وقتك.'}
-            </p>
+              </p>
+            )}
 
             {!isComplete ? (
               hasStarted ? <>
@@ -219,7 +219,6 @@ export default function WebsiteFeedbackWidget() {
                         <label htmlFor="feedback-comment" className="block font-academic text-lg font-bold leading-8 text-[#123B56]">
                           هل لديك اقتراح أو ملاحظة تساعدنا على تحسين الموقع؟
                         </label>
-                        <p className="mt-1 text-xs leading-6 text-[#738093]">إجابة اختيارية، بحد أقصى 1200 حرف.</p>
                         <textarea
                           id="feedback-comment"
                           value={comment}
@@ -234,7 +233,7 @@ export default function WebsiteFeedbackWidget() {
                     ) : currentQuestion ? (
                       <>
                         <h3 className="font-academic text-lg font-bold leading-8 text-[#123B56]">{currentQuestion.title}</h3>
-                        <div className="mt-5 flex items-center gap-2" role="group" aria-label="اختر تقييماً من نجمة إلى خمس نجوم" onMouseLeave={() => setHoveredRating(null)}>
+                        <div className="mt-5 flex items-center justify-center gap-2" role="group" aria-label="اختر تقييماً من نجمة إلى خمس نجوم" onMouseLeave={() => setHoveredRating(null)}>
                           {ratingLabels.map((label, index) => {
                             const value = index + 1;
                             const selected = currentAnswer === value;

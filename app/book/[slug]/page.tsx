@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import {
   HiOutlineArrowDownTray,
   HiOutlineArrowLeft,
@@ -23,6 +24,7 @@ import styles from '@/components/book/BookReading.module.css';
 import RelatedEntriesCarousel from '@/components/RelatedEntriesCarousel';
 import BookActions from '@/components/book/BookActions';
 import CommentsSection from '@/components/book/CommentsSection';
+import { getDocumentCommentPage } from '@/lib/document-comments';
 import DocumentRating from '@/components/book/DocumentRating';
 import DocumentAskAiPopup from '@/components/book/DocumentAskAiPopup';
 import PdfPreview from '@/components/book/PdfPreview';
@@ -30,8 +32,34 @@ import { documentFilesValue } from '@/lib/document-files';
 import { documentQuestionsValue, type DocumentChatContext } from '@/lib/document-chat';
 import { getUserSession } from '@/lib/user-auth';
 import { prisma } from '@/lib/prisma';
+import { publicEntryWhere } from '@/lib/public-entry-where';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const entry = await prisma.libraryEntry.findFirst({
+    where: { slug: decodeURIComponent(slug), AND: [publicEntryWhere] },
+    select: { title: true, description: true, coverImagePath: true },
+  });
+  if (!entry) return {};
+
+  const description = entry.description?.trim() || `تعرّف على ${entry.title} في المكتبة الرقمية الذكية.`;
+  const configuredUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+
+  return {
+    ...(configuredUrl ? { metadataBase: new URL(configuredUrl) } : {}),
+    title: entry.title,
+    description,
+    openGraph: {
+      title: entry.title,
+      description,
+      type: 'article',
+      ...(entry.coverImagePath ? { images: [{ url: entry.coverImagePath, alt: entry.title }] } : {}),
+    },
+    twitter: { card: 'summary_large_image', title: entry.title, description },
+  };
+}
 
 type EntryCategory = {
   slug: string;
@@ -345,19 +373,13 @@ export default async function BookPage({
   const related = await getRelatedEntries(entry, 6);
   const relatedRatings = await getRatingSummaries(related.map((item) => item.id));
   const parentHref = `/catalog/${entry.category.parent?.slug ?? entry.category.slug}`;
-  const [commentRows, commentCount, viewCount, ratingAggregate, ownRating] = await Promise.all([
-    prisma.documentComment.findMany({
-      where: { entryId: entry.id },
-      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
-      take: 11,
-      select: { id: true, body: true, createdAt: true, userId: true, user: { select: { name: true, email: true } } },
-    }),
+  const [commentPage, commentCount, viewCount, ratingAggregate, ownRating] = await Promise.all([
+    getDocumentCommentPage(entry.id),
     prisma.documentComment.count({ where: { entryId: entry.id } }),
     prisma.documentView.count({ where: { entryId: entry.id } }),
     prisma.documentRating.aggregate({ where: { entryId: entry.id }, _avg: { value: true }, _count: { value: true } }),
     user ? prisma.documentRating.findUnique({ where: { entryId_userId: { entryId: entry.id, userId: user.id } }, select: { value: true } }) : Promise.resolve(null),
   ]);
-  const visibleComments = commentRows.slice(0, 10);
 
   return (
     <main dir="rtl" className={styles.page}>
@@ -440,6 +462,7 @@ export default async function BookPage({
               )}
               <BookActions
                 entryId={entry.id}
+                title={entry.title}
                 initialSaved={Boolean(savedItem)}
                 isAuthenticated={Boolean(user)}
               />
@@ -596,16 +619,15 @@ export default async function BookPage({
         <CommentsSection
           entryId={entry.id}
           slug={entry.slug}
-          currentUser={user ? { id: user.id, name: user.name } : null}
-          initialComments={visibleComments.map((comment) => ({
-            id: comment.id,
-            name: comment.user.name?.trim() || comment.user.email?.split('@')[0] || 'قارئ',
-            body: comment.body,
-            createdAt: comment.createdAt.toISOString(),
+          currentUser={user ? { id: user.id, name: user.name, image: user.image } : null}
+          initialComments={commentPage.comments.map((comment) => ({
+            ...comment,
             mine: comment.userId === user?.id,
+            replies: comment.replies.map((reply) => ({ ...reply, mine: reply.userId === user?.id })),
           }))}
-          initialNextCursor={commentRows.length > 10 ? visibleComments.at(-1)?.id ?? null : null}
+          initialNextCursor={commentPage.nextCursor}
           initialCommentCount={commentCount}
+          repliesEnabled={commentPage.repliesEnabled}
         />
 
         {related.length > 0 && (

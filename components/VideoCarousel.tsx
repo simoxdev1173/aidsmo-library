@@ -22,7 +22,8 @@ function VideoImage({ id, large = false }: { id: string; large?: boolean }) {
   const [failed, setFailed] = useState(false);
   if (failed) return <span className={styles.imageFallback} aria-hidden="true" />;
   return (
-    <Image src={`https://img.youtube.com/vi/${id}/${useStandard ? 'hqdefault' : 'maxresdefault'}.jpg`} alt="" fill unoptimized
+    <Image src={`https://img.youtube.com/vi/${id}/${useStandard ? 'hqdefault' : 'maxresdefault'}.jpg`} alt="" fill
+      sizes={large ? '(max-width: 640px) 100vw, (max-width: 1280px) 80vw, 1000px' : '(max-width: 560px) 44vw, 220px'}
       className={styles.thumbnail}
       onLoad={(event) => { if (!useStandard && event.currentTarget.naturalWidth < 320) setUseStandard(true); }}
       onError={() => { if (!useStandard) setUseStandard(true); else setFailed(true); }} />

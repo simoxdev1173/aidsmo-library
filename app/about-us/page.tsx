@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 import OptimizedHeroVideo from '@/components/OptimizedHeroVideo';
 import {
   HiOutlineArchiveBox,
@@ -72,12 +73,11 @@ export default function AboutPage() {
                   استكشاف المكتبة
                   <HiOutlineArrowLeft className="h-4 w-4" />
                 </Link>
-                <Link
-                  href="/#chatbot"
-                  className="inline-flex h-12 items-center rounded-full border border-white/24 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                <ChatbotPromptButton
+                  className="inline-flex h-12 cursor-pointer items-center rounded-full border border-white/24 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
                 >
                   اسأل المساعد الذكي
-                </Link>
+                </ChatbotPromptButton>
               </div>
             </div>
           </div>

@@ -32,7 +32,9 @@ const autoRippleCenters: RippleCenter[] = [
 ];
 
 type WebGlHeroSliderProps = {
-  images: { image: string; alt: string }[];
+  images: typeof heroImages;
+  enabled: boolean;
+  visible: boolean;
   fromIndex: number;
   toIndex: number;
   transitionId: number;
@@ -241,12 +243,15 @@ function createTexture(gl: WebGLRenderingContext, image: HTMLImageElement) {
 
 const WebGlHeroSlider = ({
   images,
+  enabled,
+  visible,
   fromIndex,
   toIndex,
   transitionId,
   rippleCenter,
   reducedMotion,
 }: WebGlHeroSliderProps) => {
+  const tHero = useTranslations('hero');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const renderRef = useRef<((progress: number, from: number, to: number, center: RippleCenter) => void) | null>(null);
@@ -262,7 +267,7 @@ const WebGlHeroSlider = ({
     let cancelled = false;
     const canvas = canvasRef.current;
 
-    if (!canvas || reducedMotion) {
+    if (!canvas || reducedMotion || !enabled) {
       return undefined;
     }
 
@@ -324,7 +329,7 @@ const WebGlHeroSlider = ({
         }
 
         const resize = () => {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
           const width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
           const height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
 
@@ -373,10 +378,10 @@ const WebGlHeroSlider = ({
         cancelAnimationFrame(animationFrame.current);
       }
     };
-  }, [images, reducedMotion]);
+  }, [enabled, images, reducedMotion]);
 
   useEffect(() => {
-    if (!renderRef.current || reducedMotion) {
+    if (!renderRef.current || reducedMotion || !visible) {
       return undefined;
     }
 
@@ -399,7 +404,7 @@ const WebGlHeroSlider = ({
         cancelAnimationFrame(animationFrame.current);
       }
     };
-  }, [fromIndex, reducedMotion, rippleCenter, toIndex, transitionId]);
+  }, [fromIndex, reducedMotion, rippleCenter, toIndex, transitionId, visible]);
 
   return (
     <>
@@ -409,7 +414,7 @@ const WebGlHeroSlider = ({
         }`}
         style={{ backgroundImage: `url(${images[toIndex].image})` }}
         role="img"
-        aria-label={images[toIndex].alt}
+        aria-label={tHero(images[toIndex].altKey)}
       />
       <canvas
         ref={canvasRef}
@@ -423,12 +428,14 @@ const WebGlHeroSlider = ({
 const Hero = () => {
   const t = useTranslations('hero');
   const { locale } = useAppLocale();
+  const sectionRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [fromIndex, setFromIndex] = useState(0);
   const [transitionId, setTransitionId] = useState(0);
   const [rippleCenter, setRippleCenter] = useState<RippleCenter>(autoRippleCenters[0]);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const slidesWithAlt = heroImages.map((slide) => ({ image: slide.image, alt: t(slide.altKey) }));
+  const [effectsEnabled, setEffectsEnabled] = useState(false);
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   const goToSlide = useCallback(
     (targetIndex: number, center?: RippleCenter) => {
@@ -457,7 +464,25 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
+    if (prefersReducedMotion || effectsEnabled || !isHeroVisible) return;
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(() => setEffectsEnabled(true));
+      return () => window.cancelIdleCallback(idleId);
+    }
+    const timeoutId = setTimeout(() => setEffectsEnabled(true), 2500);
+    return () => clearTimeout(timeoutId);
+  }, [effectsEnabled, isHeroVisible, prefersReducedMotion]);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => setIsHeroVisible(entry.isIntersecting), { threshold: 0.1 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion || !effectsEnabled || !isHeroVisible) {
       return undefined;
     }
 
@@ -466,13 +491,15 @@ const Hero = () => {
     }, AUTO_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [activeIndex, goToSlide, prefersReducedMotion]);
+  }, [activeIndex, effectsEnabled, goToSlide, isHeroVisible, prefersReducedMotion]);
 
   return (
-    <section className="relative overflow-hidden bg-[#0A2540] pt-18 sm:pt-20 lg:pt-24" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <section ref={sectionRef} className="relative overflow-hidden bg-[#0A2540] pt-18 sm:pt-20 lg:pt-24" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="corner-frame relative min-h-[clamp(34rem,72dvh,46rem)] w-full overflow-hidden bg-[#0A2540] shadow-[0_24px_72px_rgba(10,37,64,0.18)]">
         <WebGlHeroSlider
-          images={slidesWithAlt}
+          images={heroImages}
+          enabled={effectsEnabled}
+          visible={isHeroVisible}
           fromIndex={fromIndex}
           toIndex={activeIndex}
           transitionId={transitionId}

@@ -5,9 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LuBookMarked, LuChevronDown, LuChevronLeft, LuLogOut, LuMenu, LuSearch, LuSettings, LuUser, LuX } from 'react-icons/lu';
-import PageLoading from '@/components/PageLoading';
 import { useAppLocale, type AppLocale } from '@/lib/i18n/LocaleProvider';
 import { logoutUserAction } from '@/lib/user-actions';
 
@@ -558,11 +557,11 @@ const UserAvatar = ({
 const TopNavBar = ({ user }: { user: SiteUser }) => {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [navigationPending, setNavigationPending] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const mobileMenuRef = useRef<HTMLElement>(null);
+  const scrolledRef = useRef(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const accountMenuButtonRef = useRef<HTMLButtonElement>(null);
@@ -573,43 +572,44 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
   const tFooter = useTranslations('footer');
 
   useEffect(() => {
-    setNavigationPending(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!navigationPending) return;
-    const timeout = window.setTimeout(() => setNavigationPending(false), 15000);
-    return () => window.clearTimeout(timeout);
-  }, [navigationPending]);
-
-  const handleNavigationClick = (event: MouseEvent<HTMLElement>) => {
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-    const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
-    if (!link || !event.currentTarget.contains(link) || link.target === '_blank' || link.hasAttribute('download')) return;
-
-    const destination = new URL(link.href, window.location.href);
-    const current = new URL(window.location.href);
-    if (destination.origin !== current.origin || (destination.pathname === current.pathname && destination.search === current.search)) return;
-
-    setNavigationPending(true);
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-      const sections = menuItemsData.map((item) => document.getElementById(item.id));
-      const scrollPosition = window.scrollY + 120;
-      sections.forEach((section) => {
-        if (section && section.offsetTop <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
-          setActiveSection(section.id);
+    let frame = 0;
+    let lastScrolled = scrolledRef.current;
+    let lastSection = 'home';
+    let lastSectionCheck = -Infinity;
+    const updateFromScroll = () => {
+      const nextScrolled = lastScrolled ? window.scrollY > 8 : window.scrollY > 40;
+      if (nextScrolled !== lastScrolled) {
+        lastScrolled = nextScrolled;
+        scrolledRef.current = nextScrolled;
+        setIsScrolled(nextScrolled);
+      }
+      const now = performance.now();
+      if (pathname === '/' && now - lastSectionCheck >= 120) {
+        lastSectionCheck = now;
+        const scrollPosition = window.scrollY + 120;
+        for (const item of menuItemsData) {
+          const section = document.getElementById(item.id);
+          if (section && section.offsetTop <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
+            if (section.id !== lastSection) {
+              lastSection = section.id;
+              setActiveSection(section.id);
+            }
+            break;
+          }
         }
-      });
+      }
+      frame = 0;
+    };
+    const handleScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateFromScroll);
     };
     handleScroll();
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -687,19 +687,17 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
 
   return (
     <>
-      {navigationPending && <PageLoading />}
       <header
-        onClick={handleNavigationClick}
         className={cn(
-          'fixed inset-x-0 z-[60] transition-all duration-500',
+          'fixed inset-x-0 z-[60] transition-all duration-200',
           isSolid ? 'top-3 px-2 md:px-3 2xl:px-4' : 'top-0 px-0',
         )}
       >
         <nav
           className={cn(
-            'mx-auto overflow-visible transition-all duration-500',
+          'mx-auto overflow-visible transition-all duration-200',
             isSolid
-              ? 'max-w-[108rem] rounded-[14px] border border-[#C29C41]/30 bg-white/95 py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)] backdrop-blur-xl'
+              ? 'max-w-[108rem] rounded-[14px] border border-[#C29C41]/30 bg-white py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)]'
               : 'max-w-none border-b border-[#C29C41]/30 bg-[#0A2540] py-1.5',
           )}
         >
@@ -921,7 +919,6 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
       />
 
       <aside
-        onClick={handleNavigationClick}
         ref={mobileMenuRef}
         id="mobile-site-menu"
         className={cn(

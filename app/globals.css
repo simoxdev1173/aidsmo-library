@@ -48,6 +48,17 @@ body {
   color: var(--library-ink);
 }
 
+/* Keep in-page destinations visible below the persistent two-row header. */
+#main-content section[id] {
+  scroll-margin-top: 156px;
+}
+
+@media (max-width: 767px) {
+  #main-content section[id] {
+    scroll-margin-top: 188px;
+  }
+}
+
 img,
 video,
 canvas,

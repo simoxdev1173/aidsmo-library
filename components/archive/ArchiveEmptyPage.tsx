@@ -66,14 +66,14 @@ export default async function ArchiveEmptyPage({ path }: { path: ArchivePagePath
                   {entries.length} {isAgreementsPage ? 'اتفاقية ووثيقة' : 'كتاب'}
                 </span>
               </div>
-              <div className={isAgreementsPage ? 'grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid gap-x-5 gap-y-9 sm:grid-cols-2 xl:grid-cols-4'}>
+              <div className={isAgreementsPage ? 'grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4' : 'grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-9 xl:grid-cols-4'}>
                 {entries.map((entry) => (
                   <article key={entry.id} className={`group min-w-0 ${isAgreementsPage ? '' : 'text-center'}`}>
                     {isAgreementsPage ? (
                       <Link href={`/book/${entry.slug}`} className="flex h-full cursor-pointer flex-col rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-4" aria-label={`عرض محتوى ${entry.title}`}>
                         <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#EAF3F8] shadow-[0_14px_34px_rgba(10,37,64,0.14)] ring-1 ring-black/5 transition duration-300 ease-out group-hover:-translate-y-1.5 group-hover:shadow-[0_26px_48px_rgba(10,37,64,0.20)] group-hover:ring-[#C29C41]/40 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0">
                           {entry.coverImagePath ? (
-                            <Image src={entry.coverImagePath} alt={entry.title} fill sizes="(min-width: 1280px) 280px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw" className="object-cover transition duration-700 ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100" unoptimized />
+                            <Image src={entry.coverImagePath} alt={entry.title} fill sizes="(min-width: 1280px) 280px, (min-width: 1024px) 30vw, 45vw" className="object-cover transition duration-700 ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100" unoptimized />
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center bg-[linear-gradient(145deg,#E9F1F6,#B8D4E2_48%,#0A3650)] px-6 text-center font-academic text-xl font-bold leading-8 text-white">{entry.title}</div>
                           )}
@@ -81,10 +81,10 @@ export default async function ArchiveEmptyPage({ path }: { path: ArchivePagePath
                           <span className="absolute inset-x-3 bottom-3 z-20 block truncate text-start text-xs font-bold text-white drop-shadow">{entry.tag ?? entry.category.name}</span>
                         </div>
                         <div className="flex flex-1 flex-col pt-4">
-                          <h2 className="line-clamp-2 min-h-12 text-[0.95rem] font-bold leading-[1.7] text-[#003652] transition-colors duration-200 group-hover:text-[#0369A1]">{entry.title}</h2>
+                          <h2 className="line-clamp-2 min-h-12 text-sm font-bold leading-[1.7] text-[#003652] transition-colors duration-200 group-hover:text-[#0369A1] sm:text-[0.95rem]">{entry.title}</h2>
                           {(entry.year || entry.pageCount) && <p className="mt-1.5 text-xs font-semibold text-[#7B8795]">{[entry.year, entry.pageCount ? `${entry.pageCount} صفحة` : null].filter(Boolean).join(' · ')}</p>}
                           <div className="mt-3">
-                            <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#F1DDA0] to-[#C29C41] px-4 py-2 text-xs font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_16px_rgba(194,156,65,0.2)] transition-all duration-300 group-hover:gap-3 group-hover:brightness-110 group-focus-visible:ring-2 group-focus-visible:ring-[#0369A1] group-focus-visible:ring-offset-2">
+                            <span className="inline-flex min-h-10 items-center gap-1 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#F1DDA0] to-[#C29C41] px-2 py-2 text-[0.65rem] font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_16px_rgba(194,156,65,0.2)] transition-all duration-300 group-hover:gap-3 group-hover:brightness-110 group-focus-visible:ring-2 group-focus-visible:ring-[#0369A1] group-focus-visible:ring-offset-2 sm:gap-2 sm:px-4 sm:text-xs">
                               عرض المحتوى <HiOutlineArrowLeft className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" aria-hidden="true" />
                             </span>
                           </div>
@@ -94,7 +94,7 @@ export default async function ArchiveEmptyPage({ path }: { path: ArchivePagePath
                       <>
                     <Link href={`/book/${entry.slug}`} aria-label={`عرض محتوى ${entry.title}`} className="relative block aspect-[3/4] cursor-pointer overflow-hidden rounded-[20px] border border-[#D9E3EE] bg-[#EAF1F6] shadow-[0_12px_30px_rgba(10,37,64,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(10,37,64,0.17)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#C29C41]/55">
                       {entry.coverImagePath ? (
-                        <Image src={entry.coverImagePath} alt={entry.title} fill sizes="(max-width: 639px) 90vw, (max-width: 1279px) 44vw, 23vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.025]" unoptimized />
+                        <Image src={entry.coverImagePath} alt={entry.title} fill sizes="(max-width: 639px) 45vw, (max-width: 1279px) 44vw, 23vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.025]" unoptimized />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center bg-[linear-gradient(145deg,#E9F1F6,#B8D4E2_48%,#0A3650)] px-6 text-center font-academic text-xl font-bold leading-8 text-white">{entry.title}</div>
                       )}
@@ -102,8 +102,8 @@ export default async function ArchiveEmptyPage({ path }: { path: ArchivePagePath
                         <span className="line-clamp-2 text-xs font-bold leading-5 text-white">{entry.tag ?? entry.category.name}</span>
                       </div>
                     </Link>
-                    <h2 className="mt-4 line-clamp-2 min-h-14 font-academic text-base font-bold leading-7 text-[#003652] transition-colors group-hover:text-[#0369A1]">{entry.title}</h2>
-                    <Link href={`/book/${entry.slug}`} className="mt-3 inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#F6E8B5] to-[#D7B653] px-5 py-2 text-sm font-bold text-[#17354A] shadow-[0_5px_14px_rgba(194,156,65,0.2)] transition duration-200 hover:brightness-105 hover:shadow-[0_8px_18px_rgba(194,156,65,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0369A1] focus-visible:ring-offset-2">
+                    <h2 className="mt-3 line-clamp-2 min-h-14 font-academic text-sm font-bold leading-7 text-[#003652] transition-colors group-hover:text-[#0369A1] sm:mt-4 sm:text-base">{entry.title}</h2>
+                    <Link href={`/book/${entry.slug}`} className="mt-3 inline-flex min-h-10 cursor-pointer items-center justify-center gap-1 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#F6E8B5] to-[#D7B653] px-2 py-2 text-[0.65rem] font-bold text-[#17354A] shadow-[0_5px_14px_rgba(194,156,65,0.2)] transition duration-200 hover:brightness-105 hover:shadow-[0_8px_18px_rgba(194,156,65,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0369A1] focus-visible:ring-offset-2 sm:gap-2 sm:px-5 sm:text-sm">
                       عرض المحتوى <HiOutlineArrowLeft className="h-4 w-4" aria-hidden="true" />
                     </Link>
                       </>

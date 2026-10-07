@@ -14,6 +14,7 @@ import {
   FaGem,
   FaIndustry,
 } from 'react-icons/fa';
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import type { TrendingItem, TrendingRow } from '@/lib/library-data';
 import RatingBadge from '@/components/book/RatingBadge';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
@@ -178,6 +179,32 @@ function LibraryCard({ item }: { item: TrendingItem }) {
   );
 }
 
+export function TrendingTitlesGrid({ items }: { items: TrendingItem[] }) {
+  const { locale } = useAppLocale();
+  const [, forceRerender] = useState(0);
+
+  useEffect(() => {
+    if (locale !== 'en') return;
+    const texts = items.flatMap((item) => {
+      const metaNeedsApi = !CATEGORY_NAME_EN[item.meta] && !ENTRY_TYPE_EN[item.meta] && !YEAR_LIKE.test(item.meta);
+      return metaNeedsApi ? [item.title, item.meta] : [item.title];
+    });
+    let cancelled = false;
+    fetchTranslations(texts).then(() => {
+      if (!cancelled) forceRerender((count) => count + 1);
+    });
+    return () => { cancelled = true; };
+  }, [locale, items]);
+
+  return (
+    <div className={styles.trendingGrid} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      {(locale === 'ar' ? items : items.map(translateItem)).map((item) => (
+        <article key={item.id} className="min-w-0"><LibraryCard item={item} /></article>
+      ))}
+    </div>
+  );
+}
+
 export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('trendingRow');
@@ -249,6 +276,7 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
   };
   const PrevIcon = isRtl ? FaChevronRight : FaChevronLeft;
   const NextIcon = isRtl ? FaChevronLeft : FaChevronRight;
+  const ViewMoreIcon = isRtl ? LuChevronLeft : LuChevronRight;
 
   return (
     <section id={`shelf-${row.id}`} aria-labelledby={`${row.id}-heading`} dir={isRtl ? 'rtl' : 'ltr'} className={styles.shelf}>
@@ -260,8 +288,8 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
             {displayDescription && <p className={styles.shelfDescription}>{displayDescription}</p>}
           </div>
         </div>
-        <Link href={row.href} className={styles.viewAll} aria-label={`${t('viewMoreAria')}: ${displayTitle}`}>
-          {t('viewMore')}<span aria-hidden="true">{isRtl ? '←' : '→'}</span>
+        <Link href={row.href} className={`${styles.viewAll} engraved brass-gradient`} aria-label={`${t('viewMoreAria')}: ${displayTitle}`}>
+          {t('viewMore')}<ViewMoreIcon aria-hidden="true" />
         </Link>
       </header>
       <div ref={scrollerRef} id={`${row.id}-books`} className={styles.scroller}

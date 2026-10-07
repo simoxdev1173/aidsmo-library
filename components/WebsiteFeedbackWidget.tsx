@@ -155,12 +155,12 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           aria-label="شاركنا رأيك في الموقع"
-          className="group inline-flex min-h-12 cursor-pointer items-center gap-2.5 rounded-full border border-[#C29C41]/70 bg-white/95 px-4 text-sm font-bold text-[#0A2540] shadow-[0_10px_28px_rgba(10,37,64,0.14)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41] hover:shadow-[0_14px_34px_rgba(10,37,64,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+          className="group inline-flex size-12 cursor-pointer items-center justify-center gap-2.5 rounded-full border border-[#C29C41]/70 bg-white/95 text-sm font-bold text-[#0A2540] shadow-[0_10px_28px_rgba(10,37,64,0.14)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41] hover:shadow-[0_14px_34px_rgba(10,37,64,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:h-12 sm:w-auto sm:px-4"
         >
           <span className="flex size-8 items-center justify-center rounded-full bg-[#FBF7EA] text-[#987523] transition-colors group-hover:bg-[#F4E8C5]">
             <HiOutlineChatBubbleLeftRight className="size-[18px]" aria-hidden="true" />
           </span>
-          <span>رأيك يهمنا</span>
+          <span className="hidden sm:inline">رأيك يهمنا</span>
         </button>
       </div>
 

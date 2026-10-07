@@ -500,7 +500,7 @@ function shuffle<T>(items: T[]) {
 }
 
 // Newest-first, sector-grouped shelves for the homepage.
-export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
+export async function getTrendingLibraryRows(trendingLimit = TRENDING_ROW_LIMIT): Promise<TrendingRow[]> {
   // Keep the shelf dynamic so newly added books appear immediately.
   await connection();
 
@@ -602,7 +602,7 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
   // category shelves below continue to use newest-upload order.
   const trendingItems = pickDiversifiedTrending(
     entries.filter((entry) => entry.year?.trim() === TRENDING_YEAR),
-    TRENDING_ROW_LIMIT,
+    trendingLimit,
   )
     .map(toItem);
   if (trendingItems.length > 0) {
@@ -610,7 +610,7 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
       id: "trending",
       title: "العناوين الرائجة",
       description: "",
-      href: "/library",
+      href: "/trending",
       iconKey: "trending",
       items: trendingItems,
     });

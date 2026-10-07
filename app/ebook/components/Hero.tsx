@@ -494,7 +494,7 @@ const Hero = () => {
   }, [activeIndex, effectsEnabled, goToSlide, isHeroVisible, prefersReducedMotion]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-[#0A2540] pt-18 sm:pt-20 lg:pt-24" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <section ref={sectionRef} className="relative overflow-hidden bg-[#0A2540]" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="corner-frame relative min-h-[clamp(34rem,72dvh,46rem)] w-full overflow-hidden bg-[#0A2540] shadow-[0_24px_72px_rgba(10,37,64,0.18)]">
         <WebGlHeroSlider
           images={heroImages}
@@ -508,49 +508,49 @@ const Hero = () => {
         />
 
         <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,37,64,0.04)_0%,rgba(10,37,64,0.42)_44%,rgba(10,37,64,0.78)_100%)]" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/90 via-[#0A2540]/55 to-[#0A2540]/15 sm:bg-[linear-gradient(90deg,rgba(10,37,64,0.04)_0%,rgba(10,37,64,0.42)_44%,rgba(10,37,64,0.78)_100%)]" aria-hidden />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.1),transparent_30%)]" aria-hidden />
         <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />
 
-        <div className="relative z-10 mx-auto grid min-h-[clamp(34rem,72dvh,46rem)] max-w-6xl items-center gap-8 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
+        <div className="relative z-10 mx-auto grid min-h-[clamp(34rem,72dvh,46rem)] max-w-6xl items-end gap-8 px-5 pb-20 pt-6 sm:items-center sm:px-8 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
      
-          <div className="max-w-2xl justify-self-end text-white">
-            <div className="mb-5 flex items-center gap-3 sm:mb-6">
+          <div className="w-full max-w-[28rem] justify-self-start text-right text-white sm:w-auto sm:max-w-2xl sm:justify-self-end sm:text-start">
+            <div className="mb-2 flex items-center gap-3 sm:mb-6">
               <Image
                 src="/logo-3d-3d.png"
                 alt={t('logoAlt')}
                 width={420}
                 height={420}
-                className="h-16 w-16 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] sm:h-20 sm:w-24"
+                className="h-12 w-12 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] sm:h-20 sm:w-24"
                 priority
               />
 
 
             </div>
 
-            <div className="w-fit max-w-full">
+            <div className="w-full max-w-full sm:w-fit">
               <h1 className="text-balance font-academic text-[clamp(1.65rem,4.4vw,3.5rem)] font-bold leading-[1.15] text-white sm:whitespace-nowrap">
                 <span className="text-[#E8C96A]">{t('titleAccent')}</span>
                 <span className="ms-2 text-white">{t('titleRest')}</span>
               </h1>
 
-              <p className="mt-4 w-0 min-w-full max-w-[58ch] text-pretty font-academic text-base leading-[1.75] text-white/86 sm:mt-6 sm:text-lg lg:text-xl">
+              <p className="mt-2 max-w-[29ch] text-pretty font-academic text-sm leading-6 text-white/90 sm:mt-6 sm:w-0 sm:min-w-full sm:max-w-[58ch] sm:text-lg sm:leading-[1.75] sm:text-white/86 lg:text-xl">
                 {t('subtitle')}
               </p>
             </div>
 
-            <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row">
+            <div className="mt-5 flex flex-col items-start gap-2 sm:mt-8 sm:flex-row sm:items-stretch sm:gap-3">
               <Link
                 href="#latest-pub"
-                className="engraved brass-gradient inline-flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:px-7"
+                className="engraved brass-gradient inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:max-w-none sm:px-7"
               >
                 {t('browsePublications')}
                 <LuChevronLeft className="h-4 w-4" />
               </Link>
 
               <Link
-                href="#about"
-                className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-5 text-center text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:px-7"
+                href="#projects"
+                className="inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-5 text-center text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:max-w-none sm:px-7"
               >
                 {t('searchBySector')}
                 <LuSearch className="h-4 w-4" />

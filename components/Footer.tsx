@@ -38,7 +38,7 @@ const Footer = () => {
     {
       title: t('group1Title'),
       items: [
-        { label: t('home'), href: '/#home' },
+        { label: t('home'), href: '/' },
         { label: t('about'), href: '/about-us' },
         { label: t('studiesAndGuides'), href: '/industry/studies' },
         { label: t('publications'), href: '/info/publications' },
@@ -320,6 +320,12 @@ const Footer = () => {
                           <Link
                             href={item.href}
                             {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                            onClick={(event) => {
+                              if (item.href === '/' && pathname === '/') {
+                                event.preventDefault();
+                                window.scrollTo({ top: 0, behavior: 'auto' });
+                              }
+                            }}
                             aria-current={isCurrentPage ? 'page' : undefined}
                             className={`group/link flex min-h-9 cursor-pointer items-center justify-between gap-3 rounded-full px-3 text-sm font-medium transition duration-300 hover:bg-[#FFF8E1] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1] ${isCurrentPage ? 'bg-[#FFF8E1] text-[#0A2540]' : 'text-[#475569]'}`}
                           >

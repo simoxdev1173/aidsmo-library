@@ -49,7 +49,7 @@
     }
   },
   "trendingRow": {
-    "viewMore": "عرض المزيد",
+    "viewMore": "تصفح الإصدارات",
     "prevAria": "السابق",
     "nextAria": "التالي",
     "viewMoreAria": "عرض المزيد",
@@ -67,18 +67,22 @@
     "browseByFieldAlt": "تصفح المكتبة الرقمية",
     "browseByFieldKicker": "تصفح حسب المجال",
     "browseByFieldTitle": "انتقال مباشر إلى رفوف المكتبة",
+    "industryShortcut": "الصناعة",
     "assistantKicker": "المساعد الذكي",
     "assistantTitle": "اسأل عن الإصدارات والقطاعات واحصل على إرشاد فوري",
     "assistantDesc": "يساعدك في تضييق البحث والوصول إلى المواد المناسبة بسرعة.",
     "askAssistant": "اسأل المساعد",
     "sectorsKicker": "مدخل القطاعات",
     "sectorsTitle": "اختر مجال العمل وانتقل مباشرة إلى الرف الرقمي المناسب",
+    "standardizationShortcut": "التقييس",
     "sectorsDesc": "الصناعة، التقييس، التعدين، والمعلومات الصناعية في مسار واضح.",
     "startBrowsing": "ابدأ التصفح",
     "miningAlt": "موارد التعدين",
     "miningText": "موارد فنية ودراسات متخصصة",
+    "miningShortcut": "التعدين",
     "industrialInfoAlt": "المعلومات الصناعية",
-    "industrialInfoText": "بيانات ومعرفة قابلة للاستكشاف"
+    "industrialInfoText": "بيانات ومعرفة قابلة للاستكشاف",
+    "industrialInfoShortcut": "المعلومات الصناعية"
   },
   "latestPublications": {
     "heading": "أحدث الإصدارات",
@@ -108,6 +112,7 @@
     "aboutLibraryCta": "من نحن",
     "smartSuggestionsTitle": "اقتراحات ذكية",
     "smartSuggestionsDesc": "توصيات مخصصة بناءً على اهتماماتك واحتياجاتك البحثية.",
+    "smartSuggestionsCta": "اطلب اقتراحات",
     "fasterAccessTitle": "وصول أسرع للمعلومة",
     "fasterAccessDesc": "مسارات مختصرة للوصول إلى الكتب والدوريات والبيانات ذات الصلة.",
     "stripTitle": "تجربة ذكية. معرفة أعمق.",

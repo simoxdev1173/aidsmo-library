@@ -49,7 +49,7 @@
     }
   },
   "trendingRow": {
-    "viewMore": "View More",
+    "viewMore": "Browse Publications",
     "prevAria": "Previous",
     "nextAria": "Next",
     "viewMoreAria": "View more",
@@ -67,18 +67,22 @@
     "browseByFieldAlt": "Browse the digital library",
     "browseByFieldKicker": "Browse by Field",
     "browseByFieldTitle": "Jump straight into the library shelves",
+    "industryShortcut": "Industry",
     "assistantKicker": "Smart Assistant",
     "assistantTitle": "Ask about publications and sectors and get instant guidance",
     "assistantDesc": "Helps you narrow your search and reach the right material quickly.",
     "askAssistant": "Ask the Assistant",
     "sectorsKicker": "Sector Gateway",
     "sectorsTitle": "Choose your field and go straight to the right digital shelf",
+    "standardizationShortcut": "Standardization",
     "sectorsDesc": "Industry, standardization, mining, and industrial information — a clear path.",
     "startBrowsing": "Start Browsing",
     "miningAlt": "Mining resources",
     "miningText": "Technical resources and specialized studies",
+    "miningShortcut": "Mining",
     "industrialInfoAlt": "Industrial information",
-    "industrialInfoText": "Explorable data and knowledge"
+    "industrialInfoText": "Explorable data and knowledge",
+    "industrialInfoShortcut": "Industrial information"
   },
   "latestPublications": {
     "heading": "Latest Publications",
@@ -108,6 +112,7 @@
     "aboutLibraryCta": "Learn About Us",
     "smartSuggestionsTitle": "Smart Suggestions",
     "smartSuggestionsDesc": "Personalized recommendations based on your interests and research needs.",
+    "smartSuggestionsCta": "Get Suggestions",
     "fasterAccessTitle": "Faster Access to Information",
     "fasterAccessDesc": "Shortcuts to reach related books, periodicals, and data.",
     "stripTitle": "A smarter experience. Deeper knowledge.",

@@ -214,9 +214,8 @@ export default function ChatbotCTA() {
           </div>
 
           {/* Bottom feature card 1 */}
-          <Link
-            href="#chatbot"
-            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
+          <ChatbotPromptButton
+            className="group relative w-full cursor-pointer overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 lg:col-span-4"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_74%,rgba(125,211,252,0.14),transparent_28%)]"
@@ -232,8 +231,12 @@ export default function ChatbotCTA() {
               <p className="mt-3 max-w-sm font-academic text-sm leading-relaxed text-white/82 sm:text-base">
                 {t('smartSuggestionsDesc')}
               </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#E8C96A] transition duration-300 group-hover:text-white">
+                {t('smartSuggestionsCta')}
+                <LuChevronLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
+              </span>
             </div>
-          </Link>
+          </ChatbotPromptButton>
 
           {/* Bottom feature card 2 */}
           <Link

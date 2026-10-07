@@ -5,7 +5,7 @@ import Courses from "./ebook/components/Courses"
 import LatestPublications from "./ebook/components/LatestPublications"
 import LibraryStats from "./ebook/components/LibraryStats"
 import ChatbotCTA from "./ebook/components/ChatbotCta"
-import VideoCarousel from "@/components/VideoCarousel"
+import LazyVideoCarousel from "@/components/LazyVideoCarousel"
 import { getLibraryStats } from "@/lib/library-data"
 import { prisma } from "@/lib/prisma"
 
@@ -50,7 +50,7 @@ export default function Home() {
           </Suspense>
         </section>
          <section id="videos">
-          <VideoCarousel />
+          <LazyVideoCarousel />
         </section>
          <section id="chatbot">
           <ChatbotCTA />

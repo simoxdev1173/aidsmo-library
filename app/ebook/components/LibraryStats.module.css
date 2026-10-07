@@ -116,10 +116,13 @@
 }
 @media (max-width: 767px) {
   .header { margin-bottom: 2rem; }
-  .grid { grid-template-columns: repeat(6, 205px); gap: 12px; }
-  .stat { height: 280px; padding: 28px 16px 24px; }
-  .label { gap: 18px; font-size: .78rem; }
-  .icon { width: 26px; height: 26px; }
+  .grid { grid-template-columns: repeat(6, calc((100% - 10px) / 2)); gap: 10px; padding-bottom: 18px; }
+  .stat { height: 230px; padding: 22px 8px 18px; }
+  .label { gap: 10px; font-size: .7rem; line-height: 1.5; }
+  .label > span { min-height: 3em; }
+  .icon { width: 23px; height: 23px; }
+  .numberLine { font-size: clamp(1.25rem, 5.5vw, 1.8rem); }
+  .stat[data-kind='numberedPapers'] .numberLine { font-size: clamp(1.25rem, 5.2vw, 1.7rem); }
 }
 @media (prefers-reduced-motion: reduce) {
   .stat, .binding span { transition: none; }

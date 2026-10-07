@@ -15,6 +15,10 @@ type ActionResult = {
   requiresAuth?: boolean;
 };
 
+type CreateShelfResult =
+  | { ok: true; shelf: { id: string; name: string; position: number; itemCount: number } }
+  | { ok: false; error: string };
+
 function refreshLibrary(slug?: string) {
   revalidatePath('/library');
   if (slug) revalidatePath(`/book/${slug}`);
@@ -158,7 +162,7 @@ export async function moveLibraryItemAction(
   return { ok: true };
 }
 
-export async function createShelfAction(nameValue: string): Promise<ActionResult> {
+export async function createShelfAction(nameValue: string): Promise<CreateShelfResult> {
   const user = await requireUser();
   const name = nameValue.trim().replace(/\s+/g, ' ').slice(0, 60);
   if (name.length < 2) return { ok: false, error: 'اكتب اسما للرف من حرفين على الأقل.' };

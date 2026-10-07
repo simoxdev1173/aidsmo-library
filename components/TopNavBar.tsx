@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { type MouseEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { LuBookMarked, LuChevronDown, LuChevronLeft, LuLogOut, LuMenu, LuSearch, LuSettings, LuUser, LuX } from 'react-icons/lu';
 import { useAppLocale, type AppLocale } from '@/lib/i18n/LocaleProvider';
 import { logoutUserAction } from '@/lib/user-actions';
@@ -25,6 +25,15 @@ type MenuItem = {
 };
 
 const pickLabel = (ar: string, en: string, locale: AppLocale) => (locale === 'en' ? en : ar);
+
+const menuHref = (item: MenuItem) =>
+  item.href ?? item.children?.[0]?.href ?? item.groups?.[0]?.items[0]?.href ?? '/';
+
+const isMenuActive = (item: MenuItem, pathname: string, activeSection: string) => {
+  if (pathname === '/') return activeSection === item.id;
+  const root = item.href?.startsWith('/') ? item.href : item.id === 'industrial-info' ? '/info' : `/${item.id}`;
+  return pathname === root || pathname.startsWith(`${root}/`);
+};
 
 const menuItemsData: MenuItem[] = [
   { id: 'home', label: 'الرئيسية', labelEn: 'Home', href: '/' },
@@ -316,7 +325,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   );
 };
 
-const LanguageSwitcher = ({ isSolid, className }: { isSolid: boolean; className?: string }) => {
+const LanguageSwitcher = ({ tone = 'light', className }: { tone?: 'light' | 'dark'; className?: string }) => {
   const { locale, setLocale } = useAppLocale();
   const t = useTranslations('nav');
 
@@ -326,7 +335,7 @@ const LanguageSwitcher = ({ isSolid, className }: { isSolid: boolean; className?
       aria-label={t('languageGroupLabel')}
       className={cn(
         'flex shrink-0 items-center gap-0.5 rounded-full border p-0.5 transition duration-300',
-        isSolid ? 'border-[#0369A1]/20 bg-[#F8FAFC]' : 'border-white/18 bg-white/10',
+        tone === 'dark' ? 'border-white/25 bg-white/10' : 'border-[#0369A1]/20 bg-[#F8FAFC]',
         className,
       )}
     >
@@ -336,13 +345,12 @@ const LanguageSwitcher = ({ isSolid, className }: { isSolid: boolean; className?
           type="button"
           onClick={() => setLocale(option)}
           aria-pressed={locale === option}
+          aria-label={option === 'ar' ? 'العربية' : 'English'}
           className={cn(
             'flex h-9 min-w-9 items-center justify-center rounded-full px-2.5 text-xs font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41]',
             locale === option
               ? 'bg-[#C29C41] text-[#0A2540] shadow-[0_4px_12px_rgba(194,156,65,0.32)]'
-              : isSolid
-                ? 'text-[#64748B] hover:text-[#0A2540]'
-                : 'text-white/60 hover:text-white',
+              : tone === 'dark' ? 'text-white/80 hover:bg-white/10 hover:text-white' : 'text-[#64748B] hover:text-[#0A2540]',
           )}
         >
           {option === 'ar' ? 'عربي' : 'EN'}
@@ -352,10 +360,11 @@ const LanguageSwitcher = ({ isSolid, className }: { isSolid: boolean; className?
   );
 };
 
-const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boolean; isScrolled: boolean }) => {
+const NavItem = ({ item, isActive, tone = 'light', onHomeNavigate }: { item: MenuItem; isActive: boolean; tone?: 'light' | 'dark'; onHomeNavigate?: (event: MouseEvent<HTMLAnchorElement>) => void }) => {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hasDropdown = item.children || item.groups;
+  const href = menuHref(item);
   const { locale } = useAppLocale();
 
   const enter = () => {
@@ -381,12 +390,15 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
       }
     >
       <Link
-        href={item.href ?? `#${item.id}`}
+        href={href}
+        scroll={item.id === 'home' ? false : undefined}
+        onClick={item.id === 'home' ? onHomeNavigate : undefined}
+        {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         className={cn(
-          'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-2 text-[0.76rem] font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:px-4 2xl:text-sm',
-          isScrolled
-            ? cn('focus:ring-offset-white', isActive ? 'text-[#C29C41]' : 'text-[#0A2540] hover:text-[#C29C41]')
-            : cn('focus:ring-offset-[#0A2540]', isActive ? 'text-[#E8C96A]' : 'text-white/88 hover:text-[#E8C96A]'),
+          'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-3 text-[0.78rem] font-bold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2',
+          tone === 'dark'
+            ? cn('xl:px-4 xl:text-sm focus:ring-offset-[#0A2540]', isActive ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')
+            : cn('2xl:px-2 2xl:text-[0.82rem] focus:ring-offset-white', isActive ? 'text-[#A77C20]' : 'text-[#0A2540] hover:bg-white/45 hover:text-[#9A7421]'),
         )}
       >
         {pickLabel(item.label, item.labelEn, locale)}
@@ -408,7 +420,7 @@ const NavItem = ({ item, isActive, isScrolled }: { item: MenuItem; isActive: boo
   );
 };
 
-const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () => void }) => {
+const MobileAccordion = ({ item, onNavigate, onHomeNavigate }: { item: MenuItem; onNavigate: () => void; onHomeNavigate?: (event: MouseEvent<HTMLAnchorElement>) => void }) => {
   const [open, setOpen] = useState(false);
   const [expandedChild, setExpandedChild] = useState<string | null>(null);
   const [expandedSubChild, setExpandedSubChild] = useState<string | null>(null);
@@ -424,7 +436,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
 
   if (!hasChildren) {
     return (
-      <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block min-h-12 rounded-full border-b border-[#0369A1]/10 px-4 py-3 text-lg font-bold text-[#003652]">
+      <Link href={item.href ?? `#${item.id}`} scroll={item.id === 'home' ? false : undefined} onClick={(event) => { if (item.id === 'home') onHomeNavigate?.(event); onNavigate(); }} className="block min-h-12 rounded-full border-b border-[#0369A1]/10 px-4 py-3 text-lg font-bold text-[#003652]">
         {pickLabel(item.label, item.labelEn, locale)}
       </Link>
     );
@@ -457,7 +469,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                   <button
                     type="button"
                     onClick={() => setExpandedChild(isExpanded ? null : child.href)}
-                    className="flex w-full items-center justify-between rounded-full px-4 py-2.5 text-sm font-semibold text-[#475569]"
+                    className="flex min-h-11 w-full items-center justify-between rounded-full px-4 py-2.5 text-sm font-semibold text-[#475569] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
                   >
                     {pickLabel(child.label, child.labelEn, locale)}
                     <LuChevronDown size={14} className={cn('text-[#C29C41] transition duration-300', isExpanded && 'rotate-180')} />
@@ -471,13 +483,13 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                           return (
                             <div key={sub.href}>
                               <div className="flex items-center gap-1 rounded-full">
-                                <Link href={sub.href} onClick={onNavigate} className="block flex-1 rounded-full px-4 py-2 text-sm font-semibold text-[#475569]">
+                                <Link href={sub.href} onClick={onNavigate} className="flex min-h-11 flex-1 items-center rounded-full px-4 py-2 text-sm font-semibold text-[#475569] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
                                   {pickLabel(sub.label, sub.labelEn, locale)}
                                 </Link>
                                 <button
                                   type="button"
                                   onClick={() => setExpandedSubChild(isSubExpanded ? null : sub.href)}
-                                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#C29C41]"
+                                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-full text-[#C29C41] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
                                   aria-label={`${pickLabel(sub.label, sub.labelEn, locale)} submenu`}
                                 >
                                   <LuChevronDown size={14} className={cn('transition duration-300', isSubExpanded && 'rotate-180')} />
@@ -486,7 +498,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                               <div className={cn('overflow-hidden transition-all duration-300', isSubExpanded ? 'max-h-44 opacity-100' : 'max-h-0 opacity-0')}>
                                 <div className="ms-4 border-s border-[#C29C41]/20 ps-2">
                                   {sub.subItems.map((nested) => (
-                                    <Link key={nested.href} href={nested.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
+                                    <Link key={nested.href} href={nested.href} onClick={onNavigate} className="flex min-h-11 items-center rounded-full px-4 py-2 text-sm text-[#475569] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
                                       {pickLabel(nested.label, nested.labelEn, locale)}
                                     </Link>
                                   ))}
@@ -497,7 +509,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
                         }
 
                         return (
-                          <Link key={sub.href} href={sub.href} onClick={onNavigate} className="block rounded-full px-4 py-2 text-sm text-[#64748B]">
+                          <Link key={sub.href} href={sub.href} onClick={onNavigate} className="flex min-h-11 items-center rounded-full px-4 py-2 text-sm text-[#475569] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
                             {pickLabel(sub.label, sub.labelEn, locale)}
                           </Link>
                         );
@@ -508,7 +520,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
               );
             }
             return (
-              <Link key={child.href} href={child.href} onClick={onNavigate} className="block rounded-full px-4 py-2.5 text-sm font-medium text-[#475569]">
+              <Link key={child.href} href={child.href} onClick={onNavigate} className="flex min-h-11 items-center rounded-full px-4 py-2.5 text-sm font-medium text-[#475569] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
                 {pickLabel(child.label, child.labelEn, locale)}
               </Link>
             );
@@ -556,37 +568,47 @@ const UserAvatar = ({
 
 const TopNavBar = ({ user }: { user: SiteUser }) => {
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const pendingHomeScrollRef = useRef(false);
   const mobileMenuRef = useRef<HTMLElement>(null);
-  const scrolledRef = useRef(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const accountMenuButtonRef = useRef<HTMLButtonElement>(null);
-  const isSolid = isScrolled;
   const { locale } = useAppLocale();
   const t = useTranslations('nav');
   const tHero = useTranslations('hero');
   const tFooter = useTranslations('footer');
 
+  const handleHomeNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    pendingHomeScrollRef.current = true;
+    if (pathname === '/') {
+      event.preventDefault();
+      if (!mobileMenuOpen) {
+        pendingHomeScrollRef.current = false;
+        window.scrollTo(0, 0);
+      }
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (pathname === '/' && !mobileMenuOpen && pendingHomeScrollRef.current) {
+      pendingHomeScrollRef.current = false;
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, mobileMenuOpen]);
+
   useEffect(() => {
     let frame = 0;
-    let lastScrolled = scrolledRef.current;
     let lastSection = 'home';
     let lastSectionCheck = -Infinity;
     const updateFromScroll = () => {
-      const nextScrolled = lastScrolled ? window.scrollY > 8 : window.scrollY > 40;
-      if (nextScrolled !== lastScrolled) {
-        lastScrolled = nextScrolled;
-        scrolledRef.current = nextScrolled;
-        setIsScrolled(nextScrolled);
-      }
       const now = performance.now();
       if (pathname === '/' && now - lastSectionCheck >= 120) {
         lastSectionCheck = now;
-        const scrollPosition = window.scrollY + 120;
+        const scrollPosition = window.scrollY + (window.innerWidth < 768 ? 188 : 156);
         for (const item of menuItemsData) {
           const section = document.getElementById(item.id);
           if (section && section.offsetTop <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
@@ -641,7 +663,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
       }
     };
     const closeAtDesktopWidth = () => {
-      if (window.innerWidth >= 1280) setMobileMenuOpen(false);
+      if (window.innerWidth >= 1536) setMobileMenuOpen(false);
     };
 
     document.body.style.overflow = 'hidden';
@@ -687,80 +709,34 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
 
   return (
     <>
-      <header
-        className={cn(
-          'fixed inset-x-0 z-[60] transition-all duration-200',
-          isSolid ? 'top-3 px-2 md:px-3 2xl:px-4' : 'top-0 px-0',
-        )}
-      >
-        <nav
-          className={cn(
-          'mx-auto overflow-visible transition-all duration-200',
-            isSolid
-              ? 'max-w-[108rem] rounded-[14px] border border-[#C29C41]/30 bg-white py-1 shadow-[0_16px_40px_rgba(10,37,64,0.12)]'
-              : 'max-w-none border-b border-[#C29C41]/30 bg-[#0A2540] py-1.5',
-          )}
-        >
-          <div className="px-3 lg:px-4">
-            <div className="flex items-center justify-between gap-2 2xl:gap-3">
-              <Link
-                href="/"
-                className={cn(
-                  'flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white',
-                  isSolid ? 'h-12 w-20' : 'h-14 w-20 md:w-24',
-                )}
-              >
-                <Image
-                  src="/logo-3d-3d.png"
-                  alt={tHero('logoAlt')}
-                  height={240}
-                  width={260}
-                  className="h-full w-full object-contain transition-all duration-500"
-                  priority
-                />
-              </Link>
+      <header className="sticky top-0 z-[60] w-full shadow-[0_8px_24px_rgba(10,37,64,0.14)]">
+        <div className="border-b border-[#E8C96A]/30 bg-[#0A2540]">
+          <div className="mx-auto max-w-[96rem] px-4 sm:px-6 lg:px-8">
+            <div dir="rtl" className="flex h-[76px] items-center justify-between gap-3 md:h-[88px]">
+              <div className="flex shrink-0 items-center">
+                <Link href="/" scroll={false} onClick={handleHomeNavigate} className="flex h-14 w-20 shrink-0 items-center rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-24 md:h-16 md:w-28">
+                  <Image src="/logo-3d-3d.png" alt={tHero('logoAlt')} height={240} width={260} className="h-full w-full object-contain" priority />
+                </Link>
+              </div>
 
-              <div className={cn('hidden h-12 w-px shrink-0 2xl:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
+              <form action="/search" method="get" role="search" className="hidden min-w-0 flex-1 justify-center md:flex">
+                <label className="relative block w-full max-w-[30rem]">
+                  <span className="sr-only">{t('searchLabel')}</span>
+                  <input type="search" name="q" required minLength={2} maxLength={120} placeholder={t('searchPlaceholder')} dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                    className="h-11 w-full rounded-full border border-[#D7E1E9] bg-white pe-5 ps-12 text-sm font-medium text-[#0A2540] shadow-[0_2px_9px_rgba(10,37,64,0.04)] outline-none transition-colors placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25" />
+                  <button type="submit" aria-label={t('searchLabel')} className="absolute start-1 top-1/2 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#0A2540] text-[#E8C96A] transition-colors hover:bg-[#16466D] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">
+                    <LuSearch className="size-4" />
+                  </button>
+                </label>
+              </form>
 
-              <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 2xl:flex min-[1800px]:gap-1.5">
-                {menuItemsData.map((item) => (
-                  <NavItem key={item.id} item={item} isActive={activeSection === item.id} isScrolled={isSolid} />
-                ))}
-              </ul>
-
-              <div className="flex shrink-0 items-center gap-2 min-[1800px]:gap-3">
-                <form action="/search" method="get" className="hidden items-center min-[1800px]:flex">
-                  <label className="relative">
-                    <span className="sr-only">{t('searchLabel')}</span>
-                    <input
-                      type="search"
-                      name="q"
-                      required
-                      minLength={2}
-                      maxLength={120}
-                      placeholder={t('searchPlaceholder')}
-                      dir={locale === 'ar' ? 'rtl' : 'ltr'}
-                      className={cn(
-                        'h-11 w-40 rounded-full border pe-4 ps-10 text-sm font-medium outline-none transition duration-300 focus:w-48 focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25',
-                        isSolid
-                          ? 'border-[#0369A1]/20 bg-[#F8FAFC] text-[#0A2540] placeholder:text-[#64748B]'
-                          : 'border-white/16 bg-white/10 text-white placeholder:text-white/60',
-                      )}
-                    />
-                    <button
-                      type="submit"
-                      aria-label={t('searchLabel')}
-                      className="absolute start-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
-                    >
-                      <LuSearch className={cn('h-4 w-4', isSolid ? 'text-[#C29C41]' : 'text-[#E8C96A]')} />
-                    </button>
-                  </label>
-                </form>
+              <div className="flex shrink-0 items-center gap-2">
+                <LanguageSwitcher tone="dark" />
 
                 {user && (
                   <div
                     ref={accountMenuRef}
-                    className="relative hidden 2xl:block"
+                    className="relative hidden xl:block"
                     onBlurCapture={(event) => {
                       if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
                         setAccountMenuOpen(false);
@@ -775,11 +751,8 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                       aria-expanded={accountMenuOpen}
                       aria-controls="desktop-account-menu"
                       className={cn(
-                        'flex h-11 max-w-48 items-center gap-2 rounded-full border py-1 pe-3 ps-1 text-start transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2',
-                        isSolid
-                          ? 'border-[#0369A1]/15 bg-[#F8FAFC] text-[#0A2540] hover:border-[#C29C41]/55 hover:bg-white focus:ring-offset-white'
-                          : 'border-white/18 bg-white/10 text-white hover:border-[#C29C41]/55 hover:bg-white/15 focus:ring-offset-[#0A2540]',
-                        accountMenuOpen && (isSolid ? 'border-[#C29C41]/60 bg-white' : 'border-[#C29C41]/65 bg-white/15'),
+                        'flex h-11 max-w-48 items-center gap-2 rounded-full border border-white/25 bg-white/10 py-1 pe-3 ps-1 text-start text-white transition duration-200 hover:border-[#E8C96A]/60 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#0A2540]',
+                        accountMenuOpen && 'border-[#E8C96A]/70 bg-white/15',
                       )}
                     >
                       <UserAvatar user={user} className="size-9" />
@@ -847,65 +820,59 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
                   </div>
                 )}
 
-                <LanguageSwitcher isSolid={isSolid} className="hidden 2xl:flex" />
-
-                <div className={cn('hidden h-12 w-px shrink-0 min-[1800px]:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
-
                 {!user && (
-                  <>
-                    <Link
-                      href="/login"
-                      aria-label={t('loginFull')}
-                      className={cn(
-                        'engraved brass-gradient hidden h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[#C29C41] px-3.5 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:flex',
-                        isSolid ? 'focus:ring-offset-white' : 'focus:ring-offset-[#0A2540]',
-                      )}
-                    >
-                      <LuUser size={16} />
-                      <span className="min-[1800px]:hidden">{t('loginShort')}</span>
-                      <span className="hidden min-[1800px]:inline">{t('loginFull')}</span>
-                    </Link>
-
-                    <div className={cn('hidden h-12 w-px shrink-0 min-[1800px]:block', isSolid ? 'bg-[#C29C41]/30' : 'bg-white/18')} aria-hidden />
-                  </>
+                  <Link href="/login" aria-label={t('loginFull')}
+                    className="engraved brass-gradient hidden h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[#C29C41] px-5 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-200 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 xl:flex">
+                    <LuUser size={16} />
+                    {t('loginFull')}
+                  </Link>
                 )}
 
-                <Link
-                  href="https://aidsmo.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hidden shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white min-[1800px]:flex"
-                >
-                  <Image
-                    src="/aidsmo-logo.png"
-                    alt={tFooter('orgLogoAlt')}
-                    height={160}
-                    width={160}
-                    className={cn('object-contain transition-all duration-500', isSolid ? 'h-9 w-auto' : 'h-11 w-auto')}
-                  />
+                <span className="hidden h-10 w-px bg-[#E8C96A]/35 sm:block" aria-hidden="true" />
+                <Link href="https://aidsmo.org" target="_blank" rel="noopener noreferrer" className="flex size-14 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-[0_3px_15px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#0A2540] md:size-[68px]">
+                  <Image src="/aidsmo-logo.png" alt={tFooter('orgLogoAlt')} height={160} width={160} className="h-full w-full object-contain" priority />
                 </Link>
-
-                <button
-                  ref={mobileMenuButtonRef}
-                  type="button"
-                  className={cn(
-                    'flex h-11 w-11 items-center justify-center rounded-full border transition duration-300 hover:bg-[#C29C41] hover:text-[#0A2540] active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 2xl:hidden',
-                    isSolid
-                      ? 'border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] focus:ring-offset-white'
-                      : 'border-white/20 bg-white/10 text-white focus:ring-offset-[#0A2540]',
-                  )}
-                  onClick={() => {
-                    setAccountMenuOpen(false);
-                    setMobileMenuOpen(true);
-                  }}
-                  aria-label={t('openMenu')}
-                  aria-expanded={mobileMenuOpen}
-                  aria-controls="mobile-site-menu"
-                >
-                  <LuMenu size={24} />
-                </button>
               </div>
             </div>
+
+            <form action="/search" method="get" role="search" className="relative pb-2 md:hidden">
+              <label htmlFor="top-mobile-search" className="sr-only">{t('searchLabel')}</label>
+              <input id="top-mobile-search" type="search" name="q" required minLength={2} maxLength={120} placeholder={t('searchPlaceholder')} dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                className="h-10 w-full rounded-full border border-[#D7E1E9] bg-white pe-4 ps-11 text-sm text-[#0A2540] outline-none placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25" />
+              <button type="submit" aria-label={t('searchLabel')} className="absolute start-1 top-1 flex size-8 cursor-pointer items-center justify-center rounded-full bg-[#0A2540] text-[#E8C96A] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">
+                <LuSearch className="size-4" />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <nav aria-label={t('mainMenuLabel')} className="border-b border-[#C29C41]/45 bg-[#0A2540] text-white">
+          <div className="mx-auto flex h-[52px] max-w-[96rem] items-center gap-3 px-4 sm:px-6 md:h-14 lg:px-8">
+            <ul className="hidden w-full items-center justify-center gap-1 2xl:flex">
+              {menuItemsData.map((item) => (
+                <NavItem key={item.id} item={item} isActive={isMenuActive(item, pathname ?? '/', activeSection)} tone="dark" onHomeNavigate={handleHomeNavigate} />
+              ))}
+            </ul>
+
+            <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden 2xl:hidden">
+              {menuItemsData.map((item) => {
+                const href = menuHref(item);
+                const active = isMenuActive(item, pathname ?? '/', activeSection);
+                return (
+                  <Link key={item.id} href={href} scroll={item.id === 'home' ? false : undefined} onClick={item.id === 'home' ? handleHomeNavigate : undefined} {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className={cn('flex min-h-11 shrink-0 items-center rounded-full px-3 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-[#C29C41]', active ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')}>
+                    {pickLabel(item.label, item.labelEn, locale)}
+                  </Link>
+                );
+              })}
+            </div>
+
+            <button ref={mobileMenuButtonRef} type="button"
+              className="flex size-11 shrink-0 items-center justify-center rounded-full border border-[#C29C41]/60 bg-white/10 text-[#E8C96A] transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-[#C29C41] 2xl:hidden"
+              onClick={() => { setAccountMenuOpen(false); setMobileMenuOpen(true); }}
+              aria-label={t('openMenu')} aria-expanded={mobileMenuOpen} aria-controls="mobile-site-menu">
+              <LuMenu size={22} />
+            </button>
           </div>
         </nav>
       </header>
@@ -940,7 +907,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652]"
+            className="flex size-11 items-center justify-center rounded-full border border-[#C29C41]/35 bg-[#F8FAFC] text-[#003652] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
             aria-label={t('closeMenu')}
           >
             <LuX size={20} />
@@ -958,9 +925,9 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
             maxLength={120}
             placeholder={t('searchPlaceholder')}
             dir={locale === 'ar' ? 'rtl' : 'ltr'}
-            className="h-12 w-full rounded-full border border-[#0369A1]/20 bg-[#F8FAFC] pe-4 ps-11 text-sm outline-none transition duration-300 placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
+            className="h-12 w-full rounded-full border border-[#0369A1]/20 bg-[#F8FAFC] pe-4 ps-12 text-sm outline-none transition duration-300 placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
           />
-          <button type="submit" aria-label={t('searchLabel')} className="absolute start-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">
+          <button type="submit" aria-label={t('searchLabel')} className="absolute start-1 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">
             <LuSearch className="h-4 w-4" />
           </button>
         </form>
@@ -976,7 +943,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
               {t('loginFull')}
             </Link>
           )}
-          <LanguageSwitcher isSolid />
+          <LanguageSwitcher />
         </div>
 
         {user && (
@@ -1013,7 +980,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
 
         <nav className="flex flex-col">
           {menuItemsData.map((item) => (
-            <MobileAccordion key={item.id} item={item} onNavigate={() => setMobileMenuOpen(false)} />
+            <MobileAccordion key={item.id} item={item} onNavigate={() => setMobileMenuOpen(false)} onHomeNavigate={handleHomeNavigate} />
           ))}
         </nav>
       </aside>

@@ -13,6 +13,12 @@
 # testing
 /coverage
 /.cache/
+/playwright-report/
+/test-results/
+/.npm-cache/
+
+# local working files
+/tmp/
 
 # Python tooling cache
 __pycache__/
@@ -45,6 +51,7 @@ yarn-error.log*
 
 # generated PDF.js browser assets
 /public/pdfjs/
+/public/pdf.worker.min.mjs
 
 # local database backups and timestamp rollback snapshots
 /db-backup/

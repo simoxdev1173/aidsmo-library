@@ -38,10 +38,10 @@ export default async function CatalogPage({
         </div>
 
         {data.entries.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
             {data.entries.map((entry) => (
-              <Link key={entry.id} href={`/book/${entry.slug}`} className="group overflow-hidden rounded-lg border border-[#D9E3EE] bg-white transition duration-200 hover:border-[#C29C41]/60 hover:shadow-[0_16px_42px_rgba(10,37,64,0.10)]">
-                <div className="grid grid-cols-[120px_1fr] gap-4 p-4">
+              <Link key={entry.id} href={`/book/${entry.slug}`} className="group min-w-0 overflow-hidden rounded-lg border border-[#D9E3EE] bg-white transition duration-200 hover:border-[#C29C41]/60 hover:shadow-[0_16px_42px_rgba(10,37,64,0.10)]">
+                <div className="flex flex-col gap-2 p-2 sm:grid sm:grid-cols-[120px_1fr] sm:gap-4 sm:p-4">
                   <div className="relative aspect-[3/4] overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
                     <RatingBadge rating={ratings.get(entry.id)} />
                     {entry.coverImagePath ? (
@@ -52,15 +52,15 @@ export default async function CatalogPage({
                       </div>
                     )}
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#C29C41]">{entry.tag ?? entry.category.name}</p>
-                    <h2 className="mt-2 line-clamp-3 text-lg font-bold leading-7 text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <p className="line-clamp-1 text-[0.65rem] font-bold text-[#C29C41] sm:text-xs">{entry.tag ?? entry.category.name}</p>
+                    <h2 className="mt-1 line-clamp-3 text-sm font-bold leading-5 text-[#003652] transition duration-200 group-hover:text-[#0369A1] sm:mt-2 sm:text-lg sm:leading-7">
                       {entry.title}
                     </h2>
                     {entry.description && (
-                      <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#64748B]">{entry.description}</p>
+                      <p className="mt-3 hidden text-sm leading-6 text-[#64748B] sm:line-clamp-3">{entry.description}</p>
                     )}
-                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#0369A1]">
+                    <span className="mt-auto inline-flex items-center gap-1 pt-2 text-[0.65rem] font-bold text-[#0369A1] sm:mt-4 sm:gap-2 sm:pt-0 sm:text-sm">
                       عرض التفاصيل
                       <HiOutlineArrowLeft className="h-4 w-4" />
                     </span>

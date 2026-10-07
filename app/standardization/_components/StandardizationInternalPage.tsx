@@ -74,7 +74,7 @@ function CardCover({
         src={src}
         alt={alt}
         fill
-        sizes="(min-width: 1280px) 300px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+        sizes="(min-width: 1280px) 300px, (min-width: 1024px) 30vw, 45vw"
         className="object-cover transition duration-700 ease-out group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         unoptimized={optimize}
       />
@@ -222,7 +222,7 @@ export default async function StandardizationInternalPage({
         </div>
 
         {data.entries.length > 0 ? (
-          <div className="mt-8 grid gap-x-5 gap-y-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-9 lg:grid-cols-3 xl:grid-cols-4">
             {data.entries.map((entry, index) => {
               const metaLine = [fieldValue(entry.year), entry.pageCount ? `${entry.pageCount} صفحة` : null].filter(
                 (part): part is string => Boolean(part),
@@ -243,7 +243,7 @@ export default async function StandardizationInternalPage({
                   />
 
                   <div className="flex flex-1 flex-col pt-4">
-                    <h2 className="line-clamp-2 min-h-[3rem] text-[0.95rem] font-bold leading-[1.6] text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+                    <h2 className="line-clamp-2 min-h-[3rem] text-sm font-bold leading-[1.6] text-[#003652] transition duration-200 group-hover:text-[#0369A1] sm:text-[0.95rem]">
                       {entry.title}
                     </h2>
 
@@ -254,7 +254,7 @@ export default async function StandardizationInternalPage({
                     )}
 
                     <div className="mt-3">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#f1dda0] to-[#C29C41] px-4 py-2 text-[0.72rem] font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_16px_rgba(194,156,65,0.24)] transition-all duration-300 group-hover:gap-2.5 group-hover:brightness-110 group-focus-visible:ring-2 group-focus-visible:ring-[#0369A1] group-focus-visible:ring-offset-2">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#f1dda0] to-[#C29C41] px-2.5 py-2 text-[0.65rem] font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_16px_rgba(194,156,65,0.24)] transition-all duration-300 group-hover:gap-2.5 group-hover:brightness-110 group-focus-visible:ring-2 group-focus-visible:ring-[#0369A1] group-focus-visible:ring-offset-2 sm:gap-1.5 sm:px-4 sm:text-[0.72rem]">
                         عرض المحتوى
                         <HiOutlineArrowLeft className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
                       </span>

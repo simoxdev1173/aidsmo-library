@@ -17,13 +17,15 @@ export function SiteNavigationFallback() {
   return (
     <header
       aria-label="جارٍ تحميل شريط التنقل"
-      className="fixed inset-x-0 top-0 z-[60] h-20 bg-[#0A2540] px-5 md:h-24"
+      className="sticky top-0 z-[60] h-44 bg-[#0A2540] md:h-36"
     >
-      <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-6">
+      <div dir="rtl" className="mx-auto flex h-[76px] max-w-[96rem] items-center justify-between gap-6 px-5 md:h-[88px]">
         <div className="h-12 w-24 animate-pulse rounded-lg bg-white/15 motion-reduce:animate-none" />
-        <div className="hidden h-10 w-2/3 max-w-2xl animate-pulse rounded-full bg-white/10 motion-reduce:animate-none md:block" />
-        <div className="h-11 w-11 animate-pulse rounded-full bg-white/15 motion-reduce:animate-none" />
+        <div className="hidden h-11 w-2/5 max-w-lg animate-pulse rounded-full bg-white/15 motion-reduce:animate-none md:block" />
+        <div className="h-12 w-28 animate-pulse rounded-full bg-[#E8C96A]/25 motion-reduce:animate-none" />
       </div>
+      <div className="mx-5 h-10 animate-pulse rounded-full bg-white/15 motion-reduce:animate-none md:hidden" />
+      <div className="absolute inset-x-0 bottom-0 h-[52px] border-t border-[#E8C96A]/30 bg-[#0A2540] md:h-14" />
     </header>
   );
 }

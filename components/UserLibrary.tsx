@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { FormEvent, useEffect, useMemo, useState, useTransition } from 'react';
+import { FormEvent, useMemo, useState, useTransition } from 'react';
 import {
   LuArrowDown,
   LuArrowUp,
@@ -65,7 +65,7 @@ const TABS = [
   { id: 'shelves', label: 'الرفوف', icon: LuFolderOpen },
 ] as const;
 
-type ActionResult = { ok: boolean; error?: string; shelf?: LibraryShelf };
+type ActionResult = { ok: boolean; error?: string };
 
 export default function UserLibrary({
   initialItems,
@@ -77,12 +77,16 @@ export default function UserLibrary({
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('all');
   const [activeShelfId, setActiveShelfId] = useState<string | null>(null);
   const [shelves, setShelves] = useState(initialShelves);
+  const [shelvesSource, setShelvesSource] = useState(initialShelves);
   const [searchQuery, setSearchQuery] = useState('');
   const [newShelfName, setNewShelfName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  useEffect(() => setShelves(initialShelves), [initialShelves]);
+  if (shelvesSource !== initialShelves) {
+    setShelvesSource(initialShelves);
+    setShelves(initialShelves);
+  }
 
   const runAction = (operation: () => Promise<ActionResult>) => {
     setError(null);
@@ -124,7 +128,7 @@ export default function UserLibrary({
     const name = newShelfName;
     runAction(async () => {
       const result = await createShelfAction(name);
-      if (result.ok && 'shelf' in result && result.shelf) {
+      if (result.ok) {
         const shelf = result.shelf;
         setShelves((previous) => previous.some((item) => item.id === shelf.id) ? previous : [...previous, shelf]);
         setNewShelfName('');
@@ -313,14 +317,13 @@ function BookOptions({
   const [shelvesError, setShelvesError] = useState<string | null>(null);
   const [shelvesPending, startShelvesTransition] = useTransition();
 
-  useEffect(() => setSelectedShelfId(book.shelfId ?? '__none__'), [book.shelfId]);
-
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
     if (!nextOpen) {
       setActivePicker(null);
       return;
     }
+    setSelectedShelfId(book.shelfId ?? '__none__');
     setShelvesError(null);
     startShelvesTransition(async () => {
       try {

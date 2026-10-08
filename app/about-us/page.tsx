@@ -49,23 +49,23 @@ export default function AboutPage() {
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#0A2540]">
       {/* ─── Hero ─── */}
-      <section className="relative h-screen min-h-[640px] w-full overflow-hidden bg-[#0A2540] text-white">
+      <section className="relative flex min-h-[calc(100svh-11rem)] w-full overflow-hidden bg-[#0A2540] text-white sm:min-h-[calc(100svh-9rem)]">
         <OptimizedHeroVideo />
 
         {/* Light, localized wash — just enough to seat the panel, video stays visible */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/72 via-[#0A2540]/8 to-transparent" aria-hidden />
         <div className="absolute inset-x-0 top-0 z-10 h-1.5 brass-gradient" aria-hidden />
 
-        <div className="relative z-10 flex h-full items-center px-4 pb-8 pt-24 sm:items-end sm:px-6 sm:pb-16 sm:pt-32 lg:px-8 lg:pb-20 lg:pt-40">
+        <div className="relative z-10 flex w-full items-center px-4 py-10 sm:items-end sm:px-6 sm:pb-10 sm:pt-12 lg:px-8 lg:pb-12">
           <div className="mx-auto w-full max-w-7xl">
-            <div className="max-w-2xl rounded-[22px] border border-white/15 bg-[#071D2F]/90 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:bg-[#071D2F]/55 sm:p-7 sm:backdrop-blur-xl md:p-9">
-              <h1 className="font-academic text-3xl font-bold leading-tight md:text-5xl">
+            <div className="max-w-2xl rounded-[22px] border border-white/15 bg-[#071D2F]/90 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:bg-[#071D2F]/55 sm:p-7 sm:backdrop-blur-xl">
+              <h1 className="font-academic text-3xl font-bold leading-tight md:text-4xl">
                 من نحن
               </h1>
-              <p className="mt-4 max-w-3xl font-academic text-base leading-8 text-white/90 sm:mt-6 sm:text-lg sm:leading-9 sm:text-white/82 md:text-xl">
+              <p className="mt-4 max-w-3xl font-academic text-base leading-8 text-white/90 sm:text-lg sm:text-white/82">
                 منصة رائدة أعدّتها المنظمة العربية للتنمية الصناعية والتقييس والتعدين، تهدف إلى جمع المعرفة الصناعية والتقنية وتنظيمها بطريقة ذكية ومتاحة للجميع.
               </p>
-              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/catalog/industry"
                   className="engraved brass-gradient inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#C29C41] px-6 text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"

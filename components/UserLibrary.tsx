@@ -139,11 +139,16 @@ export default function UserLibrary({
 
   const activeShelf = shelves.find((shelf) => shelf.id === activeShelfId);
   const readingCount = initialItems.filter((item) => item.status === 'READING').length;
+  const shelfQuery = searchQuery.trim().toLocaleLowerCase('ar');
+  const visibleShelves = shelfQuery
+    ? shelves.filter((shelf) => shelf.name.toLocaleLowerCase('ar').includes(shelfQuery))
+    : shelves;
 
   return (
     <div dir="rtl" className="min-h-screen bg-[#F8FAFC]">
       <header className="relative overflow-hidden bg-[#0A2540] px-4 pb-12 pt-32 sm:px-6 sm:pb-14 sm:pt-36">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_30%,rgba(194,156,65,0.13),transparent_28%),radial-gradient(circle_at_88%_80%,rgba(3,105,161,0.18),transparent_36%)]" aria-hidden="true" />
+        <Image src="/library-3d-scene.png" alt="" fill priority sizes="100vw" className="object-cover object-[center_45%] opacity-45" />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(7,29,47,0.84),rgba(7,29,47,0.68)_50%,rgba(7,29,47,0.84))]" aria-hidden="true" />
         <div className="relative mx-auto flex max-w-6xl flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-4">
             <span className="grid size-12 shrink-0 place-items-center rounded-xl border border-[#C29C41]/45 bg-white/10 text-[#E8C96A] sm:size-14" aria-hidden="true"><LuLibrary className="size-6 sm:size-7" /></span>
@@ -157,36 +162,48 @@ export default function UserLibrary({
         <div className="absolute inset-x-0 bottom-0 h-1 bg-[#C29C41]" aria-hidden="true" />
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-7 sm:px-6 sm:py-10">
+      <main className="mx-auto max-w-[1600px] px-4 py-7 sm:px-6 sm:py-10">
         {error && (
           <div role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
             {error}
           </div>
         )}
 
-        <nav className="mb-6 flex flex-wrap gap-2" aria-label="أقسام مكتبتي">
-          {TABS.map((tab) => {
-            const Icon = tab.icon;
-            const active = activeTab === tab.id;
-            const count = tab.id === 'all' ? initialItems.length : tab.id === 'reading' ? readingCount : shelves.length;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => selectTab(tab.id)}
-                aria-pressed={active}
-                className={cn(
-                  'inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]',
-                  active ? 'border-[#0A2540] bg-[#0A2540] text-white' : 'border-[#D9E3EE] bg-white text-[#334155] hover:border-[#C29C41]',
-                )}
-              >
-                <Icon className="size-4" aria-hidden="true" />
-                {tab.label}
-                <span className={cn('text-xs tabular-nums', active ? 'text-[#E8C96A]' : 'text-[#64748B]')}>{count.toLocaleString('ar')}</span>
-              </button>
-            );
-          })}
-        </nav>
+        <div className="flex flex-col gap-6 md:flex-row md:items-start lg:gap-8">
+          <aside aria-label="تصفح مكتبتي" className="border-b border-[#D9E3EE] pb-5 md:sticky md:top-24 md:w-56 md:shrink-0 md:border-b-0 md:border-e md:pb-0 md:pe-5 lg:w-72">
+            <label htmlFor="library-sidebar-search" className="sr-only">{activeTab === 'shelves' ? 'البحث في الرفوف' : 'البحث في المحفوظات'}</label>
+            <div className="relative">
+              <LuSearch className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-[#64748B]" aria-hidden="true" />
+              <input id="library-sidebar-search" type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder={activeTab === 'shelves' ? 'ابحث في الرفوف' : 'ابحث في المحفوظات'} className="min-h-11 w-full rounded-lg border border-[#D9E3EE] bg-white pe-3 ps-10 text-sm text-[#0A2540] outline-none placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20" />
+            </div>
+
+            <p className="mb-2 mt-6 px-3 text-xs font-bold text-[#64748B]">الأقسام</p>
+            <nav className="grid grid-cols-3 gap-1 md:grid-cols-1" aria-label="أقسام مكتبتي">
+              {TABS.map((tab) => {
+                const Icon = tab.icon;
+                const active = activeTab === tab.id;
+                const count = tab.id === 'all' ? initialItems.length : tab.id === 'reading' ? readingCount : shelves.length;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => selectTab(tab.id)}
+                    aria-current={active ? 'page' : undefined}
+                    className={cn(
+                      'flex min-h-14 min-w-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-s-[3px] px-2 py-2 text-center text-xs font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] motion-reduce:transition-none md:min-h-12 md:flex-row md:justify-start md:gap-3 md:px-3 md:text-start md:text-sm',
+                      active ? 'border-[#C29C41] bg-[#EAF2F8] text-[#0A2540]' : 'border-transparent text-[#475569] hover:bg-[#EAF2F8]/70 hover:text-[#0A2540]',
+                    )}
+                  >
+                    <Icon className="size-4 shrink-0" aria-hidden="true" />
+                    <span className="leading-tight">{tab.label}</span>
+                    <span className={cn('text-[0.68rem] tabular-nums md:ms-auto', active ? 'text-[#805E1B]' : 'text-[#64748B]')}>{count.toLocaleString('ar')}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </aside>
+
+          <div className="min-w-0 md:flex-1">
 
         {activeShelf && (
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#D9E3EE] bg-white px-4 py-3">
@@ -197,53 +214,64 @@ export default function UserLibrary({
 
         {activeTab === 'shelves' ? (
           <section aria-label="الرفوف">
-            <div className="mb-5"><h2 className="text-lg font-bold text-[#0A2540]">رفوفك</h2><p className="mt-1 text-sm text-[#64748B]">اجمع الإصدارات التي تريد الرجوع إليها في رف واحد.</p></div>
-            <form onSubmit={createShelf} className="mb-6 grid gap-3 rounded-xl border border-[#D9E3EE] bg-white p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-              <label className="min-w-0">
-                <span className="mb-2 block text-sm font-semibold text-[#0A2540]">اسم الرف الجديد</span>
-                <input
-                  value={newShelfName}
-                  onChange={(event) => setNewShelfName(event.target.value)}
-                  maxLength={60}
-                  placeholder="مثال: الطاقة المتجددة"
-                  className="h-11 w-full rounded-lg border border-[#D9E3EE] px-4 text-sm text-[#0A2540] outline-none focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20"
-                />
-              </label>
-              <button type="submit" disabled={isPending || !newShelfName.trim()} className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#0A2540] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#123d61] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto">
-                <LuPlus /> إنشاء رف
-              </button>
+            <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 className="text-2xl font-bold text-[#0A2540]">رفوفك</h2>
+                <p className="mt-1 text-sm text-[#64748B]">نظّم الإصدارات في مجموعات يسهل الرجوع إليها.</p>
+              </div>
+              <span className="rounded-full border border-[#D9E3EE] bg-white px-3 py-1.5 text-xs font-bold tabular-nums text-[#475569]">عدد الرفوف: {shelves.length.toLocaleString('ar')}</span>
+            </div>
+
+            <form onSubmit={createShelf} className="mb-8 rounded-2xl border border-[#D9E3EE] bg-[#EDF4F8] p-4 sm:p-5">
+              <div className="mb-4 flex items-center gap-3">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#0A2540] text-[#E8C96A]" aria-hidden="true"><LuPlus className="size-5" /></span>
+                <div>
+                  <h3 className="text-sm font-bold text-[#0A2540]">إنشاء رف جديد</h3>
+                  <p className="text-xs text-[#475569]">امنح مجموعتك اسماً لتجد إصداراتها بسهولة.</p>
+                </div>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                <label className="min-w-0">
+                  <span className="mb-2 block text-xs font-semibold text-[#0A2540]">اسم الرف</span>
+                  <input
+                    value={newShelfName}
+                    onChange={(event) => setNewShelfName(event.target.value)}
+                    maxLength={60}
+                    placeholder="مثال: الطاقة المتجددة"
+                    className="h-11 w-full rounded-lg border border-[#D9E3EE] bg-white px-4 text-sm text-[#0A2540] outline-none placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20"
+                  />
+                </label>
+                <button type="submit" disabled={isPending || !newShelfName.trim()} className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#0A2540] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#123d61] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] disabled:cursor-not-allowed disabled:bg-[#D9E3EE] disabled:text-[#475569] sm:w-auto">
+                  <LuPlus className="size-4" aria-hidden="true" /> إنشاء الرف
+                </button>
+              </div>
             </form>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {shelves.map((shelf) => (
-                <article key={shelf.id} className="rounded-xl border border-[#D9E3EE] bg-white p-5">
-                  <button type="button" onClick={() => openShelf(shelf.id)} className="flex w-full cursor-pointer items-center gap-3 text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">
-                    <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-[#FFF8E8] text-[#9A7421]"><LuFolderOpen className="size-5" aria-hidden="true" /></span>
-                    <span className="min-w-0"><span className="block truncate font-bold text-[#0A2540]">{shelf.name}</span><span className="mt-1 block text-xs text-[#64748B]">{shelf.itemCount.toLocaleString('ar')} {shelf.itemCount === 1 ? 'إصدار' : 'إصدارات'}</span></span>
+            <div className="space-y-3">
+              {visibleShelves.map((shelf) => (
+                <article key={shelf.id} className="flex flex-col gap-4 rounded-2xl border border-[#D9E3EE] bg-white p-4 transition-colors duration-200 hover:border-[#C29C41]/60 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                  <button type="button" onClick={() => openShelf(shelf.id)} className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">
+                    <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#FFF8E8] text-[#9A7421]"><LuFolderOpen className="size-6" aria-hidden="true" /></span>
+                    <span className="min-w-0"><span className="block truncate text-base font-bold text-[#0A2540]">{shelf.name}</span><span className="mt-1 block text-xs text-[#64748B]">{shelf.itemCount.toLocaleString('ar')} {shelf.itemCount === 1 ? 'إصدار' : 'إصدارات'}</span></span>
                   </button>
-                  <div className="mt-4 flex items-center justify-between border-t border-[#E7ECF2] pt-3">
-                    <button type="button" onClick={() => openShelf(shelf.id)} className="min-h-9 cursor-pointer text-sm font-semibold text-[#0369A1] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">عرض الإصدارات</button>
-                    <button type="button" disabled={isPending} onClick={() => { if (window.confirm(`حذف رف «${shelf.name}»؟ ستبقى الإصدارات محفوظة في مكتبتك.`)) runAction(async () => { const result = await deleteShelfAction(shelf.id); if (result.ok) setShelves((previous) => previous.filter((item) => item.id !== shelf.id)); return result; }); }} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 text-xs font-semibold text-red-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 disabled:opacity-50"><LuTrash2 className="size-4" aria-hidden="true" />حذف</button>
+                  <div className="flex items-center justify-between gap-3 border-t border-[#E7ECF2] pt-3 sm:justify-end sm:border-t-0 sm:pt-0">
+                    <button type="button" onClick={() => openShelf(shelf.id)} className="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-lg border border-[#C29C41]/50 px-4 text-sm font-semibold text-[#0A2540] transition-colors hover:bg-[#FFF8E8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">عرض الإصدارات</button>
+                    <button type="button" disabled={isPending} onClick={() => { if (window.confirm(`حذف رف «${shelf.name}»؟ ستبقى الإصدارات محفوظة في مكتبتك.`)) runAction(async () => { const result = await deleteShelfAction(shelf.id); if (result.ok) setShelves((previous) => previous.filter((item) => item.id !== shelf.id)); return result; }); }} className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 disabled:opacity-50"><LuTrash2 className="size-4" aria-hidden="true" />حذف</button>
                   </div>
                 </article>
               ))}
-              {!shelves.length && <EmptyState title="لا توجد رفوف بعد" description="أنشئ رفك الأول لتنظيم الإصدارات حسب الموضوع أو المشروع." />}
+              {!visibleShelves.length && <EmptyState title={shelfQuery ? 'لا توجد رفوف مطابقة' : 'لا توجد رفوف بعد'} description={shelfQuery ? 'جرّب اسماً آخر أو امسح البحث لعرض جميع الرفوف.' : 'أنشئ رفك الأول لتنظيم الإصدارات حسب الموضوع أو المشروع.'} />}
             </div>
           </section>
         ) : (
           <section aria-busy={isPending}>
             <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-[#0A2540]">{activeShelf ? 'إصدارات الرف' : activeTab === 'reading' ? 'قيد القراءة' : 'إصداراتك المحفوظة'}</h2>
+                <h2 className="text-xl font-bold text-[#0A2540]">{activeShelf ? 'إصدارات الرف' : activeTab === 'reading' ? 'قيد القراءة' : 'إصداراتك المحفوظة'}</h2>
                 <p className="mt-1 text-sm text-[#64748B]">{filteredItems.length.toLocaleString('ar')} {filteredItems.length === 1 ? 'إصدار' : 'إصدارات'}</p>
               </div>
-              <label className="relative w-full sm:w-72">
-                <span className="sr-only">ابحث في مكتبتك</span>
-                <LuSearch className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-[#64748B]" aria-hidden="true" />
-                <input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="ابحث في المحفوظات" className="min-h-11 w-full rounded-lg border border-[#D9E3EE] bg-white pe-3 ps-10 text-sm text-[#0A2540] outline-none placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20" />
-              </label>
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid w-full max-w-[800px] grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
               {filteredItems.map((book) => {
                 const siblingItems = initialItems.filter((item) => item.shelfId === book.shelfId);
                 const siblingIndex = siblingItems.findIndex((item) => item.id === book.id);
@@ -253,14 +281,14 @@ export default function UserLibrary({
                   <article
                     key={book.id}
                     className={cn(
-                      'group relative flex min-w-0 flex-col rounded-2xl border border-[#0369A1]/10 bg-white p-2 shadow-[0_4px_18px_rgba(10,37,64,0.06)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/35 hover:shadow-[0_16px_35px_rgba(10,37,64,0.12)] motion-reduce:transform-none',
+                      'group relative flex w-full min-w-0 flex-col rounded-2xl border border-[#0369A1]/10 bg-white p-2.5 shadow-[0_4px_18px_rgba(10,37,64,0.06)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/35 hover:shadow-[0_16px_35px_rgba(10,37,64,0.12)] motion-reduce:transform-none',
                       isPending && 'opacity-70',
                     )}
                   >
                     <div className="relative">
                       <Link href={book.isAvailable ? `/book/${book.slug}` : '#'} aria-disabled={!book.isAvailable} className="relative block aspect-[4/5] overflow-hidden rounded-xl bg-[#EAF2F8] ring-1 ring-black/5">
                         {book.cover ? (
-                          <Image src={book.cover} alt={book.title} fill sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 20vw" className="object-cover transition duration-500 group-hover:scale-[1.03] motion-reduce:transform-none" />
+                          <Image src={book.cover} alt={book.title} fill sizes="(max-width: 640px) 46vw, (max-width: 1023px) 30vw, (max-width: 1279px) 20vw, 260px" className="object-cover transition duration-500 group-hover:scale-[1.03] motion-reduce:transform-none" />
                         ) : (
                           <span className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center text-[#0B4E84]"><LuBookOpen className="size-8 text-[#C29C41]" /><span className="line-clamp-4 text-xs font-bold leading-5">{book.title}</span></span>
                         )}
@@ -271,8 +299,8 @@ export default function UserLibrary({
                     </div>
 
                     <div className="flex min-w-0 flex-1 flex-col px-1 pb-1 pt-3">
-                      <Link href={book.isAvailable ? `/book/${book.slug}` : '#'} className="line-clamp-2 min-h-10 text-xs font-bold leading-5 text-[#0A2540] transition hover:text-[#0369A1] sm:text-sm">{book.title}</Link>
-                      <p className="mt-1 truncate text-[0.68rem] text-[#64748B] sm:text-xs">{book.author}</p>
+                      <Link href={book.isAvailable ? `/book/${book.slug}` : '#'} className="line-clamp-2 min-h-10 text-sm font-bold leading-6 text-[#0A2540] transition hover:text-[#0369A1] sm:text-base">{book.title}</Link>
+                      <p className="mt-1 truncate text-xs text-[#64748B] sm:text-sm">{book.author}</p>
                       {shelfName && <p className="mt-2 flex min-w-0 items-center gap-1 text-[0.68rem] font-semibold text-[#805E1B]"><LuFolderOpen className="size-3.5 shrink-0" aria-hidden="true" /><span className="truncate">{shelfName}</span></p>}
                     </div>
                   </article>
@@ -289,6 +317,8 @@ export default function UserLibrary({
             )}
           </section>
         )}
+          </div>
+        </div>
       </main>
     </div>
   );

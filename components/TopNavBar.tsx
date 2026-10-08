@@ -36,7 +36,6 @@ const isMenuActive = (item: MenuItem, pathname: string, activeSection: string) =
 };
 
 const menuItemsData: MenuItem[] = [
-  { id: 'home', label: 'الرئيسية', labelEn: 'Home', href: '/' },
   { id: 'about', label: 'من نحن', labelEn: 'About Us', href: '/about-us' },
   {
     id: 'industry',
@@ -325,7 +324,7 @@ const DropdownMega = ({ groups }: { groups: GroupDef[] }) => {
   );
 };
 
-const LanguageSwitcher = ({ tone = 'light', className }: { tone?: 'light' | 'dark'; className?: string }) => {
+const LanguageSwitcher = ({ tone = 'light', className, compact = false }: { tone?: 'light' | 'dark'; className?: string; compact?: boolean }) => {
   const { locale, setLocale } = useAppLocale();
   const t = useTranslations('nav');
 
@@ -347,7 +346,8 @@ const LanguageSwitcher = ({ tone = 'light', className }: { tone?: 'light' | 'dar
           aria-pressed={locale === option}
           aria-label={option === 'ar' ? 'العربية' : 'English'}
           className={cn(
-            'flex h-9 min-w-9 items-center justify-center rounded-full px-2.5 text-xs font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41]',
+            'flex items-center justify-center rounded-full font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41]',
+            compact ? 'h-10 min-w-10 px-2 text-xs max-[359px]:h-9 max-[359px]:min-w-9 max-[359px]:px-1.5' : 'h-9 min-w-9 px-2.5 text-xs',
             locale === option
               ? 'bg-[#C29C41] text-[#0A2540] shadow-[0_4px_12px_rgba(194,156,65,0.32)]'
               : tone === 'dark' ? 'text-white/80 hover:bg-white/10 hover:text-white' : 'text-[#64748B] hover:text-[#0A2540]',
@@ -360,7 +360,7 @@ const LanguageSwitcher = ({ tone = 'light', className }: { tone?: 'light' | 'dar
   );
 };
 
-const NavItem = ({ item, isActive, tone = 'light', onHomeNavigate }: { item: MenuItem; isActive: boolean; tone?: 'light' | 'dark'; onHomeNavigate?: (event: MouseEvent<HTMLAnchorElement>) => void }) => {
+const NavItem = ({ item, isActive, tone = 'light', collapsed = false, enlarged = false }: { item: MenuItem; isActive: boolean; tone?: 'light' | 'dark'; collapsed?: boolean; enlarged?: boolean }) => {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hasDropdown = item.children || item.groups;
@@ -377,7 +377,9 @@ const NavItem = ({ item, isActive, tone = 'light', onHomeNavigate }: { item: Men
 
   return (
     <li
-      className="relative"
+      aria-hidden={collapsed}
+      inert={collapsed}
+      className={cn('relative transition-[max-width,opacity] duration-[420ms] ease-out motion-reduce:transition-none', collapsed ? 'max-w-0 overflow-hidden opacity-0' : 'max-w-72 overflow-visible opacity-100')}
       onMouseEnter={hasDropdown ? enter : undefined}
       onMouseLeave={hasDropdown ? leave : undefined}
       onFocusCapture={hasDropdown ? enter : undefined}
@@ -391,14 +393,13 @@ const NavItem = ({ item, isActive, tone = 'light', onHomeNavigate }: { item: Men
     >
       <Link
         href={href}
-        scroll={item.id === 'home' ? false : undefined}
-        onClick={item.id === 'home' ? onHomeNavigate : undefined}
         {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         className={cn(
           'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-3 text-[0.78rem] font-bold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2',
           tone === 'dark'
             ? cn('xl:px-4 xl:text-sm focus:ring-offset-[#0A2540]', isActive ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')
             : cn('2xl:px-2 2xl:text-[0.82rem] focus:ring-offset-white', isActive ? 'text-[#A77C20]' : 'text-[#0A2540] hover:bg-white/45 hover:text-[#9A7421]'),
+          enlarged && 'min-h-12 px-4 text-[0.95rem]',
         )}
       >
         {pickLabel(item.label, item.labelEn, locale)}
@@ -420,7 +421,7 @@ const NavItem = ({ item, isActive, tone = 'light', onHomeNavigate }: { item: Men
   );
 };
 
-const MobileAccordion = ({ item, onNavigate, onHomeNavigate }: { item: MenuItem; onNavigate: () => void; onHomeNavigate?: (event: MouseEvent<HTMLAnchorElement>) => void }) => {
+const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () => void }) => {
   const [open, setOpen] = useState(false);
   const [expandedChild, setExpandedChild] = useState<string | null>(null);
   const [expandedSubChild, setExpandedSubChild] = useState<string | null>(null);
@@ -436,7 +437,7 @@ const MobileAccordion = ({ item, onNavigate, onHomeNavigate }: { item: MenuItem;
 
   if (!hasChildren) {
     return (
-      <Link href={item.href ?? `#${item.id}`} scroll={item.id === 'home' ? false : undefined} onClick={(event) => { if (item.id === 'home') onHomeNavigate?.(event); onNavigate(); }} className="block min-h-12 rounded-full border-b border-[#0369A1]/10 px-4 py-3 text-lg font-bold text-[#003652]">
+      <Link href={item.href ?? `#${item.id}`} onClick={onNavigate} className="block min-h-12 rounded-full border-b border-[#0369A1]/10 px-4 py-3 text-lg font-bold text-[#003652]">
         {pickLabel(item.label, item.labelEn, locale)}
       </Link>
     );
@@ -570,16 +571,29 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [isCompact, setIsCompact] = useState(false);
+  const [compactSearchOpen, setCompactSearchOpen] = useState(false);
+  const [compactSearchPath, setCompactSearchPath] = useState(pathname);
+  const [compactAccountOpen, setCompactAccountOpen] = useState(false);
+  const [compactAccountPath, setCompactAccountPath] = useState(pathname);
   const [activeSection, setActiveSection] = useState('home');
   const pendingHomeScrollRef = useRef(false);
   const mobileMenuRef = useRef<HTMLElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const accountMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const compactSearchRef = useRef<HTMLDivElement>(null);
+  const compactSearchButtonRef = useRef<HTMLButtonElement>(null);
+  const compactSearchInputRef = useRef<HTMLInputElement>(null);
+  const compactAccountRef = useRef<HTMLDivElement>(null);
+  const compactAccountButtonRef = useRef<HTMLButtonElement>(null);
+  const isCompactRef = useRef(false);
   const { locale } = useAppLocale();
   const t = useTranslations('nav');
   const tHero = useTranslations('hero');
   const tFooter = useTranslations('footer');
+  const compactSearchVisible = isCompact && compactSearchOpen && compactSearchPath === pathname;
+  const compactAccountVisible = isCompact && compactAccountOpen && compactAccountPath === pathname;
 
   const handleHomeNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -606,6 +620,16 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
     let lastSectionCheck = -Infinity;
     const updateFromScroll = () => {
       const now = performance.now();
+      const nextCompact = window.scrollY > (isCompactRef.current ? 28 : 112);
+      if (nextCompact !== isCompactRef.current) {
+        isCompactRef.current = nextCompact;
+        setIsCompact(nextCompact);
+        if (nextCompact) setAccountMenuOpen(false);
+        else {
+          setCompactSearchOpen(false);
+          setCompactAccountOpen(false);
+        }
+      }
       if (pathname === '/' && now - lastSectionCheck >= 120) {
         lastSectionCheck = now;
         const scrollPosition = window.scrollY + (window.innerWidth < 768 ? 188 : 156);
@@ -632,6 +656,46 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, [pathname]);
+
+  useEffect(() => {
+    if (!compactSearchVisible) return;
+    const focusFrame = window.requestAnimationFrame(() => compactSearchInputRef.current?.focus());
+    const closeOnOutsidePress = (event: PointerEvent) => {
+      if (!compactSearchRef.current?.contains(event.target as Node)) setCompactSearchOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setCompactSearchOpen(false);
+        compactSearchButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePress);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener('pointerdown', closeOnOutsidePress);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [compactSearchVisible]);
+
+  useEffect(() => {
+    if (!compactAccountVisible) return;
+    const closeOnOutsidePress = (event: PointerEvent) => {
+      if (!compactAccountRef.current?.contains(event.target as Node)) setCompactAccountOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setCompactAccountOpen(false);
+        compactAccountButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePress);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePress);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [compactAccountVisible]);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -709,12 +773,21 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
 
   return (
     <>
-      <header className="sticky top-0 z-[60] w-full shadow-[0_8px_24px_rgba(10,37,64,0.14)]">
-        <div className="border-b border-[#E8C96A]/30 bg-[#0A2540]">
-          <div className="mx-auto max-w-[96rem] px-4 sm:px-6 lg:px-8">
+      <header data-compact={isCompact} className="sticky top-0 z-[60] w-full shadow-[0_8px_24px_rgba(10,37,64,0.14)]">
+        <div
+          aria-hidden={isCompact}
+          inert={isCompact}
+          className={cn(
+            'bg-[#0A2540] transition-[max-height,opacity,border-color,border-width] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+            isCompact
+              ? 'max-h-0 overflow-hidden border-b-0 border-transparent opacity-0'
+              : 'max-h-[124px] overflow-visible border-b border-[#E8C96A]/30 opacity-100 md:max-h-[88px]',
+          )}
+        >
+          <div className="w-full px-4 sm:px-6 lg:px-8">
             <div dir="rtl" className="flex h-[76px] items-center justify-between gap-3 md:h-[88px]">
               <div className="flex shrink-0 items-center">
-                <Link href="/" scroll={false} onClick={handleHomeNavigate} className="flex h-14 w-20 shrink-0 items-center rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-24 md:h-16 md:w-28">
+                <Link href="/" scroll={false} onClick={handleHomeNavigate} aria-label={locale === 'ar' ? 'الذهاب إلى الرئيسية' : 'Go to homepage'} className="flex h-14 w-20 shrink-0 items-center rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-24 md:h-16 md:w-28">
                   <Image src="/logo-3d-3d.png" alt={tHero('logoAlt')} height={240} width={260} className="h-full w-full object-contain" priority />
                 </Link>
               </div>
@@ -846,33 +919,143 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
           </div>
         </div>
 
-        <nav aria-label={t('mainMenuLabel')} className="border-b border-[#C29C41]/45 bg-[#0A2540] text-white">
-          <div className="mx-auto flex h-[52px] max-w-[96rem] items-center gap-3 px-4 sm:px-6 md:h-14 lg:px-8">
-            <ul className="hidden w-full items-center justify-center gap-1 2xl:flex">
+        <nav aria-label={t('mainMenuLabel')} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative w-full border-b border-[#C29C41]/45 bg-[#0A2540] text-white">
+          <div className={cn('flex w-full items-center gap-1 px-3 transition-[height] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:gap-2 sm:px-6 lg:gap-3 lg:px-8', isCompact ? 'h-[60px] justify-between md:h-16 lg:grid lg:grid-cols-[minmax(20rem,1fr)_minmax(0,3fr)_minmax(20rem,1fr)]' : 'h-[52px] md:h-14')}>
+            <Link data-nav-zone="logo" href="/" scroll={false} onClick={handleHomeNavigate} aria-label={locale === 'ar' ? 'الذهاب إلى الرئيسية' : 'Go to homepage'} aria-hidden={!isCompact} inert={!isCompact} className={cn('flex shrink-0 items-center overflow-hidden rounded-lg transition-[width,height,opacity,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#0A2540] motion-reduce:transition-none lg:justify-self-start', isCompact ? 'h-12 w-12 translate-y-0 opacity-100 delay-75 max-[359px]:w-8 sm:w-20' : 'pointer-events-none h-11 w-0 -translate-y-1 opacity-0 delay-0')}>
+              <Image src="/logo-3d-3d.png" alt="" height={120} width={130} className="h-full w-full shrink-0 object-contain" />
+            </Link>
+            <div data-nav-zone="links" className={cn('min-w-0 flex-1', isCompact && 'hidden lg:block lg:w-full')}>
+            <ul className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex">
               {menuItemsData.map((item) => (
-                <NavItem key={item.id} item={item} isActive={isMenuActive(item, pathname ?? '/', activeSection)} tone="dark" onHomeNavigate={handleHomeNavigate} />
+                <NavItem key={item.id} item={item} isActive={isMenuActive(item, pathname ?? '/', activeSection)} tone="dark" collapsed={isCompact && item.id === 'about'} enlarged={isCompact} />
               ))}
             </ul>
 
-            <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden 2xl:hidden">
+            <div className={cn('min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden 2xl:hidden', isCompact ? 'hidden lg:flex' : 'flex')}>
               {menuItemsData.map((item) => {
                 const href = menuHref(item);
                 const active = isMenuActive(item, pathname ?? '/', activeSection);
                 return (
-                  <Link key={item.id} href={href} scroll={item.id === 'home' ? false : undefined} onClick={item.id === 'home' ? handleHomeNavigate : undefined} {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className={cn('flex min-h-11 shrink-0 items-center rounded-full px-3 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-[#C29C41]', active ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')}>
+                  <Link key={item.id} href={href} aria-hidden={isCompact && item.id === 'about'} inert={isCompact && item.id === 'about'} {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className={cn('flex shrink-0 items-center overflow-hidden whitespace-nowrap rounded-full font-bold transition-[max-width,padding,opacity,background-color,color,font-size] duration-[420ms] ease-out focus:outline-none focus:ring-2 focus:ring-[#C29C41] motion-reduce:transition-none', isCompact ? 'min-h-12 text-sm' : 'min-h-11 text-xs', isCompact && item.id === 'about' ? 'max-w-0 px-0 opacity-0' : 'max-w-72 px-3 opacity-100', active ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')}>
                     {pickLabel(item.label, item.labelEn, locale)}
                   </Link>
                 );
               })}
             </div>
+            </div>
+
+            <div data-nav-zone="actions" className={cn('flex shrink-0 items-center', isCompact ? 'gap-2 sm:gap-3 lg:justify-self-end' : 'gap-0')}>
+            <div aria-hidden={!isCompact} inert={!isCompact} className={cn('shrink-0 overflow-hidden transition-[width,opacity,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none', isCompact ? 'w-[104px] translate-y-0 overflow-visible opacity-100 delay-75 max-[359px]:w-[84px]' : 'pointer-events-none w-0 -translate-y-1 opacity-0 delay-0')}>
+              <LanguageSwitcher tone="dark" compact className="w-full justify-center" />
+            </div>
+
+              <div ref={compactSearchRef} aria-hidden={!isCompact} inert={!isCompact} className={cn('relative shrink-0 transition-[width,opacity] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none', isCompact ? 'w-12 opacity-100 delay-75 max-[359px]:w-10' : 'pointer-events-none w-0 opacity-0 delay-0')}>
+                <button
+                  ref={compactSearchButtonRef}
+                  type="button"
+                  onClick={() => { setCompactSearchPath(pathname); setCompactAccountOpen(false); setMobileMenuOpen(false); setCompactSearchOpen(!compactSearchVisible); }}
+                  aria-label={t('searchLabel')}
+                  aria-expanded={compactSearchVisible}
+                  aria-controls="compact-nav-search"
+                  className={cn('flex size-12 items-center justify-center rounded-full border text-[#E8C96A] transition-colors hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#E8C96A] motion-reduce:transition-none max-[359px]:size-10', compactSearchVisible ? 'border-[#E8C96A] bg-white/15' : 'border-[#C29C41]/40 bg-white/5')}
+                >
+                  <LuSearch size={21} />
+                </button>
+                <div
+                  id="compact-nav-search"
+                  aria-hidden={!compactSearchVisible}
+                  inert={!compactSearchVisible}
+                  className={cn('fixed inset-x-4 top-[64px] z-[80] pt-3 transition duration-200 ease-out motion-reduce:transition-none sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:w-[min(30rem,calc(100vw-2rem))]', compactSearchVisible ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0')}
+                >
+                  <form action="/search" method="get" role="search" onSubmit={() => setCompactSearchOpen(false)} className="flex items-center gap-2 rounded-[16px] border border-[#C29C41]/45 bg-white p-2 shadow-[0_18px_46px_rgba(10,37,64,0.24)]">
+                    <label htmlFor="compact-search-input" className="sr-only">{t('searchLabel')}</label>
+                    <input ref={compactSearchInputRef} id="compact-search-input" type="search" name="q" required minLength={2} maxLength={120} placeholder={t('searchPlaceholder')} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="h-10 min-w-0 flex-1 rounded-lg px-3 text-sm text-[#0A2540] outline-none placeholder:text-[#64748B] focus:ring-2 focus:ring-[#C29C41]/45" />
+                    <button type="submit" aria-label={t('searchLabel')} className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#0A2540] text-[#E8C96A] transition-colors hover:bg-[#16466D] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"><LuSearch size={18} /></button>
+                    <button type="button" onClick={() => { setCompactSearchOpen(false); compactSearchButtonRef.current?.focus(); }} aria-label={locale === 'ar' ? 'إغلاق البحث' : 'Close search'} className="flex size-10 shrink-0 items-center justify-center rounded-full text-[#64748B] hover:bg-[#F0F7FC] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"><LuX size={18} /></button>
+                  </form>
+                </div>
+              </div>
+
+              <div
+                ref={compactAccountRef}
+                aria-hidden={!isCompact}
+                inert={!isCompact}
+                className={cn('relative shrink-0 transition-[width,opacity] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none', isCompact ? 'w-[74px] opacity-100 delay-75 max-[359px]:w-16' : 'pointer-events-none w-0 opacity-0 delay-0')}
+                onBlurCapture={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setCompactAccountOpen(false);
+                }}
+              >
+                <button
+                  ref={compactAccountButtonRef}
+                  type="button"
+                  onClick={() => { setCompactAccountPath(pathname); setCompactSearchOpen(false); setCompactAccountOpen(!compactAccountVisible); }}
+                  aria-label={locale === 'ar' ? 'قائمة الحساب' : 'Account menu'}
+                  aria-haspopup="menu"
+                  aria-expanded={compactAccountVisible}
+                  aria-controls="compact-account-menu"
+                  className={cn('flex h-12 min-w-[74px] items-center justify-center gap-1 rounded-full border px-1 text-[#E8C96A] transition-colors hover:border-[#E8C96A] hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#E8C96A] motion-reduce:transition-none max-[359px]:h-10 max-[359px]:min-w-16', compactAccountVisible ? 'border-[#E8C96A] bg-white/15' : 'border-[#C29C41]/40 bg-white/5')}
+                >
+                  {user ? <UserAvatar user={user} className="size-10 max-[359px]:size-9" /> : <LuUser size={21} />}
+                  <LuChevronDown aria-hidden="true" size={15} className={cn('shrink-0 transition-transform duration-200 motion-reduce:transition-none', compactAccountVisible && 'rotate-180')} />
+                </button>
+                <div
+                  id="compact-account-menu"
+                  role="menu"
+                  aria-hidden={!compactAccountVisible}
+                  inert={!compactAccountVisible}
+                  className={cn('fixed inset-x-4 top-[64px] z-[80] pt-3 transition duration-200 ease-out motion-reduce:transition-none sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:w-72', compactAccountVisible ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0')}
+                >
+                  <div className="overflow-hidden rounded-[14px] border border-[#C29C41]/30 bg-white shadow-[0_22px_55px_rgba(10,37,64,0.22)] ring-1 ring-[#0A2540]/5">
+                    {user && (
+                      <div className="flex items-center gap-3 border-b border-[#0369A1]/10 bg-[#F8FAFC] px-4 py-3">
+                        <UserAvatar user={user} className="size-10" />
+                        <p className="min-w-0 truncate text-sm font-bold text-[#0A2540]">{user.name}</p>
+                      </div>
+                    )}
+                    <div className="p-2">
+                      {user ? (
+                        <>
+                          <Link href="/library" role="menuitem" onClick={() => setCompactAccountOpen(false)} className="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-[#0A2540] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/50">
+                            <LuBookMarked size={17} className="text-[#0369A1]" />
+                            {locale === 'ar' ? 'مكتبتي' : 'My library'}
+                          </Link>
+                          <Link href="/profile" role="menuitem" onClick={() => setCompactAccountOpen(false)} className="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-[#0A2540] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/50">
+                            <LuSettings size={17} className="text-[#0369A1]" />
+                            {locale === 'ar' ? 'إعدادات الملف الشخصي' : 'Profile settings'}
+                          </Link>
+                          <div className="my-1 h-px bg-[#0A2540]/[0.07]" />
+                          <form action={logoutUserAction}>
+                            <button type="submit" role="menuitem" className="flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-xl px-3 text-sm font-bold text-[#9F2D2D] transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-200">
+                              <LuLogOut size={17} />
+                              {locale === 'ar' ? 'تسجيل الخروج' : 'Sign out'}
+                            </button>
+                          </form>
+                        </>
+                      ) : (
+                        <>
+                          <Link href="/login" role="menuitem" onClick={() => setCompactAccountOpen(false)} className="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-[#0A2540] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/50">
+                            <LuUser size={17} className="text-[#0369A1]" />
+                            {t('loginFull')}
+                          </Link>
+                          <Link href="/signup" role="menuitem" onClick={() => setCompactAccountOpen(false)} className="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-[#0A2540] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/50">
+                            <LuUser size={17} className="text-[#0369A1]" />
+                            {locale === 'ar' ? 'إنشاء حساب' : 'Create account'}
+                          </Link>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
             <button ref={mobileMenuButtonRef} type="button"
-              className="flex size-11 shrink-0 items-center justify-center rounded-full border border-[#C29C41]/60 bg-white/10 text-[#E8C96A] transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-[#C29C41] 2xl:hidden"
-              onClick={() => { setAccountMenuOpen(false); setMobileMenuOpen(true); }}
+              className={cn('flex shrink-0 items-center justify-center rounded-full border border-[#C29C41]/60 bg-white/10 text-[#E8C96A] transition-[width,height,background-color] duration-[420ms] hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-[#C29C41] max-[359px]:size-10 2xl:hidden', isCompact ? 'size-12' : 'size-11')}
+              onClick={() => { setAccountMenuOpen(false); setCompactAccountOpen(false); setCompactSearchOpen(false); setMobileMenuOpen(true); }}
               aria-label={t('openMenu')} aria-expanded={mobileMenuOpen} aria-controls="mobile-site-menu">
-              <LuMenu size={22} />
+              <LuMenu size={isCompact ? 24 : 22} />
             </button>
+            </div>
           </div>
         </nav>
       </header>
@@ -980,7 +1163,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
 
         <nav className="flex flex-col">
           {menuItemsData.map((item) => (
-            <MobileAccordion key={item.id} item={item} onNavigate={() => setMobileMenuOpen(false)} onHomeNavigate={handleHomeNavigate} />
+            <MobileAccordion key={item.id} item={item} onNavigate={() => setMobileMenuOpen(false)} />
           ))}
         </nav>
       </aside>

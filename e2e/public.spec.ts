@@ -1,6 +1,33 @@
 import { expect, test } from '@playwright/test';
 import { E2E_BOOK_TITLE } from './fixtures';
 
+test('home hydrates without mismatches with a saved locale', async ({ page, context, baseURL }) => {
+  test.setTimeout(90_000);
+  const hydrationErrors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error' && /hydration|hydrated|server rendered HTML/i.test(message.text())) {
+      hydrationErrors.push(message.text());
+    }
+  });
+  page.on('pageerror', (error) => hydrationErrors.push(error.message));
+  await context.addCookies([{ name: 'aidsmo-locale', value: 'en', url: baseURL! }]);
+
+  const response = await page.goto('/');
+  expect(await response!.text()).toContain('<html lang="en" dir="ltr"');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+  await expect(page.locator('header a[href="/about-us"]').first()).toHaveText('About Us');
+  await expect(page.locator('#latest-publications')).toBeVisible();
+
+  await page.getByRole('button', { name: 'العربية', exact: true }).first().click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('#latest-publications')).toBeVisible();
+  expect(hydrationErrors).toEqual([]);
+});
+
 test('the two-row header stays visible and navigates to About Us', async ({ page }) => {
   await page.goto('/');
   const header = page.locator('header').first();

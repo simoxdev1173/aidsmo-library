@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { Suspense } from 'react'
 import { Amiri, Cinzel, Manrope, Readex_Pro } from 'next/font/google'
 import './globals.css'
@@ -42,15 +43,17 @@ async function AuthenticatedNav() {
   return <SiteNavigation user={user} />;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const savedLocale = (await cookies()).get('aidsmo-locale')?.value;
+  const locale = savedLocale === 'en' ? 'en' : 'ar';
   return (
-    <html lang="ar" dir="rtl">
+    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <body className={`${manrope.variable} ${readexPro.variable} ${amiri.variable} ${cinzel.variable} font-arabic`}>
-        <LocaleProvider>
+        <LocaleProvider initialLocale={locale}>
           <SiteChrome navigation={
             <Suspense fallback={<SiteNavigationFallback />}>
               <AuthenticatedNav />

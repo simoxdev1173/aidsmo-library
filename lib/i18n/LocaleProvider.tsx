@@ -1,7 +1,7 @@
 'use client';
 
 import { NextIntlClientProvider } from 'next-intl';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, startTransition, useContext, useEffect, useMemo, useState } from 'react';
 import arMessages from '@/messages/ar.json';
 import enMessages from '@/messages/en.json';
 
@@ -29,18 +29,9 @@ export function useAppLocale() {
   return ctx;
 }
 
-export default function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<AppLocale>('ar');
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === 'ar' || stored === 'en') {
-      // The persisted preference is intentionally restored after hydration so
-      // the server and first client render both start with the Arabic default.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLocaleState(stored);
-    }
-  }, []);
+export default function LocaleProvider({ children, initialLocale }: { children: React.ReactNode; initialLocale: AppLocale }) {
+  // Use the request's locale for every streamed boundary's first render.
+  const [locale, setLocaleState] = useState<AppLocale>(initialLocale);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -48,8 +39,8 @@ export default function LocaleProvider({ children }: { children: React.ReactNode
   }, [locale]);
 
   const setLocale = (next: AppLocale) => {
-    setLocaleState(next);
-    window.localStorage.setItem(STORAGE_KEY, next);
+    document.cookie = `${STORAGE_KEY}=${next}; Path=/; Max-Age=31536000; SameSite=Lax${window.location.protocol === 'https:' ? '; Secure' : ''}`;
+    startTransition(() => setLocaleState(next));
   };
 
   const value = useMemo(() => ({ locale, setLocale }), [locale]);

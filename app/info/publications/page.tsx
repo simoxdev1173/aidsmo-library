@@ -18,7 +18,7 @@ export default function IndustrialPublicationsPage({
         description:
           'مجموعة الإصدارات والمنشورات التي تدعم الوصول إلى المعرفة الصناعية والإحصائية المتخصصة.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

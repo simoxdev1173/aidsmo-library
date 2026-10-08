@@ -29,7 +29,7 @@ export default function StandardizationPage({
         description:
           'مدخل موحد لدراسات التقييس، المعاجم، الأدلة، التوجيهات، الإستراتيجيات، والفعاليات المرتبطة بالجودة والمطابقة.',
         accent: '#C29C41',
-        heroImage: '/standardization-bg.png',
+        heroImage: '/standardization-bg.webp',
       }}
     />
   );

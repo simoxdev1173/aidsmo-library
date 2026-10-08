@@ -18,7 +18,7 @@ export default function IndustrySmePage({
         description:
           'مراجع ودراسات وأدلة لدعم المنشآت الصناعية الصغيرة والمتوسطة، تطوير قدراتها، وتحسين اندماجها في سلاسل الإنتاج.',
         accent: '#C29C41',
-        heroImage: '/industry-bg.png',
+        heroImage: '/industry-bg.webp',
       }}
     />
   );

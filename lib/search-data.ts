@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { publicEntryWhere } from '@/lib/public-entry-where';
 
 export const SEARCH_PAGE_SIZE = 9;
 
@@ -27,8 +28,7 @@ export async function searchPublishedEntries(queryValue: string, pageValue = 1) 
   }
 
   const where = {
-    status: 'PUBLISHED' as const,
-    AND: keywords.map((keyword) => ({
+    AND: [publicEntryWhere, ...keywords.map((keyword) => ({
       OR: [
         { title: { contains: keyword, mode: 'insensitive' as const } },
         { description: { contains: keyword, mode: 'insensitive' as const } },
@@ -39,7 +39,7 @@ export async function searchPublishedEntries(queryValue: string, pageValue = 1) 
         { language: { contains: keyword, mode: 'insensitive' as const } },
         { category: { name: { contains: keyword, mode: 'insensitive' as const } } },
       ],
-    })),
+    }))],
   };
 
   const total = await prisma.libraryEntry.count({ where });

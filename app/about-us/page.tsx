@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import ChatbotPromptButton from '@/components/ChatbotPromptButton';
+import OptimizedHeroVideo from '@/components/OptimizedHeroVideo';
 import {
   HiOutlineArchiveBox,
   HiOutlineArrowLeft,
@@ -48,43 +50,34 @@ export default function AboutPage() {
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#0A2540]">
       {/* ─── Hero ─── */}
       <section className="relative h-screen min-h-[640px] w-full overflow-hidden bg-[#0A2540] text-white">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/hero-video-3.mp4" type="video/mp4" />
-        </video>
+        <OptimizedHeroVideo />
 
         {/* Light, localized wash — just enough to seat the panel, video stays visible */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/72 via-[#0A2540]/8 to-transparent" aria-hidden />
         <div className="absolute inset-x-0 top-0 z-10 h-1.5 brass-gradient" aria-hidden />
 
-        <div className="relative z-10 flex h-full items-end px-4 pb-16 pt-32 sm:px-6 lg:px-8 lg:pb-20 lg:pt-40">
+        <div className="relative z-10 flex h-full items-center px-4 pb-8 pt-24 sm:items-end sm:px-6 sm:pb-16 sm:pt-32 lg:px-8 lg:pb-20 lg:pt-40">
           <div className="mx-auto w-full max-w-7xl">
-            <div className="max-w-2xl rounded-[22px] border border-white/15 bg-[#071D2F]/55 p-7 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl md:p-9">
+            <div className="max-w-2xl rounded-[22px] border border-white/15 bg-[#071D2F]/90 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:bg-[#071D2F]/55 sm:p-7 sm:backdrop-blur-xl md:p-9">
               <h1 className="font-academic text-3xl font-bold leading-tight md:text-5xl">
                 من نحن
               </h1>
-              <p className="mt-6 max-w-3xl font-academic text-lg leading-9 text-white/82 md:text-xl">
+              <p className="mt-4 max-w-3xl font-academic text-base leading-8 text-white/90 sm:mt-6 sm:text-lg sm:leading-9 sm:text-white/82 md:text-xl">
                 منصة رائدة أعدّتها المنظمة العربية للتنمية الصناعية والتقييس والتعدين، تهدف إلى جمع المعرفة الصناعية والتقنية وتنظيمها بطريقة ذكية ومتاحة للجميع.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/catalog/industry"
-                  className="engraved brass-gradient inline-flex h-12 items-center gap-2 rounded-full border border-[#C29C41] px-6 text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                  className="engraved brass-gradient inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#C29C41] px-6 text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
                 >
                   استكشاف المكتبة
                   <HiOutlineArrowLeft className="h-4 w-4" />
                 </Link>
-                <Link
-                  href="/#chatbot"
-                  className="inline-flex h-12 items-center rounded-full border border-white/24 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                <ChatbotPromptButton
+                  className="inline-flex h-12 cursor-pointer items-center justify-center rounded-full border border-white/24 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
                 >
                   اسأل المساعد الذكي
-                </Link>
+                </ChatbotPromptButton>
               </div>
             </div>
           </div>
@@ -92,7 +85,7 @@ export default function AboutPage() {
       </section>
       {/* test deployement  */}
       {/* ─── Mission ─── */}
-      <section className="relative bg-white py-20 md:py-28">
+      <section className="relative bg-white py-12 md:py-28">
   <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] items-stretch">
 
@@ -125,11 +118,11 @@ export default function AboutPage() {
       {/* Image */}
       <div className="relative h-full overflow-hidden rounded-[22px] border border-[#C29C41]/30 bg-[#F0F7FC] shadow-[0_24px_64px_rgba(10,37,64,0.14)]">
         <Image
-          src="/hero0cover-4.png"
+          src="/hero0cover-4.webp"
           alt="مساحة بحث هادئة في المكتبة الرقمية الذكية"
           width={900}
           height={700}
-          className="h-full min-h-[500px] w-full object-cover"
+          className="h-72 w-full object-cover sm:h-full sm:min-h-[500px]"
           priority={false}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/28 via-transparent to-transparent" />
@@ -140,7 +133,7 @@ export default function AboutPage() {
 </section>
 
       {/* ─── Pillars ─── */}
-      <section className="border-y border-[#0369A1]/10 bg-[#F0F7FC] py-20 md:py-24">
+      <section className="border-y border-[#0369A1]/10 bg-[#F0F7FC] py-12 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-12 max-w-3xl text-center">
             <h2 className="academic-heading text-3xl leading-tight md:text-4xl">
@@ -169,7 +162,7 @@ export default function AboutPage() {
       </section>
 
       {/* ─── Chapters ─── */}
-      <section className="bg-white py-20 md:py-28">
+      <section className="bg-white py-12 md:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
             <div>

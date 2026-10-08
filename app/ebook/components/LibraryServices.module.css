@@ -52,6 +52,14 @@
   transform: translateX(-3px);
 }
 
+@media (hover: none) {
+  .card:hover,
+  .card:hover .image,
+  .card:hover .arrow {
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card, .card::after, .image, .arrow { transition: none; }
   .card:hover, .card:focus-visible, .card:hover .image, .card:focus-visible .image, .card:hover .arrow, .card:focus-visible .arrow { transform: none; }

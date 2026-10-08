@@ -32,7 +32,6 @@
 html {
   min-width: 0;
   overflow-x: clip;
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -47,6 +46,17 @@ body {
     radial-gradient(ellipse at top, rgba(3, 105, 161, 0.1), transparent 48%),
     linear-gradient(180deg, #ffffff 0%, var(--library-paper-blue) 44%, #ffffff 100%);
   color: var(--library-ink);
+}
+
+/* Keep in-page destinations visible below the persistent two-row header. */
+#main-content section[id] {
+  scroll-margin-top: 156px;
+}
+
+@media (max-width: 767px) {
+  #main-content section[id] {
+    scroll-margin-top: 188px;
+  }
 }
 
 img,
@@ -84,28 +94,6 @@ select {
 ::selection {
   background: rgba(194, 156, 65, 0.28);
   color: var(--library-ink);
-}
-
-.academic-atmosphere::before,
-.academic-atmosphere::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 80;
-}
-
-.academic-atmosphere::before {
-  opacity: 0.18;
-  mix-blend-mode: multiply;
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(10, 37, 64, 0.18) 1px, transparent 0);
-  background-size: 22px 22px;
-}
-
-.academic-atmosphere::after {
-  background:
-    radial-gradient(ellipse at center, transparent 0%, transparent 58%, rgba(10, 37, 64, 0.13) 100%);
 }
 
 .academic-heading {

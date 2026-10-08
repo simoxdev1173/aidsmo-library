@@ -134,16 +134,16 @@ export default async function SearchPage({
             </div>
 
             {result.entries.length ? (
-              <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 xl:grid-cols-3">
                 {result.entries.map((entry) => {
                   const description = entry.description?.replace(/\s+/g, ' ').trim();
                   return (
                     <article key={entry.id} className="group relative h-full overflow-hidden rounded-2xl border border-[#0369A1]/10 bg-white shadow-[0_5px_22px_rgba(10,37,64,0.06)] transition hover:-translate-y-0.5 hover:border-[#C29C41]/35 hover:shadow-[0_16px_38px_rgba(10,37,64,0.11)] motion-reduce:transform-none">
                       <span className="absolute inset-y-0 start-0 w-1 bg-[#C29C41]" aria-hidden="true" />
-                      <div className="flex min-h-48 gap-4 p-3 ps-4 sm:p-4 sm:ps-5">
-                        <Link href={`/book/${entry.slug}`} className="relative aspect-[3/4] w-24 shrink-0 overflow-hidden rounded-xl bg-[#EAF2F8] ring-1 ring-black/5">
+                      <div className="flex h-full flex-col gap-2 p-2 sm:min-h-48 sm:flex-row sm:gap-4 sm:p-4 sm:ps-5">
+                        <Link href={`/book/${entry.slug}`} className="relative block aspect-[3/4] w-full shrink-0 overflow-hidden rounded-xl bg-[#EAF2F8] ring-1 ring-black/5 sm:w-24">
                           {entry.coverImagePath ? (
-                            <Image src={entry.coverImagePath} alt={entry.title} fill sizes="112px" className="object-cover transition duration-500 group-hover:scale-[1.03]" />
+                            <Image src={entry.coverImagePath} alt={entry.title} fill sizes="(max-width: 639px) 45vw, 112px" className="object-cover transition duration-500 group-hover:scale-[1.03]" />
                           ) : (
                             <span className="flex h-full items-center justify-center text-[#C29C41]"><LuBookOpen className="size-7" /></span>
                           )}
@@ -155,18 +155,18 @@ export default async function SearchPage({
                             <span className="text-[#8B681C]">{ENTRY_TYPE_LABEL[entry.entryType] ?? 'إصدار'}</span>
                             {entry.year && <span className="text-[#64748B]">{entry.year}</span>}
                           </div>
-                          <h2 className="mt-3 line-clamp-2 text-sm font-bold leading-6 text-[#0A2540] sm:text-base">
+                          <h2 className="mt-2 line-clamp-2 text-sm font-bold leading-5 text-[#0A2540] sm:mt-3 sm:text-base sm:leading-6">
                             <Link href={`/book/${entry.slug}`} className="transition hover:text-[#0369A1]">
                               <Highlight text={entry.title} keywords={result.keywords} />
                             </Link>
                           </h2>
                           <p className="mt-1 truncate text-xs text-[#64748B]">{entry.author ?? entry.publisher ?? 'المنظمة العربية للتنمية الصناعية والتقييس والتعدين'}</p>
                           {description && (
-                            <p className="mt-3 line-clamp-2 text-xs leading-6 text-[#64748B] sm:text-sm">
+                            <p className="mt-3 hidden text-xs leading-6 text-[#64748B] sm:line-clamp-2 sm:text-sm">
                               <Highlight text={description} keywords={result.keywords} />
                             </p>
                           )}
-                          <Link href={`/book/${entry.slug}`} className="mt-auto inline-flex items-center gap-1.5 pt-3 text-xs font-bold text-[#0369A1] hover:text-[#8B681C]">
+                          <Link href={`/book/${entry.slug}`} className="mt-auto inline-flex items-center gap-1 pt-2 text-[0.65rem] font-bold text-[#0369A1] hover:text-[#8B681C] sm:gap-1.5 sm:pt-3 sm:text-xs">
                             عرض الإصدار <LuArrowLeft className="size-3.5" />
                           </Link>
                         </div>

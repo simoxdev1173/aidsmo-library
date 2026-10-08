@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Amiri, Cinzel, Manrope, Readex_Pro } from 'next/font/google'
 import './globals.css'
-import SiteChrome from '@/components/SiteChrome';
+import SiteChrome, { SiteNavigation, SiteNavigationFallback } from '@/components/SiteChrome';
 import LocaleProvider from '@/lib/i18n/LocaleProvider';
 import { getUserSession } from '@/lib/user-auth';
 const manrope = Manrope({
@@ -36,20 +37,25 @@ export const metadata: Metadata = {
   description: 'المكتبة الرقمية الذكية',
 }
 
-export default async function RootLayout({
+async function AuthenticatedNav() {
+  const user = await getUserSession();
+  return <SiteNavigation user={user} />;
+}
+
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = await getUserSession();
-
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${manrope.variable} ${readexPro.variable} ${amiri.variable} ${cinzel.variable} font-arabic academic-atmosphere`}>
+      <body className={`${manrope.variable} ${readexPro.variable} ${amiri.variable} ${cinzel.variable} font-arabic`}>
         <LocaleProvider>
-          <SiteChrome user={user}>
-            {children}
-          </SiteChrome>
+          <SiteChrome navigation={
+            <Suspense fallback={<SiteNavigationFallback />}>
+              <AuthenticatedNav />
+            </Suspense>
+          }>{children}</SiteChrome>
         </LocaleProvider>
       </body>
     </html>

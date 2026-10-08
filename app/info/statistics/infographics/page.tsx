@@ -19,7 +19,7 @@ export default function IndustrialInfographicsPage({
         description:
           'مساحة للمواد البصرية التي تحول البيانات والمؤشرات الصناعية إلى عروض مختصرة وسهلة القراءة.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

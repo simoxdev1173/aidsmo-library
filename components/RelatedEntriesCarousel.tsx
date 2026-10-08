@@ -76,7 +76,7 @@ export default function RelatedEntriesCarousel({
               key={item.id}
               href={`/book/${item.slug}`}
               style={{ scrollSnapAlign: 'start' }}
-              className="group flex w-36 shrink-0 flex-col sm:w-40"
+              className="group flex w-[calc((100%_-_1rem)/2)] shrink-0 flex-col sm:w-40"
             >
               <div className="relative aspect-[3/4] overflow-hidden rounded-[14px] border border-[#D9E3EE] bg-[#EAF3F8] shadow-[0_10px_28px_rgba(10,37,64,0.08)] transition duration-300 group-hover:-translate-y-1 group-hover:border-[#C29C41]/55 group-hover:shadow-[0_18px_40px_rgba(10,37,64,0.14)]">
                 <RatingBadge rating={item.rating} />

@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { FormEvent, useState } from 'react';
 import {
@@ -24,6 +25,7 @@ const bookImages = [
 ];
 
 const Footer = () => {
+  const pathname = usePathname();
   const year = new Date().getFullYear();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -87,8 +89,8 @@ const Footer = () => {
   ];
 
   const quickActions = [
-    { label: t('exploreLibrary'), href: '/', icon: LuBookOpen },
-    { label: t('startSearch'), href: '/#search', icon: LuSearch },
+    { label: t('exploreLibrary'), href: '/#projects', icon: LuBookOpen },
+    { label: t('startSearch'), href: '/search', icon: LuSearch },
   ];
 
   const validateEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -123,7 +125,7 @@ const Footer = () => {
   return (
     <footer dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#382715] text-[#0A2540]">
       <Image
-        src="/background-01.png"
+        src="/background-01.webp"
         alt=""
         fill
         sizes="100vw"
@@ -310,20 +312,31 @@ const Footer = () => {
                     {group.title}
                   </h3>
                   <ul className="space-y-1">
-                    {group.items.map((item) => (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                          className="group/link flex min-h-9 cursor-pointer items-center justify-between gap-3 rounded-full px-3 text-sm font-medium text-[#475569] transition duration-300 hover:bg-[#FFF8E1] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1]"
-                        >
-                          <span className="inline-flex items-center gap-2">
-                            <LuChevronLeft className="h-3.5 w-3.5 text-[#C6A346] transition duration-300 group-hover/link:-translate-x-1" />
-                            {item.label}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
+                    {group.items.map((item) => {
+                      const isCurrentPage = !item.external && pathname === item.href.split('#')[0];
+
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                            onClick={(event) => {
+                              if (item.href === '/' && pathname === '/') {
+                                event.preventDefault();
+                                window.scrollTo({ top: 0, behavior: 'auto' });
+                              }
+                            }}
+                            aria-current={isCurrentPage ? 'page' : undefined}
+                            className={`group/link flex min-h-9 cursor-pointer items-center justify-between gap-3 rounded-full px-3 text-sm font-medium transition duration-300 hover:bg-[#FFF8E1] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1] ${isCurrentPage ? 'bg-[#FFF8E1] text-[#0A2540]' : 'text-[#475569]'}`}
+                          >
+                            <span className="inline-flex items-center gap-2">
+                              <LuChevronLeft className={`h-3.5 w-3.5 text-[#C6A346] transition duration-300 group-hover/link:-translate-x-1 ${isCurrentPage ? '-translate-x-1' : ''}`} />
+                              {item.label}
+                            </span>
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </nav>
               ))}

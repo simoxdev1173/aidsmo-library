@@ -8,6 +8,7 @@ import {
   LuChevronLeft,
 } from 'react-icons/lu';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
+import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 
 const primaryButton =
   'engraved brass-gradient inline-flex min-h-12 max-w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 py-3 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#FFF8E8] sm:px-8';
@@ -23,7 +24,7 @@ function ChatbotVisualCard() {
   ];
 
   return (
-    <div className="relative h-full min-h-[440px] overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071A2E] shadow-[0_20px_48px_rgba(10,37,64,0.15)]">
+    <div className="relative h-full min-h-[520px] overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071A2E] shadow-[0_20px_48px_rgba(10,37,64,0.15)]">
       <div
         className="absolute inset-0 bg-[radial-gradient(circle_at_78%_35%,rgba(14,165,233,0.22),transparent_34%),radial-gradient(circle_at_18%_78%,rgba(194,156,65,0.18),transparent_30%),linear-gradient(135deg,rgba(10,37,64,0.45),rgba(7,26,46,0.96))]"
         aria-hidden
@@ -119,7 +120,7 @@ export default function ChatbotCTA() {
       aria-label={t('sectionLabel')}
     >
       <Image
-        src="/background-01.png"
+        src="/background-01.webp"
         alt=""
         fill
         sizes="100vw"
@@ -144,9 +145,9 @@ export default function ChatbotCTA() {
           </p>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-12 lg:grid-rows-[220px_220px]">
+        <div className="grid gap-4 lg:grid-cols-12 lg:grid-rows-[260px_260px]">
           {/* Main cream card */}
-          <div className="relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.1)] sm:p-6 lg:col-span-5">
+          <div className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.1)] transition hover:border-[#C29C41]/55 sm:p-6 lg:col-span-5">
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.18]"
               style={{
@@ -162,9 +163,11 @@ export default function ChatbotCTA() {
               aria-hidden
             />
 
-            <div className="relative z-10 flex h-full flex-col items-center justify-center">
-           
+            <ChatbotPromptButton className="absolute inset-0 z-20 cursor-pointer rounded-[14px] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#C29C41]">
+              <span className="sr-only">{t('startChat')}</span>
+            </ChatbotPromptButton>
 
+            <div className="pointer-events-none relative z-10 flex h-full flex-col items-center justify-center">
               <h3 className="mt-4 font-academic text-2xl font-bold leading-tight text-[#0A2540] sm:text-3xl">
                 {t('mainTitle')}
               </h3>
@@ -173,15 +176,15 @@ export default function ChatbotCTA() {
                 {t('mainDesc')}
               </p>
 
-              <Link href="#chatbot" className={`${primaryButton} mt-5`}>
+              <span className={`${primaryButton} mt-5`}>
                 {t('startChat')}
-              </Link>
+              </span>
             </div>
           </div>
 
-          {/* Dark immediate search card */}
+          {/* About the library card */}
           <Link
-            href="#chatbot"
+            href="/about-us"
             className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-3"
           >
             <div
@@ -191,15 +194,15 @@ export default function ChatbotCTA() {
 
             <div className="relative z-10 flex h-full flex-col items-center justify-center">
               <h3 className="font-academic text-xl font-bold text-[#E8C96A]">
-                {t('instantSearchTitle')}
+                {t('aboutLibraryTitle')}
               </h3>
 
               <p className="mt-3 max-w-[15rem] font-academic text-sm leading-relaxed text-white/82 sm:text-base">
-                {t('instantSearchDesc')}
+                {t('aboutLibraryDesc')}
               </p>
 
               <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#E8C96A] transition duration-300 group-hover:text-white">
-                {t('exploreIssues')}
+                {t('aboutLibraryCta')}
                 <LuChevronLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
               </span>
             </div>
@@ -211,9 +214,8 @@ export default function ChatbotCTA() {
           </div>
 
           {/* Bottom feature card 1 */}
-          <Link
-            href="#chatbot"
-            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
+          <ChatbotPromptButton
+            className="group relative w-full cursor-pointer overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 lg:col-span-4"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_74%,rgba(125,211,252,0.14),transparent_28%)]"
@@ -229,8 +231,12 @@ export default function ChatbotCTA() {
               <p className="mt-3 max-w-sm font-academic text-sm leading-relaxed text-white/82 sm:text-base">
                 {t('smartSuggestionsDesc')}
               </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#E8C96A] transition duration-300 group-hover:text-white">
+                {t('smartSuggestionsCta')}
+                <LuChevronLeft className="h-4 w-4 transition duration-300 group-hover:-translate-x-1" />
+              </span>
             </div>
-          </Link>
+          </ChatbotPromptButton>
 
           {/* Bottom feature card 2 */}
           <Link
@@ -257,7 +263,7 @@ export default function ChatbotCTA() {
 
         {/* Bottom strip */}
         <div className="mt-5 rounded-[14px] border border-[#C29C41]/18 bg-white/70 p-5 shadow-[0_16px_42px_rgba(10,37,64,0.08)] backdrop-blur-sm">
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center">
             <div className="flex items-center gap-5">
               <span className="flex h-14 w-14 shrink-0 items-center justify-center text-[#C29C41]">
                 <LuBookOpen className="h-10 w-10" strokeWidth={1.45} />
@@ -274,13 +280,6 @@ export default function ChatbotCTA() {
               </div>
             </div>
 
-            <Link
-              href="#chatbot"
-              className="inline-flex h-11 items-center justify-center gap-3 rounded-full border border-[#C29C41]/45 bg-white/40 px-6 text-sm font-bold text-[#8B681C] transition duration-300 hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
-            >
-              {t('howItWorks')}
-              <LuChevronLeft className="h-4 w-4" />
-            </Link>
           </div>
         </div>
       </div>

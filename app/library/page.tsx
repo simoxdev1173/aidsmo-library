@@ -47,7 +47,7 @@ export default async function LibraryPage() {
         author: item.entry.author ?? item.entry.publisher ?? 'المنظمة العربية للتنمية الصناعية والتقييس والتعدين',
         cover: item.entry.coverImagePath,
         entryType: item.entry.entryType,
-        isAvailable: item.entry.status === 'PUBLISHED',
+        isAvailable: item.entry.entryType === 'BOOK' || item.entry.status === 'PUBLISHED',
         status: item.status,
         progress: item.progress,
         position: item.position,

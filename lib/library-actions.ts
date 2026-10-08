@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { authenticateAdmin, createAdminSession, destroyAdminSession, requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -408,7 +408,8 @@ export async function createEntryAction(formData: FormData) {
       },
     });
 
-    revalidatePath("/");
+    revalidateTag("public-library-stats", { expire: 0 });
+    revalidatePath("/", "layout");
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/entries");
     coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(filePath && !uploadedCoverImagePath));
@@ -512,7 +513,8 @@ export async function updateEntryAction(id: string, formData: FormData) {
       },
     });
 
-    revalidatePath("/");
+    revalidateTag("public-library-stats", { expire: 0 });
+    revalidatePath("/", "layout");
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/entries");
     revalidatePath(`/dashboard/entries/${id}`);
@@ -600,7 +602,8 @@ export async function generateEntryCoverAction(id: string) {
 export async function deleteEntryAction(id: string) {
   await requireAdmin();
   await prisma.libraryEntry.delete({ where: { id } });
-  revalidatePath("/");
+  revalidateTag("public-library-stats", { expire: 0 });
+  revalidatePath("/", "layout");
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/entries");
   redirect("/dashboard/entries?saved=deleted");
@@ -627,6 +630,7 @@ export async function createCategoryAction(formData: FormData) {
       },
     });
 
+    revalidateTag("public-library-stats", { expire: 0 });
     revalidatePath("/");
     revalidatePath("/dashboard/categories");
   } catch (error) {
@@ -658,6 +662,7 @@ export async function updateCategoryAction(id: string, formData: FormData) {
       },
     });
 
+    revalidateTag("public-library-stats", { expire: 0 });
     revalidatePath("/");
     revalidatePath("/dashboard/categories");
   } catch (error) {

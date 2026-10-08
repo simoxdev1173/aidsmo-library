@@ -1,5 +1,7 @@
-import { notFound } from 'next/navigation';
+import ArchiveEmptyPage from '@/components/archive/ArchiveEmptyPage';
+
+export const metadata = { title: 'المنظمة العربية للتنمية الصناعية والتقييس والتعدين | الأرشيف' };
 
 export default function ArchiveOrganizationPage() {
-  notFound();
+  return <ArchiveEmptyPage path="/archive/org" />;
 }

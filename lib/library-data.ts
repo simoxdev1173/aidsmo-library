@@ -1,5 +1,7 @@
 import { connection } from "next/server";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { publicEntryWhere } from "@/lib/public-entry-where";
 
 type CategoryTreeItem = {
   id: string;
@@ -141,28 +143,29 @@ function categoryPath(
   return path;
 }
 
-/** Counts the published content represented by the library statistics section. */
-export async function getLibraryStats() {
-  // These numbers are part of the public catalogue, so do not include drafts
-  // or archived entries that visitors cannot access.
-  await connection();
-
+/** Counts the content represented by the public library statistics section. */
+const getCachedLibraryStats = unstable_cache(async () => {
   const [categories, entries] = await Promise.all([
     prisma.category.findMany({ select: { id: true, parentId: true, slug: true, name: true } }),
     prisma.libraryEntry.findMany({
-      where: { status: "PUBLISHED" },
+      where: publicEntryWhere,
       select: { categoryId: true, entryType: true, title: true, tag: true },
     }),
   ]);
 
   const categoryById = new Map(categories.map((category) => [category.id, category]));
+  const searchableEntries = entries.map((entry) => ({
+    ...entry,
+    categoryPath: categoryPath(entry.categoryId, categoryById),
+    searchText: normalizeStatText(`${entry.title} ${entry.tag ?? ""}`),
+  }));
   const countFor = (definition: LibraryStatDefinition) =>
-    entries.filter((entry) => {
-      if (categoryPath(entry.categoryId, categoryById).some((category) => categoryMatchesStat(category, definition))) {
+    searchableEntries.filter((entry) => {
+      if (entry.categoryPath.some((category) => categoryMatchesStat(category, definition))) {
         return true;
       }
 
-      return definition.matchesEntryText(normalizeStatText(`${entry.title} ${entry.tag ?? ""}`));
+      return definition.matchesEntryText(entry.searchText);
     }).length;
 
   return {
@@ -174,6 +177,10 @@ export async function getLibraryStats() {
     numberedPapers: VERIFIED_NUMBERED_PAGES_TOTAL,
     memorandums: Math.max(VERIFIED_MEMORANDUMS_TOTAL, countFor(LIBRARY_STAT_DEFINITIONS.memorandums)),
   };
+}, ["public-library-stats-v1"], { tags: ["public-library-stats"], revalidate: 300 });
+
+export async function getLibraryStats() {
+  return getCachedLibraryStats();
 }
 
 export async function getDashboardStats() {
@@ -259,7 +266,7 @@ export async function getEntries(filters: {
 
 export async function getPublishedEntryBySlug(slug: string) {
   return prisma.libraryEntry.findFirst({
-    where: { slug, status: "PUBLISHED" },
+    where: { slug, AND: [publicEntryWhere] },
     include: {
       category: { include: { parent: { include: { parent: true } } } },
       documentAnalyses: {
@@ -287,7 +294,7 @@ export async function getRelatedEntries(entry: { id: string; categoryId: string 
 
   return prisma.libraryEntry.findMany({
     where: {
-      status: "PUBLISHED",
+      AND: [publicEntryWhere],
       categoryId: { in: ids },
       NOT: { id: entry.id },
     },
@@ -312,7 +319,7 @@ export async function getCategoryWithEntries(slug: string) {
 
   const entries = await prisma.libraryEntry.findMany({
     where: {
-      status: "PUBLISHED",
+      AND: [publicEntryWhere],
       categoryId: { in: ids },
     },
     orderBy: [{ featured: "desc" }, { year: "desc" }, { title: "asc" }],
@@ -348,7 +355,7 @@ export async function getStandardizationPageData(
   const year = filters.year?.trim();
 
   const baseWhere = {
-    status: "PUBLISHED" as const,
+    AND: [publicEntryWhere],
     categoryId: { in: categories.map((item) => item.id) },
   };
 
@@ -493,17 +500,15 @@ function shuffle<T>(items: T[]) {
 }
 
 // Newest-first, sector-grouped shelves for the homepage.
-export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
-  // Keep the shelf dynamic so newly published entries appear immediately.
+export async function getTrendingLibraryRows(trendingLimit = TRENDING_ROW_LIMIT): Promise<TrendingRow[]> {
+  // Keep the shelf dynamic so newly added books appear immediately.
   await connection();
 
   const [categories, entries] = await Promise.all([
     prisma.category.findMany({ select: { id: true, parentId: true, name: true, slug: true } }),
     prisma.libraryEntry.findMany({
-      // Homepage shelves are visual browsing surfaces. Only include entries
-      // that can render a real cover, allowing older covered entries from the
-      // same sector to fill any slots a coverless upload would have occupied.
-      where: { status: "PUBLISHED", coverImagePath: { not: null } },
+      // The carousel has a fallback cover for books without an uploaded image.
+      where: publicEntryWhere,
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       select: {
         id: true,
@@ -517,10 +522,6 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
       },
     }),
   ]);
-
-  // The database filter removes nulls; this also guards against legacy rows
-  // whose cover path is an empty or whitespace-only string.
-  const coveredEntries = entries.filter((entry) => Boolean(entry.coverImagePath?.trim()));
 
   const categoryById = new Map(categories.map((category) => [category.id, category]));
 
@@ -537,7 +538,7 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
   type Entry = (typeof entries)[number];
 
   const grouped = new Map<string, Entry[]>();
-  for (const entry of coveredEntries) {
+  for (const entry of entries) {
     const slug = topLevelSlug(entry.categoryId);
     if (!slug) continue;
     const bucket = grouped.get(slug);
@@ -597,11 +598,11 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
 
   const rows: TrendingRow[] = [];
 
-  // Trending is a fresh random selection from covered 2026 publications;
+  // Trending is a fresh random selection from 2026 publications;
   // category shelves below continue to use newest-upload order.
   const trendingItems = pickDiversifiedTrending(
-    coveredEntries.filter((entry) => entry.year?.trim() === TRENDING_YEAR),
-    TRENDING_ROW_LIMIT,
+    entries.filter((entry) => entry.year?.trim() === TRENDING_YEAR),
+    trendingLimit,
   )
     .map(toItem);
   if (trendingItems.length > 0) {
@@ -609,7 +610,7 @@ export async function getTrendingLibraryRows(): Promise<TrendingRow[]> {
       id: "trending",
       title: "العناوين الرائجة",
       description: "",
-      href: "/library",
+      href: "/trending",
       iconKey: "trending",
       items: trendingItems,
     });

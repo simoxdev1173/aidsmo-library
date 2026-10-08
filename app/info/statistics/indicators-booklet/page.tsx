@@ -18,7 +18,7 @@ export default function IndicatorsBookletPage({
         description:
           'مجموعة منظمة من المؤشرات الاقتصادية والصناعية التي تدعم المقارنة والمتابعة وتحليل تطور الصناعة العربية.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

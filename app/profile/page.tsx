@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { LuCamera, LuKeyRound, LuMail, LuUserRound } from 'react-icons/lu';
+import { LuCamera, LuKeyRound, LuMail, LuTrash2, LuUserRound } from 'react-icons/lu';
 import AuthShell from '@/components/auth/AuthShell';
 import AuthSubmitButton from '@/components/auth/AuthSubmitButton';
 import PasswordInput from '@/components/auth/PasswordInput';
@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = { title: 'إعدادات الملف الشخصي | المكتبة الرقمية الذكية' };
 
 export default async function ProfilePage({ searchParams }: {
-  searchParams: Promise<{ error?: string; saved?: string }>;
+  searchParams: Promise<{ error?: string; saved?: string; section?: string }>;
 }) {
   const session = await requireUser('/profile');
   const [user, query] = await Promise.all([
@@ -22,26 +22,46 @@ export default async function ProfilePage({ searchParams }: {
     searchParams,
   ]);
   if (!user) return null;
+  const activeSection = query.section === 'password' ? 'password' : 'personal';
 
   return (
     <AuthShell
       title="إعدادات الملف الشخصي"
-      description="حدّث بيانات حسابك وصورتك وكلمة المرور من مكان واحد."
+      description="اختر القسم الذي تريد تحديثه في حسابك."
       showTabs={false}
       showImage={false}
     >
+      <nav aria-label="إعدادات الحساب" className="mx-auto mt-7 grid max-w-2xl grid-cols-2 gap-2 rounded-2xl bg-[#EDF4F9] p-1.5">
+        <Link
+          href="/profile"
+          aria-current={activeSection === 'personal' ? 'page' : undefined}
+          className={`flex min-h-12 items-center justify-center gap-2 rounded-xl px-3 text-center text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] ${activeSection === 'personal' ? 'bg-white text-[#0B4E84] shadow-sm' : 'text-[#64748B] hover:text-[#0B4E84]'}`}
+        >
+          <LuUserRound className="size-4 shrink-0" aria-hidden="true" />
+          البيانات الشخصية
+        </Link>
+        <Link
+          href="/profile?section=password"
+          aria-current={activeSection === 'password' ? 'page' : undefined}
+          className={`flex min-h-12 items-center justify-center gap-2 rounded-xl px-3 text-center text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] ${activeSection === 'password' ? 'bg-white text-[#0B4E84] shadow-sm' : 'text-[#64748B] hover:text-[#0B4E84]'}`}
+        >
+          <LuKeyRound className="size-4 shrink-0" aria-hidden="true" />
+          كلمة المرور
+        </Link>
+      </nav>
+
       {query.error && (
-        <div role="alert" className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold leading-6 text-red-800">
+        <div role="alert" className="mx-auto mt-6 max-w-2xl rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold leading-6 text-red-800">
           {query.error}
         </div>
       )}
       {query.saved && (
-        <div role="status" className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold leading-6 text-emerald-800">
+        <div role="status" className="mx-auto mt-6 max-w-2xl rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold leading-6 text-emerald-800">
           تم حفظ التغييرات بنجاح.
         </div>
       )}
 
-      <div className="mt-7 flex items-center gap-4 rounded-2xl border border-[#D9E3EE] bg-[#F6FAFD] p-4">
+      <div className="mx-auto mt-7 flex max-w-2xl items-center gap-4 rounded-2xl border border-[#D9E3EE] bg-[#F6FAFD] p-4">
         <span className="relative grid size-16 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#C29C41]/50 bg-[#0A2540] text-[#E8C96A] sm:size-20">
           {user.image ? (
             <Image src={user.image} alt="صورتك الشخصية" fill sizes="80px" className="object-cover" unoptimized />
@@ -52,9 +72,10 @@ export default async function ProfilePage({ searchParams }: {
         <div className="min-w-0 flex-1">
           <p className="truncate font-bold text-[#0A2540]">{user.name || session.name}</p>
           <p dir="ltr" className="mt-1 truncate text-left text-xs text-[#64748B]">{user.email}</p>
-          {user.image && (
+          {user.image && activeSection === 'personal' && (
             <form action={removeProfilePictureAction} className="mt-2">
-              <button type="submit" className="text-xs font-bold text-[#9F2D2D] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">
+              <button type="submit" className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 text-xs font-bold text-[#9F2D2D] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">
+                <LuTrash2 className="size-4" aria-hidden="true" />
                 حذف الصورة
               </button>
             </form>
@@ -62,8 +83,8 @@ export default async function ProfilePage({ searchParams }: {
         </div>
       </div>
 
-      <div className="mt-9 grid gap-6 lg:grid-cols-2 lg:gap-8">
-      <section className="rounded-2xl border border-[#E7ECF2] bg-white p-5 sm:p-6" aria-labelledby="personal-details-heading">
+      {activeSection === 'personal' ? (
+      <section className="mx-auto mt-7 w-full max-w-2xl rounded-2xl border border-[#E7ECF2] bg-white p-5 sm:p-7" aria-labelledby="personal-details-heading">
         <div className="mb-6 flex items-center gap-3 border-b border-[#E7ECF2] pb-4">
           <span className="grid size-10 place-items-center rounded-xl bg-[#EDF4F9] text-[#0369A1]"><LuUserRound className="size-5" /></span>
           <div>
@@ -103,8 +124,8 @@ export default async function ProfilePage({ searchParams }: {
           </FieldGroup>
         </form>
       </section>
-
-      <section className="rounded-2xl border border-[#E7ECF2] bg-[#FBFCFE] p-5 sm:p-6" aria-labelledby="password-heading">
+      ) : (
+      <section className="mx-auto mt-7 w-full max-w-2xl rounded-2xl border border-[#E7ECF2] bg-white p-5 sm:p-7" aria-labelledby="password-heading">
         <div className="mb-6 flex items-center gap-3 border-b border-[#E7ECF2] pb-4">
           <span className="grid size-10 place-items-center rounded-xl bg-[#FFF8E8] text-[#9A7421]"><LuKeyRound className="size-5" /></span>
           <div>
@@ -138,9 +159,9 @@ export default async function ProfilePage({ searchParams }: {
           </p>
         )}
       </section>
-      </div>
+      )}
 
-      <div className="mt-9 border-t border-[#E7ECF2] pt-5 text-center">
+      <div className="mx-auto mt-9 max-w-2xl border-t border-[#E7ECF2] pt-5 text-center">
         <Link href="/library" className="text-sm font-bold text-[#8B681C] transition hover:text-[#0369A1] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C29C41]">
           العودة إلى مكتبتي
         </Link>

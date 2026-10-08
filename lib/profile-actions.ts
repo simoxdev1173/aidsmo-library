@@ -12,8 +12,10 @@ const field = (data: FormData, key: string) => {
   const value = data.get(key);
   return typeof value === 'string' ? value.trim() : '';
 };
-const errorPath = (message: string) => `${profilePath}?error=${encodeURIComponent(message)}`;
-const savedPath = (section: string) => `${profilePath}?saved=${section}`;
+const errorPath = (message: string, section: 'personal' | 'password' = 'personal') =>
+  `${profilePath}?section=${section}&error=${encodeURIComponent(message)}`;
+const savedPath = (section: string) =>
+  `${profilePath}?section=${section === 'password' ? 'password' : 'personal'}&saved=${section}`;
 
 export async function updateProfileAction(formData: FormData) {
   const session = await requireUser(profilePath);
@@ -68,15 +70,15 @@ export async function removeProfilePictureAction() {
 export async function changeProfilePasswordAction(formData: FormData) {
   const session = await requireUser(profilePath);
   const current = await prisma.user.findUnique({ where: { id: session.id }, select: { passwordHash: true } });
-  if (!current?.passwordHash) redirect(errorPath('عيّن كلمة مرور عبر صفحة استعادة كلمة المرور أولاً.'));
+  if (!current?.passwordHash) redirect(errorPath('عيّن كلمة مرور عبر صفحة استعادة كلمة المرور أولاً.', 'password'));
 
   const oldPassword = field(formData, 'currentPassword');
   const password = field(formData, 'password');
   const confirmPassword = field(formData, 'confirmPassword');
-  if (!verifyPassword(oldPassword, current.passwordHash)) redirect(errorPath('كلمة المرور الحالية غير صحيحة.'));
-  if (password.length < 8 || password.length > 128) redirect(errorPath('يجب أن تكون كلمة المرور الجديدة بين 8 و128 حرفاً.'));
-  if (password !== confirmPassword) redirect(errorPath('كلمتا المرور الجديدتان غير متطابقتين.'));
-  if (verifyPassword(password, current.passwordHash)) redirect(errorPath('اختر كلمة مرور جديدة مختلفة عن الحالية.'));
+  if (!verifyPassword(oldPassword, current.passwordHash)) redirect(errorPath('كلمة المرور الحالية غير صحيحة.', 'password'));
+  if (password.length < 8 || password.length > 128) redirect(errorPath('يجب أن تكون كلمة المرور الجديدة بين 8 و128 حرفاً.', 'password'));
+  if (password !== confirmPassword) redirect(errorPath('كلمتا المرور الجديدتان غير متطابقتين.', 'password'));
+  if (verifyPassword(password, current.passwordHash)) redirect(errorPath('اختر كلمة مرور جديدة مختلفة عن الحالية.', 'password'));
 
   await prisma.user.update({ where: { id: session.id }, data: { passwordHash: hashPassword(password) } });
   revalidatePath(profilePath);

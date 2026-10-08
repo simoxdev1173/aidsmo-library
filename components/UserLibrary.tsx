@@ -2,13 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { FormEvent, useMemo, useRef, useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { FormEvent, useMemo, useState, useTransition } from 'react';
 import {
   LuArrowDown,
   LuArrowUp,
   LuBookOpen,
   LuCheck,
+  LuChevronDown,
   LuClock3,
   LuEllipsisVertical,
   LuFolderOpen,
@@ -20,19 +20,13 @@ import {
 import {
   createShelfAction,
   deleteShelfAction,
+  getLibraryShelvesAction,
   moveLibraryItemAction,
   removeLibraryItemAction,
   updateLibraryItemAction,
 } from '@/lib/user-library-actions';
 import { cn } from '@/utils/cn';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 type ReadingStatus = 'SAVED' | 'READING' | 'COMPLETED';
 
@@ -66,8 +60,8 @@ const STATUS_LABEL: Record<ReadingStatus, string> = {
 };
 
 const TABS = [
-  { id: 'all', label: 'جميع الكتب', icon: LuLibrary },
-  { id: 'reading', label: 'أقرأ حاليا', icon: LuClock3 },
+  { id: 'all', label: 'كل المحفوظات', icon: LuLibrary },
+  { id: 'reading', label: 'قيد القراءة', icon: LuClock3 },
   { id: 'shelves', label: 'الرفوف', icon: LuFolderOpen },
 ] as const;
 
@@ -80,13 +74,19 @@ export default function UserLibrary({
   initialItems: LibraryItem[];
   initialShelves: LibraryShelf[];
 }) {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('all');
   const [activeShelfId, setActiveShelfId] = useState<string | null>(null);
+  const [shelves, setShelves] = useState(initialShelves);
+  const [shelvesSource, setShelvesSource] = useState(initialShelves);
   const [searchQuery, setSearchQuery] = useState('');
   const [newShelfName, setNewShelfName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  if (shelvesSource !== initialShelves) {
+    setShelvesSource(initialShelves);
+    setShelves(initialShelves);
+  }
 
   const runAction = (operation: () => Promise<ActionResult>) => {
     setError(null);
@@ -97,7 +97,6 @@ export default function UserLibrary({
           setError(result.error ?? 'تعذر تنفيذ العملية. حاول مرة أخرى.');
           return;
         }
-        router.refresh();
       } catch {
         setError('تعذر الاتصال بالخادم. حاول مرة أخرى.');
       }
@@ -115,12 +114,13 @@ export default function UserLibrary({
 
   const selectTab = (tab: (typeof TABS)[number]['id']) => {
     setActiveTab(tab);
-    if (tab !== 'all') setActiveShelfId(null);
+    setActiveShelfId(null);
   };
 
   const openShelf = (shelfId: string) => {
     setActiveShelfId(shelfId);
     setActiveTab('all');
+    setSearchQuery('');
   };
 
   const createShelf = (event: FormEvent<HTMLFormElement>) => {
@@ -128,133 +128,126 @@ export default function UserLibrary({
     const name = newShelfName;
     runAction(async () => {
       const result = await createShelfAction(name);
-      if (result.ok) setNewShelfName('');
+      if (result.ok) {
+        const shelf = result.shelf;
+        setShelves((previous) => previous.some((item) => item.id === shelf.id) ? previous : [...previous, shelf]);
+        setNewShelfName('');
+      }
       return result;
     });
   };
 
-  const activeShelf = initialShelves.find((shelf) => shelf.id === activeShelfId);
+  const activeShelf = shelves.find((shelf) => shelf.id === activeShelfId);
+  const readingCount = initialItems.filter((item) => item.status === 'READING').length;
 
   return (
     <div dir="rtl" className="min-h-screen bg-[#F8FAFC]">
-      <header className="relative overflow-hidden bg-gradient-to-br from-[#022A4E] to-[#034582] px-4 pb-10 pt-28 shadow-lg sm:px-6 sm:pb-12 sm:pt-32">
-        <div className="pointer-events-none absolute -end-20 -top-20 size-72 rounded-full bg-[#C29C41]/10 blur-[80px]" />
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-[#E8C96A]">مكتبتي الشخصية</p>
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-4xl">مرحباً بعودتك</h1>
-            <p className="mt-2 text-sm text-[#B9DDF5] sm:text-base">
-              {initialItems.length ? `${initialItems.length} عناصر محفوظة، مرتبة كما تحب.` : 'احفظ إصداراتك المفضلة لتظهر هنا على جميع أجهزتك.'}
-            </p>
+      <header className="relative overflow-hidden bg-[#0A2540] px-4 pb-12 pt-32 sm:px-6 sm:pb-14 sm:pt-36">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_30%,rgba(194,156,65,0.13),transparent_28%),radial-gradient(circle_at_88%_80%,rgba(3,105,161,0.18),transparent_36%)]" aria-hidden="true" />
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="grid size-12 shrink-0 place-items-center rounded-xl border border-[#C29C41]/45 bg-white/10 text-[#E8C96A] sm:size-14" aria-hidden="true"><LuLibrary className="size-6 sm:size-7" /></span>
+            <div>
+              <p className="text-xs font-bold text-[#E8C96A]">مكتبتك الشخصية</p>
+              <h1 className="mt-1 text-3xl font-bold leading-tight text-white sm:text-4xl">مكتبتي</h1>
+            </div>
           </div>
-
-          <form action="/search" method="get" className="relative block w-full md:w-80">
-            <label htmlFor="library-search" className="sr-only">ابحث في مكتبتك</label>
-            <input
-              id="library-search"
-              name="q"
-              type="search"
-              minLength={2}
-              maxLength={120}
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="ابحث في مكتبتك..."
-              className="h-12 w-full rounded-full border border-white/20 bg-white/95 pe-4 ps-11 text-sm text-[#0A2540] shadow-sm outline-none transition focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/40"
-            />
-            <button type="submit" aria-label="البحث في فهرس المكتبة" className="absolute start-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-[#0B4E84] transition hover:bg-[#F0F7FC] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">
-              <LuSearch className="size-4" />
-            </button>
-          </form>
+          <Link href="/search" className="inline-flex min-h-12 w-fit cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#C29C41] bg-[#C29C41] px-5 text-sm font-bold text-[#0A2540] shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition-colors hover:bg-[#E8C96A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8C96A]"><LuPlus className="size-4" aria-hidden="true" />استكشف الإصدارات</Link>
         </div>
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-[#C29C41]" aria-hidden="true" />
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <main className="mx-auto max-w-6xl px-4 py-7 sm:px-6 sm:py-10">
         {error && (
           <div role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
             {error}
           </div>
         )}
 
-        <nav className="mb-7 overflow-x-auto border-b border-[#0A2540]/10" aria-label="أقسام مكتبتي">
-          <div className="flex min-w-max gap-7">
-            {TABS.map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id && !activeShelfId;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => selectTab(tab.id)}
-                  className={cn(
-                    'relative flex min-h-11 items-center gap-2 pb-3 text-sm font-bold transition',
-                    active ? 'text-[#0B4E84]' : 'text-[#64748B] hover:text-[#0A2540]',
-                  )}
-                >
-                  <Icon className={cn('size-4.5', active && 'text-[#C29C41]')} />
-                  {tab.label}
-                  {active && <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-[#C29C41]" />}
-                </button>
-              );
-            })}
-          </div>
+        <nav className="mb-6 flex flex-wrap gap-2" aria-label="أقسام مكتبتي">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            const count = tab.id === 'all' ? initialItems.length : tab.id === 'reading' ? readingCount : shelves.length;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => selectTab(tab.id)}
+                aria-pressed={active}
+                className={cn(
+                  'inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]',
+                  active ? 'border-[#0A2540] bg-[#0A2540] text-white' : 'border-[#D9E3EE] bg-white text-[#334155] hover:border-[#C29C41]',
+                )}
+              >
+                <Icon className="size-4" aria-hidden="true" />
+                {tab.label}
+                <span className={cn('text-xs tabular-nums', active ? 'text-[#E8C96A]' : 'text-[#64748B]')}>{count.toLocaleString('ar')}</span>
+              </button>
+            );
+          })}
         </nav>
 
         {activeShelf && (
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#C29C41]/25 bg-[#FFF8E8] px-4 py-3">
-            <span className="flex items-center gap-2 font-bold text-[#0A2540]"><LuFolderOpen className="text-[#C29C41]" /> {activeShelf.name}</span>
-            <button type="button" onClick={() => setActiveShelfId(null)} className="text-sm font-bold text-[#0369A1] hover:text-[#8A6A1D]">عرض جميع الكتب</button>
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#D9E3EE] bg-white px-4 py-3">
+            <span className="flex items-center gap-2 font-semibold text-[#0A2540]"><LuFolderOpen className="text-[#9A7421]" aria-hidden="true" />رف: {activeShelf.name}</span>
+            <button type="button" onClick={() => setActiveShelfId(null)} className="min-h-9 cursor-pointer text-sm font-semibold text-[#0369A1] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">عرض كل المحفوظات</button>
           </div>
         )}
 
         {activeTab === 'shelves' ? (
           <section aria-label="الرفوف">
-            <form onSubmit={createShelf} className="mb-7 flex flex-col gap-3 rounded-2xl border border-[#0369A1]/10 bg-white p-4 shadow-sm sm:flex-row">
-              <label className="flex-1">
-                <span className="sr-only">اسم الرف الجديد</span>
+            <div className="mb-5"><h2 className="text-lg font-bold text-[#0A2540]">رفوفك</h2><p className="mt-1 text-sm text-[#64748B]">اجمع الإصدارات التي تريد الرجوع إليها في رف واحد.</p></div>
+            <form onSubmit={createShelf} className="mb-6 grid gap-3 rounded-xl border border-[#D9E3EE] bg-white p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <label className="min-w-0">
+                <span className="mb-2 block text-sm font-semibold text-[#0A2540]">اسم الرف الجديد</span>
                 <input
                   value={newShelfName}
                   onChange={(event) => setNewShelfName(event.target.value)}
                   maxLength={60}
-                  placeholder="مثال: أبحاث الطاقة المتجددة"
-                  className="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20"
+                  placeholder="مثال: الطاقة المتجددة"
+                  className="h-11 w-full rounded-lg border border-[#D9E3EE] px-4 text-sm text-[#0A2540] outline-none focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20"
                 />
               </label>
-              <button disabled={isPending} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#0B4E84] px-5 text-sm font-bold text-white transition hover:bg-[#083C67] disabled:opacity-60">
+              <button type="submit" disabled={isPending || !newShelfName.trim()} className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#0A2540] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#123d61] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto">
                 <LuPlus /> إنشاء رف
               </button>
             </form>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {initialShelves.map((shelf) => (
-                <article key={shelf.id} className="group rounded-2xl border border-[#0369A1]/10 bg-white p-5 shadow-sm transition hover:border-[#C29C41]/40 hover:shadow-md">
-                  <button type="button" onClick={() => openShelf(shelf.id)} className="w-full text-start">
-                    <span className="mb-4 flex size-11 items-center justify-center rounded-xl bg-[#F0F7FC] text-[#0369A1]"><LuFolderOpen className="size-5" /></span>
-                    <h2 className="font-bold text-[#0A2540] group-hover:text-[#0369A1]">{shelf.name}</h2>
-                    <p className="mt-1 text-sm text-[#64748B]">{shelf.itemCount} عناصر محفوظة</p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {shelves.map((shelf) => (
+                <article key={shelf.id} className="rounded-xl border border-[#D9E3EE] bg-white p-5">
+                  <button type="button" onClick={() => openShelf(shelf.id)} className="flex w-full cursor-pointer items-center gap-3 text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">
+                    <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-[#FFF8E8] text-[#9A7421]"><LuFolderOpen className="size-5" aria-hidden="true" /></span>
+                    <span className="min-w-0"><span className="block truncate font-bold text-[#0A2540]">{shelf.name}</span><span className="mt-1 block text-xs text-[#64748B]">{shelf.itemCount.toLocaleString('ar')} {shelf.itemCount === 1 ? 'إصدار' : 'إصدارات'}</span></span>
                   </button>
-                  <button
-                    type="button"
-                    disabled={isPending}
-                    onClick={() => {
-                      if (window.confirm(`حذف رف «${shelf.name}»؟ ستبقى الكتب محفوظة في مكتبتك.`)) {
-                        runAction(() => deleteShelfAction(shelf.id));
-                      }
-                    }}
-                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 disabled:opacity-50"
-                  >
-                    <LuTrash2 /> حذف الرف
-                  </button>
+                  <div className="mt-4 flex items-center justify-between border-t border-[#E7ECF2] pt-3">
+                    <button type="button" onClick={() => openShelf(shelf.id)} className="min-h-9 cursor-pointer text-sm font-semibold text-[#0369A1] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">عرض الإصدارات</button>
+                    <button type="button" disabled={isPending} onClick={() => { if (window.confirm(`حذف رف «${shelf.name}»؟ ستبقى الإصدارات محفوظة في مكتبتك.`)) runAction(async () => { const result = await deleteShelfAction(shelf.id); if (result.ok) setShelves((previous) => previous.filter((item) => item.id !== shelf.id)); return result; }); }} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 text-xs font-semibold text-red-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 disabled:opacity-50"><LuTrash2 className="size-4" aria-hidden="true" />حذف</button>
+                  </div>
                 </article>
               ))}
-              {!initialShelves.length && <EmptyState title="لا توجد رفوف بعد" description="أنشئ رفك الأول لتنظيم الكتب حسب الموضوع أو المشروع." />}
+              {!shelves.length && <EmptyState title="لا توجد رفوف بعد" description="أنشئ رفك الأول لتنظيم الإصدارات حسب الموضوع أو المشروع." />}
             </div>
           </section>
         ) : (
           <section aria-busy={isPending}>
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-bold text-[#0A2540]">{activeShelf ? 'إصدارات الرف' : activeTab === 'reading' ? 'قيد القراءة' : 'إصداراتك المحفوظة'}</h2>
+                <p className="mt-1 text-sm text-[#64748B]">{filteredItems.length.toLocaleString('ar')} {filteredItems.length === 1 ? 'إصدار' : 'إصدارات'}</p>
+              </div>
+              <label className="relative w-full sm:w-72">
+                <span className="sr-only">ابحث في مكتبتك</span>
+                <LuSearch className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-[#64748B]" aria-hidden="true" />
+                <input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="ابحث في المحفوظات" className="min-h-11 w-full rounded-lg border border-[#D9E3EE] bg-white pe-3 ps-10 text-sm text-[#0A2540] outline-none placeholder:text-[#64748B] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/20" />
+              </label>
+            </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
               {filteredItems.map((book) => {
-                const siblingItems = filteredItems.filter((item) => item.shelfId === book.shelfId);
+                const siblingItems = initialItems.filter((item) => item.shelfId === book.shelfId);
                 const siblingIndex = siblingItems.findIndex((item) => item.id === book.id);
+                const shelfName = shelves.find((shelf) => shelf.id === book.shelfId)?.name;
 
                 return (
                   <article
@@ -265,63 +258,22 @@ export default function UserLibrary({
                     )}
                   >
                     <div className="relative">
-                      <Link
-                        href={book.isAvailable ? `/book/${book.slug}` : '#'}
-                        aria-disabled={!book.isAvailable}
-                        className="relative block aspect-[4/5] overflow-hidden rounded-xl bg-[#EAF2F8] ring-1 ring-black/5"
-                      >
+                      <Link href={book.isAvailable ? `/book/${book.slug}` : '#'} aria-disabled={!book.isAvailable} className="relative block aspect-[4/5] overflow-hidden rounded-xl bg-[#EAF2F8] ring-1 ring-black/5">
                         {book.cover ? (
-                          <Image
-                            src={book.cover}
-                            alt={book.title}
-                            fill
-                            sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 20vw"
-                            className="object-cover transition duration-500 group-hover:scale-[1.03] motion-reduce:transform-none"
-                          />
+                          <Image src={book.cover} alt={book.title} fill sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 20vw" className="object-cover transition duration-500 group-hover:scale-[1.03] motion-reduce:transform-none" />
                         ) : (
-                          <span className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center text-[#0B4E84]">
-                            <LuBookOpen className="size-8 text-[#C29C41]" />
-                            <span className="line-clamp-4 text-xs font-bold leading-5">{book.title}</span>
-                          </span>
+                          <span className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center text-[#0B4E84]"><LuBookOpen className="size-8 text-[#C29C41]" /><span className="line-clamp-4 text-xs font-bold leading-5">{book.title}</span></span>
                         )}
-                        <span className="absolute bottom-2 start-2 rounded-full border border-white/15 bg-[#0A2540]/88 px-2.5 py-1 text-[0.62rem] font-bold text-white shadow-sm backdrop-blur-md">
-                          {STATUS_LABEL[book.status]}
-                        </span>
-                        {!book.isAvailable && (
-                          <span className="absolute inset-x-2 top-1/2 -translate-y-1/2 rounded-lg bg-red-950/88 px-2 py-1.5 text-center text-[0.68rem] font-bold text-white">
-                            غير متاح حاليا
-                          </span>
-                        )}
+                        <span className="absolute bottom-2 start-2 rounded-full border border-white/15 bg-[#0A2540]/88 px-2.5 py-1 text-[0.62rem] font-bold text-white shadow-sm backdrop-blur-md">{STATUS_LABEL[book.status]}</span>
+                        {!book.isAvailable && <span className="absolute inset-x-2 top-1/2 -translate-y-1/2 rounded-lg bg-red-950/88 px-2 py-1.5 text-center text-[0.68rem] font-bold text-white">غير متاح حاليا</span>}
                       </Link>
-
-                      <BookOptions
-                        key={`${book.id}-${book.status}-${book.progress}-${book.shelfId ?? 'none'}`}
-                        book={book}
-                        shelves={initialShelves}
-                        isPending={isPending}
-                        canMoveUp={siblingIndex > 0}
-                        canMoveDown={siblingIndex >= 0 && siblingIndex < siblingItems.length - 1}
-                        runAction={runAction}
-                      />
+                      <BookOptions key={`${book.id}-${book.status}-${book.shelfId ?? 'none'}`} book={book} shelves={shelves} onShelvesLoaded={setShelves} isPending={isPending} canMoveUp={siblingIndex > 0} canMoveDown={siblingIndex >= 0 && siblingIndex < siblingItems.length - 1} runAction={runAction} />
                     </div>
 
                     <div className="flex min-w-0 flex-1 flex-col px-1 pb-1 pt-3">
-                      <Link
-                        href={book.isAvailable ? `/book/${book.slug}` : '#'}
-                        className="line-clamp-2 min-h-10 text-xs font-bold leading-5 text-[#0A2540] transition hover:text-[#0369A1] sm:text-sm"
-                      >
-                        {book.title}
-                      </Link>
+                      <Link href={book.isAvailable ? `/book/${book.slug}` : '#'} className="line-clamp-2 min-h-10 text-xs font-bold leading-5 text-[#0A2540] transition hover:text-[#0369A1] sm:text-sm">{book.title}</Link>
                       <p className="mt-1 truncate text-[0.68rem] text-[#64748B] sm:text-xs">{book.author}</p>
-                      <div className="mt-3 flex items-center gap-2" aria-label={`نسبة التقدم ${book.progress}%`}>
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAF2F8]">
-                          <div
-                            className={cn('h-full rounded-full transition-[width] duration-500', book.progress === 100 ? 'bg-emerald-500' : 'bg-[#C29C41]')}
-                            style={{ width: `${book.progress}%` }}
-                          />
-                        </div>
-                        <span className="w-7 text-end text-[0.62rem] font-bold tabular-nums text-[#8B681C]">{book.progress}%</span>
-                      </div>
+                      {shelfName && <p className="mt-2 flex min-w-0 items-center gap-1 text-[0.68rem] font-semibold text-[#805E1B]"><LuFolderOpen className="size-3.5 shrink-0" aria-hidden="true" /><span className="truncate">{shelfName}</span></p>}
                     </div>
                   </article>
                 );
@@ -330,9 +282,9 @@ export default function UserLibrary({
 
             {!filteredItems.length && (
               <EmptyState
-                title={searchQuery ? 'لم نعثر على نتائج' : activeTab === 'reading' ? 'لا توجد كتب قيد القراءة' : 'مكتبتك فارغة'}
-                description={searchQuery ? 'جرّب عبارة بحث مختلفة.' : 'افتح أي إصدار واضغط «حفظ» لإضافته إلى مكتبتك.'}
-                showBrowse={!searchQuery && !activeShelfId}
+                title={searchQuery ? 'لا توجد نتائج في مكتبتك' : activeShelf ? 'هذا الرف فارغ' : activeTab === 'reading' ? 'لا توجد إصدارات قيد القراءة' : 'مكتبتك فارغة'}
+                description={searchQuery ? 'جرّب عنواناً أو اسم مؤلف آخر، أو امسح البحث لعرض المحفوظات.' : activeShelf ? 'انقل إصداراً إلى هذا الرف من قائمة الخيارات على غلاف الإصدار.' : activeTab === 'reading' ? 'غيّر حالة أحد إصداراتك إلى «أقرأ حاليا» من قائمة الخيارات على غلافه.' : 'استكشف الإصدارات واحفظ ما تريد الرجوع إليه.'}
+                showBrowse={!searchQuery && !activeShelfId && activeTab === 'all'}
               />
             )}
           </section>
@@ -345,6 +297,7 @@ export default function UserLibrary({
 function BookOptions({
   book,
   shelves,
+  onShelvesLoaded,
   isPending,
   canMoveUp,
   canMoveDown,
@@ -352,100 +305,103 @@ function BookOptions({
 }: {
   book: LibraryItem;
   shelves: LibraryShelf[];
+  onShelvesLoaded: (shelves: LibraryShelf[]) => void;
   isPending: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
   runAction: (operation: () => Promise<ActionResult>) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [progress, setProgress] = useState(book.progress);
-  const committedProgress = useRef(book.progress);
+  const [activePicker, setActivePicker] = useState<'status' | 'shelf' | null>(null);
+  const [selectedShelfId, setSelectedShelfId] = useState(book.shelfId ?? '__none__');
+  const [shelvesError, setShelvesError] = useState<string | null>(null);
+  const [shelvesPending, startShelvesTransition] = useTransition();
 
-  const commitProgress = () => {
-    if (progress === committedProgress.current) return;
-    committedProgress.current = progress;
-    runAction(() => updateLibraryItemAction(book.id, { progress }));
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setActivePicker(null);
+      return;
+    }
+    setSelectedShelfId(book.shelfId ?? '__none__');
+    setShelvesError(null);
+    startShelvesTransition(async () => {
+      try {
+        onShelvesLoaded(await getLibraryShelvesAction());
+      } catch {
+        setShelvesError('تعذر تحديث الرفوف. افتح القائمة مرة أخرى.');
+      }
+    });
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <button
           type="button"
           disabled={isPending}
           aria-label={`خيارات ${book.title}`}
-          className="absolute end-2 top-2 z-10 flex size-9 items-center justify-center rounded-full border border-white/25 bg-[#0A2540]/78 text-white shadow-[0_6px_18px_rgba(10,37,64,0.28)] backdrop-blur-md transition hover:border-[#C29C41] hover:bg-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] disabled:opacity-50"
+          className="absolute end-2 top-2 z-10 flex size-9 cursor-pointer items-center justify-center rounded-full border border-white/25 bg-[#0A2540]/78 text-white shadow-[0_6px_18px_rgba(10,37,64,0.28)] backdrop-blur-md transition hover:border-[#C29C41] hover:bg-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] disabled:opacity-50"
         >
-          <LuEllipsisVertical className="size-5" />
+          <LuEllipsisVertical className="size-5" aria-hidden="true" />
         </button>
       </PopoverTrigger>
 
       <PopoverContent dir="rtl" className="w-[min(19rem,calc(100vw-1.5rem))] p-0">
         <div className="relative border-b border-[#0369A1]/10 bg-[#F8FAFC] px-4 py-3.5">
           <span className="absolute inset-y-0 start-0 w-1 bg-[#C29C41]" aria-hidden="true" />
-          <p className="text-xs font-bold text-[#8B681C]">خيارات الكتاب</p>
+          <p className="text-xs font-bold text-[#8B681C]">إدارة الإصدار</p>
           <p className="mt-1 line-clamp-1 text-sm font-bold text-[#0A2540]">{book.title}</p>
         </div>
 
         <div className="space-y-4 p-4">
-          <label className="block space-y-1.5">
+          <div className="space-y-1.5">
             <span className="text-[0.68rem] font-bold text-[#64748B]">حالة القراءة</span>
-            <Select
-              value={book.status}
-              disabled={isPending}
-              onValueChange={(status) => runAction(() => updateLibraryItemAction(book.id, { status }))}
-            >
-              <SelectTrigger className="h-10 rounded-xl px-3 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(STATUS_LABEL).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>{label}</SelectItem>
+            <button type="button" disabled={isPending} aria-expanded={activePicker === 'status'} aria-controls={`library-status-options-${book.id}`} onClick={() => setActivePicker(activePicker === 'status' ? null : 'status')} className="flex h-10 w-full cursor-pointer items-center justify-between rounded-xl border border-[#D9E3EE] bg-white px-3 text-xs font-bold text-[#0A2540] hover:border-[#C29C41] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] disabled:opacity-50">
+              {STATUS_LABEL[book.status]}<LuChevronDown className="size-4 text-[#64748B]" aria-hidden="true" />
+            </button>
+            {activePicker === 'status' && (
+              <div id={`library-status-options-${book.id}`} className="space-y-1 rounded-xl border border-[#D9E3EE] bg-[#F8FAFC] p-1">
+                {Object.entries(STATUS_LABEL).map(([status, label]) => (
+                  <button key={status} type="button" disabled={isPending} onClick={() => { setActivePicker(null); if (status !== book.status) runAction(() => updateLibraryItemAction(book.id, { status })); }} className="flex min-h-9 w-full cursor-pointer items-center justify-between rounded-lg px-3 text-start text-xs font-semibold text-[#0A2540] hover:bg-white focus-visible:outline-2 focus-visible:outline-[#C29C41] disabled:opacity-50">
+                    {label}{status === book.status && <LuCheck className="size-4 text-[#9A7421]" aria-hidden="true" />}
+                  </button>
                 ))}
-              </SelectContent>
-            </Select>
-          </label>
+              </div>
+            )}
+          </div>
 
-          <label className="block space-y-1.5">
+          <div className="space-y-1.5">
             <span className="text-[0.68rem] font-bold text-[#64748B]">الرف</span>
-            <Select
-              value={book.shelfId ?? '__none__'}
-              disabled={isPending}
-              onValueChange={(shelfId) => runAction(() => updateLibraryItemAction(book.id, { shelfId: shelfId === '__none__' ? null : shelfId }))}
-            >
-              <SelectTrigger className="h-10 rounded-xl px-3 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">بدون رف</SelectItem>
-                {shelves.map((shelf) => (
-                  <SelectItem key={shelf.id} value={shelf.id}>{shelf.name}</SelectItem>
+            <button type="button" disabled={isPending || shelvesPending} aria-expanded={activePicker === 'shelf'} aria-controls={`library-shelf-options-${book.id}`} onClick={() => setActivePicker(activePicker === 'shelf' ? null : 'shelf')} className="flex h-10 w-full cursor-pointer items-center justify-between rounded-xl border border-[#D9E3EE] bg-white px-3 text-xs font-bold text-[#0A2540] hover:border-[#C29C41] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] disabled:opacity-50">
+              <span className="truncate">{shelves.find((shelf) => shelf.id === selectedShelfId)?.name ?? 'بدون رف'}</span><LuChevronDown className="size-4 shrink-0 text-[#64748B]" aria-hidden="true" />
+            </button>
+            {activePicker === 'shelf' && (
+              <div id={`library-shelf-options-${book.id}`} className="max-h-48 space-y-1 overflow-y-auto rounded-xl border border-[#D9E3EE] bg-[#F8FAFC] p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {[{ id: '__none__', name: 'بدون رف' }, ...shelves].map((shelf) => (
+                  <button key={shelf.id} type="button" disabled={isPending} onClick={() => {
+                    setActivePicker(null);
+                    if (shelf.id === selectedShelfId) return;
+                    setSelectedShelfId(shelf.id);
+                    runAction(async () => {
+                      try {
+                        const result = await updateLibraryItemAction(book.id, { shelfId: shelf.id === '__none__' ? null : shelf.id });
+                        if (!result.ok) setSelectedShelfId(book.shelfId ?? '__none__');
+                        return result;
+                      } catch (error) {
+                        setSelectedShelfId(book.shelfId ?? '__none__');
+                        throw error;
+                      }
+                    });
+                  }} className="flex min-h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-3 text-start text-xs font-semibold text-[#0A2540] hover:bg-white focus-visible:outline-2 focus-visible:outline-[#C29C41] disabled:opacity-50">
+                    <span className="truncate">{shelf.name}</span>{shelf.id === selectedShelfId && <LuCheck className="size-4 shrink-0 text-[#9A7421]" aria-hidden="true" />}
+                  </button>
                 ))}
-              </SelectContent>
-            </Select>
-          </label>
-
-          <label className="block space-y-2">
-            <span className="flex items-center justify-between text-[0.68rem] font-bold text-[#64748B]">
-              نسبة التقدم
-              <span className="rounded-full bg-[#FFF8E8] px-2 py-0.5 tabular-nums text-[#8B681C]">{progress}%</span>
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              step={5}
-              value={progress}
-              disabled={isPending}
-              onChange={(event) => setProgress(Number(event.currentTarget.value))}
-              onPointerUp={commitProgress}
-              onKeyUp={(event) => {
-                if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) commitProgress();
-              }}
-              onBlur={commitProgress}
-              className="h-2 w-full cursor-pointer accent-[#C29C41] disabled:cursor-not-allowed disabled:opacity-50"
-            />
-          </label>
+              </div>
+            )}
+            {shelvesPending && <span className="block text-[0.68rem] text-[#64748B]">جار تحديث الرفوف...</span>}
+            {shelvesError && <span role="alert" className="block text-[0.68rem] text-red-700">{shelvesError}</span>}
+          </div>
 
           <div className="grid grid-cols-2 gap-2 border-t border-[#0A2540]/[0.07] pt-4" aria-label="ترتيب الكتاب">
             <button
@@ -487,11 +443,11 @@ function BookOptions({
 
 function EmptyState({ title, description, showBrowse = false }: { title: string; description: string; showBrowse?: boolean }) {
   return (
-    <div className="col-span-full flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-[#0369A1]/20 bg-white px-5 py-12 text-center">
-      <span className="mb-4 flex size-14 items-center justify-center rounded-full bg-[#FFF8E8] text-[#C29C41]"><LuCheck className="size-6" /></span>
+    <div className="col-span-full flex min-h-64 flex-col items-center justify-center rounded-xl border border-dashed border-[#CBD5E1] bg-white px-5 py-12 text-center">
+      <span className="mb-4 flex size-14 items-center justify-center rounded-full bg-[#FFF8E8] text-[#9A7421]"><LuLibrary className="size-6" aria-hidden="true" /></span>
       <h2 className="text-lg font-bold text-[#0A2540]">{title}</h2>
       <p className="mt-2 max-w-md text-sm leading-6 text-[#64748B]">{description}</p>
-      {showBrowse && <Link href="/" className="mt-5 inline-flex h-10 items-center rounded-full bg-[#0B4E84] px-5 text-sm font-bold text-white hover:bg-[#083C67]">تصفح الإصدارات</Link>}
+      {showBrowse && <Link href="/search" className="mt-5 inline-flex min-h-10 cursor-pointer items-center rounded-lg bg-[#0A2540] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#123d61] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41]">استكشف الإصدارات</Link>}
     </div>
   );
 }

@@ -33,7 +33,7 @@ export default function IndustrialInfoPage({
         description:
           'مدخل موحد للإحصاءات الصناعية، التقارير، المؤشرات، النشرات، الإنفوجرافيك، والمؤتمرات والإصدارات المرتبطة بالمعلومات الصناعية.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

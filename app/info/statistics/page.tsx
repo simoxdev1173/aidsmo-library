@@ -29,7 +29,7 @@ export default function IndustrialStatisticsPage({
         description:
           'مساحة للإحصاءات والتقارير والمؤشرات التي تساعد على متابعة واقع الصناعة العربية وتحليل اتجاهاتها.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

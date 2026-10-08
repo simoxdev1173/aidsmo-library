@@ -18,7 +18,7 @@ export default function IndustrialConferencesPage({
         description:
           'صفحة للفعاليات والمؤتمرات والندوات المرتبطة بالمعلومات الصناعية والإحصاءات وقضايا التنمية الصناعية.',
         accent: '#C29C41',
-        heroImage: '/industry-informations-bg.png',
+        heroImage: '/industry-informations-bg.webp',
       }}
     />
   );

@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiOutlineArrowRight, HiOutlineHome } from 'react-icons/hi2';
+import { HiOutlineHome } from 'react-icons/hi2';
 
 export default function NotFoundLanding({ archive = false }: { archive?: boolean }) {
   return (
     <main data-error-page dir="rtl" className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-[#071D2F] px-4 py-24 text-[#0A2540] sm:px-6">
       <Image
-        src="/standardization-bg.png"
+        src="/standardization-bg.webp"
         alt=""
         fill
         priority
@@ -33,7 +33,6 @@ export default function NotFoundLanding({ archive = false }: { archive?: boolean
         >
           <HiOutlineHome className="size-5" aria-hidden="true" />
           العودة إلى الصفحة الرئيسية
-          <HiOutlineArrowRight className="size-4" aria-hidden="true" />
         </Link>
       </div>
     </main>

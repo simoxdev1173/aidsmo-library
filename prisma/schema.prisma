@@ -278,13 +278,17 @@ model DocumentComment {
   id        String       @id @default(cuid())
   entryId   String
   userId    String
+  parentId  String?
   body      String       @db.Text
   entry     LibraryEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    DocumentComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   DocumentComment[] @relation("CommentReplies")
   createdAt DateTime     @default(now())
 
   @@index([entryId, createdAt])
   @@index([userId, createdAt])
+  @@index([parentId, createdAt, id])
 }
 
 model DocumentRating {
@@ -311,4 +315,17 @@ model DocumentView {
 
   @@unique([entryId, visitorId, viewedOn])
   @@index([entryId])
+}
+
+model WebsiteFeedback {
+  id          String   @id @default(cuid())
+  experience  Int
+  performance Int
+  navigation  Int
+  readability Int
+  comment     String?  @db.Text
+  pagePath    String?  @db.VarChar(400)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
 }

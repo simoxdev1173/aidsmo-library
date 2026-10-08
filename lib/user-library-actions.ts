@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { getUserSession, requireUser } from '@/lib/user-auth';
+import { publicEntryWhere } from '@/lib/public-entry-where';
 
 const VALID_STATUSES = ['SAVED', 'READING', 'COMPLETED'] as const;
 type ReadingStatusValue = (typeof VALID_STATUSES)[number];
@@ -14,6 +15,10 @@ type ActionResult = {
   requiresAuth?: boolean;
 };
 
+type CreateShelfResult =
+  | { ok: true; shelf: { id: string; name: string; position: number; itemCount: number } }
+  | { ok: false; error: string };
+
 function refreshLibrary(slug?: string) {
   revalidatePath('/library');
   if (slug) revalidatePath(`/book/${slug}`);
@@ -24,7 +29,7 @@ export async function toggleSavedBookAction(entryId: string): Promise<ActionResu
   if (!user) return { ok: false, requiresAuth: true };
 
   const entry = await prisma.libraryEntry.findFirst({
-    where: { id: entryId, status: 'PUBLISHED' },
+    where: { id: entryId, AND: [publicEntryWhere] },
     select: { id: true, slug: true },
   });
   if (!entry) return { ok: false, error: 'هذا الإصدار غير متاح حاليا.' };
@@ -157,7 +162,7 @@ export async function moveLibraryItemAction(
   return { ok: true };
 }
 
-export async function createShelfAction(nameValue: string): Promise<ActionResult> {
+export async function createShelfAction(nameValue: string): Promise<CreateShelfResult> {
   const user = await requireUser();
   const name = nameValue.trim().replace(/\s+/g, ' ').slice(0, 60);
   if (name.length < 2) return { ok: false, error: 'اكتب اسما للرف من حرفين على الأقل.' };
@@ -173,11 +178,26 @@ export async function createShelfAction(nameValue: string): Promise<ActionResult
     orderBy: { position: 'desc' },
     select: { position: true },
   });
-  await prisma.userShelf.create({
+  const shelf = await prisma.userShelf.create({
     data: { userId: user.id, name, position: (lastShelf?.position ?? -1) + 1 },
   });
   refreshLibrary();
-  return { ok: true };
+  return { ok: true, shelf: { id: shelf.id, name: shelf.name, position: shelf.position, itemCount: 0 } };
+}
+
+export async function getLibraryShelvesAction() {
+  const user = await requireUser('/library');
+  const shelves = await prisma.userShelf.findMany({
+    where: { userId: user.id },
+    orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
+    select: { id: true, name: true, position: true, _count: { select: { items: true } } },
+  });
+  return shelves.map((shelf) => ({
+    id: shelf.id,
+    name: shelf.name,
+    position: shelf.position,
+    itemCount: shelf._count.items,
+  }));
 }
 
 export async function deleteShelfAction(shelfId: string): Promise<ActionResult> {

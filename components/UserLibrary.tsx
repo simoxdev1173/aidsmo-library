@@ -170,7 +170,7 @@ export default function UserLibrary({
         )}
 
         <div className="flex flex-col gap-6 md:flex-row md:items-start lg:gap-8">
-          <aside aria-label="تصفح مكتبتي" className="border-b border-[#D9E3EE] pb-5 md:sticky md:top-24 md:w-56 md:shrink-0 md:border-b-0 md:border-e md:pb-0 md:pe-5 lg:w-72">
+          <aside aria-label="تصفح مكتبتي" className="border-b border-[#D9E3EE] pb-5 md:w-56 md:shrink-0 md:border-b-0 md:border-e md:pb-0 md:pe-5 lg:w-72">
             <label htmlFor="library-sidebar-search" className="sr-only">{activeTab === 'shelves' ? 'البحث في الرفوف' : 'البحث في المحفوظات'}</label>
             <div className="relative">
               <LuSearch className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-[#64748B]" aria-hidden="true" />

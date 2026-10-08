@@ -268,7 +268,7 @@ const DropdownSimple = ({ items }: { items: ChildItem[] }) => {
               </div>
             </div>
           ) : (
-            <Link href={item.href} className={dropdownLink}>
+            <Link href={item.href} target={item.href.startsWith('http') ? '_blank' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined} className={dropdownLink}>
               {pickLabel(item.label, item.labelEn, locale)}
             </Link>
           )}
@@ -521,7 +521,7 @@ const MobileAccordion = ({ item, onNavigate }: { item: MenuItem; onNavigate: () 
               );
             }
             return (
-              <Link key={child.href} href={child.href} onClick={onNavigate} className="flex min-h-11 items-center rounded-full px-4 py-2.5 text-sm font-medium text-[#475569] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
+              <Link key={child.href} href={child.href} target={child.href.startsWith('http') ? '_blank' : undefined} rel={child.href.startsWith('http') ? 'noopener noreferrer' : undefined} onClick={onNavigate} className="flex min-h-11 items-center rounded-full px-4 py-2.5 text-sm font-medium text-[#475569] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
                 {pickLabel(child.label, child.labelEn, locale)}
               </Link>
             );

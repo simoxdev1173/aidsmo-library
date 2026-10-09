@@ -47,18 +47,18 @@ const chapters = [
 
 export default function AboutPage() {
   return (
-    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#0A2540]">
+    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#082F50]">
       {/* ─── Hero ─── */}
-      <section className="relative flex min-h-[calc(100svh-11rem)] w-full overflow-hidden bg-[#0A2540] text-white sm:min-h-[calc(100svh-9rem)]">
+      <section className="relative flex min-h-[calc(100svh-11rem)] w-full overflow-hidden bg-[#082F50] text-white sm:min-h-[calc(100svh-9rem)]">
         <OptimizedHeroVideo />
 
         {/* Light, localized wash — just enough to seat the panel, video stays visible */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/72 via-[#0A2540]/8 to-transparent" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#082F50]/72 via-[#082F50]/8 to-transparent" aria-hidden />
         <div className="absolute inset-x-0 top-0 z-10 h-1.5 brass-gradient" aria-hidden />
 
         <div className="relative z-10 flex w-full items-center px-4 py-10 sm:items-end sm:px-6 sm:pb-10 sm:pt-12 lg:px-8 lg:pb-12">
           <div className="mx-auto w-full max-w-7xl">
-            <div className="max-w-2xl rounded-[22px] border border-white/15 bg-[#071D2F]/90 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:bg-[#071D2F]/55 sm:p-7 sm:backdrop-blur-xl">
+            <div className="max-w-2xl rounded-[22px] border border-white/15 bg-[#062B46]/90 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:bg-[#062B46]/55 sm:p-7 sm:backdrop-blur-xl">
               <h1 className="font-academic text-3xl font-bold leading-tight md:text-4xl">
                 من نحن
               </h1>
@@ -68,7 +68,7 @@ export default function AboutPage() {
               <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/catalog/industry"
-                  className="engraved brass-gradient inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#C29C41] px-6 text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+                  className="engraved brass-gradient inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#C29C41] px-6 text-sm font-bold text-[#082F50] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
                 >
                   استكشاف المكتبة
                   <HiOutlineArrowLeft className="h-4 w-4" />
@@ -116,7 +116,7 @@ export default function AboutPage() {
       </div>
 
       {/* Image */}
-      <div className="relative h-full overflow-hidden rounded-[22px] border border-[#C29C41]/30 bg-[#F0F7FC] shadow-[0_24px_64px_rgba(10,37,64,0.14)]">
+      <div className="relative h-full overflow-hidden rounded-[22px] border border-[#C29C41]/30 bg-[#EFF5F9] shadow-[0_24px_64px_rgba(8,47,80,0.14)]">
         <Image
           src="/hero0cover-4.webp"
           alt="مساحة بحث هادئة في المكتبة الرقمية الذكية"
@@ -125,7 +125,7 @@ export default function AboutPage() {
           className="h-72 w-full object-cover sm:h-full sm:min-h-[500px]"
           priority={false}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/28 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#082F50]/28 via-transparent to-transparent" />
       </div>
 
     </div>
@@ -133,7 +133,7 @@ export default function AboutPage() {
 </section>
 
       {/* ─── Pillars ─── */}
-      <section className="border-y border-[#0369A1]/10 bg-[#F0F7FC] py-12 md:py-24">
+      <section className="border-y border-[#0B5688]/10 bg-[#EFF5F9] py-12 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-12 max-w-3xl text-center">
             <h2 className="academic-heading text-3xl leading-tight md:text-4xl">
@@ -149,10 +149,10 @@ export default function AboutPage() {
               const Icon = pillar.Icon;
               return (
                 <article key={pillar.title} className="group academic-card rounded-[18px] p-6">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white text-[#C29C41] transition duration-300 group-hover:border-[#0369A1]/35 group-hover:text-[#0369A1]">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#C29C41]/35 bg-white text-[#C29C41] transition duration-300 group-hover:border-[#0B5688]/35 group-hover:text-[#0B5688]">
                     <Icon className="h-7 w-7" />
                   </div>
-                  <h3 className="text-xl font-bold text-[#003652]">{pillar.title}</h3>
+                  <h3 className="text-xl font-bold text-[#053D69]">{pillar.title}</h3>
                   <p className="mt-4 text-base leading-8 text-[#475569]">{pillar.description}</p>
                 </article>
               );
@@ -178,11 +178,11 @@ export default function AboutPage() {
               {chapters.map((chapter) => (
                 <article
                   key={chapter.number}
-                  className="grid gap-5 rounded-[18px] border border-[#0369A1]/14 bg-[#F8FAFC] p-5 md:grid-cols-[90px_1fr] md:p-6"
+                  className="grid gap-5 rounded-[18px] border border-[#0B5688]/14 bg-[#F8FAFC] p-5 md:grid-cols-[90px_1fr] md:p-6"
                 >
                   <div className="font-display text-4xl font-bold text-[#C29C41]">{chapter.number}</div>
                   <div>
-                    <h3 className="text-2xl font-bold text-[#003652]">{chapter.title}</h3>
+                    <h3 className="text-2xl font-bold text-[#053D69]">{chapter.title}</h3>
                     <p className="mt-3 font-academic text-lg leading-9 text-[#475569]">{chapter.text}</p>
                   </div>
                 </article>

@@ -15,11 +15,11 @@ export default async function TrendingPage() {
   const items = rows.find((row) => row.id === 'trending')?.items ?? [];
 
   return (
-    <main className="min-h-screen bg-white pt-32 pb-20 text-[#0A2540]">
+    <main className="min-h-screen bg-white pt-32 pb-20 text-[#082F50]">
       <section className="mx-auto max-w-[1320px] px-5 sm:px-8 lg:px-12" aria-labelledby="trending-heading">
         <div className="mb-10 flex flex-wrap items-center justify-between gap-5 border-b border-[#C29C41]/30 pb-7">
           <div className="flex items-center gap-4">
-            <span className="grid size-12 place-items-center rounded-xl bg-[#0A2540] text-[#F7E5A9]" aria-hidden="true">
+            <span className="grid size-12 place-items-center rounded-xl bg-[#082F50] text-[#F7E5A9]" aria-hidden="true">
               <FaBookOpen />
             </span>
             <h1 id="trending-heading" className="font-academic text-3xl font-bold">العناوين الرائجة</h1>

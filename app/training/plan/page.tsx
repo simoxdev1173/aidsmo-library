@@ -22,7 +22,7 @@ export default async function TrainingPlanIndexPage() {
   }));
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] text-[#0A2540]">
+    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] text-[#082F50]">
       <TrainingHero
         breadcrumb={[
           { label: 'التدريب والاستشارات', href: '/training/about' },
@@ -39,7 +39,7 @@ export default async function TrainingPlanIndexPage() {
             <Link
               key={year}
               href={href}
-              className="group relative overflow-hidden rounded-[18px] border border-[#C29C41]/25 bg-[#071D2F] p-7 text-white transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 hover:shadow-[0_26px_58px_rgba(10,37,64,0.24)]"
+              className="group relative overflow-hidden rounded-[18px] border border-[#C29C41]/25 bg-[#062B46] p-7 text-white transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 hover:shadow-[0_26px_58px_rgba(8,47,80,0.24)]"
             >
               <div
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(232,201,106,0.16),transparent_42%)]"

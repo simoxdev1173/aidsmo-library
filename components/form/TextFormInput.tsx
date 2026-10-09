@@ -36,7 +36,7 @@ const TextFormInput = ({
           id={name}
           name={name}
           className={cn(
-            'rounded-md border border-[#e2e8f0] bg-white px-4 py-2 text-[#334155] placeholder:text-[#94a3b8] focus:border-[#0369a1] focus:outline-none focus:ring-1 focus:ring-[#0369a1]',
+            'rounded-md border border-[#e2e8f0] bg-white px-4 py-2 text-[#334155] placeholder:text-[#94a3b8] focus:border-[#0B5688] focus:outline-none focus:ring-1 focus:ring-[#0B5688]',
             fullWidth && 'w-full',
             error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
             className

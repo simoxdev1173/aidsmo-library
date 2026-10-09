@@ -61,7 +61,7 @@ const SubscribeToMail = () => {
         className="pointer-events-none absolute inset-0 opacity-[0.14]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(10,37,64,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
+            'linear-gradient(rgba(8,47,80,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(194,156,65,0.2) 1px, transparent 1px)',
           backgroundSize: '56px 56px',
         }}
         aria-hidden
@@ -70,7 +70,7 @@ const SubscribeToMail = () => {
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="corner-frame grid gap-10 border border-[#C29C41]/35 bg-white/88 p-6 shadow-[0_22px_58px_rgba(10,37,64,0.1)] backdrop-blur-sm md:p-10 lg:grid-cols-2 lg:items-center">
+        <div className="corner-frame grid gap-10 border border-[#C29C41]/35 bg-white/88 p-6 shadow-[0_22px_58px_rgba(8,47,80,0.1)] backdrop-blur-sm md:p-10 lg:grid-cols-2 lg:items-center">
           <div className="order-2 lg:order-1">
             <h2 className="academic-heading mt-4 text-4xl leading-tight md:text-4xl">
               ابقَ على اتصال بآخر مستجدات المكتبة الرقمية
@@ -82,7 +82,7 @@ const SubscribeToMail = () => {
 
             <div className="mt-8 max-w-xl">
               {isSuccess ? (
-                <div className="border border-[#C29C41]/30 bg-[#FFF8E1] p-4 text-center text-[#003652]">
+                <div className="border border-[#C29C41]/30 bg-[#FFF8E1] p-4 text-center text-[#053D69]">
                   تم الاشتراك بنجاح. شكراً لك.
                 </div>
               ) : (
@@ -101,7 +101,7 @@ const SubscribeToMail = () => {
                           setEmail(e.target.value);
                           if (error) setError('');
                         }}
-                        className="h-14 w-full border border-[#C29C41]/25 bg-[#FFFCF4] px-4 text-right text-[#0A2540] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/30"
+                        className="h-14 w-full border border-[#C29C41]/25 bg-[#FFFCF4] px-4 text-right text-[#082F50] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C29C41] focus:outline-none focus:ring-2 focus:ring-[#C29C41]/30"
                         placeholder="أدخل بريدك الإلكتروني"
                         aria-invalid={Boolean(error)}
                         aria-describedby={error ? 'newsletter-error' : undefined}
@@ -116,7 +116,7 @@ const SubscribeToMail = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="engraved brass-gradient h-14 shrink-0 border border-[#C29C41] px-8 text-base font-bold text-[#0A2540] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white"
+                      className="engraved brass-gradient h-14 shrink-0 border border-[#C29C41] px-8 text-base font-bold text-[#082F50] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white"
                     >
                       {isSubmitting ? 'جاري الإرسال...' : 'اشترك الآن'}
                     </button>

@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { getUserSession } from '@/lib/user-auth';
 import { publicEntryWhere } from '@/lib/public-entry-where';
 import { getDocumentCommentPage, getDocumentReplyPage, isReplySchemaUnavailable } from '@/lib/document-comments';
+import { notifyCommentReply } from '@/lib/notifications';
 
 const VISITOR_COOKIE = 'aidsmo_visitor';
 
@@ -56,14 +57,16 @@ async function createDocumentComment(entryId: string, text: string, parentId: st
   if (!entry) return { ok: false, error: 'هذا الإصدار غير متاح حاليا.' };
   const body = typeof text === 'string' ? text.trim().replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/gu, '') : '';
   if (body.length < 3 || body.length > 1000) return { ok: false, error: 'اكتب تعليقا بين 3 و1000 حرف.' };
+  let parentAuthorId: string | null = null;
   if (parentId) {
     if (parentId.length > 100) return { ok: false, error: 'تعذر العثور على التعليق.' };
     try {
       const parent = await prisma.documentComment.findFirst({
         where: { id: parentId, entryId, parentId: null },
-        select: { id: true },
+        select: { id: true, userId: true },
       });
       if (!parent) return { ok: false, error: 'تعذر العثور على التعليق.' };
+      parentAuthorId = parent.userId;
     } catch (error) {
       if (!isReplySchemaUnavailable(error)) throw error;
       return { ok: false, error: 'الردود غير متاحة حاليا.' };
@@ -92,6 +95,13 @@ async function createDocumentComment(entryId: string, text: string, parentId: st
       data: { entryId, userId: user.id, body },
       select: { id: true, body: true, createdAt: true },
     });
+  }
+  if (parentId && parentAuthorId && parentAuthorId !== user.id) {
+    try {
+      await notifyCommentReply(comment.id, parentAuthorId, user.id, entryId, entry.slug, user.name);
+    } catch (error) {
+      console.error('Could not create reply notification', error);
+    }
   }
   revalidatePath(`/book/${entry.slug}`);
   return { ok: true, comment: { id: comment.id, userId: user.id, name: user.name, image: user.image, body: comment.body, createdAt: comment.createdAt.toISOString() } };

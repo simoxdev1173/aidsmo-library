@@ -26,7 +26,7 @@ export default function ArchiveAdminPage() {
           <HiOutlineArchiveBox className="h-5 w-5" aria-hidden />
           إدارة المحتوى المؤسسي
         </div>
-        <h1 className="mt-2 text-3xl font-bold text-[#003652]">إدارة الأرشيف</h1>
+        <h1 className="mt-2 text-3xl font-bold text-[#053D69]">إدارة الأرشيف</h1>
         <p className="mt-2 text-sm leading-7 text-[#64748B]">اختر القسم الذي تريد تعديل معلوماته وملفات أعضائه.</p>
       </div>
       <div className="grid gap-5 md:grid-cols-2">
@@ -34,12 +34,12 @@ export default function ArchiveAdminPage() {
           const Icon = section.icon;
           return (
             <Link key={section.href} href={section.href} className="group flex flex-col rounded-xl border border-[#D9E3EE] bg-white p-6 shadow-sm transition duration-200 hover:border-[#C29C41] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#C29C41] sm:p-8">
-              <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#F0F7FC] text-[#0369A1]">
+              <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#EFF5F9] text-[#0B5688]">
                 <Icon className="h-7 w-7" aria-hidden />
               </span>
-              <h2 className="mt-5 text-xl font-bold text-[#003652]">{section.title}</h2>
+              <h2 className="mt-5 text-xl font-bold text-[#053D69]">{section.title}</h2>
               <p className="mt-3 flex-1 text-sm leading-7 text-[#64748B]">{section.description}</p>
-              <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#0369A1] group-hover:text-[#8B681C]">فتح القسم <HiOutlineArrowLeft className="h-4 w-4" aria-hidden /></span>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#0B5688] group-hover:text-[#8B681C]">فتح القسم <HiOutlineArrowLeft className="h-4 w-4" aria-hidden /></span>
             </Link>
           );
         })}

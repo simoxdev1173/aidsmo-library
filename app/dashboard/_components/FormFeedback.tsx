@@ -52,20 +52,22 @@ export function SubmitButton({
   children,
   pendingText = 'جاري الحفظ...',
   className,
+  disabled = false,
 }: {
   children: React.ReactNode;
   pendingText?: string;
   className?: string;
+  disabled?: boolean;
 }) {
   const { pending } = useFormStatus();
 
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || disabled}
       aria-busy={pending}
       className={cn(
-        'inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#0369A1] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#003652] focus:outline-none focus:ring-2 focus:ring-[#C29C41] disabled:cursor-wait disabled:opacity-75',
+        'inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#0B5688] px-6 text-sm font-bold text-white transition duration-200 hover:bg-[#053D69] focus:outline-none focus:ring-2 focus:ring-[#C29C41] disabled:cursor-wait disabled:opacity-75',
         className,
       )}
     >
@@ -87,12 +89,12 @@ export function FormBusyOverlay({
   if (!pending) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[#0A2540]/45 px-4 backdrop-blur-sm" role="status" aria-live="polite">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[#082F50]/45 px-4 backdrop-blur-sm" role="status" aria-live="polite">
       <div className="w-full max-w-sm rounded-lg border border-[#D9E3EE] bg-white p-5 text-center shadow-2xl">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#F0F7FC] text-[#0369A1]">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#EFF5F9] text-[#0B5688]">
           <HiOutlineArrowPath className="h-6 w-6 animate-spin" />
         </div>
-        <p className="mt-4 text-base font-bold text-[#003652]">{title}</p>
+        <p className="mt-4 text-base font-bold text-[#053D69]">{title}</p>
         <p className="mt-2 text-sm leading-6 text-[#64748B]">{detail}</p>
       </div>
     </div>
@@ -126,7 +128,7 @@ export function FileField({
         multiple={multiple}
         disabled={pending}
         onChange={onChange}
-        className="block w-full cursor-pointer rounded-md border border-[#CBD5E1] bg-white text-sm text-[#475569] file:ml-3 file:cursor-pointer file:border-0 file:bg-[#0369A1] file:px-4 file:py-2.5 file:font-bold file:text-white disabled:cursor-wait disabled:opacity-70"
+        className="block w-full cursor-pointer rounded-md border border-[#CBD5E1] bg-white text-sm text-[#475569] file:ml-3 file:cursor-pointer file:border-0 file:bg-[#0B5688] file:px-4 file:py-2.5 file:font-bold file:text-white disabled:cursor-wait disabled:opacity-70"
       />
       <p className="mt-2 text-xs leading-5 text-[#64748B]">{hint}</p>
     </div>

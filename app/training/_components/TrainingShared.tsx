@@ -22,12 +22,12 @@ export function TrainingHero({
   subtitle?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-[#071D2F] pt-28 text-white md:pt-32">
+    <section className="relative overflow-hidden bg-[#062B46] pt-28 text-white md:pt-32">
       <div className="absolute inset-0 opacity-[0.5]" aria-hidden>
         <Image src={HERO_IMAGE} alt="" fill priority className="object-cover" />
       </div>
       <div
-        className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.9),rgba(3,105,161,0.42)_56%,rgba(7,29,47,0.94))]"
+        className="absolute inset-0 bg-[linear-gradient(115deg,rgba(6,43,70,0.9),rgba(5,61,105,0.42)_56%,rgba(6,43,70,0.94))]"
         aria-hidden
       />
 
@@ -113,11 +113,11 @@ export function PlanEntryRow({ entry }: { entry: PlanEntry }) {
         {showCover && (
           <div className="mx-auto w-36 shrink-0 sm:mx-0 sm:w-44">
             <div className="corner-frame">
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm shadow-[0_24px_40px_-16px_rgba(10,37,64,0.5)]">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-sm shadow-[0_24px_40px_-16px_rgba(8,47,80,0.5)]">
                 {entry.coverImagePath ? (
                   <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" unoptimized />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#0A2540] to-[#0C5B99] p-4 text-center">
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#082F50] to-[#0C618E] p-4 text-center">
                     <span className="font-academic text-xs font-bold leading-5 text-white/90 line-clamp-4">
                       {entry.title}
                     </span>
@@ -130,7 +130,7 @@ export function PlanEntryRow({ entry }: { entry: PlanEntry }) {
 
         <div className="min-w-0 flex-1">
           <Link href={`/book/${entry.slug}`} className="group inline-block">
-            <h2 className="text-lg font-bold text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+            <h2 className="text-lg font-bold text-[#053D69] transition duration-200 group-hover:text-[#0B5688]">
               {entry.title}
             </h2>
           </Link>
@@ -154,7 +154,7 @@ export function PlanEntryRow({ entry }: { entry: PlanEntry }) {
                   href={primaryDocument.path}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-10 items-center gap-2 rounded-full border border-[#D9E3EE] bg-white px-5 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#C29C41]/60 hover:text-[#8A6A1D]"
+                  className="inline-flex h-10 items-center gap-2 rounded-full border border-[#D9E3EE] bg-white px-5 text-sm font-bold text-[#0B5688] transition duration-200 hover:border-[#C29C41]/60 hover:text-[#8A6A1D]"
                 >
                   <HiOutlineEye className="h-4 w-4" />
                   فتح كامل
@@ -162,7 +162,7 @@ export function PlanEntryRow({ entry }: { entry: PlanEntry }) {
                 <a
                   href={primaryDocument.path}
                   download
-                  className="inline-flex h-10 items-center gap-2 rounded-full border border-[#D9E3EE] bg-white px-5 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#C29C41]/60 hover:text-[#8A6A1D]"
+                  className="inline-flex h-10 items-center gap-2 rounded-full border border-[#D9E3EE] bg-white px-5 text-sm font-bold text-[#0B5688] transition duration-200 hover:border-[#C29C41]/60 hover:text-[#8A6A1D]"
                 >
                   <HiOutlineArrowDownTray className="h-4 w-4" />
                   تنزيل
@@ -171,7 +171,7 @@ export function PlanEntryRow({ entry }: { entry: PlanEntry }) {
             )}
             <Link
               href={`/book/${entry.slug}`}
-              className="inline-flex h-10 items-center gap-1.5 text-sm font-bold text-[#0369A1] transition duration-200 hover:text-[#8A6A1D]"
+              className="inline-flex h-10 items-center gap-1.5 text-sm font-bold text-[#0B5688] transition duration-200 hover:text-[#8A6A1D]"
             >
               صفحة الدورة الكاملة
               <HiOutlineArrowTopRightOnSquare className="h-3.5 w-3.5" />

@@ -9,9 +9,11 @@ import { mirrorPublicUploadToDrive, readUpload, saveUploadCopies } from "@/lib/u
 import { createPdfCoverFromBytes, createPdfCoverFromPublicPath } from "@/lib/pdf-cover";
 import { createDocumentCoverFromPublicPath } from "@/lib/document-cover";
 import { countPdfPagesFromBytes, countPdfPagesFromPublicPath } from "@/lib/pdf-pages";
-import { createDocumentFile, documentFilesValue, parseDocumentFilesInput, primaryDocumentFilePath, type DocumentFile } from "@/lib/document-files";
+import { createDocumentFile, documentFilesValue, parseDocumentFilesInput, type DocumentFile } from "@/lib/document-files";
 import { driveDocumentFilesValue, driveStoredFilesValue, type DriveDocumentFile } from "@/lib/drive-files";
 import { isGoogleDriveConfigured } from "@/lib/google-drive";
+import { announceEvent, notifyNewPublication, notifySavedPublicationUpdated } from "@/lib/notifications";
+import { eventCategorySlugs } from "@/lib/event-categories";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -130,19 +132,6 @@ async function uniqueCategorySlug(baseValue: string, currentId?: string) {
 
   return slug;
 }
-
-const eventCategorySlugs = new Set([
-  "industry-events",
-  "industry-sme",
-  "conferences",
-  "standardization-training-courses",
-  "standardization-workshops-events",
-  "standardization-seminars",
-  "standardization-meetings",
-  "training-plan-2024",
-  "training-plan-2025",
-  "training-plan-2026",
-]);
 
 async function isEventCategory(categoryId: string) {
   const category = await prisma.category.findUnique({
@@ -334,9 +323,10 @@ export async function createEntryAction(formData: FormData) {
 
   const title = text(formData, "title");
   const categoryId = text(formData, "categoryId");
+  const newEntryPath = text(formData, "entryKind") === "event" ? "/dashboard/entries/new?kind=event" : "/dashboard/entries/new";
 
   if (!title || !categoryId) {
-    redirect("/dashboard/entries/new?error=missing");
+    redirect(`${newEntryPath}${newEntryPath.includes('?') ? '&' : '?'}error=missing`);
   }
 
   let coverRedirectStatus = "";
@@ -376,7 +366,7 @@ export async function createEntryAction(formData: FormData) {
       : await resolveEntryPageCount(documentFiles, optionalInt(formData, "pageCount"), documentUploads.pagesByPath, null);
     const slug = await uniqueEntrySlug(text(formData, "slug") || title);
 
-    await prisma.libraryEntry.create({
+    const created = await prisma.libraryEntry.create({
       data: {
         title,
         slug,
@@ -408,13 +398,21 @@ export async function createEntryAction(formData: FormData) {
       },
     });
 
+    if (created.status === "PUBLISHED" && created.entryType === "BOOK") {
+      try {
+        await notifyNewPublication(created);
+      } catch (error) {
+        console.error("Could not create publication notifications", error);
+      }
+    }
+
     revalidateTag("public-library-stats", { expire: 0 });
     revalidatePath("/", "layout");
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/entries");
     coverRedirectStatus = coverStatusParam(coverGeneration, Boolean(filePath && !uploadedCoverImagePath));
   } catch (error) {
-    redirect(errorUrl("/dashboard/entries/new", getActionError(error)));
+    redirect(`${newEntryPath}${newEntryPath.includes('?') ? '&' : '?'}error=${encodeURIComponent(getActionError(error))}`);
   }
 
   redirect(`/dashboard/entries?saved=created${coverRedirectStatus}`);
@@ -481,7 +479,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
       : await resolveEntryPageCount(documentFiles, optionalInt(formData, "pageCount"), documentUploads.pagesByPath, existing.pageCount);
     const slug = await uniqueEntrySlug(text(formData, "slug") || title, id);
 
-    await prisma.libraryEntry.update({
+    const updated = await prisma.libraryEntry.update({
       where: { id },
       data: {
         title,
@@ -513,6 +511,23 @@ export async function updateEntryAction(id: string, formData: FormData) {
       },
     });
 
+    if (updated.entryType === "BOOK" && updated.status === "PUBLISHED") {
+      try {
+        if (existing.status !== "PUBLISHED") {
+          await notifyNewPublication(updated);
+        } else if (
+          existing.title !== updated.title ||
+          existing.description !== updated.description ||
+          existing.filePath !== updated.filePath ||
+          JSON.stringify(existing.documentFiles) !== JSON.stringify(updated.documentFiles)
+        ) {
+          await notifySavedPublicationUpdated(updated);
+        }
+      } catch (error) {
+        console.error("Could not create publication notifications", error);
+      }
+    }
+
     revalidateTag("public-library-stats", { expire: 0 });
     revalidatePath("/", "layout");
     revalidatePath("/dashboard");
@@ -524,6 +539,26 @@ export async function updateEntryAction(id: string, formData: FormData) {
   }
 
   redirect(`/dashboard/entries/${id}?saved=1${coverRedirectStatus}`);
+}
+
+export async function announceEventAction(id: string) {
+  await requireAdmin();
+  if (!id || id.length > 100) redirect('/dashboard/entries');
+  const entry = await prisma.libraryEntry.findUnique({
+    where: { id },
+    select: { id: true, slug: true, title: true, entryType: true, status: true },
+  });
+  if (!entry || entry.entryType !== 'EVENT' || entry.status !== 'PUBLISHED') {
+    redirect(`/dashboard/entries/${id}?error=${encodeURIComponent('انشر الفعالية أولاً قبل الإعلان عنها.')}`);
+  }
+  let recipients: number;
+  try {
+    recipients = await announceEvent(entry);
+  } catch (error) {
+    console.error('Could not announce event', error);
+    redirect(`/dashboard/entries/${id}?error=${encodeURIComponent('تعذر إرسال الإعلان. حاول مجدداً.')}`);
+  }
+  redirect(`/dashboard/entries/${id}?announced=${recipients}`);
 }
 
 export async function generateEntryCoverAction(id: string) {

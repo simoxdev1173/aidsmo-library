@@ -11,6 +11,7 @@ import { createEntryAction, updateEntryAction } from '@/lib/library-actions';
 import { countPdfPagesFromFile, countPdfPagesFromUrl } from '@/lib/pdf-pages-client';
 import { categoryPath } from '@/lib/library-labels';
 import { type DocumentFile, documentFilesValue } from '@/lib/document-files';
+import { eventCategorySlugs } from '@/lib/event-categories';
 
 type PdfSource = { kind: 'file'; file: File } | { kind: 'url'; url: string };
 
@@ -51,23 +52,11 @@ type EntryFormValue = {
   eventImages: string[];
 };
 
-const eventCategorySlugs = new Set([
-  'industry-events',
-  'industry-sme',
-  'conferences',
-  'standardization-training-courses',
-  'standardization-workshops-events',
-  'standardization-seminars',
-  'standardization-meetings',
-  'training-plan-2024',
-  'training-plan-2025',
-  'training-plan-2026',
-]);
 
 const IMAGE_MAX_BYTES = 10 * 1024 * 1024;
 
 function fieldClass() {
-  return 'h-11 w-full rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#0A2540] outline-none transition duration-200 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20';
+  return 'h-11 w-full rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#082F50] outline-none transition duration-200 focus:border-[#0B5688] focus:ring-2 focus:ring-[#0B5688]/20';
 }
 
 function labelClass() {
@@ -142,7 +131,7 @@ function DocumentFilesField({
             يمكن إضافة أي عدد من ملفات PDF. العنوان اختياري، والملف الأول يستخدم كملف أساسي ولإنشاء الغلاف تلقائيا.
           </p>
         </div>
-        <span className="rounded-full bg-[#F0F7FC] px-3 py-1 text-xs font-bold text-[#0369A1]">
+        <span className="rounded-full bg-[#EFF5F9] px-3 py-1 text-xs font-bold text-[#0B5688]">
           {totalSlots} PDF
         </span>
       </div>
@@ -152,7 +141,7 @@ function DocumentFilesField({
           {existingFiles.map((file, index) => (
             <div key={file.path} className="grid gap-3 rounded-md border border-[#D9E3EE] bg-[#F8FAFC] p-3 sm:grid-cols-[1fr_auto] sm:items-center">
               <div className="min-w-0">
-                <a href={file.path} target="_blank" rel="noopener noreferrer" className="min-w-0 text-sm font-bold text-[#0369A1] hover:text-[#003652]">
+                <a href={file.path} target="_blank" rel="noopener noreferrer" className="min-w-0 text-sm font-bold text-[#0B5688] hover:text-[#053D69]">
                   <span className="block truncate" dir="ltr">{file.path.split('/').pop()}</span>
                 </a>
                 <span className="mt-1 block text-xs font-semibold text-[#64748B]">
@@ -173,7 +162,7 @@ function DocumentFilesField({
                   type="button"
                   onClick={() => moveFile(index, -1)}
                   disabled={index === 0}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#CBD5E1] bg-white text-[#475569] transition duration-200 hover:border-[#0369A1] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#CBD5E1] bg-white text-[#475569] transition duration-200 hover:border-[#0B5688] hover:text-[#0B5688] disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="رفع ملف PDF"
                 >
                   <HiOutlineArrowUp className="h-4 w-4" />
@@ -182,7 +171,7 @@ function DocumentFilesField({
                   type="button"
                   onClick={() => moveFile(index, 1)}
                   disabled={index === existingFiles.length - 1}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#CBD5E1] bg-white text-[#475569] transition duration-200 hover:border-[#0369A1] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#CBD5E1] bg-white text-[#475569] transition duration-200 hover:border-[#0B5688] hover:text-[#0B5688] disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="إنزال ملف PDF"
                 >
                   <HiOutlineArrowDown className="h-4 w-4" />
@@ -249,7 +238,7 @@ function DocumentFilesField({
         <button
           type="button"
           onClick={() => addUploadSlots(1)}
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#0369A1]/35 bg-[#F0F7FC] px-4 text-sm font-bold text-[#0369A1] transition duration-200 hover:border-[#0369A1] hover:bg-[#0369A1] hover:text-white"
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#0B5688]/35 bg-[#EFF5F9] px-4 text-sm font-bold text-[#0B5688] transition duration-200 hover:border-[#0B5688] hover:bg-[#0B5688] hover:text-white"
         >
           <HiOutlineDocumentPlus className="h-5 w-5" />
           إضافة PDF
@@ -257,7 +246,7 @@ function DocumentFilesField({
         <button
           type="button"
           onClick={() => addUploadSlots(5)}
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#CBD5E1] bg-white px-4 text-sm font-bold text-[#334155] transition duration-200 hover:border-[#0369A1] hover:text-[#0369A1]"
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[#CBD5E1] bg-white px-4 text-sm font-bold text-[#334155] transition duration-200 hover:border-[#0B5688] hover:text-[#0B5688]"
         >
           <HiOutlineDocumentPlus className="h-5 w-5" />
           إضافة 5 ملفات
@@ -300,7 +289,7 @@ function CategoryPicker({
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-md border border-[#CBD5E1] bg-white px-3 py-2 text-right text-sm font-semibold text-[#0A2540] shadow-sm outline-none transition duration-200 hover:border-[#94A3B8] focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20"
+        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-md border border-[#CBD5E1] bg-white px-3 py-2 text-right text-sm font-semibold text-[#082F50] shadow-sm outline-none transition duration-200 hover:border-[#94A3B8] focus:border-[#0B5688] focus:ring-2 focus:ring-[#0B5688]/20"
       >
         <span className={selectedCategory ? 'leading-6' : 'text-[#64748B]'}>
           {selectedCategory ? categoryPath(selectedCategory) : 'اختر التصنيف'}
@@ -309,7 +298,7 @@ function CategoryPicker({
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-md border border-[#CBD5E1] bg-white shadow-[0_18px_42px_rgba(10,37,64,0.16)]">
+        <div className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-md border border-[#CBD5E1] bg-white shadow-[0_18px_42px_rgba(8,47,80,0.16)]">
           <label className="relative block border-b border-[#E2E8F0]">
             <span className="sr-only">بحث في التصنيفات</span>
             <LuSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
@@ -317,7 +306,7 @@ function CategoryPicker({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="بحث..."
-              className="h-11 w-full bg-[#F8FAFC] pr-9 pl-3 text-sm text-[#0A2540] outline-none placeholder:text-[#94A3B8]"
+              className="h-11 w-full bg-[#F8FAFC] pr-9 pl-3 text-sm text-[#082F50] outline-none placeholder:text-[#94A3B8]"
             />
           </label>
           <div className="max-h-72 overflow-y-auto p-1">
@@ -334,7 +323,7 @@ function CategoryPicker({
                       setQuery('');
                     }}
                     className={`flex w-full items-start justify-between gap-3 rounded px-3 py-2.5 text-right text-sm transition duration-150 ${
-                      selected ? 'bg-[#EFF6FF] font-bold text-[#0369A1]' : 'text-[#334155] hover:bg-[#F8FAFC]'
+                      selected ? 'bg-[#EFF6FF] font-bold text-[#0B5688]' : 'text-[#334155] hover:bg-[#F8FAFC]'
                     }`}
                   >
                     <span className="leading-6">{categoryPath(category)}</span>
@@ -355,13 +344,15 @@ function CategoryPicker({
 export default function EntryForm({
   entry,
   categories,
+  initialCategoryId,
 }: {
   entry?: EntryFormValue | null;
   categories: CategoryOption[];
+  initialCategoryId?: string;
 }) {
   const action = entry ? updateEntryAction.bind(null, entry.id) : createEntryAction;
   const formRef = useRef<HTMLFormElement>(null);
-  const draftKey = `entry-form-draft:${entry?.id ?? 'new'}`;
+  const draftKey = `entry-form-draft:${entry?.id ?? (initialCategoryId ? 'new-event' : 'new')}`;
   const [clientError, setClientError] = useState<string | null>(null);
   const [pageCountStatus, setPageCountStatus] = useState<PageCountStatus>({ phase: 'idle', done: 0, total: 0, failed: 0 });
   // Whether the admin typed the page count by hand. When true we never overwrite
@@ -369,7 +360,7 @@ export default function EntryForm({
   const pageCountManualRef = useRef(false);
   // Guards against overlapping counts: only the newest run may write results.
   const countRunRef = useRef(0);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(entry?.categoryId ?? '');
+  const [selectedCategoryId, setSelectedCategoryId] = useState(entry?.categoryId ?? initialCategoryId ?? '');
   const selectedCategory = useMemo(
     () => categories.find((category) => category.id === selectedCategoryId),
     [categories, selectedCategoryId],
@@ -531,6 +522,7 @@ export default function EntryForm({
       }}
       className="space-y-6 rounded-lg border border-[#D9E3EE] bg-white p-5"
     >
+      {!entry && initialCategoryId && <input type="hidden" name="entryKind" value="event" />}
       <FormBusyOverlay
         title="جاري حفظ المدخل"
         detail="إذا كنت ترفع صورا أو ملف PDF فقد يستغرق الأمر قليلا. انتظر حتى تكتمل العملية."
@@ -551,7 +543,7 @@ export default function EntryForm({
             <div className="space-y-5">
               <section className="rounded-lg border border-[#D9E3EE] bg-[#F8FAFC] p-4">
                 <div className="mb-4">
-                  <h3 className="text-lg font-bold text-[#003652]">بيانات الفعالية</h3>
+                  <h3 className="text-lg font-bold text-[#053D69]">بيانات الفعالية</h3>
                   <p className="mt-1 text-sm leading-6 text-[#64748B]">
                     استخدم هذه الخانات لفعاليات الخطة التدريبية حسب السنة المختارة.
                   </p>
@@ -579,7 +571,7 @@ export default function EntryForm({
                   defaultValue={entry?.notes ?? ''}
                   rows={4}
                   placeholder="ملاحظة للإدارة فقط، لا تظهر للزائر."
-                  className="w-full rounded-md border border-[#E8C96A] bg-[#FFF8E1] px-3 py-3 text-sm leading-7 text-[#0A2540] outline-none transition duration-200 placeholder:text-[#8A6A1D] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
+                  className="w-full rounded-md border border-[#E8C96A] bg-[#FFF8E1] px-3 py-3 text-sm leading-7 text-[#082F50] outline-none transition duration-200 placeholder:text-[#8A6A1D] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
                 />
               </label>
             </div>
@@ -617,7 +609,7 @@ export default function EntryForm({
           </label>
 
           <label className="flex items-center gap-3 rounded-md border border-[#CBD5E1] bg-white px-3 py-3 text-sm font-bold text-[#334155]">
-            <input name="featured" type="checkbox" defaultChecked={entry?.featured} className="h-4 w-4 accent-[#0369A1]" />
+            <input name="featured" type="checkbox" defaultChecked={entry?.featured} className="h-4 w-4 accent-[#0B5688]" />
             عرض كمدخل مميز
           </label>
 

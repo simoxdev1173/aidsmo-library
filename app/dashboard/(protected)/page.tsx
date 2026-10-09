@@ -27,9 +27,9 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-bold text-[#C29C41]">لوحة التحكم</p>
-          <h1 className="mt-2 text-3xl font-bold text-[#003652]">نظرة عامة</h1>
+          <h1 className="mt-2 text-3xl font-bold text-[#053D69]">نظرة عامة</h1>
         </div>
-        <Link href="/dashboard/entries/new" className="inline-flex h-11 items-center justify-center rounded-md bg-[#0369A1] px-5 text-sm font-bold text-white transition duration-200 hover:bg-[#003652]">
+        <Link href="/dashboard/entries/new" className="inline-flex h-11 items-center justify-center rounded-md bg-[#0B5688] px-5 text-sm font-bold text-white transition duration-200 hover:bg-[#053D69]">
           مدخل جديد
         </Link>
       </div>
@@ -43,9 +43,9 @@ export default async function DashboardPage() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-bold text-[#64748B]">{card.label}</p>
-                  <p className="mt-3 text-3xl font-bold text-[#003652]">{card.value}</p>
+                  <p className="mt-3 text-3xl font-bold text-[#053D69]">{card.value}</p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[#F0F7FC] text-[#0369A1]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[#EFF5F9] text-[#0B5688]">
                   <Icon className="h-6 w-6" />
                 </div>
               </div>
@@ -56,8 +56,8 @@ export default async function DashboardPage() {
 
       <section className="rounded-lg border border-[#D9E3EE] bg-white">
         <div className="flex items-center justify-between border-b border-[#E2E8F0] px-5 py-4">
-          <h2 className="text-lg font-bold text-[#003652]">آخر التحديثات</h2>
-          <Link href="/dashboard/entries" className="text-sm font-bold text-[#0369A1] hover:text-[#C29C41]">
+          <h2 className="text-lg font-bold text-[#053D69]">آخر التحديثات</h2>
+          <Link href="/dashboard/entries" className="text-sm font-bold text-[#0B5688] hover:text-[#C29C41]">
             عرض الكل
           </Link>
         </div>
@@ -66,20 +66,20 @@ export default async function DashboardPage() {
             stats.recentEntries.map((entry) => (
               <Link key={entry.id} href={`/dashboard/entries/${entry.id}`} className="grid gap-3 px-5 py-4 transition duration-200 hover:bg-[#F8FAFC] md:grid-cols-[1fr_180px_120px]">
                 <div className="flex items-center gap-3">
-                  <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md border border-[#E2E8F0] bg-[#F0F7FC]">
+                  <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md border border-[#E2E8F0] bg-[#EFF5F9]">
                     {entry.coverImagePath ? (
                       <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" unoptimized />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#0369A1]">PDF</div>
+                      <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#0B5688]">PDF</div>
                     )}
                   </div>
                   <div>
-                    <p className="line-clamp-2 font-bold text-[#0A2540]">{entry.title}</p>
+                    <p className="line-clamp-2 font-bold text-[#082F50]">{entry.title}</p>
                     <p className="mt-1 text-sm leading-6 text-[#64748B]">{categoryPath(entry.category)}</p>
                   </div>
                 </div>
                 <p className="text-sm text-[#64748B]">{entry.author ?? 'بدون مؤلف'}</p>
-                <p className="text-sm font-bold text-[#0369A1]">{statusLabel(entry.status)}</p>
+                <p className="text-sm font-bold text-[#0B5688]">{statusLabel(entry.status)}</p>
               </Link>
             ))
           ) : (

@@ -329,6 +329,38 @@ export async function getCategoryWithEntries(slug: string) {
   return { category, entries };
 }
 
+/** Small records for the public catalog; the book route fetches full content on navigation. */
+export async function getCategoryWithCards(slug: string) {
+  const category = await prisma.category.findUnique({
+    where: { slug },
+    select: { id: true, name: true, description: true },
+  });
+  if (!category) return null;
+
+  const categories = await prisma.category.findMany({
+    select: { id: true, parentId: true },
+  });
+  const ids = collectDescendantCategoryIds(categories, category.id);
+  const entries = await prisma.libraryEntry.findMany({
+    where: {
+      AND: [publicEntryWhere],
+      categoryId: { in: ids },
+    },
+    orderBy: [{ featured: "desc" }, { year: "desc" }, { title: "asc" }],
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      coverImagePath: true,
+      tag: true,
+      year: true,
+      category: { select: { name: true } },
+    },
+  });
+
+  return { category, entries };
+}
+
 export async function getStandardizationPageData(
   slug: string | string[],
   filters: {

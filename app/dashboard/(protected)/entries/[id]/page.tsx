@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
-import { deleteEntryAction, generateEntryCoverAction } from '@/lib/library-actions';
+import { announceEventAction, deleteEntryAction, generateEntryCoverAction } from '@/lib/library-actions';
 import EntryForm from '@/app/dashboard/_components/EntryForm';
 import { Notice, SubmitButton } from '@/app/dashboard/_components/FormFeedback';
 import { getCategoryOptions, getEntryForEdit } from '@/lib/library-data';
 import { documentFilesValue } from '@/lib/document-files';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export default async function EditEntryPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ saved?: string; error?: string; cover?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string; cover?: string; announced?: string }>;
 }) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
   const [entry, categories] = await Promise.all([
@@ -32,13 +33,14 @@ export default async function EditEntryPage({
   if (!entry) {
     notFound();
   }
+  const announcedCount = entry.entryType === 'EVENT' ? await prisma.notification.count({ where: { entryId: entry.id, type: 'EVENT_ANNOUNCEMENT' } }) : 0;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-bold text-[#C29C41]">المداخل</p>
-          <h1 className="mt-2 text-3xl font-bold text-[#003652]">تعديل المدخل</h1>
+          <h1 className="mt-2 text-3xl font-bold text-[#053D69]">تعديل المدخل</h1>
         </div>
         <form action={deleteEntryAction.bind(null, entry.id)}>
           <SubmitButton pendingText="جاري الحذف..." className="border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-700">
@@ -52,6 +54,7 @@ export default async function EditEntryPage({
           تم الحفظ.
         </Notice>
       )}
+      {query.announced !== undefined && <Notice tone="success" title="تم إرسال الإعلان">وصل الإعلان إلى {Number(query.announced) || 0} من مستخدمي المكتبة. لا يُرسل مرة أخرى إلى من تلقاه بالفعل.</Notice>}
       {query.cover === 'generated' && (
         <Notice tone="success" title="تم إنشاء صورة الغلاف تلقائيا">
           تم استخراج صورة الغلاف من الصفحة الأولى لملف PDF.
@@ -77,6 +80,12 @@ export default async function EditEntryPage({
           {query.error === 'missing' ? 'العنوان والتصنيف مطلوبان.' : decodeURIComponent(query.error)}
         </Notice>
       )}
+
+      {entry.entryType === 'EVENT' && <section className="rounded-xl border border-[#D9E3EE] bg-white p-5">
+        <h2 className="text-lg font-bold text-[#053D69]">إعلان الفعالية</h2>
+        <p className="mt-2 text-sm leading-7 text-[#475569]">أرسل إشعاراً داخل الموقع إلى المستخدمين المسجلين. لن يُرسل الإعلان تلقائياً عند حفظ الفعالية.</p>
+        {entry.status === 'PUBLISHED' ? <form action={announceEventAction.bind(null, entry.id)} className="mt-4"><SubmitButton pendingText="جارٍ إرسال الإعلان..." disabled={announcedCount > 0}>{announcedCount > 0 ? `أُعلن عنها (${announcedCount} مستخدم)` : 'أعلن الفعالية الآن'}</SubmitButton></form> : <p className="mt-3 text-sm font-semibold text-[#805E1B]">انشر الفعالية أولاً لتفعيل الإعلان.</p>}
+      </section>}
 
       {!entry.coverImagePath && documentFilesValue(entry.documentFiles, entry.filePath).length > 0 && (
         <form action={generateEntryCoverAction.bind(null, entry.id)} className="flex justify-end rounded-lg border border-[#D9E3EE] bg-white p-4">

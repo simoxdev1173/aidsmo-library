@@ -14,9 +14,9 @@ export default async function NewExecutiveBoardMemberPage({
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/dashboard/executive-board" className="text-sm font-bold text-[#0369A1] transition-colors hover:text-[#8B681C] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">العودة إلى المجلس التنفيذي</Link>
+        <Link href="/dashboard/executive-board" className="text-sm font-bold text-[#0B5688] transition-colors hover:text-[#8B681C] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">العودة إلى المجلس التنفيذي</Link>
         <p className="mt-4 text-sm font-bold text-[#C29C41]">المجلس التنفيذي</p>
-        <h1 className="mt-1 text-3xl font-bold text-[#003652]">إضافة عضو</h1>
+        <h1 className="mt-1 text-3xl font-bold text-[#053D69]">إضافة عضو</h1>
       </div>
       {error && <Notice tone="error" title="تعذر حفظ الملف">{error}</Notice>}
       <ExecutiveBoardMemberForm action={createExecutiveBoardMember} />

@@ -9,7 +9,7 @@ import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './LibraryServices.module.css';
 
 const primaryButton =
-  'inline-flex min-h-11 max-w-full items-center justify-center gap-3 rounded-full border border-[#b88e36] bg-[#e8c96a] px-5 py-2.5 text-center text-[0.8rem] font-medium text-[#0A2540] shadow-[0_7px_18px_rgba(10,37,64,0.12)] sm:px-6';
+  'inline-flex min-h-11 max-w-full items-center justify-center gap-3 rounded-full border border-[#b88e36] bg-[#e8c96a] px-5 py-2.5 text-center text-[0.8rem] font-medium text-[#082F50] shadow-[0_7px_18px_rgba(8,47,80,0.12)] sm:px-6';
 
 const darkButton =
   'inline-flex min-h-11 max-w-full items-center justify-center gap-3 rounded-full border border-[#e8c96a]/65 bg-white/10 px-5 py-2.5 text-center text-[0.8rem] font-medium text-white backdrop-blur-sm sm:px-6';
@@ -21,7 +21,7 @@ const LibraryNews = () => {
   return (
     <section
       id="library-services"
-      className="relative overflow-hidden bg-[#382715] py-10 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[#032C4B] py-10 sm:py-20 lg:py-24"
       aria-label={t('heading')}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
     >
@@ -34,14 +34,14 @@ const LibraryNews = () => {
         aria-hidden
       />
 
-      <div className="pointer-events-none absolute inset-0 bg-black/10 sm:bg-black/20" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[#032C4B]/55 sm:bg-[#032C4B]/70" aria-hidden />
 
       <div className="absolute inset-x-0 top-0 h-px bg-[#C29C41]/35" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#C29C41]/35" aria-hidden />
 
-      <div className="relative z-10 mx-auto w-[calc(100%-2rem)] max-w-6xl rounded-[18px] border border-[#C6A346]/35 bg-[#fffdf8] px-4 py-6 shadow-[0_22px_58px_rgba(10,37,64,0.16)] sm:bg-white/78 sm:px-7 sm:py-8 sm:backdrop-blur-sm lg:px-9">
+      <div className="relative z-10 mx-auto w-[calc(100%-2rem)] max-w-6xl rounded-[18px] border border-[#C6A346]/35 bg-[#fffdf8] px-4 py-6 shadow-[0_22px_58px_rgba(8,47,80,0.16)] sm:bg-white/78 sm:px-7 sm:py-8 sm:backdrop-blur-sm lg:px-9">
         <div className="mb-6 max-w-2xl sm:mb-12">
-          <h2 className="text-balance text-[1.5rem] font-medium leading-[1.45] text-[#003652] sm:text-[2rem] lg:text-[2.4rem]">
+          <h2 className="text-balance text-[1.5rem] font-medium leading-[1.45] text-[#053D69] sm:text-[2rem] lg:text-[2.4rem]">
             {t('heading')}
           </h2>
 
@@ -54,14 +54,14 @@ const LibraryNews = () => {
           {/* Personal library card */}
           <Link
             href="/library"
-            className={`${styles.card} group col-span-2 flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/35 bg-[#fffcf4]/95 p-5 shadow-[0_14px_36px_rgba(10,37,64,0.07)] sm:p-7 sm:backdrop-blur-sm lg:col-span-1 lg:row-span-2`}
+            className={`${styles.card} group col-span-2 flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/35 bg-[#fffcf4]/95 p-5 shadow-[0_14px_36px_rgba(8,47,80,0.07)] sm:p-7 sm:backdrop-blur-sm lg:col-span-1 lg:row-span-2`}
           >
             <div>
               <p className="text-xs font-medium text-[#805e1b]">
                 {t('myLibraryKicker')}
               </p>
 
-              <h3 className="mt-2 max-w-md text-lg font-medium leading-[1.5] text-[#0A2540] sm:mt-4 sm:text-[1.45rem] sm:leading-[1.7]">
+              <h3 className="mt-2 max-w-md text-lg font-medium leading-[1.5] text-[#082F50] sm:mt-4 sm:text-[1.45rem] sm:leading-[1.7]">
                 {t('myLibraryTitle')}
               </h3>
 
@@ -77,7 +77,7 @@ const LibraryNews = () => {
           </Link>
 
           {/* Smart assistant card */}
-          <div className={`${styles.card} group col-span-2 flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] p-5 text-white shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:p-7 lg:col-span-1 lg:row-span-2`}>
+          <div className={`${styles.card} group col-span-2 flex flex-col justify-between overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#082F50] p-5 text-white shadow-[0_14px_36px_rgba(8,47,80,0.12)] sm:p-7 lg:col-span-1 lg:row-span-2`}>
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(232,201,106,0.14),transparent_34%)]"
               aria-hidden
@@ -110,7 +110,7 @@ const LibraryNews = () => {
           {/* Top image card */}
           <Link
             href="/catalog/industry"
-            className={`${styles.card} group min-h-[164px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
+            className={`${styles.card} group min-h-[164px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#082F50] shadow-[0_14px_36px_rgba(8,47,80,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
               src="/industry-informations-bg.webp"
@@ -120,7 +120,7 @@ const LibraryNews = () => {
               className={`${styles.image} object-cover`}
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#061d31] via-[#0A2540]/65 to-[#0A2540]/10 sm:bg-[linear-gradient(90deg,rgba(10,37,64,0.12)_0%,rgba(10,37,64,0.55)_50%,rgba(10,37,64,0.9)_100%)]" aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#061d31] via-[#082F50]/65 to-[#082F50]/10 sm:bg-[linear-gradient(90deg,rgba(8,47,80,0.12)_0%,rgba(8,47,80,0.55)_50%,rgba(8,47,80,0.9)_100%)]" aria-hidden="true" />
 
             <div className="absolute inset-x-3 bottom-4 text-start sm:inset-x-6 sm:bottom-6">
               <p className="hidden text-xs font-medium text-[#E8C96A] sm:block">
@@ -137,7 +137,7 @@ const LibraryNews = () => {
           {/* Main blue sector card */}
           <Link
             href="/catalog/standardization"
-            className={`${styles.card} group flex min-h-[164px] flex-col justify-end overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#003652] p-3 text-white shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] sm:justify-between sm:p-7 lg:min-h-0 lg:row-span-2`}
+            className={`${styles.card} group flex min-h-[164px] flex-col justify-end overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#053D69] p-3 text-white shadow-[0_14px_36px_rgba(8,47,80,0.12)] sm:min-h-[230px] sm:justify-between sm:p-7 lg:min-h-0 lg:row-span-2`}
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_14%,rgba(232,201,106,0.13),transparent_36%)]"
@@ -168,7 +168,7 @@ const LibraryNews = () => {
           {/* Bottom image card */}
           <Link
             href="/catalog/mining"
-            className={`${styles.card} group min-h-[164px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
+            className={`${styles.card} group min-h-[164px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#082F50] shadow-[0_14px_36px_rgba(8,47,80,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
               src="/industry-bg.webp"
@@ -178,7 +178,7 @@ const LibraryNews = () => {
               className={`${styles.image} object-cover`}
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/90 via-[#0A2540]/35 to-transparent" aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#082F50]/90 via-[#082F50]/35 to-transparent" aria-hidden="true" />
 
             <div className="absolute inset-x-3 bottom-4 text-start sm:inset-x-6 sm:bottom-6">
               <p className="hidden text-xs font-medium text-[#E8C96A] sm:block">{t('miningAlt')}</p>
@@ -192,7 +192,7 @@ const LibraryNews = () => {
           {/* Bottom image card */}
           <Link
             href="/catalog/industrial-info"
-            className={`${styles.card} group min-h-[164px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#0A2540] shadow-[0_14px_36px_rgba(10,37,64,0.12)] sm:min-h-[230px] lg:min-h-0`}
+            className={`${styles.card} group min-h-[164px] overflow-hidden rounded-[18px] border border-[#C29C41]/30 bg-[#082F50] shadow-[0_14px_36px_rgba(8,47,80,0.12)] sm:min-h-[230px] lg:min-h-0`}
           >
             <Image
               src="/standardization-bg.webp"
@@ -202,7 +202,7 @@ const LibraryNews = () => {
               className={`${styles.image} object-cover`}
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/90 via-[#0A2540]/35 to-transparent" aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#082F50]/90 via-[#082F50]/35 to-transparent" aria-hidden="true" />
 
             <div className="absolute inset-x-3 bottom-4 text-start sm:inset-x-6 sm:bottom-6">
               <p className="hidden text-xs font-medium text-[#E8C96A] sm:block">{t('industrialInfoAlt')}</p>

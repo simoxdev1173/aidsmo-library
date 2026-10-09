@@ -16,7 +16,7 @@ export default function StandardizationStrategiesPage({
         title: 'إستراتيجيات التقييس والجودة',
         description:
           'مرجع منظم للإستراتيجيات والرؤى التي تدعم تطوير منظومات التقييس، البنية التحتية للجودة، والمواءمة العربية في مجالات المواصفات والاعتماد.',
-        accent: '#0A2540',
+        accent: '#082F50',
         heroImage: '/standardization-bg.webp',
       }}
     />

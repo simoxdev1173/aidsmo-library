@@ -5,6 +5,7 @@ import './globals.css'
 import SiteChrome, { SiteNavigation, SiteNavigationFallback } from '@/components/SiteChrome';
 import LocaleProvider from '@/lib/i18n/LocaleProvider';
 import { getUserSession } from '@/lib/user-auth';
+import { getUnreadNotificationCount } from '@/lib/notifications';
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
@@ -39,7 +40,8 @@ export const metadata: Metadata = {
 
 async function AuthenticatedNav() {
   const user = await getUserSession();
-  return <SiteNavigation user={user} />;
+  const unreadCount = user ? await getUnreadNotificationCount(user.id) : 0;
+  return <SiteNavigation user={user} unreadCount={unreadCount} />;
 }
 
 export default function RootLayout({

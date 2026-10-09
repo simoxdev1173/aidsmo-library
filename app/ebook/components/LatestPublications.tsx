@@ -17,7 +17,7 @@ const publications = [
     inside: '/latest-cover/previews/industry-88-1.webp',
     preview: '/latest-cover/previews/industry-88-2.webp',
     year: '2025',
-    color: '#0a2540',
+    color: '#082F50',
     href: '/catalog/industry',
   },
   {
@@ -28,7 +28,7 @@ const publications = [
     inside: '/latest-cover/previews/conformity-guide-1.webp',
     preview: '/latest-cover/previews/conformity-guide-2.webp',
     year: '2026',
-    color: '#003652',
+    color: '#053D69',
     href: '/book/الدليل-الا-رشادي-العربي-لنماذج-تقييم-المطابقة',
   },
   {

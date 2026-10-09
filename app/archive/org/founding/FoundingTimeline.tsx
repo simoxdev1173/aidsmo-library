@@ -48,8 +48,8 @@ export default function FoundingTimeline({ milestones }: { milestones: readonly 
   if (!activeMilestone) return null;
 
   return (
-    <div className="overflow-hidden rounded-[24px] border border-[#DCE6EF] bg-white shadow-[0_18px_48px_rgba(10,37,64,0.08)]">
-      <div className="flex flex-wrap items-center justify-between gap-6 bg-[#0A2540] px-6 py-6 text-white sm:px-9">
+    <div className="overflow-hidden rounded-[24px] border border-[#DCE6EF] bg-white shadow-[0_18px_48px_rgba(8,47,80,0.08)]">
+      <div className="flex flex-wrap items-center justify-between gap-6 bg-[#082F50] px-6 py-6 text-white sm:px-9">
         <div className="max-w-2xl">
           <span className="font-display text-xs font-bold tracking-[0.18em] text-[#E8C96A]">رحلة التأسيس</span>
           <p className="mt-2 font-academic text-lg font-bold leading-8">من أول خطوة إلى المسمى الحالي للمنظمة</p>
@@ -70,8 +70,8 @@ export default function FoundingTimeline({ milestones }: { milestones: readonly 
         <ol aria-label="تواريخ محطات التأسيس" className="relative grid grid-cols-2 gap-2 sm:grid-cols-5 sm:gap-3 lg:grid-cols-10">
           {milestones.map((milestone, index) => (
             <li key={milestone.year}>
-              <button type="button" aria-pressed={index === state.activeIndex} aria-controls="founding-milestone-description" onClick={() => dispatch({ type: 'select', index })} className={`flex min-h-16 w-full flex-col items-center justify-center gap-2 rounded-xl border px-2 py-2 font-display text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0369A1] ${index === state.activeIndex ? 'border-[#C29C41]/45 bg-[#FBF7EA] text-[#003652]' : 'border-transparent bg-white text-[#64748B] hover:border-[#DCE6EF] hover:bg-[#F8FAFC] hover:text-[#003652]'}`}>
-                <span className={`h-3.5 w-3.5 rounded-full border-[3px] ${index === state.activeIndex ? 'border-[#E8C96A] bg-[#0A2540] ring-4 ring-[#E8C96A]/25' : 'border-[#A6B4B8] bg-white'}`} aria-hidden="true" />
+              <button type="button" aria-pressed={index === state.activeIndex} aria-controls="founding-milestone-description" onClick={() => dispatch({ type: 'select', index })} className={`flex min-h-16 w-full flex-col items-center justify-center gap-2 rounded-xl border px-2 py-2 font-display text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B5688] ${index === state.activeIndex ? 'border-[#C29C41]/45 bg-[#FBF7EA] text-[#053D69]' : 'border-transparent bg-white text-[#64748B] hover:border-[#DCE6EF] hover:bg-[#F8FAFC] hover:text-[#053D69]'}`}>
+                <span className={`h-3.5 w-3.5 rounded-full border-[3px] ${index === state.activeIndex ? 'border-[#E8C96A] bg-[#082F50] ring-4 ring-[#E8C96A]/25' : 'border-[#A6B4B8] bg-white'}`} aria-hidden="true" />
                 <span dir="ltr">{milestone.year}</span>
               </button>
             </li>
@@ -82,8 +82,8 @@ export default function FoundingTimeline({ milestones }: { milestones: readonly 
       <article id="founding-milestone-description" className="px-6 py-8 sm:px-9 sm:py-10">
         <p className="max-w-5xl border-r-[3px] border-[#C29C41] pr-5 whitespace-pre-line font-academic text-base leading-9 text-[#334155] md:text-lg md:leading-10">{activeMilestone.text}</p>
         <div className="mt-9 flex items-center justify-between gap-4 border-t border-[#E8EEF4] pt-5">
-          <button type="button" aria-label="المحطة السابقة" title="المحطة السابقة" onClick={() => dispatch({ type: 'select', index: (state.activeIndex - 1 + milestones.length) % milestones.length })} className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#DCE6EF] text-[#003652] transition-colors hover:border-[#C29C41] hover:bg-[#FBF7EA] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0369A1]"><ArrowRight className="h-5 w-5" aria-hidden="true" /></button>
-          <button type="button" aria-label="المحطة التالية" title="المحطة التالية" onClick={() => dispatch({ type: 'select', index: (state.activeIndex + 1) % milestones.length })} className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#0A2540] text-white transition-colors hover:bg-[#003652] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0369A1]"><ArrowLeft className="h-5 w-5" aria-hidden="true" /></button>
+          <button type="button" aria-label="المحطة السابقة" title="المحطة السابقة" onClick={() => dispatch({ type: 'select', index: (state.activeIndex - 1 + milestones.length) % milestones.length })} className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#DCE6EF] text-[#053D69] transition-colors hover:border-[#C29C41] hover:bg-[#FBF7EA] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B5688]"><ArrowRight className="h-5 w-5" aria-hidden="true" /></button>
+          <button type="button" aria-label="المحطة التالية" title="المحطة التالية" onClick={() => dispatch({ type: 'select', index: (state.activeIndex + 1) % milestones.length })} className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#082F50] text-white transition-colors hover:bg-[#053D69] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B5688]"><ArrowLeft className="h-5 w-5" aria-hidden="true" /></button>
         </div>
       </article>
     </div>

@@ -35,7 +35,7 @@ const FOCUS_AREAS = [
 
 export default function TrainingAboutPage() {
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] text-[#0A2540]">
+    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] text-[#082F50]">
       <TrainingHero
         breadcrumb={[{ label: 'التدريب والاستشارات', href: '/training/about' }, { label: 'حول المعهد', href: '/training/about' }]}
         badge="AIMTCI"
@@ -62,8 +62,8 @@ export default function TrainingAboutPage() {
           <div className="grid gap-x-8 gap-y-9 sm:grid-cols-3">
             {FOCUS_AREAS.map(({ icon: Icon, title, body }) => (
               <div key={title} className="border-t-2 border-[#C29C41]/25 pt-4">
-                <Icon className="h-6 w-6 text-[#0369A1]" />
-                <h3 className="mt-3 text-base font-bold text-[#003652]">{title}</h3>
+                <Icon className="h-6 w-6 text-[#0B5688]" />
+                <h3 className="mt-3 text-base font-bold text-[#053D69]">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#64748B]">{body}</p>
               </div>
             ))}
@@ -71,7 +71,7 @@ export default function TrainingAboutPage() {
         </div>
 
         {/* Promotional CTA toward the institute's own platform */}
-        <div className="relative mt-14 overflow-hidden rounded-[20px] border border-[#C29C41]/30 bg-[#071D2F] p-8 text-white md:p-10">
+        <div className="relative mt-14 overflow-hidden rounded-[20px] border border-[#C29C41]/30 bg-[#062B46] p-8 text-white md:p-10">
           <div
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_20%,rgba(232,201,106,0.18),transparent_42%),radial-gradient(circle_at_10%_90%,rgba(14,165,233,0.14),transparent_42%)]"
             aria-hidden
@@ -106,7 +106,7 @@ export default function TrainingAboutPage() {
                 href={OFFICIAL_SITE}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="engraved brass-gradient mt-6 inline-flex h-12 shrink-0 items-center gap-2 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_10px_24px_rgba(0,0,0,0.28)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#071D2F]"
+                className="engraved brass-gradient mt-6 inline-flex h-12 shrink-0 items-center gap-2 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_10px_24px_rgba(0,0,0,0.28)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#062B46]"
               >
                 زيارة المنصة
                 <HiOutlineArrowTopRightOnSquare className="h-4 w-4" />
@@ -121,11 +121,11 @@ export default function TrainingAboutPage() {
         >
           <div>
             <p className="text-xs font-bold text-[#C29C41]">التدريب</p>
-            <p className="mt-1 text-base font-bold text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+            <p className="mt-1 text-base font-bold text-[#053D69] transition duration-200 group-hover:text-[#0B5688]">
               تصفّح الخطة التدريبية للمعهد
             </p>
           </div>
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F8FB] text-[#0369A1] transition duration-200 group-hover:bg-[#0369A1] group-hover:text-white">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F8FB] text-[#0B5688] transition duration-200 group-hover:bg-[#0B5688] group-hover:text-white">
             <HiOutlineArrowLeft className="h-5 w-5" />
           </span>
         </Link>

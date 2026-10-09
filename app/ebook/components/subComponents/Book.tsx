@@ -15,7 +15,7 @@ interface BookProps {
   rtl?: boolean;
 }
 
-export function Book({ title, openLabel, closeLabel, content, cover, backOfCover, color = '#0a2540', rtl = false }: BookProps) {
+export function Book({ title, openLabel, closeLabel, content, cover, backOfCover, color = '#082F50', rtl = false }: BookProps) {
   const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
 

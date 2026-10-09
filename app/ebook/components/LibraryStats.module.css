@@ -2,13 +2,13 @@
   --ink: #fff6dd;
   --muted: #e3d6b8;
   --brass: #d6b66b;
-  --cover: #102e42;
-  --cover-highlight: #1d4052;
+  --cover: #032c4b;
+  --cover-highlight: #0a527e;
   --edge: #977744;
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #f1f1f1;
+  background: #eff5f9;
   color: var(--ink);
   padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(3rem, 5vw, 4.5rem);
 }
@@ -20,7 +20,7 @@
 }
 .header { max-width: 720px; margin: 0 auto 2.5rem; text-align: center; }
 .heading {
-  color: #0a2540;
+  color: #082F50;
   font-family: var(--font-readex), sans-serif;
   font-size: clamp(1.9rem, 3.2vw, 2.8rem);
   font-weight: 500;

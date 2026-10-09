@@ -16,7 +16,7 @@ export default function StandardizationDirectivesPage({
         title: 'توجيهات التقييس والمطابقة',
         description:
           'توجيهات عملية تساعد الجهات المختصة والمهنيين على تطبيق المواصفات، فهم متطلبات المطابقة، وتوحيد إجراءات الجودة في القطاعات الصناعية.',
-        accent: '#0369A1',
+        accent: '#0B5688',
         heroImage: '/standardization-bg.webp',
       }}
     />

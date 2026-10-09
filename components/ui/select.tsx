@@ -27,7 +27,7 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        'flex h-13 w-full cursor-pointer items-center justify-between gap-2 rounded-2xl border border-[#D9E3EE] bg-white px-4 text-sm font-bold text-[#0A2540] shadow-[0_1px_2px_rgba(10,37,64,0.04)] outline-none transition duration-200',
+        'flex h-13 w-full cursor-pointer items-center justify-between gap-2 rounded-2xl border border-[#D9E3EE] bg-white px-4 text-sm font-bold text-[#082F50] shadow-[0_1px_2px_rgba(8,47,80,0.04)] outline-none transition duration-200',
         'hover:border-[#C29C41]/55',
         'focus-visible:border-[#C29C41] focus-visible:ring-[3px] focus-visible:ring-[#C29C41]/18',
         'data-[state=open]:border-[#C29C41] data-[state=open]:ring-[3px] data-[state=open]:ring-[#C29C41]/18',
@@ -58,7 +58,7 @@ function SelectContent({
         data-slot="select-content"
         position={position}
         className={cn(
-          'relative z-[70] max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-y-auto overflow-x-hidden rounded-2xl border border-[#D9E3EE] bg-white p-1.5 text-[#0A2540] shadow-[0_24px_60px_rgba(10,37,64,0.16)]',
+          'relative z-[70] max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-y-auto overflow-x-hidden rounded-2xl border border-[#D9E3EE] bg-white p-1.5 text-[#082F50] shadow-[0_24px_60px_rgba(8,47,80,0.16)]',
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
           position === 'popper' &&
             'data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1',
@@ -102,8 +102,8 @@ function SelectItem({
       data-slot="select-item"
       className={cn(
         'relative flex w-full cursor-pointer select-none items-center gap-2 rounded-xl py-2.5 pe-8 ps-3 text-sm font-semibold outline-none transition-colors',
-        'focus:bg-[#FFF8E8] focus:text-[#0A2540]',
-        'data-[state=checked]:bg-[#F0F7FC] data-[state=checked]:text-[#0B4E84]',
+        'focus:bg-[#FFF8E8] focus:text-[#082F50]',
+        'data-[state=checked]:bg-[#EFF5F9] data-[state=checked]:text-[#0A527E]',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
       )}

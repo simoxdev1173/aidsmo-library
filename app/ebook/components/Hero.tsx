@@ -494,8 +494,8 @@ const Hero = () => {
   }, [activeIndex, effectsEnabled, goToSlide, isHeroVisible, prefersReducedMotion]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-[#0A2540]" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <div className="corner-frame relative min-h-[clamp(34rem,72dvh,46rem)] w-full overflow-hidden bg-[#0A2540] shadow-[0_24px_72px_rgba(10,37,64,0.18)]">
+    <section ref={sectionRef} className="relative overflow-hidden bg-[#082F50]" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="corner-frame relative min-h-[clamp(34rem,72dvh,46rem)] w-full overflow-hidden bg-[#082F50] shadow-[0_24px_72px_rgba(8,47,80,0.18)]">
         <WebGlHeroSlider
           images={heroImages}
           enabled={effectsEnabled}
@@ -508,7 +508,7 @@ const Hero = () => {
         />
 
         <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/90 via-[#0A2540]/55 to-[#0A2540]/15 sm:bg-[linear-gradient(90deg,rgba(10,37,64,0.04)_0%,rgba(10,37,64,0.42)_44%,rgba(10,37,64,0.78)_100%)]" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#082F50]/90 via-[#082F50]/55 to-[#082F50]/15 sm:bg-[linear-gradient(90deg,rgba(8,47,80,0.04)_0%,rgba(8,47,80,0.42)_44%,rgba(8,47,80,0.78)_100%)]" aria-hidden />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.1),transparent_30%)]" aria-hidden />
         <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />
 
@@ -542,7 +542,7 @@ const Hero = () => {
             <div className="mt-5 flex flex-col items-start gap-2 sm:mt-8 sm:flex-row sm:items-stretch sm:gap-3">
               <Link
                 href="#latest-pub"
-                className="engraved brass-gradient inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:max-w-none sm:px-7"
+                className="engraved brass-gradient inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 text-center text-sm font-bold text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#082F50] sm:w-auto sm:max-w-none sm:px-7"
               >
                 {t('browsePublications')}
                 <LuChevronLeft className="h-4 w-4" />
@@ -550,7 +550,7 @@ const Hero = () => {
 
               <Link
                 href="#projects"
-                className="inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-5 text-center text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#0A2540] sm:w-auto sm:max-w-none sm:px-7"
+                className="inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-5 text-center text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#082F50] sm:w-auto sm:max-w-none sm:px-7"
               >
                 {t('searchBySector')}
                 <LuSearch className="h-4 w-4" />

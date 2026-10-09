@@ -12,14 +12,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'border border-[#C29C41] bg-gradient-to-b from-[#e8c96a] to-[#C29C41] text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] hover:brightness-110',
-        navy: 'bg-gradient-to-br from-[#022A4E] to-[#034582] text-white shadow-[0_8px_20px_rgba(2,42,78,0.24)] hover:brightness-125',
+          'border border-[#C29C41] bg-gradient-to-b from-[#e8c96a] to-[#C29C41] text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] hover:brightness-110',
+        navy: 'bg-gradient-to-br from-[#032C4B] to-[#0B5688] text-white shadow-[0_8px_20px_rgba(2,42,78,0.24)] hover:brightness-125',
         outline:
-          'border border-[#C29C41]/45 bg-white/60 text-[#8B681C] hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#0A2540]',
-        ghost: 'text-[#0369A1] hover:bg-[#0369A1]/8 hover:text-[#022A4E]',
+          'border border-[#C29C41]/45 bg-white/60 text-[#8B681C] hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#082F50]',
+        ghost: 'text-[#0B5688] hover:bg-[#0B5688]/8 hover:text-[#032C4B]',
         subtle:
-          'border border-[#0369A1]/14 bg-white text-[#0A2540] shadow-sm hover:border-[#C29C41]/50 hover:bg-[#FFF8E8]',
-        link: 'text-[#0369A1] underline-offset-4 hover:underline',
+          'border border-[#0B5688]/14 bg-white text-[#082F50] shadow-sm hover:border-[#C29C41]/50 hover:bg-[#FFF8E8]',
+        link: 'text-[#0B5688] underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-5 has-[>svg]:px-4',

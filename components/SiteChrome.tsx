@@ -9,8 +9,8 @@ import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 type SiteUser = { id: string; email: string; name: string; image: string | null } | null;
 
-export function SiteNavigation({ user }: { user: SiteUser }) {
-  return <TopNavBar user={user} />;
+export function SiteNavigation({ user, unreadCount }: { user: SiteUser; unreadCount: number }) {
+  return <TopNavBar user={user} unreadCount={unreadCount} />;
 }
 
 export function SiteNavigationFallback() {
@@ -49,7 +49,7 @@ export default function SiteChrome({
         <>
           <a
             href="#main-content"
-            className="fixed start-4 top-3 z-[130] -translate-y-20 rounded-full bg-[#0A2540] px-4 py-2 text-sm font-bold text-white shadow-lg transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2"
+            className="fixed start-4 top-3 z-[130] -translate-y-20 rounded-full bg-[#082F50] px-4 py-2 text-sm font-bold text-white shadow-lg transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2"
           >
             {locale === 'ar' ? 'انتقل إلى المحتوى' : 'Skip to content'}
           </a>

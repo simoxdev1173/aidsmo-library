@@ -45,20 +45,20 @@ export default function ToolTrace({ steps, revealed, done, locale }: ToolTracePr
   const active = done ? null : steps[revealed];
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[#0369A1]/12 bg-white/70 backdrop-blur-sm">
+    <div className="overflow-hidden rounded-xl border border-[#0B5688]/12 bg-white/70 backdrop-blur-sm">
       <button
         type="button"
         onClick={() => setCollapsed((value) => !value)}
         disabled={!done}
         className={cn(
           'flex w-full items-center gap-2 px-3 py-2 text-start transition-colors',
-          done ? 'cursor-pointer hover:bg-[#F0F7FC]' : 'cursor-default',
+          done ? 'cursor-pointer hover:bg-[#EFF5F9]' : 'cursor-default',
         )}
       >
         <span
           className={cn(
             'flex size-5 shrink-0 items-center justify-center rounded-md',
-            done ? 'bg-[#C29C41]/15 text-[#8B681C]' : 'bg-[#0369A1]/10 text-[#0369A1]',
+            done ? 'bg-[#C29C41]/15 text-[#8B681C]' : 'bg-[#0B5688]/10 text-[#0B5688]',
           )}
         >
           {done ? (
@@ -73,7 +73,7 @@ export default function ToolTrace({ steps, revealed, done, locale }: ToolTracePr
           )}
         </span>
 
-        <span className="flex-1 text-[0.7rem] font-bold text-[#0A2540]">
+        <span className="flex-1 text-[0.7rem] font-bold text-[#082F50]">
           {done
             ? t('toolsUsed', { count: steps.length })
             : (active ?? steps[steps.length - 1]).label[locale]}
@@ -98,7 +98,7 @@ export default function ToolTrace({ steps, revealed, done, locale }: ToolTracePr
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ol className="space-y-0 border-t border-[#0369A1]/10 px-3 py-2">
+            <ol className="space-y-0 border-t border-[#0B5688]/10 px-3 py-2">
               {visible.map((step, index) => {
                 const Icon = TOOL_ICONS[step.tool];
                 const isLast = index === visible.length - 1;
@@ -114,17 +114,17 @@ export default function ToolTrace({ steps, revealed, done, locale }: ToolTracePr
                     {/* Connector rail */}
                     {!isLast && (
                       <span
-                        className="absolute top-5 h-[calc(100%-12px)] w-px bg-[#0369A1]/15 start-[7px]"
+                        className="absolute top-5 h-[calc(100%-12px)] w-px bg-[#0B5688]/15 start-[7px]"
                         aria-hidden
                       />
                     )}
 
-                    <span className="relative z-10 mt-0.5 flex size-3.5 shrink-0 items-center justify-center rounded-full bg-[#F0F7FC] ring-1 ring-[#0369A1]/20">
-                      <Icon className="size-2 text-[#0369A1]" />
+                    <span className="relative z-10 mt-0.5 flex size-3.5 shrink-0 items-center justify-center rounded-full bg-[#EFF5F9] ring-1 ring-[#0B5688]/20">
+                      <Icon className="size-2 text-[#0B5688]" />
                     </span>
 
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[0.68rem] font-bold leading-tight text-[#0A2540]">
+                      <span className="block text-[0.68rem] font-bold leading-tight text-[#082F50]">
                         {step.label[locale]}
                       </span>
                       <span className="mt-0.5 block truncate text-[0.62rem] leading-tight text-[#475569]">

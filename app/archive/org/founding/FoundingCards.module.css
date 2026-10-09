@@ -16,7 +16,7 @@
   .cardGrid > article:hover {
     z-index: 1;
     transform: translateY(-4px) scale(1.045);
-    box-shadow: 0 24px 52px rgba(10, 37, 64, 0.15);
+    box-shadow: 0 24px 52px rgba(8,47,80, 0.15);
   }
 }
 
@@ -30,6 +30,6 @@
   .cardGrid > article:focus-within {
     z-index: 1;
     transform: translateY(-4px) scale(1.045);
-    box-shadow: 0 24px 52px rgba(10, 37, 64, 0.15);
+    box-shadow: 0 24px 52px rgba(8,47,80, 0.15);
   }
 }

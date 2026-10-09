@@ -778,7 +778,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
           aria-hidden={isCompact}
           inert={isCompact}
           className={cn(
-            'bg-[#0A2540] transition-[max-height,opacity,border-color,border-width] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+            'bg-[#053D69] transition-[max-height,opacity,border-color,border-width] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
             isCompact
               ? 'max-h-0 overflow-hidden border-b-0 border-transparent opacity-0'
               : 'max-h-[124px] overflow-visible border-b border-[#E8C96A]/30 opacity-100 md:max-h-[88px]',
@@ -919,7 +919,7 @@ const TopNavBar = ({ user }: { user: SiteUser }) => {
           </div>
         </div>
 
-        <nav aria-label={t('mainMenuLabel')} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative w-full border-b border-[#C29C41]/45 bg-[#0A2540] text-white">
+        <nav aria-label={t('mainMenuLabel')} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative w-full border-b border-[#C29C41]/45 bg-[#053D69] text-white">
           <div className={cn('flex w-full items-center gap-1 px-3 transition-[height] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:gap-2 sm:px-6 lg:gap-3 lg:px-8', isCompact ? 'h-[60px] justify-between md:h-16 lg:grid lg:grid-cols-[minmax(20rem,1fr)_minmax(0,3fr)_minmax(20rem,1fr)]' : 'h-[52px] md:h-14')}>
             <Link data-nav-zone="logo" href="/" scroll={false} onClick={handleHomeNavigate} aria-label={locale === 'ar' ? 'الذهاب إلى الرئيسية' : 'Go to homepage'} aria-hidden={!isCompact} inert={!isCompact} className={cn('flex shrink-0 items-center overflow-hidden rounded-lg transition-[width,height,opacity,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#0A2540] motion-reduce:transition-none lg:justify-self-start', isCompact ? 'h-12 w-12 translate-y-0 opacity-100 delay-75 max-[359px]:w-8 sm:w-20' : 'pointer-events-none h-11 w-0 -translate-y-1 opacity-0 delay-0')}>
               <Image src="/logo-3d-3d.png" alt="" height={120} width={130} className="h-full w-full shrink-0 object-contain" />

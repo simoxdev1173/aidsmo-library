@@ -142,7 +142,7 @@ export function PlanEntryRow({ entry }: { entry: PlanEntry }) {
                 src={`${primaryDocument.path}#toolbar=0&view=FitH&navpanes=0`}
                 title={`معاينة: ${entry.title}`}
                 loading="lazy"
-                className="h-[360px] w-full rounded-lg border border-[#D9E3EE] bg-[#F4F8FB] sm:h-[440px]"
+                className={`w-full rounded-lg border border-[#D9E3EE] bg-[#F4F8FB] ${showCover ? 'h-[520px] sm:h-[680px]' : 'h-[clamp(480px,91vw,1050px)]'}`}
               />
             </div>
           )}

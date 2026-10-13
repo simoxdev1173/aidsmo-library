@@ -64,7 +64,7 @@ export default async function DashboardPage() {
         <div className="divide-y divide-[#E2E8F0]">
           {stats.recentEntries.length > 0 ? (
             stats.recentEntries.map((entry) => (
-              <Link key={entry.id} href={`/dashboard/entries/${entry.id}`} className="grid gap-3 px-5 py-4 transition duration-200 hover:bg-[#F8FAFC] md:grid-cols-[1fr_180px_120px]">
+              <Link key={entry.id} href={`/dashboard/entries/${entry.id}`} className="grid gap-3 px-5 py-4 transition duration-200 hover:bg-[#F8FAFC] md:grid-cols-[1fr_150px_120px_100px]">
                 <div className="flex items-center gap-3">
                   <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md border border-[#E2E8F0] bg-[#EFF5F9]">
                     {entry.coverImagePath ? (

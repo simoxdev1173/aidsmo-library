@@ -193,7 +193,7 @@ export async function getDashboardStats() {
     prisma.libraryEntry.count({ where: { coverImagePath: { not: null } } }),
     prisma.libraryEntry.findMany({
       take: 5,
-      orderBy: { updatedAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       include: { category: { include: { parent: { include: { parent: true } } } } },
     }),
   ]);
@@ -259,7 +259,7 @@ export async function getEntries(filters: {
           }
         : {}),
     },
-    orderBy: { updatedAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     include: { category: { include: { parent: { include: { parent: true } } } } },
   });
 }

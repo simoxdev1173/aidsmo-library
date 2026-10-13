@@ -86,7 +86,7 @@ function OrganizationHistoryNode({ name, image, details, largeLogo = false }: { 
   return (
     <article className="relative z-10 mx-auto flex max-w-[340px] flex-col items-center text-center">
       <Image src={image} alt="" width={160} height={160} className={largeLogo ? 'h-36 w-40 object-contain' : 'h-24 w-28 object-contain'} />
-      <h3 className="mt-2 font-academic text-base font-bold leading-7 text-[#003652]">{name}</h3>
+      <h3 className="mt-2 font-academic text-base font-bold leading-7 text-[#053D69]">{name}</h3>
       <ul className="mt-2 space-y-0.5 font-academic text-sm leading-6 text-[#475569]">
         {details.map((detail) => <li key={detail}>{detail}</li>)}
       </ul>
@@ -178,12 +178,12 @@ const organs = [
 
 export default function FoundingPage() {
   return (
-    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#0A2540]">
-      <section className="relative border-b border-[#C29C41]/25 bg-[#071D2F] text-white">
+    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#082F50]">
+      <section className="relative border-b border-[#C29C41]/25 bg-[#062B46] text-white">
         <div className="absolute inset-0 opacity-35" aria-hidden="true">
           <Image src="/standardization-bg.webp" alt="" fill priority sizes="100vw" className="object-cover" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.94),rgba(3,105,161,0.64)_55%,rgba(7,29,47,0.86))]" aria-hidden="true" />
+        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(6,43,70,0.94),rgba(5,61,105,0.64)_55%,rgba(6,43,70,0.86))]" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-36 sm:px-6 lg:px-8 lg:pb-20 lg:pt-40">
           <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 backdrop-blur">
             <Image src="/aidsmo-logo.png" alt="" width={30} height={30} className="h-7 w-7 object-contain" />
@@ -196,19 +196,19 @@ export default function FoundingPage() {
 
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
         <nav aria-label="مسار الصفحة" className="mb-9 flex flex-wrap items-center gap-2 text-sm text-[#64748B]">
-          <Link href="/" className="hover:text-[#0369A1]">الرئيسية</Link>
+          <Link href="/" className="hover:text-[#0B5688]">الرئيسية</Link>
           <HiOutlineChevronLeft className="h-3.5 w-3.5 text-[#C29C41]" aria-hidden="true" />
-          <Link href="/archive" className="hover:text-[#0369A1]">الأرشيف</Link>
+          <Link href="/archive" className="hover:text-[#0B5688]">الأرشيف</Link>
           <HiOutlineChevronLeft className="h-3.5 w-3.5 text-[#C29C41]" aria-hidden="true" />
-          <Link href="/archive/org" className="hover:text-[#0369A1]">المنظمة العربية للتنمية الصناعية والتقييس والتعدين</Link>
+          <Link href="/archive/org" className="hover:text-[#0B5688]">المنظمة العربية للتنمية الصناعية والتقييس والتعدين</Link>
           <HiOutlineChevronLeft className="h-3.5 w-3.5 text-[#C29C41]" aria-hidden="true" />
-          <span aria-current="page" className="font-semibold text-[#0A2540]">تأسيس المنظمة</span>
+          <span aria-current="page" className="font-semibold text-[#082F50]">تأسيس المنظمة</span>
         </nav>
 
-        <section aria-labelledby="founding-intro-heading" className="mb-12 overflow-hidden rounded-[18px] border border-[#DCE6EF] bg-white shadow-[0_12px_34px_rgba(10,37,64,0.055)]">
-          <div className="h-1.5 bg-gradient-to-l from-[#C29C41] via-[#E8C96A] to-[#0369A1]" aria-hidden="true" />
+        <section aria-labelledby="founding-intro-heading" className="mb-12 overflow-hidden rounded-[18px] border border-[#DCE6EF] bg-white shadow-[0_12px_34px_rgba(8,47,80,0.055)]">
+          <div className="h-1.5 bg-gradient-to-l from-[#C29C41] via-[#E8C96A] to-[#0B5688]" aria-hidden="true" />
           <div className="p-6 sm:p-8 lg:p-10">
-            <h2 id="founding-intro-heading" className="font-academic text-2xl font-bold text-[#003652]">نبذة تعريفية</h2>
+            <h2 id="founding-intro-heading" className="font-academic text-2xl font-bold text-[#053D69]">نبذة تعريفية</h2>
             <p className="mt-5 max-w-5xl font-academic text-base leading-9 text-[#334155] md:text-lg md:leading-10">
               المنظمة العربية للتنمية الصناعية والتقييس والتعدين هي منظمة عربية متخصصة ذات شخصية اعتبارية واستقلال مالي وإداري تعمل في إطار جامعة الدول العربية في مجالات الصناعة، التقييس والتعدين، أنشأت نتيجة لدمج مهام المنظمة العربية للثروة المعدنية والمنظمة العربية للمواصفات والمقاييس بالمنظمة العربية للتنمية الصناعية وتضم في عضويتها (21) دولة عربية.
             </p>
@@ -219,7 +219,7 @@ export default function FoundingPage() {
           {identity.map((item, index) => (
             <article
               key={item.title}
-              className="relative flex min-h-[320px] flex-col overflow-hidden rounded-[22px] border border-[#DCE6EF] bg-white p-7 text-[#003652] shadow-[0_16px_42px_rgba(10,37,64,0.08)] sm:p-8"
+              className="relative flex min-h-[320px] flex-col overflow-hidden rounded-[22px] border border-[#DCE6EF] bg-white p-7 text-[#053D69] shadow-[0_16px_42px_rgba(8,47,80,0.08)] sm:p-8"
             >
               <div className="absolute inset-0" aria-hidden="true">
                 <Image src={item.image} alt="" fill sizes="(min-width: 1024px) 33vw, 100vw" className="scale-110 object-cover blur-[3px]" />
@@ -231,7 +231,7 @@ export default function FoundingPage() {
               </div>
               <div className="relative mt-auto pt-8">
                 <span className="mb-4 block h-1 w-12 rounded-full bg-[#C29C41]" aria-hidden="true" />
-                <h2 className="font-academic text-2xl font-bold text-[#003652]">{item.title}</h2>
+                <h2 className="font-academic text-2xl font-bold text-[#053D69]">{item.title}</h2>
                 <p className="mt-4 font-academic text-base leading-8 text-[#334155]">{item.text}</p>
               </div>
             </article>
@@ -239,8 +239,8 @@ export default function FoundingPage() {
         </section>
 
         <section aria-labelledby="founding-predecessors-heading" className="mb-12">
-          <h2 id="founding-predecessors-heading" className="mb-7 font-academic text-2xl font-bold text-[#003652]">المنظمة العربية للتنمية الصناعية والتقييس والتعدين</h2>
-          <div className="overflow-hidden rounded-[22px] border border-[#DCE6EF] bg-white px-5 py-9 shadow-[0_12px_34px_rgba(10,37,64,0.055)] sm:px-8 lg:px-12">
+          <h2 id="founding-predecessors-heading" className="mb-7 font-academic text-2xl font-bold text-[#053D69]">المنظمة العربية للتنمية الصناعية والتقييس والتعدين</h2>
+          <div className="overflow-hidden rounded-[22px] border border-[#DCE6EF] bg-white px-5 py-9 shadow-[0_12px_34px_rgba(8,47,80,0.055)] sm:px-8 lg:px-12">
             <div className="grid gap-10 lg:grid-cols-3 lg:gap-6">
               {predecessors.map((predecessor) => (
                 <OrganizationHistoryNode key={predecessor.name} {...predecessor} largeLogo />
@@ -262,7 +262,7 @@ export default function FoundingPage() {
 
             <div className="mx-auto max-w-2xl text-center">
               <Image src="/archive/founding/logo-aidsmo.png" alt="" width={128} height={128} className="mx-auto h-28 w-28 object-contain" />
-              <h3 className="mt-2 font-academic text-lg font-bold text-[#003652]">المنظمة العربية للتنمية الصناعية والتقييس والتعدين</h3>
+              <h3 className="mt-2 font-academic text-lg font-bold text-[#053D69]">المنظمة العربية للتنمية الصناعية والتقييس والتعدين</h3>
               <p className="mt-2 font-academic text-sm text-[#475569]">المدينة: الرباط</p>
               <p className="mt-5 border-t border-[#E8EEF4] pt-5 font-academic text-sm leading-7 text-[#475569]">
                 تمت الموافقة على تعديل مسمى المنظمة ليشمل التقييس خلال الدورة 26 للجمعية العامة في الرباط (23/7/2020)، ثم وافق المجلس الاقتصادي والاجتماعي في فبراير 2021 على المسمى الجديد.
@@ -272,15 +272,15 @@ export default function FoundingPage() {
         </section>
 
         <section aria-labelledby="founding-timeline-heading">
-          <h2 id="founding-timeline-heading" className="mb-7 font-academic text-2xl font-bold text-[#003652]">محطات التأسيس</h2>
+          <h2 id="founding-timeline-heading" className="mb-7 font-academic text-2xl font-bold text-[#053D69]">محطات التأسيس</h2>
           <FoundingTimeline milestones={milestones} />
         </section>
 
         <section aria-labelledby="founding-goals-heading" className="mt-14">
-          <h2 id="founding-goals-heading" className="mb-7 font-academic text-2xl font-bold text-[#003652]">من أهدافنا</h2>
+          <h2 id="founding-goals-heading" className="mb-7 font-academic text-2xl font-bold text-[#053D69]">من أهدافنا</h2>
           <div className={`${styles.cardGrid} grid gap-5 sm:grid-cols-2 xl:grid-cols-4`}>
             {goals.map((goal, index) => (
-              <article key={goal.image} className="relative flex min-h-[300px] flex-col overflow-hidden rounded-[22px] border border-[#DCE6EF] bg-white p-6 shadow-[0_12px_34px_rgba(10,37,64,0.055)] sm:p-7">
+              <article key={goal.image} className="relative flex min-h-[300px] flex-col overflow-hidden rounded-[22px] border border-[#DCE6EF] bg-white p-6 shadow-[0_12px_34px_rgba(8,47,80,0.055)] sm:p-7">
                 <div className="absolute inset-0" aria-hidden="true">
                   <Image src={goal.image} alt="" fill sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw" className="scale-110 object-cover blur-[3px]" />
                 </div>
@@ -290,7 +290,7 @@ export default function FoundingPage() {
                 </div>
                 <div className="relative mt-auto pt-8">
                   <span className="mb-4 block h-1 w-12 rounded-full bg-[#C29C41]" aria-hidden="true" />
-                  <p className="font-academic text-base font-semibold leading-8 text-[#003652]">{goal.text}</p>
+                  <p className="font-academic text-base font-semibold leading-8 text-[#053D69]">{goal.text}</p>
                 </div>
               </article>
             ))}
@@ -298,23 +298,23 @@ export default function FoundingPage() {
         </section>
 
         <section aria-labelledby="founding-organs-heading" className="mt-14">
-          <h2 id="founding-organs-heading" className="mb-7 font-academic text-2xl font-bold text-[#003652]">أجهزة المنظمة</h2>
+          <h2 id="founding-organs-heading" className="mb-7 font-academic text-2xl font-bold text-[#053D69]">أجهزة المنظمة</h2>
           <div className={`${styles.cardGrid} grid gap-5 lg:grid-cols-3`}>
             {organs.map((organ) => (
-              <article key={organ.title} className="relative flex flex-col overflow-hidden rounded-[18px] border border-[#DCE6EF] bg-white shadow-[0_12px_34px_rgba(10,37,64,0.055)]">
+              <article key={organ.title} className="relative flex flex-col overflow-hidden rounded-[18px] border border-[#DCE6EF] bg-white shadow-[0_12px_34px_rgba(8,47,80,0.055)]">
                 {organ.image ? (
-                  <div className="relative h-44 bg-[#F0F7FC]">
+                  <div className="relative h-44 bg-[#EFF5F9]">
                     <Image src={organ.image} alt="" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover" />
                   </div>
                 ) : (
-                  <div className="flex h-44 items-center justify-center bg-[#0A2540]">
+                  <div className="flex h-44 items-center justify-center bg-[#082F50]">
                     <Image src="/aidsmo-logo.png" alt="" width={104} height={104} className="h-24 w-24 object-contain" />
                   </div>
                 )}
                 <div className="flex flex-1 flex-col p-6">
-                  <h3 className="font-academic text-xl font-bold text-[#003652]">{organ.title}</h3>
+                  <h3 className="font-academic text-xl font-bold text-[#053D69]">{organ.title}</h3>
                   <p className="mt-4 flex-1 font-academic text-sm leading-8 text-[#475569]">{organ.text}</p>
-                  {organ.href && <Link href={organ.href} className="mt-6 inline-flex min-h-10 items-center self-start rounded-full border border-[#C29C41]/55 bg-[#FBF7EA] px-4 text-sm font-bold text-[#8B681C] transition-colors hover:bg-[#F0F7FC] hover:text-[#0369A1]">عرض الأعضاء</Link>}
+                  {organ.href && <Link href={organ.href} className="mt-6 inline-flex min-h-10 items-center self-start rounded-full border border-[#C29C41]/55 bg-[#FBF7EA] px-4 text-sm font-bold text-[#8B681C] transition-colors hover:bg-[#EFF5F9] hover:text-[#0B5688]">عرض الأعضاء</Link>}
                 </div>
               </article>
             ))}
@@ -323,14 +323,14 @@ export default function FoundingPage() {
 
         <section aria-labelledby="member-countries-heading" className="mt-14">
           <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
-            <h2 id="member-countries-heading" className="font-academic text-2xl font-bold text-[#003652]">الدول العربية الأعضاء</h2>
+            <h2 id="member-countries-heading" className="font-academic text-2xl font-bold text-[#053D69]">الدول العربية الأعضاء</h2>
             <span className="rounded-full border border-[#C29C41]/35 bg-[#FBF7EA] px-4 py-1.5 text-sm font-bold text-[#8B681C]">{memberCountries.length} دولة عربية</span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {memberCountries.map((country) => (
-              <article key={country.flag} className="flex min-h-28 items-center gap-5 rounded-[16px] border border-[#DCE6EF] bg-white px-6 py-4 shadow-[0_10px_26px_rgba(10,37,64,0.045)]">
+              <article key={country.flag} className="flex min-h-28 items-center gap-5 rounded-[16px] border border-[#DCE6EF] bg-white px-6 py-4 shadow-[0_10px_26px_rgba(8,47,80,0.045)]">
                 <Image src={`/archive/founding/flag-${country.flag}.webp`} alt="" width={70} height={48} className="h-12 w-[70px] shrink-0 rounded-sm border border-[#E8EEF4] object-cover" />
-                <h3 className="font-academic text-base font-bold leading-7 text-[#003652]">{country.name}</h3>
+                <h3 className="font-academic text-base font-bold leading-7 text-[#053D69]">{country.name}</h3>
               </article>
             ))}
           </div>

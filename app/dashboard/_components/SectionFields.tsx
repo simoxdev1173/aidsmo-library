@@ -31,7 +31,7 @@ export default function SectionFields({ initialSections = [] }: { initialSection
     <section className="rounded-lg border border-[#D9E3EE] bg-[#F8FAFC] p-4">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-lg font-bold text-[#003652]">أقسام المحتوى</h3>
+          <h3 className="text-lg font-bold text-[#053D69]">أقسام المحتوى</h3>
           <p className="mt-1 text-sm leading-6 text-[#64748B]">
             استخدمها للصفحات أو للإصدارات التي تحتاج فقرات منظمة بعناوين فرعية.
           </p>
@@ -39,7 +39,7 @@ export default function SectionFields({ initialSections = [] }: { initialSection
         <button
           type="button"
           onClick={() => setSections((current) => [...current, emptySection])}
-          className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md border border-[#0369A1] bg-white px-4 text-sm font-bold text-[#0369A1] transition duration-200 hover:bg-[#0369A1] hover:text-white"
+          className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md border border-[#0B5688] bg-white px-4 text-sm font-bold text-[#0B5688] transition duration-200 hover:bg-[#0B5688] hover:text-white"
         >
           <HiOutlinePlus className="h-5 w-5" />
           إضافة قسم
@@ -67,7 +67,7 @@ export default function SectionFields({ initialSections = [] }: { initialSection
                 name="sectionTitle"
                 value={section.title}
                 onChange={(event) => updateSection(index, 'title', event.target.value)}
-                className="h-11 w-full rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#0A2540] outline-none transition duration-200 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20"
+                className="h-11 w-full rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#082F50] outline-none transition duration-200 focus:border-[#0B5688] focus:ring-2 focus:ring-[#0B5688]/20"
               />
             </label>
 
@@ -78,7 +78,7 @@ export default function SectionFields({ initialSections = [] }: { initialSection
                 value={section.body}
                 onChange={(event) => updateSection(index, 'body', event.target.value)}
                 rows={4}
-                className="w-full rounded-md border border-[#CBD5E1] bg-white px-3 py-3 text-sm leading-7 text-[#0A2540] outline-none transition duration-200 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20"
+                className="w-full rounded-md border border-[#CBD5E1] bg-white px-3 py-3 text-sm leading-7 text-[#082F50] outline-none transition duration-200 focus:border-[#0B5688] focus:ring-2 focus:ring-[#0B5688]/20"
               />
             </label>
           </div>

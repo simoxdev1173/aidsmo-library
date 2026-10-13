@@ -99,9 +99,9 @@ const ENTRY_TYPE_CLOSING: Record<string, string> = {
 };
 
 const CATEGORY_SPINE: Record<string, string> = {
-  industry: '#0369A1',
-  standardization: '#0C5B99',
-  mining: '#003652',
+  industry: '#0B5688',
+  standardization: '#0C618E',
+  mining: '#053D69',
   'industrial-info': '#8A6A1D',
 };
 
@@ -162,7 +162,7 @@ function FactCell({ label, value, icon: Icon, compact = false }: EntryFact & { c
         <span>{label}</span>
       </dt>
       <dd
-        className={`mt-1.5 break-words font-academic font-bold text-[#0A2540] ${compact ? 'ms-11 text-[0.95rem] leading-6' : 'ms-[3.25rem] text-[1.05rem] leading-7'}`}
+        className={`mt-1.5 break-words font-academic font-bold text-[#082F50] ${compact ? 'ms-11 text-[0.95rem] leading-6' : 'ms-[3.25rem] text-[1.05rem] leading-7'}`}
       >
         {value}
       </dd>
@@ -176,7 +176,7 @@ function FactCell({ label, value, icon: Icon, compact = false }: EntryFact & { c
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-6">
-      <h2 className="text-xl font-medium text-[#0A2540]">{children}</h2>
+      <h2 className="text-xl font-medium text-[#082F50]">{children}</h2>
       <div className="mt-3 h-[3px] w-14 rounded-full bg-[#C29C41]" />
     </div>
   );
@@ -196,8 +196,8 @@ function CoverArt({
   return (
     <div className={styles.coverArt}>
       <div
-        className="relative aspect-[3/4] overflow-hidden rounded-sm shadow-[0_28px_46px_-18px_rgba(10,37,64,0.55)]"
-        style={{ background: `linear-gradient(160deg, #0A2540, ${spine})` }}
+        className="relative aspect-[3/4] overflow-hidden rounded-sm shadow-[0_28px_46px_-18px_rgba(8,47,80,0.55)]"
+        style={{ background: `linear-gradient(160deg, #082F50, ${spine})` }}
       >
         {src ? (
           <Image src={src} alt={title} fill sizes="(max-width: 767px) 240px, 320px" className="object-cover object-top" unoptimized priority />
@@ -314,7 +314,7 @@ export default async function BookPage({
     : undefined;
 
   const topSlug = categoryTopSlug(entry.category);
-  const spine = CATEGORY_SPINE[topSlug] ?? '#0369A1';
+  const spine = CATEGORY_SPINE[topSlug] ?? '#0B5688';
   const heroImage = SECTOR_HERO[topSlug] ?? DEFAULT_HERO;
   const typeLabel = ENTRY_TYPE_LABEL[entry.entryType] ?? 'مدخل';
   const demonstrative = ENTRY_TYPE_DEMONSTRATIVE[entry.entryType] ?? 'هذا';
@@ -384,11 +384,11 @@ export default async function BookPage({
   return (
     <main dir="rtl" className={styles.page}>
       {/* ─── Hero: the sector's own header backdrop, matching listing pages ─── */}
-      <section className="relative overflow-hidden bg-[#071D2F] pt-28 text-white md:pt-32">
+      <section className="relative overflow-hidden bg-[#062B46] pt-28 text-white md:pt-32">
         <div className="absolute inset-0 opacity-[0.72]" aria-hidden>
           <Image src={heroImage} alt="" fill priority className="object-cover" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.82),rgba(3,105,161,0.4)_56%,rgba(7,29,47,0.9))]" aria-hidden />
+        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(6,43,70,0.82),rgba(5,61,105,0.4)_56%,rgba(6,43,70,0.9))]" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-14 sm:px-6 lg:px-8 md:pb-16">
           <nav className="flex items-center gap-2 text-sm font-bold text-white/60">
@@ -435,7 +435,7 @@ export default async function BookPage({
               {primaryDocument ? (
                 <a
                   href="#document-preview"
-                  className="engraved brass-gradient inline-flex h-12 items-center gap-2 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_10px_24px_rgba(0,0,0,0.28)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#071D2F]"
+                  className="engraved brass-gradient inline-flex h-12 items-center gap-2 rounded-full border border-[#C29C41] px-7 text-sm font-bold text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_10px_24px_rgba(0,0,0,0.28)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#062B46]"
                 >
                   <HiOutlineEye className="h-5 w-5" />
                   اقرأ الوثيقة
@@ -529,7 +529,7 @@ export default async function BookPage({
                   href={file.path}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-11 items-center justify-between gap-3 border-t-2 border-[#C29C41]/25 pt-3 text-sm font-bold text-[#0369A1] transition duration-200 hover:text-[#8A6A1D]"
+                  className="flex min-h-11 items-center justify-between gap-3 border-t-2 border-[#C29C41]/25 pt-3 text-sm font-bold text-[#0B5688] transition duration-200 hover:text-[#8A6A1D]"
                 >
                   <span>وثيقة {index + 1}</span>
                   <HiOutlineEye className="h-5 w-5 shrink-0" />
@@ -555,7 +555,7 @@ export default async function BookPage({
                 href={primaryDocument.path}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0369A1] transition duration-200 hover:text-[#8A6A1D]"
+                className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0B5688] transition duration-200 hover:text-[#8A6A1D]"
               >
                 <HiOutlineArrowTopRightOnSquare className="h-4 w-4" />
                 فتح كامل
@@ -597,11 +597,11 @@ export default async function BookPage({
         >
           <div>
             <p className="text-xs font-bold text-[#C29C41]">استكشاف</p>
-            <p className="mt-1 text-base font-bold text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+            <p className="mt-1 text-base font-bold text-[#053D69] transition duration-200 group-hover:text-[#0B5688]">
               تصفّح المزيد ضمن {entry.category.name}
             </p>
           </div>
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F8FB] text-[#0369A1] transition duration-200 group-hover:bg-[#0369A1] group-hover:text-white">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F8FB] text-[#0B5688] transition duration-200 group-hover:bg-[#0B5688] group-hover:text-white">
             <HiOutlineArrowLeft className="h-5 w-5" />
           </span>
         </Link>

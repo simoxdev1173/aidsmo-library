@@ -1,20 +1,20 @@
-.page { min-height: 100vh; background: #faf7ef; color: #0a2540; }
+.page { min-height: 100vh; background: #faf7ef; color: #082F50; }
 .heroLayout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; align-items: center; gap: 48px; margin-top: 36px; }
 .coverArt { width: 100%; max-width: 320px; }
 .readingLayout { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 40px; align-items: start; }
 .coverSidebar { align-self: stretch; }
 .stickyCover { position: sticky; top: 120px; }
 .sidebarTitle { margin-top: 24px; font-size: 14px; font-weight: 500; line-height: 1.9; }
-.sidebarRead { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 18px; min-height: 48px; border: 1px solid #c29c41; border-radius: 999px; color: #0a2540; background: #f5efdf; font-size: 13px; }
+.sidebarRead { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 18px; min-height: 48px; border: 1px solid #c29c41; border-radius: 999px; color: #082F50; background: #f5efdf; font-size: 13px; }
 .sidebarRead:hover { background: #eee3c9; }
 .sidebarRead:focus-visible { outline: 2px solid #9a7421; outline-offset: 4px; }
 .heroTitle { margin-top: 18px; font-family: var(--font-readex), sans-serif; font-size: clamp(26px, 3.1vw, 42px); font-weight: 500; line-height: 1.7; text-wrap: balance; }
 .heroCover { display: flex; justify-content: center; padding: 8px; animation: book-arrive 650ms ease both; }
-.pageNav { background: #fffcf5; border-bottom: 1px solid rgb(194 156 65 / 24%); }
+.pageNav { background: #eff5f9; border-bottom: 1px solid rgb(5 61 105 / 18%); }
 .pageNavInner { display: flex; align-items: center; gap: 28px; max-width: 1152px; padding: 0 32px; margin-inline: auto; overflow-x: auto; scrollbar-width: none; }
 .pageNavInner::-webkit-scrollbar { display: none; }
-.pageNav a { padding: 20px 0; white-space: nowrap; color: #526072; font-size: 13px; font-weight: 500; border-bottom: 2px solid transparent; transition: color 200ms, border-color 200ms; }
-.pageNav a:hover { color: #805e1b; border-color: #c29c41; }
+.pageNav a { padding: 20px 0; white-space: nowrap; color: #053d69; font-size: 13px; font-weight: 500; border-bottom: 2px solid transparent; transition: color 200ms, border-color 200ms; }
+.pageNav a:hover { color: #0b5688; border-color: #c29c41; }
 .summary { position: relative; overflow: hidden; scroll-margin-top: 110px; border: 1px solid #e8dfcb; border-radius: 20px; background: #fffdf8; box-shadow: 0 18px 55px -35px rgb(10 37 64 / 24%); animation: book-arrive 650ms ease both; }
 .summary::before { content: ''; position: absolute; inset-inline: 36px; top: 0; height: 3px; background: linear-gradient(90deg, transparent, #c29c41, transparent); }
 .summaryHeader { display: flex; justify-content: space-between; align-items: end; gap: 24px; padding: 36px 44px 26px; }
@@ -24,7 +24,7 @@
 .prose { max-width: 76ch; margin-inline: auto; padding: 4px 36px 36px; font-family: var(--font-readex), sans-serif; font-weight: 400; font-size: 20px; line-height: 2.15; color: #344557; overflow-wrap: anywhere; }
 .prose p { white-space: pre-line; }
 .prose p + p { margin-top: 1.3em; }
-.prose p:first-child { color: #0a2540; font-weight: 400; }
+.prose p:first-child { color: #082F50; font-weight: 400; }
 .sourceNote { padding: 0 44px 28px; color: #6d726e; font-size: 11px; line-height: 1.9; }
 .questions { padding: 28px 44px 36px; background: #f5efdf; border-top: 1px solid #e8dfcb; }
 .questionsHeader { margin-bottom: 20px; }

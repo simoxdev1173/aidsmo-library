@@ -155,7 +155,7 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           aria-label="شاركنا رأيك في الموقع"
-          className="group inline-flex size-12 cursor-pointer items-center justify-center gap-2.5 rounded-full border border-[#C29C41]/70 bg-white/95 text-sm font-bold text-[#0A2540] shadow-[0_10px_28px_rgba(10,37,64,0.14)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41] hover:shadow-[0_14px_34px_rgba(10,37,64,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:h-12 sm:w-auto sm:px-4"
+          className="group inline-flex size-12 cursor-pointer items-center justify-center gap-2.5 rounded-full border border-[#C29C41]/70 bg-white/95 text-sm font-bold text-[#082F50] shadow-[0_10px_28px_rgba(8,47,80,0.14)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#C29C41] hover:shadow-[0_14px_34px_rgba(8,47,80,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:h-12 sm:w-auto sm:px-4"
         >
           <span className="flex size-8 items-center justify-center rounded-full bg-[#FBF7EA] text-[#987523] transition-colors group-hover:bg-[#F4E8C5]">
             <HiOutlineChatBubbleLeftRight className="size-[18px]" aria-hidden="true" />
@@ -176,17 +176,17 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
             aria-labelledby="feedback-title"
             aria-describedby={hasStarted && !isComplete ? undefined : 'feedback-description'}
             dir="rtl"
-            className={`relative max-h-[min(90dvh,760px)] w-full max-w-[520px] overflow-x-hidden overflow-y-auto rounded-t-[26px] border border-white/70 bg-[#FFFEFA] p-5 text-[#0A2540] shadow-[0_28px_100px_rgba(1,18,33,0.35)] sm:rounded-[26px] sm:p-7 ${styles.dialog}`}
+            className={`relative max-h-[min(90dvh,760px)] w-full max-w-[520px] overflow-x-hidden overflow-y-auto rounded-t-[26px] border border-white/70 bg-[#FFFEFA] p-5 text-[#082F50] shadow-[0_28px_100px_rgba(1,18,33,0.35)] sm:rounded-[26px] sm:p-7 ${styles.dialog}`}
           >
-            <div className="absolute inset-x-8 top-0 h-[3px] rounded-full bg-gradient-to-l from-[#0369A1] via-[#E8C96A] to-[#C29C41]" aria-hidden="true" />
+            <div className="absolute inset-x-8 top-0 h-[3px] rounded-full bg-gradient-to-l from-[#0B5688] via-[#E8C96A] to-[#C29C41]" aria-hidden="true" />
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="font-display text-[0.65rem] font-bold tracking-[0.16em] text-[#9B7626]">ملاحظاتكم تصنع الفرق</p>
-                <h2 id="feedback-title" ref={headingRef} tabIndex={-1} className="mt-2 font-academic text-2xl font-bold leading-tight text-[#003652] focus:outline-none sm:text-[1.7rem]">
+                <h2 id="feedback-title" ref={headingRef} tabIndex={-1} className="mt-2 font-academic text-2xl font-bold leading-tight text-[#053D69] focus:outline-none sm:text-[1.7rem]">
                   {isComplete ? 'شكراً لمشاركتك' : hasStarted ? 'ساعدنا على تحسين الموقع' : 'شاركنا رأيك'}
                 </h2>
               </div>
-              <button type="button" onClick={() => setIsOpen(false)} aria-label="إغلاق الاستبيان" className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#DCE6EF] bg-white text-[#526276] transition hover:border-[#C29C41] hover:text-[#0A2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
+              <button type="button" onClick={() => setIsOpen(false)} aria-label="إغلاق الاستبيان" className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#DCE6EF] bg-white text-[#526276] transition hover:border-[#C29C41] hover:text-[#082F50] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
                 <HiOutlineXMark className="size-5" aria-hidden="true" />
               </button>
             </div>
@@ -226,7 +226,7 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
                           maxLength={1200}
                           rows={4}
                           placeholder="اكتب اقتراحك هنا..."
-                          className="mt-4 w-full resize-y rounded-2xl border border-[#D9E2EA] bg-white px-4 py-3 text-sm leading-7 text-[#0A2540] placeholder:text-[#98A3B0] focus:border-[#B99135] focus:outline-none focus:ring-4 focus:ring-[#C29C41]/15"
+                          className="mt-4 w-full resize-y rounded-2xl border border-[#D9E2EA] bg-white px-4 py-3 text-sm leading-7 text-[#082F50] placeholder:text-[#98A3B0] focus:border-[#B99135] focus:outline-none focus:ring-4 focus:ring-[#C29C41]/15"
                         />
                         <p className="mt-1 text-end text-xs text-[#7B8795]">{comment.length} / 1200</p>
                       </>
@@ -246,7 +246,7 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
                                 onMouseEnter={() => setHoveredRating(value)}
                                 aria-label={`${value} ${value === 1 ? 'نجمة' : 'نجوم'}: ${label}`}
                                 aria-pressed={selected}
-                                className="grid size-12 cursor-pointer place-items-center rounded-xl text-[#C29C41] transition duration-150 hover:bg-[#FBF7EA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0369A1] focus-visible:ring-offset-2 motion-reduce:transition-none"
+                                className="grid size-12 cursor-pointer place-items-center rounded-xl text-[#C29C41] transition duration-150 hover:bg-[#FBF7EA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B5688] focus-visible:ring-offset-2 motion-reduce:transition-none"
                               >
                                 {filled
                                   ? <HiStar className="size-8 text-[#D1A83D] drop-shadow-[0_2px_3px_rgba(162,126,48,0.2)]" aria-hidden="true" />
@@ -265,17 +265,17 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
 
                   <div className="mt-7 flex items-center justify-between gap-3 border-t border-[#E8EDF1] pt-5">
                     {step > 0 ? (
-                      <button type="button" onClick={() => { setErrorMessage(''); setHoveredRating(null); setStep((current) => current - 1); }} className="min-h-11 cursor-pointer rounded-full px-4 text-sm font-bold text-[#637185] transition hover:bg-[#F1F5F8] hover:text-[#0A2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
+                      <button type="button" onClick={() => { setErrorMessage(''); setHoveredRating(null); setStep((current) => current - 1); }} className="min-h-11 cursor-pointer rounded-full px-4 text-sm font-bold text-[#637185] transition hover:bg-[#F1F5F8] hover:text-[#082F50] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]">
                         السابق
                       </button>
                     ) : <span />}
 
                     {isCommentStep ? (
-                      <button type="submit" disabled={isSubmitting} className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#B58D36] bg-gradient-to-b from-[#F1DDA0] to-[#C29C41] px-6 text-sm font-bold text-[#0A2540] shadow-[0_7px_18px_rgba(194,156,65,0.22)] transition duration-200 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0369A1] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-65">
+                      <button type="submit" disabled={isSubmitting} className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#B58D36] bg-gradient-to-b from-[#F1DDA0] to-[#C29C41] px-6 text-sm font-bold text-[#082F50] shadow-[0_7px_18px_rgba(194,156,65,0.22)] transition duration-200 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B5688] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-65">
                         {isSubmitting ? 'جارٍ الإرسال…' : 'إرسال رأيي'}
                       </button>
                     ) : (
-                      <button type="button" disabled={!currentAnswer} onClick={() => { setErrorMessage(''); setHoveredRating(null); setStep((current) => current + 1); }} className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#0A3A58] px-6 text-sm font-bold text-white shadow-[0_7px_18px_rgba(10,58,88,0.18)] transition duration-200 hover:bg-[#07517B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40">
+                      <button type="button" disabled={!currentAnswer} onClick={() => { setErrorMessage(''); setHoveredRating(null); setStep((current) => current + 1); }} className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#053D69] px-6 text-sm font-bold text-white shadow-[0_7px_18px_rgba(10,58,88,0.18)] transition duration-200 hover:bg-[#0B5688] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40">
                         التالي
                       </button>
                     )}
@@ -283,13 +283,13 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
                   {errorMessage && <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm leading-6 text-red-800">{errorMessage}</p>}
                 </form>
               </> : (
-                <div className={`mt-7 rounded-[20px] border border-[#E2E8EF] bg-white p-5 shadow-[0_12px_32px_rgba(10,37,64,0.06)] sm:p-6 ${styles.intro}`}>
+                <div className={`mt-7 rounded-[20px] border border-[#E2E8EF] bg-white p-5 shadow-[0_12px_32px_rgba(8,47,80,0.06)] sm:p-6 ${styles.intro}`}>
                   <span className="flex size-12 items-center justify-center rounded-2xl border border-[#C29C41]/30 bg-[#FBF7EA] text-[#987523]">
                     <HiOutlineClock className="size-6" aria-hidden="true" />
                   </span>
                   <h3 className="mt-4 font-academic text-lg font-bold text-[#123B56]">استبيان قصير لتحسين تجربتك</h3>
                   <p className="mt-2 text-sm leading-7 text-[#586779]">أجب عن أربعة أسئلة سريعة، ويمكنك إضافة اقتراح في النهاية. لن يستغرق الأمر أكثر من دقيقتين.</p>
-                  <button type="button" onClick={() => { setOpenedAt(Date.now()); setHasStarted(true); }} className="mt-5 inline-flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-[#B58D36] bg-gradient-to-b from-[#F1DDA0] to-[#C29C41] px-6 text-sm font-bold text-[#0A2540] shadow-[0_7px_18px_rgba(194,156,65,0.22)] transition duration-200 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0369A1] focus-visible:ring-offset-2">
+                  <button type="button" onClick={() => { setOpenedAt(Date.now()); setHasStarted(true); }} className="mt-5 inline-flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-[#B58D36] bg-gradient-to-b from-[#F1DDA0] to-[#C29C41] px-6 text-sm font-bold text-[#082F50] shadow-[0_7px_18px_rgba(194,156,65,0.22)] transition duration-200 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B5688] focus-visible:ring-offset-2">
                     ابدأ الاستبيان <HiOutlineArrowLeft className="size-4" aria-hidden="true" />
                   </button>
                 </div>
@@ -299,9 +299,9 @@ export default function WebsiteFeedbackWidget({ initiallyOpen = false }: { initi
                 <span className={`mx-auto flex size-[76px] items-center justify-center rounded-full border border-[#C29C41]/45 bg-[#FBF7EA] text-[#8B681C] ${styles.successIcon}`}>
                   <HiCheck className="size-9" aria-hidden="true" />
                 </span>
-                <h3 className="mt-5 font-academic text-xl font-bold text-[#003652]">وصلنا رأيك، شكراً لك</h3>
+                <h3 className="mt-5 font-academic text-xl font-bold text-[#053D69]">وصلنا رأيك، شكراً لك</h3>
                 <p className="mx-auto mt-2 max-w-[36ch] text-sm leading-7 text-[#586779]">كل إجابة تساعدنا على جعل التصفح والقراءة أسهل للجميع.</p>
-                <button type="button" onClick={() => setIsOpen(false)} className="mt-6 min-h-11 cursor-pointer rounded-full bg-[#0A3A58] px-6 text-sm font-bold text-white transition hover:bg-[#07517B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2">إغلاق</button>
+                <button type="button" onClick={() => setIsOpen(false)} className="mt-6 min-h-11 cursor-pointer rounded-full bg-[#053D69] px-6 text-sm font-bold text-white transition hover:bg-[#0B5688] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2">إغلاق</button>
               </div>
             )}
           </div>

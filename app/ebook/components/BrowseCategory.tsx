@@ -55,7 +55,7 @@ const BrowseBySubject = () => {
         className="pointer-events-none absolute inset-0 opacity-[0.065]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(3,105,161,0.72) 1px, transparent 1px), linear-gradient(90deg, rgba(3,105,161,0.72) 1px, transparent 1px)',
+            'linear-gradient(rgba(5,61,105,0.72) 1px, transparent 1px), linear-gradient(90deg, rgba(5,61,105,0.72) 1px, transparent 1px)',
           backgroundSize: '68px 68px',
         }}
         aria-hidden
@@ -64,7 +64,7 @@ const BrowseBySubject = () => {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[#C29C41]/30" aria-hidden />
 
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 px-4 sm:gap-12 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
-        <div className="relative min-h-[34rem] overflow-hidden border border-[#C29C41]/35 bg-[#0A2540] shadow-[0_28px_72px_rgba(10,37,64,0.18)] sm:min-h-[560px]">
+        <div className="relative min-h-[34rem] overflow-hidden border border-[#C29C41]/35 bg-[#082F50] shadow-[0_28px_72px_rgba(8,47,80,0.18)] sm:min-h-[560px]">
           <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />
           <div className="absolute inset-0 bg-[linear-gradient(140deg,rgba(255,255,255,0.16)_0%,transparent_28%,rgba(232,201,106,0.12)_100%)]" aria-hidden />
           <div
@@ -154,14 +154,14 @@ const BrowseBySubject = () => {
                 <Link
                   key={path.title}
                   href={path.href}
-                  className="group corner-card relative min-h-[238px] overflow-hidden border border-[#C29C41]/30 bg-white/88 p-5 shadow-[0_16px_38px_rgba(10,37,64,0.08)] transition duration-300 [animation:research-card-rise_700ms_cubic-bezier(0.19,1,0.22,1)_both] hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(10,37,64,0.13)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-[#F8FAFC] sm:p-6"
+                  className="group corner-card relative min-h-[238px] overflow-hidden border border-[#C29C41]/30 bg-white/88 p-5 shadow-[0_16px_38px_rgba(8,47,80,0.08)] transition duration-300 [animation:research-card-rise_700ms_cubic-bezier(0.19,1,0.22,1)_both] hover:-translate-y-1 hover:border-[#C29C41]/65 hover:shadow-[0_24px_58px_rgba(8,47,80,0.13)] focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-4 focus:ring-offset-[#F8FAFC] sm:p-6"
                   style={{ animationDelay: `${index * 90}ms` }}
                 >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#C29C41,rgba(3,105,161,0.55),transparent)] opacity-75" aria-hidden />
-                  <div className="flex h-12 w-12 items-center justify-center border border-[#C29C41]/35 bg-[#F8FAFC] text-[#C29C41] transition duration-300 group-hover:bg-[#0A2540] group-hover:text-[#E8C96A]">
+                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#C29C41,rgba(5,61,105,0.55),transparent)] opacity-75" aria-hidden />
+                  <div className="flex h-12 w-12 items-center justify-center border border-[#C29C41]/35 bg-[#F8FAFC] text-[#C29C41] transition duration-300 group-hover:bg-[#082F50] group-hover:text-[#E8C96A]">
                     <Icon className="h-6 w-6" strokeWidth={1.5} />
                   </div>
-                  <h3 className="mt-5 text-xl font-bold leading-relaxed text-[#003652]">{path.title}</h3>
+                  <h3 className="mt-5 text-xl font-bold leading-relaxed text-[#053D69]">{path.title}</h3>
                   <p className="mt-3 font-academic text-lg leading-8 text-[#475569]">{path.text}</p>
                   <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#C29C41]">
                     {path.label}
@@ -181,7 +181,7 @@ const BrowseBySubject = () => {
             </div>
             <Link
               href="/catalog/industry"
-              className="engraved brass-gradient inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 border border-[#C29C41] px-5 py-2.5 text-center text-sm font-bold text-[#0A2540] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white sm:w-auto"
+              className="engraved brass-gradient inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 border border-[#C29C41] px-5 py-2.5 text-center text-sm font-bold text-[#082F50] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-white sm:w-auto"
             >
               ابدأ الآن
               <ArrowLeft className="h-4 w-4" />

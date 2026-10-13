@@ -18,7 +18,7 @@ export default async function TrainingPlanYearPage({
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] text-[#0A2540]">
+    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] text-[#082F50]">
       <TrainingHero
         breadcrumb={[
           { label: 'التدريب والاستشارات', href: '/training/about' },
@@ -41,14 +41,14 @@ export default async function TrainingPlanYearPage({
           <div className="grid overflow-hidden rounded-[18px] border border-[#D9E3EE] bg-white lg:grid-cols-[1fr_360px]">
             <div className="p-8">
               <p className="text-xs font-bold text-[#C29C41]">لا توجد دورات منشورة بعد</p>
-              <h2 className="mt-3 text-3xl font-bold text-[#003652]">الخطة التدريبية لعام {year} قيد الإعداد</h2>
+              <h2 className="mt-3 text-3xl font-bold text-[#053D69]">الخطة التدريبية لعام {year} قيد الإعداد</h2>
               <p className="mt-4 max-w-2xl text-base leading-8 text-[#64748B]">
                 عند نشر الدورات التدريبية لهذا العام ستظهر هنا مع الغلاف والعنوان ورابط الملف.
               </p>
             </div>
             <div className="relative min-h-72 bg-[#EAF3F8]">
               <Image src="/services-bg.png" alt="" fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071D2F]/58 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#062B46]/58 to-transparent" />
             </div>
           </div>
         )}

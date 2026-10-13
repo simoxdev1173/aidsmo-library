@@ -69,7 +69,7 @@ function CardCover({
   optimize: boolean;
 }) {
   return (
-    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#EAF3F8] shadow-[0_14px_34px_rgba(10,37,64,0.16)] ring-1 ring-black/5 transition duration-300 ease-out group-hover:-translate-y-1.5 group-hover:shadow-[0_26px_52px_rgba(10,37,64,0.24)] group-hover:ring-[#C29C41]/40">
+    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#EAF3F8] shadow-[0_14px_34px_rgba(8,47,80,0.16)] ring-1 ring-black/5 transition duration-300 ease-out group-hover:-translate-y-1.5 group-hover:shadow-[0_26px_52px_rgba(8,47,80,0.24)] group-hover:ring-[#C29C41]/40">
       <Image
         src={src}
         alt={alt}
@@ -81,14 +81,14 @@ function CardCover({
       {/* light sweep on hover */}
       <div className="pointer-events-none absolute -inset-y-10 -left-24 z-20 w-16 rotate-12 bg-white/25 blur-md transition duration-[900ms] ease-out group-hover:translate-x-[145%] motion-reduce:hidden" aria-hidden />
       {/* base scrim */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-[#071D2F]/92 via-[#071D2F]/28 to-transparent" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-[#062B46]/92 via-[#062B46]/28 to-transparent" aria-hidden />
 
-      <span className="absolute inset-x-3 bottom-2.5 z-20 block max-w-[calc(100%-1.5rem)] truncate text-[0.68rem] font-bold text-white/90 drop-shadow-[0_1px_6px_rgba(7,29,47,0.9)]">
+      <span className="absolute inset-x-3 bottom-2.5 z-20 block max-w-[calc(100%-1.5rem)] truncate text-[0.68rem] font-bold text-white/90 drop-shadow-[0_1px_6px_rgba(6,43,70,0.9)]">
         {category}
       </span>
 
       {featured && (
-        <span className="absolute end-2.5 top-2.5 z-20 inline-flex items-center gap-1 rounded-full bg-[#E8C96A] px-2.5 py-1 text-[0.68rem] font-bold text-[#071D2F] shadow-[0_6px_16px_rgba(232,201,106,0.4)]">
+        <span className="absolute end-2.5 top-2.5 z-20 inline-flex items-center gap-1 rounded-full bg-[#E8C96A] px-2.5 py-1 text-[0.68rem] font-bold text-[#062B46] shadow-[0_6px_16px_rgba(232,201,106,0.4)]">
           <HiOutlineSparkles className="h-3.5 w-3.5" />
           مميز
         </span>
@@ -140,12 +140,12 @@ export default async function StandardizationInternalPage({
   const hasFilters = Boolean(filters.q || filters.tag || filters.year || filters.sort);
 
   return (
-    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#0A2540]">
-      <section className="relative border-b border-[#C29C41]/20 bg-[#071D2F] text-white">
+    <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F6F8FA] text-[#082F50]">
+      <section className="relative border-b border-[#C29C41]/20 bg-[#062B46] text-white">
         <div className="absolute inset-0 opacity-[0.72]" aria-hidden>
           <Image src={config.heroImage} alt="" fill className="object-cover" priority />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(7,29,47,0.76),rgba(3,105,161,0.38)_56%,rgba(7,29,47,0.66))]" aria-hidden />
+        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(6,43,70,0.76),rgba(5,61,105,0.38)_56%,rgba(6,43,70,0.66))]" aria-hidden />
 
         <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-36 sm:px-6 lg:px-8 lg:pb-20 lg:pt-40">
           <div className="max-w-4xl">
@@ -163,7 +163,7 @@ export default async function StandardizationInternalPage({
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="rounded-[20px] border border-[#E3EAF3] bg-white p-5 shadow-[0_18px_55px_rgba(10,37,64,0.07)]">
+        <div className="rounded-[20px] border border-[#E3EAF3] bg-white p-5 shadow-[0_18px_55px_rgba(8,47,80,0.07)]">
           <form className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="library-search" className="block ps-1 text-[0.68rem] font-bold text-[#8A6A1D]">
@@ -243,7 +243,7 @@ export default async function StandardizationInternalPage({
                   />
 
                   <div className="flex flex-1 flex-col pt-4">
-                    <h2 className="line-clamp-2 min-h-[3rem] text-sm font-bold leading-[1.6] text-[#003652] transition duration-200 group-hover:text-[#0369A1] sm:text-[0.95rem]">
+                    <h2 className="line-clamp-2 min-h-[3rem] text-sm font-bold leading-[1.6] text-[#053D69] transition duration-200 group-hover:text-[#0B5688] sm:text-[0.95rem]">
                       {entry.title}
                     </h2>
 
@@ -254,7 +254,7 @@ export default async function StandardizationInternalPage({
                     )}
 
                     <div className="mt-3">
-                      <span className="inline-flex items-center gap-1 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#f1dda0] to-[#C29C41] px-2.5 py-2 text-[0.65rem] font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_16px_rgba(194,156,65,0.24)] transition-all duration-300 group-hover:gap-2.5 group-hover:brightness-110 group-focus-visible:ring-2 group-focus-visible:ring-[#0369A1] group-focus-visible:ring-offset-2 sm:gap-1.5 sm:px-4 sm:text-[0.72rem]">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-[#C29C41] bg-gradient-to-b from-[#f1dda0] to-[#C29C41] px-2.5 py-2 text-[0.65rem] font-bold text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_16px_rgba(194,156,65,0.24)] transition-all duration-300 group-hover:gap-2.5 group-hover:brightness-110 group-focus-visible:ring-2 group-focus-visible:ring-[#0B5688] group-focus-visible:ring-offset-2 sm:gap-1.5 sm:px-4 sm:text-[0.72rem]">
                         عرض المحتوى
                         <HiOutlineArrowLeft className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
                       </span>
@@ -268,14 +268,14 @@ export default async function StandardizationInternalPage({
           <div className="mt-8 grid overflow-hidden rounded-[18px] border border-[#D9E3EE] bg-white lg:grid-cols-[1fr_360px]">
             <div className="p-8">
               <p className="text-xs font-bold text-[#C29C41]">لا توجد نتائج منشورة</p>
-              <h2 className="mt-3 text-3xl font-bold text-[#003652]">هذه الصفحة جاهزة لاستقبال مدخلات لوحة التحكم</h2>
+              <h2 className="mt-3 text-3xl font-bold text-[#053D69]">هذه الصفحة جاهزة لاستقبال مدخلات لوحة التحكم</h2>
               <p className="mt-4 max-w-2xl text-base leading-8 text-[#64748B]">
                 عند إضافة مدخل منشور ضمن هذا التصنيف ستظهر بطاقة تعرض الغلاف، العنوان، الوصف، الوسم، السنة، عدد الصفحات، ورابط ملف PDF إن وجد.
               </p>
             </div>
             <div className="relative min-h-72 bg-[#EAF3F8]">
               <Image src={fallbackImages[0]} alt="" fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071D2F]/58 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#062B46]/58 to-transparent" />
             </div>
           </div>
         )}

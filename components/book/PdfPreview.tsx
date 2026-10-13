@@ -20,8 +20,8 @@ export default function PdfPreview({ src, title }: { src: string; title: string 
         >
           <div className="flex min-h-[420px] flex-col items-center justify-center gap-4 px-6 text-center">
             <HiOutlineDocumentText className="h-10 w-10 text-[#9a7421]" aria-hidden="true" />
-            <p className="text-base text-[#0a2540]">افتح الوثيقة لقراءتها في عارض جهازك.</p>
-            <a href={src} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#0a2540] px-6 py-3 text-sm text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a7421]">
+            <p className="text-base text-[#082F50]">افتح الوثيقة لقراءتها في عارض جهازك.</p>
+            <a href={src} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#082F50] px-6 py-3 text-sm text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a7421]">
               فتح الوثيقة
             </a>
           </div>
@@ -31,7 +31,7 @@ export default function PdfPreview({ src, title }: { src: string; title: string 
       )}
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#C29C41]/20 px-4 py-3 text-xs text-[#59616a]">
         <span>إذا لم تظهر المعاينة بشكل صحيح، افتح الوثيقة مباشرة.</span>
-        <a href={src} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 font-medium text-[#0a2540] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a7421]">
+        <a href={src} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 font-medium text-[#082F50] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a7421]">
           فتح الوثيقة<HiOutlineArrowTopRightOnSquare className="h-4 w-4" aria-hidden="true" />
         </a>
       </div>

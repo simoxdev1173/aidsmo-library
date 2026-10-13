@@ -11,7 +11,7 @@ import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 
 const primaryButton =
-  'engraved brass-gradient inline-flex min-h-12 max-w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 py-3 text-center text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#FFF8E8] sm:px-8';
+  'engraved brass-gradient inline-flex min-h-12 max-w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#C29C41] px-5 py-3 text-center text-sm font-bold text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-300 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#FFF8E8] sm:px-8';
 
 function ChatbotVisualCard() {
   const t = useTranslations('chatbotCta');
@@ -24,9 +24,9 @@ function ChatbotVisualCard() {
   ];
 
   return (
-    <div className="relative h-full min-h-[520px] overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071A2E] shadow-[0_20px_48px_rgba(10,37,64,0.15)]">
+    <div className="relative h-full min-h-[520px] overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#062B46] shadow-[0_20px_48px_rgba(8,47,80,0.15)]">
       <div
-        className="absolute inset-0 bg-[radial-gradient(circle_at_78%_35%,rgba(14,165,233,0.22),transparent_34%),radial-gradient(circle_at_18%_78%,rgba(194,156,65,0.18),transparent_30%),linear-gradient(135deg,rgba(10,37,64,0.45),rgba(7,26,46,0.96))]"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_78%_35%,rgba(11,86,136,0.24),transparent_34%),radial-gradient(circle_at_18%_78%,rgba(194,156,65,0.18),transparent_30%),linear-gradient(135deg,rgba(8,47,80,0.45),rgba(6,43,70,0.96))]"
         aria-hidden
       />
 
@@ -64,19 +64,19 @@ function ChatbotVisualCard() {
           </p>
         </div>
 
-        <div className={`w-full max-w-[330px] rounded-[28px] border border-sky-300/32 bg-sky-300/[0.08] p-4 shadow-[0_0_44px_rgba(56,189,248,0.28)] backdrop-blur-md ${isRtl ? 'mr-auto' : 'ml-auto'}`}>
+        <div className={`w-full max-w-[330px] rounded-[28px] border border-[#C29C41]/35 bg-[#053D69]/20 p-4 shadow-[0_0_44px_rgba(194,156,65,0.18)] backdrop-blur-md ${isRtl ? 'mr-auto' : 'ml-auto'}`}>
 
 
           <div className="space-y-2.5">
-            <div className="rounded-xl bg-white/88 px-3 py-2 text-xs font-semibold leading-relaxed text-[#0A2540]">
+            <div className="rounded-xl bg-white/88 px-3 py-2 text-xs font-semibold leading-relaxed text-[#082F50]">
               {t('chatGreeting')}
             </div>
 
-            <div className={`max-w-[86%] rounded-xl bg-[#0B4E84]/88 px-3 py-2 text-xs font-semibold leading-relaxed text-white ${isRtl ? 'mr-auto' : 'ml-auto'}`}>
+            <div className={`max-w-[86%] rounded-xl bg-[#0A527E]/88 px-3 py-2 text-xs font-semibold leading-relaxed text-white ${isRtl ? 'mr-auto' : 'ml-auto'}`}>
               {t('chatUserMsg')}
             </div>
 
-            <div className="rounded-xl bg-white/88 px-3 py-2 text-xs font-semibold leading-relaxed text-[#0A2540]">
+            <div className="rounded-xl bg-white/88 px-3 py-2 text-xs font-semibold leading-relaxed text-[#082F50]">
               {t('chatBotReply')}
             </div>
           </div>
@@ -98,9 +98,9 @@ function ChatbotVisualCard() {
             ))}
           </div>
 
-          <div className="mt-4 flex h-8 items-center justify-between rounded-full bg-[#0B4E84]/70 px-4">
+          <div className="mt-4 flex h-8 items-center justify-between rounded-full bg-[#0A527E]/70 px-4">
             <span className="text-xs text-white/60">•••</span>
-            <span className="h-4 w-4 rounded-full border border-sky-200/40" />
+            <span className="h-4 w-4 rounded-full border border-[#E8C96A]/45" />
           </div>
         </div>
       </div>
@@ -135,7 +135,7 @@ export default function ChatbotCTA() {
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className={`mb-8 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
-          <h2 className="academic-heading text-balance text-2xl leading-tight text-[#0A2540] sm:text-3xl lg:text-4xl">
+          <h2 className="academic-heading text-balance text-2xl leading-tight text-[#082F50] sm:text-3xl lg:text-4xl">
             {t('heading')}
           </h2>
 
@@ -147,7 +147,7 @@ export default function ChatbotCTA() {
 
         <div className="grid gap-4 lg:grid-cols-12 lg:grid-rows-[260px_260px]">
           {/* Main cream card */}
-          <div className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.1)] transition hover:border-[#C29C41]/55 sm:p-6 lg:col-span-5">
+          <div className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/24 bg-[#FFF8E8]/95 p-5 text-center shadow-[0_18px_42px_rgba(8,47,80,0.1)] transition hover:border-[#C29C41]/55 sm:p-6 lg:col-span-5">
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.18]"
               style={{
@@ -168,7 +168,7 @@ export default function ChatbotCTA() {
             </ChatbotPromptButton>
 
             <div className="pointer-events-none relative z-10 flex h-full flex-col items-center justify-center">
-              <h3 className="mt-4 font-academic text-2xl font-bold leading-tight text-[#0A2540] sm:text-3xl">
+              <h3 className="mt-4 font-academic text-2xl font-bold leading-tight text-[#082F50] sm:text-3xl">
                 {t('mainTitle')}
               </h3>
 
@@ -185,7 +185,7 @@ export default function ChatbotCTA() {
           {/* About the library card */}
           <Link
             href="/about-us"
-            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-3"
+            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/20 bg-[#062B46] p-5 text-center shadow-[0_18px_42px_rgba(8,47,80,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-3"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_20%,rgba(232,201,106,0.17),transparent_28%),linear-gradient(135deg,rgba(11,78,132,0.32),transparent_55%)]"
@@ -215,7 +215,7 @@ export default function ChatbotCTA() {
 
           {/* Bottom feature card 1 */}
           <ChatbotPromptButton
-            className="group relative w-full cursor-pointer overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#071D33] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 lg:col-span-4"
+            className="group relative w-full cursor-pointer overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#062B46] p-5 text-center shadow-[0_18px_42px_rgba(8,47,80,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2 lg:col-span-4"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_74%,rgba(125,211,252,0.14),transparent_28%)]"
@@ -241,7 +241,7 @@ export default function ChatbotCTA() {
           {/* Bottom feature card 2 */}
           <Link
             href="/catalog/industry"
-            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#0B4E84] p-5 text-center shadow-[0_18px_42px_rgba(10,37,64,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
+            className="group relative overflow-hidden rounded-[14px] border border-[#C29C41]/18 bg-[#0A527E] p-5 text-center shadow-[0_18px_42px_rgba(8,47,80,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#C29C41]/55 lg:col-span-4"
           >
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_78%,rgba(255,255,255,0.13),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_60%)]"
@@ -262,7 +262,7 @@ export default function ChatbotCTA() {
         </div>
 
         {/* Bottom strip */}
-        <div className="mt-5 rounded-[14px] border border-[#C29C41]/18 bg-white/70 p-5 shadow-[0_16px_42px_rgba(10,37,64,0.08)] backdrop-blur-sm">
+        <div className="mt-5 rounded-[14px] border border-[#C29C41]/18 bg-white/70 p-5 shadow-[0_16px_42px_rgba(8,47,80,0.08)] backdrop-blur-sm">
           <div className="flex items-center">
             <div className="flex items-center gap-5">
               <span className="flex h-14 w-14 shrink-0 items-center justify-center text-[#C29C41]">
@@ -270,7 +270,7 @@ export default function ChatbotCTA() {
               </span>
 
               <div>
-                <h3 className="font-academic text-lg font-bold text-[#0A2540]">
+                <h3 className="font-academic text-lg font-bold text-[#082F50]">
                   {t('stripTitle')}
                 </h3>
 

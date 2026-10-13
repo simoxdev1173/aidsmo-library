@@ -3,30 +3,22 @@ import { Prisma, PrismaClient } from "@/lib/generated/prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
+  prismaSchemaVersion?: string;
 };
+
+// In development, discard the global client after a generated schema change.
+const prismaSchemaVersion = "20261009150000_news_announcements";
 
 const connectionString =
   process.env.DATABASE_URL ?? "postgresql://invalid:invalid@localhost:5432/invalid";
 
 const adapter = new PrismaPg({ connectionString });
 
-// Next.js keeps globals across development reloads. A client created before
-// a new model was generated can therefore be missing that model's delegate.
-const cachedClient = globalForPrisma.prisma;
-const cachedModels = cachedClient as unknown as Record<string, { findMany?: unknown }> | undefined;
-const cacheIsCurrent = cachedModels && Object.values(Prisma.ModelName).every((model) => {
-  const delegate = model[0].toLowerCase() + model.slice(1);
-  return typeof cachedModels[delegate]?.findMany === "function";
-});
-
-if (cachedClient && !cacheIsCurrent) {
-  void cachedClient.$disconnect().catch((error) => {
-    console.error("Could not disconnect the outdated Prisma client", error);
-  });
-}
-
+// Prisma's generated delegates can change while `next dev` keeps this module's
+// global client alive. Replace an instance generated before a schema update.
+const cachedPrisma = globalForPrisma.prisma;
 export const prisma =
-  (cacheIsCurrent ? cachedClient : undefined) ??
+  (cachedPrisma && globalForPrisma.prismaSchemaVersion === prismaSchemaVersion ? cachedPrisma : null) ??
   new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
@@ -34,4 +26,5 @@ export const prisma =
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
+  globalForPrisma.prismaSchemaVersion = prismaSchemaVersion;
 }

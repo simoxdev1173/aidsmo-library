@@ -99,7 +99,7 @@ export default async function ForgotPasswordPage({
       )}
 
       {query.status !== 'sent' && (
-        <Link href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#0369A1] hover:text-[#8B681C]">
+        <Link href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#0B5688] hover:text-[#8B681C]">
           <HiOutlineArrowRight className="size-4" /> العودة إلى تسجيل الدخول
         </Link>
       )}

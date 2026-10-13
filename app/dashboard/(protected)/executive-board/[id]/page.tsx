@@ -21,9 +21,9 @@ export default async function EditExecutiveBoardMemberPage({
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/dashboard/executive-board" className="text-sm font-bold text-[#0369A1] transition-colors hover:text-[#8B681C] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">العودة إلى المجلس التنفيذي</Link>
+        <Link href="/dashboard/executive-board" className="text-sm font-bold text-[#0B5688] transition-colors hover:text-[#8B681C] focus:outline-none focus:ring-2 focus:ring-[#C29C41]">العودة إلى المجلس التنفيذي</Link>
         <p className="mt-4 text-sm font-bold text-[#C29C41]">المجلس التنفيذي</p>
-        <h1 className="mt-1 text-3xl font-bold text-[#003652]">تعديل الملف التعريفي</h1>
+        <h1 className="mt-1 text-3xl font-bold text-[#053D69]">تعديل الملف التعريفي</h1>
         <p className="mt-2 text-sm text-[#64748B]">{member.name}</p>
       </div>
       {query.saved === 'updated' && <Notice tone="success" title="تم حفظ التغييرات." />}

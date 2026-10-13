@@ -15,7 +15,7 @@ function FieldLabel({ className, ...props }: React.ComponentProps<'label'>) {
   return (
     <label
       data-slot="field-label"
-      className={cn('ps-1 text-sm font-bold leading-none text-[#0B4E84] group-has-[[aria-invalid=true]]/field:text-red-700', className)}
+      className={cn('ps-1 text-sm font-bold leading-none text-[#0A527E] group-has-[[aria-invalid=true]]/field:text-red-700', className)}
       {...props}
     />
   );

@@ -34,12 +34,12 @@ export default function RelatedEntriesCarousel({
   return (
     <section aria-roledescription="carousel" aria-label="قد يهمك أيضا">
       <div className="flex items-center justify-between">
-        <h2 className="font-academic text-xl font-bold text-[#003652] md:text-2xl">قد يهمك أيضا</h2>
+        <h2 className="font-academic text-xl font-bold text-[#053D69] md:text-2xl">قد يهمك أيضا</h2>
 
         <div className="flex items-center gap-2">
           <Link
             href={viewAllHref}
-            className="text-sm font-bold text-[#0369A1] transition duration-200 hover:text-[#C29C41]"
+            className="text-sm font-bold text-[#0B5688] transition duration-200 hover:text-[#C29C41]"
           >
             عرض المزيد
           </Link>
@@ -47,7 +47,7 @@ export default function RelatedEntriesCarousel({
             type="button"
             onClick={onPrev}
             aria-label="السابق"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D9E3EE] bg-white text-[#0369A1] shadow-sm transition duration-200 hover:border-[#C29C41]/60 hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D9E3EE] bg-white text-[#0B5688] shadow-sm transition duration-200 hover:border-[#C29C41]/60 hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <FaChevronRight className="h-3.5 w-3.5" />
           </button>
@@ -55,7 +55,7 @@ export default function RelatedEntriesCarousel({
             type="button"
             onClick={onNext}
             aria-label="التالي"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D9E3EE] bg-white text-[#0369A1] shadow-sm transition duration-200 hover:border-[#C29C41]/60 hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#D9E3EE] bg-white text-[#0B5688] shadow-sm transition duration-200 hover:border-[#C29C41]/60 hover:text-[#9A7421] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
           >
             <FaChevronLeft className="h-3.5 w-3.5" />
           </button>
@@ -78,7 +78,7 @@ export default function RelatedEntriesCarousel({
               style={{ scrollSnapAlign: 'start' }}
               className="group flex w-[calc((100%_-_1rem)/2)] shrink-0 flex-col sm:w-40"
             >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-[14px] border border-[#D9E3EE] bg-[#EAF3F8] shadow-[0_10px_28px_rgba(10,37,64,0.08)] transition duration-300 group-hover:-translate-y-1 group-hover:border-[#C29C41]/55 group-hover:shadow-[0_18px_40px_rgba(10,37,64,0.14)]">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-[14px] border border-[#D9E3EE] bg-[#EAF3F8] shadow-[0_10px_28px_rgba(8,47,80,0.08)] transition duration-300 group-hover:-translate-y-1 group-hover:border-[#C29C41]/55 group-hover:shadow-[0_18px_40px_rgba(8,47,80,0.14)]">
                 <RatingBadge rating={item.rating} />
                 {item.coverImagePath ? (
                   <Image
@@ -90,18 +90,18 @@ export default function RelatedEntriesCarousel({
                     unoptimized
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-[#0A2540] px-3 text-center">
+                  <div className="flex h-full w-full items-center justify-center bg-[#082F50] px-3 text-center">
                     <span className="font-display text-[0.6rem] font-bold uppercase tracking-[0.16em] text-[#C29C41]">
                       {item.title}
                     </span>
                   </div>
                 )}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#071D2F]/85 via-[#071D2F]/20 to-transparent" aria-hidden />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#062B46]/85 via-[#062B46]/20 to-transparent" aria-hidden />
                 <span className="absolute inset-x-2 bottom-2 block truncate rounded-full bg-white/12 px-2 py-0.5 text-[0.6rem] font-bold text-white ring-1 ring-white/25 backdrop-blur-md">
                   {item.categoryLabel}
                 </span>
               </div>
-              <h3 className="mt-2.5 line-clamp-2 min-h-[2.5rem] text-xs font-bold leading-5 text-[#003652] transition duration-200 group-hover:text-[#0369A1]">
+              <h3 className="mt-2.5 line-clamp-2 min-h-[2.5rem] text-xs font-bold leading-5 text-[#053D69] transition duration-200 group-hover:text-[#0B5688]">
                 {item.title}
               </h3>
             </Link>

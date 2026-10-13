@@ -11,6 +11,12 @@ npm run prisma:seed
 npm run dev
 ```
 
+## In-site notifications
+
+Apply the Prisma migration before starting the updated app (`npm run prisma:migrate` locally, or `npm run prisma:deploy` in production). Signed-in readers can follow a topic from `/catalog/[slug]` and manage followed topics at `/profile?section=notifications`. The bell opens `/notifications`, where readers can open or mark notifications as read.
+
+The site creates notifications for replies to a reader's comments, newly published books in a followed category or its child categories, and meaningful updates to books in their personal library. Admins use **Dashboard → Events & Announcements** (`/dashboard/events`) to create an event or open a published event and send its in-site announcement to registered users; saving the event alone does not announce it. These notifications do not send email or browser push messages.
+
 ## Required Environment Variables
 
 ```bash

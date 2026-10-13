@@ -16,7 +16,7 @@ export default function StandardizationStudiesPage({
         title: 'دراسات التقييس والجودة',
         description:
           'مساحة منظمة للدراسات والتحليلات التي تتناول المواصفات، المطابقة، البنية التحتية للجودة، وتطوير منظومات القياس والاعتماد في الدول العربية.',
-        accent: '#0369A1',
+        accent: '#0B5688',
         heroImage: '/standardization-bg.webp',
       }}
     />

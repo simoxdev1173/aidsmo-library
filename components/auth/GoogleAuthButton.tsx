@@ -22,9 +22,9 @@ function SubmitButton({ enabled }: { enabled: boolean }) {
     <button
       type="submit"
       disabled={!enabled || pending}
-      className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-[#0A2540] shadow-sm transition hover:border-[#0369A1]/40 hover:bg-[#F8FAFC] disabled:cursor-not-allowed disabled:opacity-55"
+      className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-[#082F50] shadow-sm transition hover:border-[#0B5688]/40 hover:bg-[#F8FAFC] disabled:cursor-not-allowed disabled:opacity-55"
     >
-      {pending ? <HiOutlineArrowPath className="h-5 w-5 animate-spin text-[#0369A1]" /> : <GoogleIcon />}
+      {pending ? <HiOutlineArrowPath className="h-5 w-5 animate-spin text-[#0B5688]" /> : <GoogleIcon />}
       {pending ? 'جارٍ الاتصال بـ Google...' : enabled ? 'المتابعة باستخدام Google' : 'Google غير مهيأ بعد'}
     </button>
   );

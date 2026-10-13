@@ -24,7 +24,7 @@ export default function PasswordInput({
         onClick={() => setVisible((current) => !current)}
         aria-label={visible ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'}
         aria-pressed={visible}
-        className="absolute left-2 top-1/2 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-xl text-[#64748B] transition hover:bg-[#F0F7FC] hover:text-[#0369A1] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
+        className="absolute left-2 top-1/2 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-xl text-[#64748B] transition hover:bg-[#EFF5F9] hover:text-[#0B5688] focus:outline-none focus:ring-2 focus:ring-[#C29C41]"
       >
         {visible ? <LuEyeOff className="size-4.5" /> : <LuEye className="size-4.5" />}
       </button>

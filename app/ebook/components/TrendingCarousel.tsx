@@ -152,7 +152,7 @@ function LibraryCard({ item }: { item: TrendingItem }) {
   const coverReady = loadedCover === item.cover;
 
   return (
-    <Link href={item.href} className={styles.book}>
+    <Link href={item.href} prefetch={false} className={styles.book}>
       <div className={styles.coverStage}>
         {item.href.startsWith('/book/') && <RatingBadge rating={item.rating} />}
         {showCover && <div className={`${styles.coverSkeleton} ${coverReady ? styles.coverSkeletonReady : ''}`} aria-hidden="true"><span /></div>}

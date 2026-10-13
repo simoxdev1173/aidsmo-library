@@ -33,6 +33,14 @@ enum DocumentAnalysisStatus {
   FAILED
 }
 
+enum NotificationType {
+  COMMENT_REPLY
+  NEW_PUBLICATION
+  SAVED_PUBLICATION_UPDATED
+  EVENT_ANNOUNCEMENT
+  NEWS_ANNOUNCEMENT
+}
+
 model AdminUser {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -57,6 +65,8 @@ model User {
   shelves        UserShelf[]
   documentComments DocumentComment[]
   documentRatings  DocumentRating[]
+  categoryFollows CategoryFollow[]
+  notifications Notification[]
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 }
@@ -144,6 +154,7 @@ model Category {
   parent       Category?      @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
   children     Category[]     @relation("CategoryTree")
   entries      LibraryEntry[]
+  followers    CategoryFollow[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 
@@ -188,6 +199,7 @@ model LibraryEntry {
   comments       DocumentComment[]
   ratings        DocumentRating[]
   views          DocumentView[]
+  notifications  Notification[]
 
   @@index([categoryId])
   @@index([status])
@@ -314,6 +326,36 @@ model DocumentView {
   createdAt DateTime     @default(now())
 
   @@unique([entryId, visitorId, viewedOn])
+  @@index([entryId])
+}
+
+model CategoryFollow {
+  userId     String
+  categoryId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([userId, categoryId])
+  @@index([categoryId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  entryId   String?
+  type      NotificationType
+  sourceKey String           @db.VarChar(180)
+  title     String           @db.VarChar(250)
+  body      String           @db.VarChar(500)
+  href      String           @db.VarChar(500)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entry     LibraryEntry?    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sourceKey])
+  @@index([userId, readAt, createdAt])
   @@index([entryId])
 }
 

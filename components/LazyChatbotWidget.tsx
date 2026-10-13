@@ -49,7 +49,7 @@ function Launcher({ loading = false, locale, onClick }: { loading?: boolean; loc
         disabled={loading}
         aria-label={locale === 'ar' ? 'فتح المساعد الذكي' : 'Open the smart assistant'}
         aria-busy={loading}
-        className="relative flex size-14 items-center justify-center rounded-full border-2 border-[#C29C41] bg-[linear-gradient(135deg,#022A4E,#034582)] shadow-2xl transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] disabled:cursor-wait sm:size-16"
+        className="relative flex size-14 items-center justify-center rounded-full border-2 border-[#C29C41] bg-[linear-gradient(135deg,#032C4B,#0B5688)] shadow-2xl transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C29C41] disabled:cursor-wait sm:size-16"
       >
         <Image src="/ai-assistant.png" alt="" width={52} height={52} className="object-contain" />
         {loading ? (

@@ -341,24 +341,24 @@ function StreamingAnswer({ text, active }: { text: string; active: boolean }) {
 
   return (
     <div
-      className="text-[0.82rem] leading-[1.75] text-[#0A2540]"
+      className="text-[0.82rem] leading-[1.75] text-[#082F50]"
       aria-live={active ? 'polite' : 'off'}
     >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ children }) => (
-            <h1 className="mb-2 mt-4 text-base font-bold leading-snug tracking-[-0.02em] text-[#022A4E] first:mt-0">
+            <h1 className="mb-2 mt-4 text-base font-bold leading-snug tracking-[-0.02em] text-[#032C4B] first:mt-0">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="mb-2 mt-4 text-[0.95rem] font-bold leading-snug text-[#022A4E] first:mt-0">
+            <h2 className="mb-2 mt-4 text-[0.95rem] font-bold leading-snug text-[#032C4B] first:mt-0">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="mb-1.5 mt-3.5 text-[0.86rem] font-bold leading-snug text-[#0B4E84] first:mt-0">
+            <h3 className="mb-1.5 mt-3.5 text-[0.86rem] font-bold leading-snug text-[#0A527E] first:mt-0">
               {children}
             </h3>
           ),
@@ -377,7 +377,7 @@ function StreamingAnswer({ text, active }: { text: string; active: boolean }) {
           ),
           li: ({ children }) => <li className="ps-1 text-pretty">{children}</li>,
           strong: ({ children }) => (
-            <strong className="font-bold text-[#022A4E]">{children}</strong>
+            <strong className="font-bold text-[#032C4B]">{children}</strong>
           ),
           em: ({ children }) => <em className="text-[#334E63]">{children}</em>,
           a: ({ href, children }) => (
@@ -385,7 +385,7 @@ function StreamingAnswer({ text, active }: { text: string; active: boolean }) {
               href={href}
               target="_blank"
               rel="noreferrer noopener"
-              className="font-semibold text-[#0369A1] underline decoration-[#C29C41]/55 underline-offset-2 transition-colors hover:text-[#8B681C] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
+              className="font-semibold text-[#0B5688] underline decoration-[#C29C41]/55 underline-offset-2 transition-colors hover:text-[#8B681C] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
             >
               {children}
             </a>
@@ -396,12 +396,12 @@ function StreamingAnswer({ text, active }: { text: string; active: boolean }) {
             </blockquote>
           ),
           code: ({ children, className }) => (
-            <code className={cn('rounded bg-[#E8F1F7] px-1 py-0.5 font-mono text-[0.76rem] text-[#0B4E84]', className)}>
+            <code className={cn('rounded bg-[#E8F1F7] px-1 py-0.5 font-mono text-[0.76rem] text-[#0A527E]', className)}>
               {children}
             </code>
           ),
           pre: ({ children }) => (
-            <pre className="my-3 max-w-full overflow-x-auto rounded-xl bg-[#022A4E] p-3 text-start text-[0.74rem] leading-relaxed text-white [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-inherit">
+            <pre className="my-3 max-w-full overflow-x-auto rounded-xl bg-[#032C4B] p-3 text-start text-[0.74rem] leading-relaxed text-white [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-inherit">
               {children}
             </pre>
           ),
@@ -413,7 +413,7 @@ function StreamingAnswer({ text, active }: { text: string; active: boolean }) {
             </div>
           ),
           th: ({ children }) => (
-            <th className="border-b border-[#DDEAF3] bg-[#F0F7FC] px-3 py-2 text-start font-bold text-[#022A4E]">
+            <th className="border-b border-[#DDEAF3] bg-[#EFF5F9] px-3 py-2 text-start font-bold text-[#032C4B]">
               {children}
             </th>
           ),
@@ -475,7 +475,7 @@ function HardcodedBookSuggestions({
 
           <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
             <div>
-              <h4 className="line-clamp-2 text-[0.8rem] font-bold leading-snug text-[#0A2540] transition-colors group-hover:text-[#0B4E84]">
+              <h4 className="line-clamp-2 text-[0.8rem] font-bold leading-snug text-[#082F50] transition-colors group-hover:text-[#0A527E]">
                 {doc.title[locale as keyof typeof doc.title] || doc.title.en}
               </h4>
               <p className="mt-1 line-clamp-2 text-[0.68rem] leading-relaxed text-[#475569]">
@@ -497,7 +497,7 @@ function HardcodedBookSuggestions({
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#0A2540]/10">
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#082F50]/10">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-[#C29C41] to-[#e8c96a]"
                     style={{ width: `${doc.relevance}%` }}
@@ -531,8 +531,8 @@ function HardcodedBookSuggestions({
 
 function RetrievalState({ label, reduceMotion }: { label: string; reduceMotion: boolean }) {
   return (
-    <div className="min-h-[82px] rounded-2xl rounded-ss-none border border-[#0369A1]/8 bg-white/95 px-4 py-3.5 shadow-[0_4px_20px_rgba(10,37,64,0.06)]">
-      <div className="flex items-center gap-2 text-[0.72rem] font-semibold text-[#0B4E84]">
+    <div className="min-h-[82px] rounded-2xl rounded-ss-none border border-[#0B5688]/8 bg-white/95 px-4 py-3.5 shadow-[0_4px_20px_rgba(8,47,80,0.06)]">
+      <div className="flex items-center gap-2 text-[0.72rem] font-semibold text-[#0A527E]">
         <span className="relative flex size-2">
           <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#C29C41]/70 motion-reduce:animate-none" />
           <span className="relative inline-flex size-2 rounded-full bg-[#C29C41]" />
@@ -1029,7 +1029,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
     <div
       dir={isRtl ? 'rtl' : 'ltr'}
       className={cn(
-        'flex flex-col overflow-hidden rounded-[1.75rem] bg-[#F0F7FC] shadow-[0_28px_70px_rgba(10,37,64,0.28)] ring-1 ring-[#0A2540]/8',
+        'flex flex-col overflow-hidden rounded-[1.75rem] bg-[#EFF5F9] shadow-[0_28px_70px_rgba(8,47,80,0.28)] ring-1 ring-[#082F50]/8',
         isExpanded
           ? 'h-[min(820px,calc(100dvh-1rem))] w-[min(880px,calc(100vw-1rem))] sm:h-[min(820px,calc(100dvh-2rem))] sm:w-[min(880px,calc(100vw-2rem))]'
           : 'h-[min(600px,calc(100dvh-7.75rem))] w-[min(404px,calc(100vw-2rem))]',
@@ -1037,7 +1037,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
     >
       <header
         className="relative z-10 flex items-center gap-3 px-5 py-4 shadow-md"
-        style={{ background: 'linear-gradient(135deg, #022A4E 0%, #034582 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #032C4B 0%, #0B5688 100%)' }}
       >
         <div
           className="absolute inset-x-0 bottom-0 h-px"
@@ -1144,7 +1144,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
               className="flex flex-col gap-4"
             >
               <div className="flex items-start gap-2.5">
-                <div className="relative mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#C29C41]/30 bg-[#022A4E]">
+                <div className="relative mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#C29C41]/30 bg-[#032C4B]">
                   <Image
                     src="/ai-assistant.png"
                     alt=""
@@ -1153,7 +1153,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                     className="object-contain"
                   />
                 </div>
-                <div className="rounded-2xl rounded-ss-none bg-white px-4 py-3 text-[0.82rem] leading-relaxed text-[#0A2540] shadow-sm">
+                <div className="rounded-2xl rounded-ss-none bg-white px-4 py-3 text-[0.82rem] leading-relaxed text-[#082F50] shadow-sm">
                   {activeDocumentContext
                     ? locale === 'ar'
                       ? 'اطلعتُ على الأسئلة المحفوظة لهذه الوثيقة. اختر سؤالاً وسأعرض إجابته الموثقة مباشرة، من دون انتظار توليد جديد.'
@@ -1175,12 +1175,12 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                           key={item.question}
                           type="button"
                           onClick={() => answerFromDocument(item)}
-                          className="group/question grid grid-cols-[2rem_1fr_auto] items-center gap-3 rounded-2xl border border-[#0B4E84]/14 bg-white px-3 py-3 text-start shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41] hover:bg-[#FFFBF0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
+                          className="group/question grid grid-cols-[2rem_1fr_auto] items-center gap-3 rounded-2xl border border-[#0A527E]/14 bg-white px-3 py-3 text-start shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41] hover:bg-[#FFFBF0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]"
                         >
-                          <span className="flex size-8 items-center justify-center rounded-xl bg-[#EAF4FA] text-[0.66rem] font-black text-[#0B4E84] transition-colors group-hover/question:bg-[#C29C41] group-hover/question:text-[#071D2F]">
+                          <span className="flex size-8 items-center justify-center rounded-xl bg-[#EAF4FA] text-[0.66rem] font-black text-[#0A527E] transition-colors group-hover/question:bg-[#C29C41] group-hover/question:text-[#062B46]">
                             {String(index + 1).padStart(2, '0')}
                           </span>
-                          <span className="text-[0.75rem] font-bold leading-5 text-[#0A2540]">
+                          <span className="text-[0.75rem] font-bold leading-5 text-[#082F50]">
                             {item.question}
                           </span>
                           <LuBookOpen className="size-3.5 text-[#C29C41]" aria-hidden />
@@ -1191,7 +1191,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                           key={prompt.en}
                           type="button"
                           onClick={() => send(prompt[locale as keyof typeof prompt] || prompt.en)}
-                          className="rounded-2xl border border-[#0369A1]/16 bg-white px-4 py-2.5 text-start text-[0.75rem] font-medium text-[#0B4E84] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#0A2540]"
+                          className="rounded-2xl border border-[#0B5688]/16 bg-white px-4 py-2.5 text-start text-[0.75rem] font-medium text-[#0A527E] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#C29C41] hover:bg-[#FFF8E8] hover:text-[#082F50]"
                         >
                           {prompt[locale as keyof typeof prompt] || prompt.en}
                         </button>
@@ -1210,7 +1210,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                 transition={{ duration: 0.3 }}
                 className="flex justify-end"
               >
-                <p className="max-w-[85%] rounded-2xl rounded-ee-none bg-gradient-to-br from-[#034582] to-[#022A4E] px-4 py-2.5 text-[0.82rem] leading-relaxed text-white shadow-[0_6px_16px_rgba(2,42,78,0.2)]">
+                <p className="max-w-[85%] rounded-2xl rounded-ee-none bg-gradient-to-br from-[#0B5688] to-[#032C4B] px-4 py-2.5 text-[0.82rem] leading-relaxed text-white shadow-[0_6px_16px_rgba(2,42,78,0.2)]">
                   {entry.text}
                 </p>
               </motion.div>
@@ -1231,7 +1231,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                       transition={{ duration: 1.45, repeat: Infinity, ease: 'easeOut' }}
                     />
                   )}
-                  <div className="relative flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#C29C41]/30 bg-[#022A4E]">
+                  <div className="relative flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#C29C41]/30 bg-[#032C4B]">
                     <Image src="/ai-assistant.png" alt="" width={26} height={26} className="object-contain" />
                   </div>
                 </div>
@@ -1248,10 +1248,10 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                     <motion.div
                       initial={reduceMotion ? false : { opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="overflow-hidden rounded-2xl rounded-ss-none border border-[#0369A1]/5 bg-white/95 shadow-[0_4px_20px_rgba(10,37,64,0.06)]"
+                      className="overflow-hidden rounded-2xl rounded-ss-none border border-[#0B5688]/5 bg-white/95 shadow-[0_4px_20px_rgba(8,47,80,0.06)]"
                     >
                       {entry.status === 'streaming' && (
-                        <div className="flex items-center gap-2 border-b border-[#0369A1]/6 bg-[#F8FBFD] px-4 py-2 text-[0.65rem] font-semibold text-[#0B4E84]">
+                        <div className="flex items-center gap-2 border-b border-[#0B5688]/6 bg-[#F8FBFD] px-4 py-2 text-[0.65rem] font-semibold text-[#0A527E]">
                           <span className="flex gap-1" aria-hidden>
                             {[0, 1, 2].map((index) => (
                               <motion.span
@@ -1281,7 +1281,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                                   href={`${entry.documentSourcePath}#page=${page}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 rounded-full border border-[#C29C41]/35 bg-white px-2.5 py-1 text-[0.64rem] font-bold text-[#0B4E84] transition hover:border-[#C29C41] hover:bg-[#FFF8E8]"
+                                  className="inline-flex items-center gap-1 rounded-full border border-[#C29C41]/35 bg-white px-2.5 py-1 text-[0.64rem] font-bold text-[#0A527E] transition hover:border-[#C29C41] hover:bg-[#FFF8E8]"
                                 >
                                   <LuBookOpen className="size-3" aria-hidden />
                                   {locale === 'ar' ? `صفحة ${page}` : `Page ${page}`}
@@ -1299,7 +1299,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                         )}
 
                         {entry.status !== 'streaming' && (
-                          <div className="mt-3 flex items-center gap-2 border-t border-[#0369A1]/5 pt-2.5">
+                          <div className="mt-3 flex items-center gap-2 border-t border-[#0B5688]/5 pt-2.5">
                             {typeof entry.responseTime === 'number' && (
                               <span className="text-[0.6rem] font-medium text-[#7A8D9C]">
                                 {entry.responseTime.toFixed(1)}s
@@ -1315,7 +1315,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                               onClick={() =>
                                 handleCopy(entry.id, stripReferencesSection(entry.text))
                               }
-                              className="ms-auto inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[0.64rem] font-semibold text-[#475569] transition-colors hover:bg-[#F0F7FC] hover:text-[#0A2540]"
+                              className="ms-auto inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[0.64rem] font-semibold text-[#475569] transition-colors hover:bg-[#EFF5F9] hover:text-[#082F50]"
                             >
                               {copiedId === entry.id ? (
                                 <><LuCheck className="size-2.5 text-green-600" aria-hidden />{t('copied')}</>
@@ -1370,7 +1370,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                                   type="button"
                                   onClick={() => answerFromDocument(item)}
                                   disabled={isBusy}
-                                  className="rounded-xl border border-[#0369A1]/14 bg-white/90 px-3 py-2 text-start text-[0.68rem] font-semibold leading-snug text-[#0B4E84] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/70 hover:bg-[#FFF9EA] hover:text-[#0A2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:pointer-events-none disabled:opacity-50"
+                                  className="rounded-xl border border-[#0B5688]/14 bg-white/90 px-3 py-2 text-start text-[0.68rem] font-semibold leading-snug text-[#0A527E] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/70 hover:bg-[#FFF9EA] hover:text-[#082F50] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:pointer-events-none disabled:opacity-50"
                                 >
                                   {item.question}
                                 </button>
@@ -1381,7 +1381,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                                 type="button"
                                 onClick={() => send(suggestion)}
                                 disabled={isBusy}
-                                className="rounded-xl border border-[#0369A1]/14 bg-white/90 px-3 py-2 text-start text-[0.68rem] font-semibold leading-snug text-[#0B4E84] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/70 hover:bg-[#FFF9EA] hover:text-[#0A2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:pointer-events-none disabled:opacity-50"
+                                className="rounded-xl border border-[#0B5688]/14 bg-white/90 px-3 py-2 text-start text-[0.68rem] font-semibold leading-snug text-[#0A527E] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C29C41]/70 hover:bg-[#FFF9EA] hover:text-[#082F50] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:pointer-events-none disabled:opacity-50"
                               >
                                 {suggestion}
                               </button>
@@ -1393,7 +1393,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
               </motion.div>
             ) : (
               <div key={entry.id} className="flex items-start gap-2.5">
-                <div className="relative mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#C29C41]/30 bg-[#022A4E]">
+                <div className="relative mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#C29C41]/30 bg-[#032C4B]">
                   <Image
                     src="/ai-assistant.png"
                     alt=""
@@ -1427,7 +1427,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                             <span
                               className={
                                 isActive
-                                  ? 'font-semibold text-[#0B4E84]'
+                                  ? 'font-semibold text-[#0A527E]'
                                   : 'font-medium text-[#64748b]'
                               }
                             >
@@ -1445,7 +1445,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                      <div className="rounded-2xl rounded-ss-none bg-white/95 px-4 py-4 shadow-[0_4px_20px_rgba(10,37,64,0.06)] border border-[#0369A1]/5">
+                      <div className="rounded-2xl rounded-ss-none bg-white/95 px-4 py-4 shadow-[0_4px_20px_rgba(8,47,80,0.06)] border border-[#0B5688]/5">
                         <AnswerText text={entry.run.answer[locale as keyof typeof entry.run.answer] || entry.run.answer.en} />
 
                         {entry.run.docs.length > 0 && (
@@ -1473,7 +1473,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                                 {/* Content & Buttons */}
                                 <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
                                   <div>
-                                    <h4 className="line-clamp-2 text-[0.8rem] font-bold leading-snug text-[#0A2540] group-hover:text-[#0B4E84] transition-colors">
+                                    <h4 className="line-clamp-2 text-[0.8rem] font-bold leading-snug text-[#082F50] group-hover:text-[#0A527E] transition-colors">
                                       {doc.title[locale as keyof typeof doc.title] || doc.title.en}
                                     </h4>
                                     <p className="mt-1 line-clamp-2 text-[0.68rem] leading-relaxed text-[#475569]">
@@ -1496,7 +1496,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                                           </TooltipContent>
                                         </Tooltip>
                                       </TooltipProvider>
-                                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#0A2540]/10">
+                                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#082F50]/10">
                                         <div
                                           className="h-full rounded-full bg-gradient-to-r from-[#C29C41] to-[#e8c96a]"
                                           style={{ width: `${doc.relevance}%` }}
@@ -1525,11 +1525,11 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                           </div>
                         )}
 
-                        <div className="mt-3.5 flex items-center gap-2 border-t border-[#0369A1]/5 pt-2.5">
+                        <div className="mt-3.5 flex items-center gap-2 border-t border-[#0B5688]/5 pt-2.5">
                           <button
                             type="button"
                             onClick={() => handleCopy(entry.id, entry.run.answer[locale as keyof typeof entry.run.answer] || entry.run.answer.en)}
-                            className="ms-auto inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[0.64rem] font-semibold text-[#475569] transition-colors hover:bg-[#F0F7FC] hover:text-[#0A2540]"
+                            className="ms-auto inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[0.64rem] font-semibold text-[#475569] transition-colors hover:bg-[#EFF5F9] hover:text-[#082F50]"
                           >
                             {copiedId === entry.id ? (
                               <>
@@ -1554,14 +1554,14 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
         </div>
       </div>
 
-      <div className="border-t border-[#0369A1]/10 bg-white p-3 sm:p-4">
+      <div className="border-t border-[#0B5688]/10 bg-white p-3 sm:p-4">
         <div className={cn(isExpanded && 'mx-auto w-full max-w-3xl')}>
           <div
             className={cn(
-              'flex items-end gap-1.5 rounded-2xl bg-[#F0F7FC] p-1.5 transition-all duration-300',
+              'flex items-end gap-1.5 rounded-2xl bg-[#EFF5F9] p-1.5 transition-all duration-300',
               message.trim()
                 ? 'ring-1 ring-[#C29C41] shadow-sm'
-                : 'ring-1 ring-transparent focus-within:ring-[#0369A1]/25 focus-within:shadow-sm',
+                : 'ring-1 ring-transparent focus-within:ring-[#0B5688]/25 focus-within:shadow-sm',
             )}
           >
             <button
@@ -1572,7 +1572,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                 'relative shrink-0 rounded-xl p-2.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] disabled:cursor-not-allowed disabled:opacity-55',
                 voiceState === 'listening' || voiceState === 'processing'
                   ? 'bg-[#C29C41]/16 text-[#8B681C] ring-1 ring-[#C29C41]/35'
-                  : 'text-[#0369A1] hover:bg-[#0369A1]/8 hover:text-[#8B681C]',
+                  : 'text-[#0B5688] hover:bg-[#0B5688]/8 hover:text-[#8B681C]',
               )}
               aria-label={
                 voiceState === 'listening'
@@ -1584,7 +1584,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
               aria-pressed={voiceState === 'listening'}
             >
               {voiceState === 'requesting' ? (
-                <span className="block size-4 animate-spin rounded-full border-2 border-[#0369A1]/25 border-t-[#0369A1] motion-reduce:animate-pulse" aria-hidden />
+                <span className="block size-4 animate-spin rounded-full border-2 border-[#0B5688]/25 border-t-[#0B5688] motion-reduce:animate-pulse" aria-hidden />
               ) : (
                 <>
                   <LuMic className={cn('size-4', voiceState === 'listening' && 'animate-pulse')} />
@@ -1620,8 +1620,8 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
               className={cn(
                 'mb-1 shrink-0 text-white transition-colors [&_svg]:text-white',
                 isBusy
-                  ? 'bg-[#0A2540] hover:bg-[#163C5C]'
-                  : 'bg-gradient-to-br from-[#034582] to-[#022A4E] hover:from-[#0B4E84] hover:to-[#034582]',
+                  ? 'bg-[#082F50] hover:bg-[#0A527E]'
+                  : 'bg-gradient-to-br from-[#0B5688] to-[#032C4B] hover:from-[#0A527E] hover:to-[#0B5688]',
               )}
               aria-label={
                 isBusy
@@ -1661,7 +1661,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
                 initial={reduceMotion ? false : { opacity: 0, y: -3 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -3 }}
-                className="mt-2 px-1 text-center text-[0.64rem] font-semibold text-[#0B4E84]"
+                className="mt-2 px-1 text-center text-[0.64rem] font-semibold text-[#0A527E]"
               >
                 {voiceState === 'requesting'
                   ? locale === 'ar' ? 'اسمح بالوصول إلى الميكروفون للبدء.' : 'Allow microphone access to begin.'
@@ -1686,7 +1686,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[60] grid place-items-center bg-[#0A2540]/45 p-2 backdrop-blur-sm sm:p-4"
+            className="fixed inset-0 z-[60] grid place-items-center bg-[#082F50]/45 p-2 backdrop-blur-sm sm:p-4"
             onClick={(event) => {
               if (event.target === event.currentTarget) setIsExpanded(false);
             }}
@@ -1736,7 +1736,7 @@ const ChatbotWidget = ({ initialRequest }: { initialRequest?: { prompt?: string;
           whileTap={{ scale: 0.95 }}
           className="relative flex size-14 items-center justify-center rounded-full shadow-2xl sm:size-16"
           style={{
-            background: 'linear-gradient(135deg, #022A4E 0%, #034582 100%)',
+            background: 'linear-gradient(135deg, #032C4B 0%, #0B5688 100%)',
             border: '2px solid #C29C41',
           }}
           aria-label={t('toggleChat')}

@@ -14,7 +14,7 @@ type EntryTypedFieldsProps = {
 };
 
 function fieldClass() {
-  return 'h-11 w-full rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#0A2540] outline-none transition duration-200 focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20';
+  return 'h-11 w-full rounded-md border border-[#CBD5E1] bg-white px-3 text-sm text-[#082F50] outline-none transition duration-200 focus:border-[#0B5688] focus:ring-2 focus:ring-[#0B5688]/20';
 }
 
 function labelClass() {
@@ -39,7 +39,7 @@ export default function EntryTypedFields({
     <div className="space-y-5">
       <section className="rounded-lg border border-[#D9E3EE] bg-[#F8FAFC] p-4">
         <div className="mb-4">
-          <h3 className="text-lg font-bold text-[#003652]">بيانات الإصدار</h3>
+          <h3 className="text-lg font-bold text-[#053D69]">بيانات الإصدار</h3>
           <p className="mt-1 text-sm leading-6 text-[#64748B]">
             املأ البيانات المتوفرة فقط. يمكن ترك أي خانة غير ضرورية فارغة.
           </p>
@@ -77,13 +77,13 @@ export default function EntryTypedFields({
             />
             {isCounting ? (
               <div className="mt-2" role="status" aria-live="polite">
-                <div className="mb-1 flex items-center justify-between text-xs font-bold text-[#0369A1]">
+                <div className="mb-1 flex items-center justify-between text-xs font-bold text-[#0B5688]">
                   <span>جاري حساب صفحات ملفات PDF...</span>
                   <span dir="ltr">{status.done}/{status.total}</span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E2E8F0]">
                   <div
-                    className="h-full rounded-full bg-[#0369A1] transition-[width] duration-300 ease-out"
+                    className="h-full rounded-full bg-[#0B5688] transition-[width] duration-300 ease-out"
                     style={{ width: `${Math.max(progress, 6)}%` }}
                   />
                 </div>
@@ -129,7 +129,7 @@ export default function EntryTypedFields({
           defaultValue={notes ?? ''}
           rows={4}
           placeholder="ملاحظة للإدارة فقط، لا تظهر للزائر."
-          className="w-full rounded-md border border-[#E8C96A] bg-[#FFF8E1] px-3 py-3 text-sm leading-7 text-[#0A2540] outline-none transition duration-200 placeholder:text-[#8A6A1D] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
+          className="w-full rounded-md border border-[#E8C96A] bg-[#FFF8E1] px-3 py-3 text-sm leading-7 text-[#082F50] outline-none transition duration-200 placeholder:text-[#8A6A1D] focus:border-[#C29C41] focus:ring-2 focus:ring-[#C29C41]/25"
         />
         <p className="mt-2 text-xs leading-5 text-[#8A6A1D]">هذه الملاحظات داخلية ولا تظهر في صفحات المكتبة.</p>
       </label>

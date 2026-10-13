@@ -26,7 +26,7 @@ async function LatestPublicationsSection() {
 
 export default function Home() {
   return (
-    <div className="min-h-dvh w-full min-w-0 overflow-x-clip bg-[#F8FAFC] text-[#0A2540]">
+    <div className="min-h-dvh w-full min-w-0 overflow-x-clip bg-[#F8FAFC] text-[#082F50]">
       <main className="min-w-0">
         <section id="home">
           <Hero />

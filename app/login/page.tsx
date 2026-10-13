@@ -78,7 +78,7 @@ export default async function LoginPage({
               <FieldLabel htmlFor="login-password" className="p-0">كلمة المرور</FieldLabel>
               <Link
                 href={`/forgot-password?callbackUrl=${encodeURIComponent(callbackUrl)}`}
-                className="text-xs font-bold text-[#8B681C] transition hover:text-[#0369A1] focus:outline-none focus:underline"
+                className="text-xs font-bold text-[#8B681C] transition hover:text-[#0B5688] focus:outline-none focus:underline"
               >
                 نسيت كلمة المرور؟
               </Link>

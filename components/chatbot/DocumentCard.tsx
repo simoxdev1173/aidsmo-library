@@ -38,14 +38,14 @@ export default function DocumentCard({
         href={doc.href}
         onClick={onOpen}
         className={cn(
-          'group flex gap-3 rounded-2xl border border-[#0369A1]/12 bg-white p-2.5',
-          'shadow-[0_2px_10px_rgba(10,37,64,0.04)] transition-all duration-300',
-          'hover:-translate-y-0.5 hover:border-[#C29C41]/55 hover:shadow-[0_10px_26px_rgba(10,37,64,0.12)]',
+          'group flex gap-3 rounded-2xl border border-[#0B5688]/12 bg-white p-2.5',
+          'shadow-[0_2px_10px_rgba(8,47,80,0.04)] transition-all duration-300',
+          'hover:-translate-y-0.5 hover:border-[#C29C41]/55 hover:shadow-[0_10px_26px_rgba(8,47,80,0.12)]',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]',
         )}
       >
         {/* Cover */}
-        <div className="relative h-[78px] w-[56px] shrink-0 overflow-hidden rounded-lg bg-[#FFF8E8] shadow-[0_4px_12px_rgba(10,37,64,0.16)] ring-1 ring-[#C29C41]/20">
+        <div className="relative h-[78px] w-[56px] shrink-0 overflow-hidden rounded-lg bg-[#FFF8E8] shadow-[0_4px_12px_rgba(8,47,80,0.16)] ring-1 ring-[#C29C41]/20">
           <Image
             src={doc.cover}
             alt=""
@@ -63,7 +63,7 @@ export default function DocumentCard({
         {/* Body */}
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-start gap-1.5">
-            <h4 className="line-clamp-2 flex-1 text-[0.82rem] font-bold leading-snug text-[#0A2540] transition-colors group-hover:text-[#0B4E84]">
+            <h4 className="line-clamp-2 flex-1 text-[0.82rem] font-bold leading-snug text-[#082F50] transition-colors group-hover:text-[#0A527E]">
               {doc.title[locale]}
             </h4>
             <LuArrowUpRight
@@ -79,7 +79,7 @@ export default function DocumentCard({
           <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1.5">
             <Badge variant="default">{TYPE_LABELS[doc.type][locale]}</Badge>
             <span className="text-[0.65rem] font-semibold text-[#475569]">{doc.year}</span>
-            <span className="text-[0.65rem] text-[#0A2540]/25" aria-hidden>
+            <span className="text-[0.65rem] text-[#082F50]/25" aria-hidden>
               •
             </span>
             <span className="inline-flex items-center gap-1 text-[0.65rem] font-semibold text-[#475569]">
@@ -92,7 +92,7 @@ export default function DocumentCard({
               className="ms-auto inline-flex items-center gap-1.5"
               title={t('relevance', { percent: relevance })}
             >
-              <span className="h-1 w-8 overflow-hidden rounded-full bg-[#0A2540]/10">
+              <span className="h-1 w-8 overflow-hidden rounded-full bg-[#082F50]/10">
                 <span
                   className="block h-full rounded-full bg-gradient-to-r from-[#C29C41] to-[#e8c96a]"
                   style={{ width: `${relevance}%` }}

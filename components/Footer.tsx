@@ -123,7 +123,7 @@ const Footer = () => {
   };
 
   return (
-    <footer dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#382715] text-[#0A2540]">
+    <footer dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative overflow-hidden bg-[#032C4B] text-[#082F50]">
       <Image
         src="/background-01.webp"
         alt=""
@@ -136,7 +136,7 @@ const Footer = () => {
       <div className="absolute inset-x-0 top-0 h-1 bg-[#C6A346]" aria-hidden />
 
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
-        <section className="grid gap-7 rounded-[14px] border border-[#C6A346]/35 bg-white/88 p-5 shadow-[0_22px_58px_rgba(10,37,64,0.1)] backdrop-blur-sm md:p-7 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+        <section className="grid gap-7 rounded-[14px] border border-[#C6A346]/35 bg-white/88 p-5 shadow-[0_22px_58px_rgba(8,47,80,0.1)] backdrop-blur-sm md:p-7 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div>
             <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#C6A346]">
               {t('newsletterKicker')}
@@ -150,7 +150,7 @@ const Footer = () => {
 
             <div className="mt-6 max-w-2xl">
               {isSuccess ? (
-                <div className="rounded-[14px] border border-[#C6A346]/35 bg-[#FFF8E1] p-4 text-center font-bold text-[#003652]">
+                <div className="rounded-[14px] border border-[#C6A346]/35 bg-[#FFF8E1] p-4 text-center font-bold text-[#053D69]">
                   {t('subscribeSuccess')}
                 </div>
               ) : (
@@ -170,7 +170,7 @@ const Footer = () => {
                           if (error) setError('');
                         }}
                         dir={locale === 'ar' ? 'rtl' : 'ltr'}
-                        className={`h-12 w-full rounded-full border border-[#C6A346]/35 bg-[#FFFCF4] px-4 ${locale === 'ar' ? 'text-right' : 'text-left'} text-[#0A2540] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C6A346] focus:outline-none focus:ring-2 focus:ring-[#C6A346]/30`}
+                        className={`h-12 w-full rounded-full border border-[#C6A346]/35 bg-[#FFFCF4] px-4 ${locale === 'ar' ? 'text-right' : 'text-left'} text-[#082F50] placeholder:font-academic placeholder:text-[#64748B] focus:border-[#C6A346] focus:outline-none focus:ring-2 focus:ring-[#C6A346]/30`}
                         placeholder={t('emailPlaceholder')}
                         aria-invalid={Boolean(error)}
                         aria-describedby={error ? 'footer-newsletter-error' : undefined}
@@ -185,7 +185,7 @@ const Footer = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="engraved h-12 w-full shrink-0 cursor-pointer rounded-full border border-[#C6A346] bg-[#C6A346] px-7 text-sm font-bold text-[#0A2540] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(198,163,70,0.2)] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-white sm:w-auto"
+                      className="engraved h-12 w-full shrink-0 cursor-pointer rounded-full border border-[#C6A346] bg-[#C6A346] px-7 text-sm font-bold text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(198,163,70,0.2)] transition duration-300 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-white sm:w-auto"
                     >
                       {isSubmitting ? t('subscribing') : t('subscribe')}
                     </button>
@@ -205,7 +205,7 @@ const Footer = () => {
           </div>
 
           <div className="flex justify-center lg:justify-end">
-            <div className="h-[280px] w-full max-w-sm overflow-hidden rounded-[14px] border border-[#C6A346]/28 bg-[#FFFCF4]/72 p-3 shadow-[0_16px_36px_rgba(10,37,64,0.08)] sm:h-[320px]">
+            <div className="h-[280px] w-full max-w-sm overflow-hidden rounded-[14px] border border-[#C6A346]/28 bg-[#FFFCF4]/72 p-3 shadow-[0_16px_36px_rgba(8,47,80,0.08)] sm:h-[320px]">
               <div className="marquee grid grid-cols-2 place-items-center gap-3">
                 {[false, true].map((reverse) => (
                   <div key={String(reverse)} className={`${reverse ? 'marquee-reverse ' : ''}flex flex-col gap-5 overflow-hidden`}>
@@ -232,7 +232,7 @@ const Footer = () => {
         </section>
 
         <section className="mt-5 grid gap-5 lg:grid-cols-[0.92fr_1.5fr]">
-          <div className="rounded-[14px] border border-[#C6A346]/28 bg-white/78 p-5 shadow-[0_14px_34px_rgba(10,37,64,0.07)] backdrop-blur-sm">
+          <div className="rounded-[14px] border border-[#C6A346]/28 bg-white/78 p-5 shadow-[0_14px_34px_rgba(8,47,80,0.07)] backdrop-blur-sm">
             <div className="flex flex-wrap items-center gap-4">
               <Image
                 src="/logo-3.png"
@@ -269,7 +269,7 @@ const Footer = () => {
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="group/action flex min-h-12 cursor-pointer items-center justify-between rounded-full border border-[#C6A346]/30 bg-[#FFF8E1] px-4 text-sm font-bold text-[#0A2540] transition duration-300 hover:border-[#C6A346] hover:bg-[#C6A346] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1]"
+                    className="group/action flex min-h-12 cursor-pointer items-center justify-between rounded-full border border-[#C6A346]/30 bg-[#FFF8E1] px-4 text-sm font-bold text-[#082F50] transition duration-300 hover:border-[#C6A346] hover:bg-[#C6A346] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1]"
                   >
                     <span className="inline-flex items-center gap-2">
                       <Icon className="h-5 w-5" />
@@ -293,7 +293,7 @@ const Footer = () => {
                     {...(contact.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     className="group/contact rounded-[14px] border border-[#C6A346]/25 bg-white/78 p-4 transition duration-300 hover:border-[#C6A346]/55 hover:bg-[#FFF8E1] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1]"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C6A346]/38 bg-[#FFF8E1] text-[#8B681C] transition duration-300 group-hover/contact:bg-[#C6A346] group-hover/contact:text-[#0A2540]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C6A346]/38 bg-[#FFF8E1] text-[#8B681C] transition duration-300 group-hover/contact:bg-[#C6A346] group-hover/contact:text-[#082F50]">
                       <Icon className="h-5 w-5" />
                     </span>
                     <span className="mt-4 block text-xs font-bold text-[#8B681C]">{contact.label}</span>
@@ -308,7 +308,7 @@ const Footer = () => {
             <div className="grid gap-4 rounded-[14px] border border-[#C6A346]/25 bg-white/78 p-5 md:grid-cols-3">
               {footerLinks.map((group) => (
                 <nav key={group.title} aria-label={group.title}>
-                  <h3 className="mb-3 border-b border-[#C6A346]/22 pb-3 text-sm font-bold text-[#003652]">
+                  <h3 className="mb-3 border-b border-[#C6A346]/22 pb-3 text-sm font-bold text-[#053D69]">
                     {group.title}
                   </h3>
                   <ul className="space-y-1">
@@ -327,7 +327,7 @@ const Footer = () => {
                               }
                             }}
                             aria-current={isCurrentPage ? 'page' : undefined}
-                            className={`group/link flex min-h-9 cursor-pointer items-center justify-between gap-3 rounded-full px-3 text-sm font-medium transition duration-300 hover:bg-[#FFF8E1] hover:text-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1] ${isCurrentPage ? 'bg-[#FFF8E1] text-[#0A2540]' : 'text-[#475569]'}`}
+                            className={`group/link flex min-h-9 cursor-pointer items-center justify-between gap-3 rounded-full px-3 text-sm font-medium transition duration-300 hover:bg-[#FFF8E1] hover:text-[#082F50] focus:outline-none focus:ring-2 focus:ring-[#C6A346] focus:ring-offset-2 focus:ring-offset-[#F7F0E1] ${isCurrentPage ? 'bg-[#FFF8E1] text-[#082F50]' : 'text-[#475569]'}`}
                           >
                             <span className="inline-flex items-center gap-2">
                               <LuChevronLeft className={`h-3.5 w-3.5 text-[#C6A346] transition duration-300 group-hover/link:-translate-x-1 ${isCurrentPage ? '-translate-x-1' : ''}`} />

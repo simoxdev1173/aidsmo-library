@@ -1,6 +1,16 @@
 [variables]
 NIXPACKS_NODE_VERSION = "24"
+PORT = "3000"
 
 [phases.setup]
 nixPkgs = ["nodejs_24"]
 aptPkgs = ["libreoffice-writer", "libreoffice-impress", "fonts-noto-core"]
+
+[phases.install]
+cmds = ["npm ci --include=dev"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run start"

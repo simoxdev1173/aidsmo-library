@@ -56,16 +56,61 @@ Local development does not require an email provider. After submitting the forgo
 
 ## Coolify Deployment Notes
 
-1. Set the app environment variables above in Coolify.
-2. Use the public URL you actually open in the browser for `NEXT_PUBLIC_APP_URL`.
-3. If Coolify serves the app over HTTPS, keep `AUTH_COOKIE_SECURE=true`.
-4. If you are testing over HTTP, set `AUTH_COOKIE_SECURE=false`.
-5. Run production migrations after deployment:
+1. Use the **Nixpacks** build pack with **Static site** disabled. The repository's
+   `nixpacks.toml` installs build dependencies, runs `npm run build` (including
+   Prisma generation and PDF assets), and starts `npm run start`.
+2. Set **Ports Exposes** to `3000`. The image defaults `PORT` to `3000` and
+   Next.js binds to `0.0.0.0`. If you override `PORT`, update the proxy's target
+   port to match. Remove stale custom build/start commands in Coolify that
+   override the repository configuration.
+3. Configure the domain to target the HTTP application port, even when the
+   public domain uses HTTPS. Coolify terminates TLS at the proxy. For this
+   deployment, use `https://library-aidsmo.duckdns.org` and target port `3000`.
+4. Set the app environment variables above in Coolify. Use the public URL you
+   actually open for `NEXT_PUBLIC_APP_URL`. Keep `AUTH_COOKIE_SECURE=true` for
+   HTTPS, or `false` only when testing over HTTP.
+5. Configure the HTTP health check to use port `3000`, path `/api/health`,
+   and expected status `200`. This checks the HTTP process; it does not check
+   database connectivity or migrations.
+6. Deploy the new commit with a rebuild. Restarting an existing image does not
+   include changes made after that image was built.
+7. Run production migrations in the application terminal:
 
 ```bash
 npm run prisma:deploy
-npm run prisma:seed
 ```
+
+Use `npm run prisma:seed` only for initial database setup.
+
+### Diagnose a Bad Gateway
+
+The application terminal runs **inside the container**. Docker commands belong
+in the host server terminal (Coolify's server terminal or an SSH session).
+Do not install Docker inside the application container to diagnose the proxy.
+
+In the application terminal, check the listener and the homepage separately:
+
+```bash
+curl -i --max-time 15 http://127.0.0.1:3000/api/health
+curl -I --max-time 15 http://127.0.0.1:3000/
+```
+
+If the health endpoint returns `200` while the public domain returns `502`,
+check the proxy's target port, HTTP upstream scheme, and shared Docker network.
+If the health endpoint succeeds but the homepage fails, inspect application
+logs and database connectivity. Never post `DATABASE_URL` or authentication
+secrets in diagnostic output.
+
+In the **host server terminal**, list container networks and inspect the proxy:
+
+```bash
+docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Networks}}'
+docker logs --since 5m --tail 100 coolify-proxy
+```
+
+The application and proxy must share a reachable Docker network. Refresh the
+domain immediately before collecting proxy logs. A healthy container alone
+does not prove the proxy is targeting the correct container and port.
 
 ## Upload Persistence
 

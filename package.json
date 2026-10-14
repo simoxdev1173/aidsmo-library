@@ -11,7 +11,7 @@
     "dev": "next dev --turbopack",
     "prebuild": "prisma generate && node scripts/copy-pdf-worker.mjs",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",

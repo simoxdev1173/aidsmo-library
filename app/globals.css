@@ -241,10 +241,40 @@ select {
   }
 }
 
+.hero-image-overlay {
+  background: linear-gradient(0deg, rgb(5 29 51 / 86%) 0%, rgb(5 29 51 / 58%) 48%, rgb(5 29 51 / 14%) 100%);
+}
+
+@media (min-width: 640px) {
+  [dir='rtl'] .hero-image-overlay {
+    background: linear-gradient(270deg, rgb(5 29 51 / 86%) 0%, rgb(5 29 51 / 65%) 34%, rgb(5 29 51 / 18%) 70%, transparent 100%);
+  }
+
+  [dir='ltr'] .hero-image-overlay {
+    background: linear-gradient(90deg, rgb(5 29 51 / 86%) 0%, rgb(5 29 51 / 65%) 34%, rgb(5 29 51 / 18%) 70%, transparent 100%);
+  }
+}
+
+.hero-copy {
+  text-shadow: 0 2px 14px rgb(3 21 40 / 48%);
+  animation: hero-copy-enter 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hero-copy-enter {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+[dir='rtl'] .hero-progress-fill {
+  transform-origin: right;
+}
+
 .hero-progress-fill {
   display: block;
   height: 100%;
-  width: 0;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
   background: linear-gradient(90deg, #e8c96a 0%, #ffffff 100%);
 }
 
@@ -252,12 +282,27 @@ select {
   animation: hero-progress linear forwards;
 }
 
+.hero-progress-fill.is-selected {
+  transform: scaleX(1);
+}
+
 @keyframes hero-progress {
   from {
-    width: 0;
+    transform: scaleX(0);
   }
   to {
-    width: 100%;
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy {
+    animation: none;
+  }
+
+  .hero-progress-fill.is-active {
+    animation: none;
+    transform: scaleX(1);
   }
 }
 

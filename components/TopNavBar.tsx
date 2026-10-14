@@ -349,7 +349,7 @@ const LanguageSwitcher = ({ tone = 'light', className, compact = false }: { tone
             'flex items-center justify-center rounded-full font-bold transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#C29C41]',
             compact ? 'h-10 min-w-10 px-2 text-xs max-[359px]:h-9 max-[359px]:min-w-9 max-[359px]:px-1.5' : 'h-9 min-w-9 px-2.5 text-xs',
             locale === option
-              ? 'bg-[#C29C41] text-[#082F50] shadow-[0_4px_12px_rgba(194,156,65,0.32)]'
+              ? tone === 'dark' ? 'bg-[#C29C41] text-[#082F50] shadow-[0_4px_12px_rgba(194,156,65,0.32)]' : 'bg-white text-[#082F50] ring-1 ring-[#C29C41]/50 shadow-[0_1px_4px_rgba(8,47,80,0.10)]'
               : tone === 'dark' ? 'text-white/80 hover:bg-white/10 hover:text-white' : 'text-[#64748B] hover:text-[#082F50]',
           )}
         >
@@ -417,7 +417,7 @@ const NavItem = ({ item, isActive, pathname, tone = 'light', collapsed = false, 
           'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-3 text-[0.78rem] font-bold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2',
           tone === 'dark'
             ? cn('xl:px-4 xl:text-sm focus:ring-offset-[#082F50]', isActive ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')
-            : cn('2xl:px-2 2xl:text-[0.82rem] focus:ring-offset-white', isActive ? 'text-[#A77C20]' : 'text-[#082F50] hover:bg-white/45 hover:text-[#9A7421]'),
+            : cn('2xl:px-2 2xl:text-[0.82rem] focus:ring-offset-white', isActive ? 'bg-[#F7F2E8] text-[#082F50] shadow-[inset_0_-2px_0_#C29C41]' : 'text-[#334155] hover:bg-[#F7F2E8] hover:text-[#082F50]'),
           enlarged && 'min-h-12 px-4 text-[0.95rem]',
         )}
       >
@@ -588,6 +588,7 @@ const UserAvatar = ({
 
 const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number }) => {
   const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
@@ -802,15 +803,15 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
 
   return (
     <>
-      <header data-compact={isCompact} className="sticky top-0 z-[60] w-full shadow-[0_8px_24px_rgba(8,47,80,0.14)]">
+      <header data-compact={isCompact} className={cn('sticky top-0 z-[60] w-full', isHomePage ? 'shadow-[0_5px_20px_rgba(8,47,80,0.08)]' : 'shadow-[0_8px_24px_rgba(8,47,80,0.14)]')}>
         <div
           aria-hidden={isCompact}
           inert={isCompact}
           className={cn(
-            'bg-[#053D69]',
+            isHomePage ? 'bg-white' : 'bg-[#053D69]',
             isCompact
               ? 'max-h-0 overflow-hidden border-b-0 border-transparent opacity-0'
-              : 'max-h-[124px] overflow-visible border-b border-[#E8C96A]/30 opacity-100 md:max-h-[88px]',
+              : cn('max-h-[124px] overflow-visible border-b opacity-100 md:max-h-[88px]', isHomePage ? 'border-[#D8C693]' : 'border-[#E8C96A]/30'),
           )}
         >
           <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -833,7 +834,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
               </form>
 
               <div className="flex shrink-0 items-center gap-2">
-                <LanguageSwitcher tone="dark" />
+                <LanguageSwitcher tone={isHomePage ? 'light' : 'dark'} />
 
                 {user && (
                   <div
@@ -853,8 +854,9 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
                       aria-expanded={accountMenuOpen}
                       aria-controls="desktop-account-menu"
                       className={cn(
-                        'relative flex h-11 max-w-48 items-center gap-2 rounded-full border border-white/25 bg-white/10 py-1 pe-3 ps-1 text-start text-white transition duration-200 hover:border-[#E8C96A]/60 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#082F50]',
-                        accountMenuOpen && 'border-[#E8C96A]/70 bg-white/15',
+                        'relative flex h-11 max-w-48 items-center gap-2 rounded-full border py-1 pe-3 ps-1 text-start transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2',
+                        isHomePage ? 'border-[#D7E1E9] bg-[#F8FAFC] text-[#082F50] hover:border-[#A9BAC8] hover:bg-[#EFF4F7] focus:ring-offset-white' : 'border-white/25 bg-white/10 text-white hover:border-[#E8C96A]/60 hover:bg-white/15 focus:ring-offset-[#082F50]',
+                        accountMenuOpen && (isHomePage ? 'border-[#A9BAC8] bg-[#EFF4F7]' : 'border-[#E8C96A]/70 bg-white/15'),
                       )}
                     >
                       <UserAvatar user={user} className="size-9" />
@@ -926,13 +928,13 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
 
                 {!user && (
                   <Link href="/login" aria-label={t('loginFull')}
-                    className="engraved brass-gradient hidden h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[#C29C41] px-5 text-sm font-bold text-[#082F50] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] transition duration-200 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 xl:flex">
-                    <LuUser size={16} />
+                    className={cn('hidden h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border px-5 text-sm font-bold text-[#082F50] transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 xl:flex', isHomePage ? 'border-[#C29C41]/60 bg-[#FCFBF8] hover:border-[#C29C41] hover:bg-[#F7F2E8]' : 'engraved brass-gradient border-[#C29C41] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_rgba(194,156,65,0.22)] hover:brightness-110')}>
+                    <LuUser size={16} className={isHomePage ? 'text-[#9A7421]' : undefined} />
                     {t('loginFull')}
                   </Link>
                 )}
 
-                <span className="hidden h-10 w-px bg-[#E8C96A]/35 sm:block" aria-hidden="true" />
+                <span className={cn('hidden h-10 w-px sm:block', isHomePage ? 'bg-[#C29C41]/45' : 'bg-[#E8C96A]/35')} aria-hidden="true" />
                 <Link href="https://aidsmo.org" target="_blank" rel="noopener noreferrer" className="flex size-14 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-[0_3px_15px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#082F50] md:size-[68px]">
                   <Image src="/aidsmo-logo.png" alt={tFooter('orgLogoAlt')} height={160} width={160} className="h-full w-full object-contain" priority />
                 </Link>
@@ -950,7 +952,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
           </div>
         </div>
 
-        <nav aria-label={t('mainMenuLabel')} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative w-full border-b border-[#C29C41]/45 bg-[#053D69] text-white">
+        <nav aria-label={t('mainMenuLabel')} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={cn('relative w-full border-b', isHomePage ? 'border-[#C29C41]/55 bg-[#FCFBF8] text-[#082F50]' : 'border-[#C29C41]/45 bg-[#053D69] text-white')}>
           <div className={cn('flex w-full items-center gap-1 px-3 sm:gap-2 sm:px-6 lg:gap-3 lg:px-8', isCompact ? 'h-[60px] justify-between md:h-16 lg:grid lg:grid-cols-[minmax(20rem,1fr)_minmax(0,3fr)_minmax(20rem,1fr)]' : 'h-[52px] md:h-14')}>
             <Link data-nav-zone="logo" href="/" scroll={false} onClick={handleHomeNavigate} aria-label={locale === 'ar' ? 'الذهاب إلى الرئيسية' : 'Go to homepage'} aria-hidden={!isCompact} inert={!isCompact} className={cn('flex shrink-0 items-center overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E8C96A] focus:ring-offset-2 focus:ring-offset-[#082F50] lg:justify-self-start', isCompact ? 'h-12 w-12 translate-y-0 opacity-100 max-[359px]:w-8 sm:w-20' : 'pointer-events-none h-11 w-0 -translate-y-1 opacity-0')}>
               <Image src="/logo-3d-3d.png" alt="" height={120} width={130} className="h-full w-full shrink-0 object-contain" />
@@ -958,7 +960,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
             <div data-nav-zone="links" className={cn('min-w-0 flex-1', isCompact && 'hidden lg:block lg:w-full')}>
             <ul className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex">
               {menuItemsData.map((item) => (
-                <NavItem key={item.id} item={item} isActive={isMenuActive(item, pathname ?? '/', activeSection)} pathname={pathname ?? '/'} tone="dark" collapsed={isCompact && item.id === 'about'} enlarged={isCompact} />
+                <NavItem key={item.id} item={item} isActive={isMenuActive(item, pathname ?? '/', activeSection)} pathname={pathname ?? '/'} tone={isHomePage ? 'light' : 'dark'} collapsed={isCompact && item.id === 'about'} enlarged={isCompact} />
               ))}
             </ul>
 
@@ -968,7 +970,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
                 const active = isMenuActive(item, pathname ?? '/', activeSection);
                 return (
                   <Link key={item.id} href={href} aria-hidden={isCompact && item.id === 'about'} inert={isCompact && item.id === 'about'} {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className={cn('flex shrink-0 items-center overflow-hidden whitespace-nowrap rounded-full font-bold focus:outline-none focus:ring-2 focus:ring-[#C29C41]', isCompact ? 'min-h-12 text-sm' : 'min-h-11 text-xs', isCompact && item.id === 'about' ? 'max-w-0 px-0 opacity-0' : 'max-w-72 px-3 opacity-100', active ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')}>
+                    className={cn('flex shrink-0 items-center overflow-hidden whitespace-nowrap rounded-full font-bold focus:outline-none focus:ring-2 focus:ring-[#C29C41]', isCompact ? 'min-h-12 text-sm' : 'min-h-11 text-xs', isCompact && item.id === 'about' ? 'max-w-0 px-0 opacity-0' : 'max-w-72 px-3 opacity-100', isHomePage ? (active ? 'bg-[#F7F2E8] text-[#082F50] shadow-[inset_0_-2px_0_#C29C41]' : 'text-[#334155] hover:bg-[#F7F2E8] hover:text-[#082F50]') : (active ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]'))}>
                     {pickLabel(item.label, item.labelEn, locale)}
                   </Link>
                 );
@@ -978,7 +980,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
 
             <div data-nav-zone="actions" className={cn('flex shrink-0 items-center', isCompact ? 'gap-2 sm:gap-3 lg:justify-self-end' : 'gap-0')}>
             <div aria-hidden={!isCompact} inert={!isCompact} className={cn('shrink-0 overflow-hidden', isCompact ? 'w-[104px] translate-y-0 overflow-visible opacity-100 max-[359px]:w-[84px]' : 'pointer-events-none w-0 -translate-y-1 opacity-0')}>
-              <LanguageSwitcher tone="dark" compact className="w-full justify-center" />
+              <LanguageSwitcher tone={isHomePage ? 'light' : 'dark'} compact className="w-full justify-center" />
             </div>
 
               <div ref={compactSearchRef} aria-hidden={!isCompact} inert={!isCompact} className={cn('relative shrink-0', isCompact ? 'w-12 opacity-100 max-[359px]:w-10' : 'pointer-events-none w-0 opacity-0')}>
@@ -989,7 +991,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
                   aria-label={t('searchLabel')}
                   aria-expanded={compactSearchVisible}
                   aria-controls="compact-nav-search"
-                  className={cn('flex size-12 items-center justify-center rounded-full border text-[#E8C96A] transition-colors hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#E8C96A] motion-reduce:transition-none max-[359px]:size-10', compactSearchVisible ? 'border-[#E8C96A] bg-white/15' : 'border-[#C29C41]/40 bg-white/5')}
+                  className={cn('flex size-12 items-center justify-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-[#C29C41] motion-reduce:transition-none max-[359px]:size-10', isHomePage ? (compactSearchVisible ? 'border-[#A9BAC8] bg-[#E8EEF2] text-[#082F50]' : 'border-[#D7E1E9] bg-white text-[#334155] hover:bg-[#E8EEF2]') : (compactSearchVisible ? 'border-[#E8C96A] bg-white/15 text-[#E8C96A] hover:bg-white/15' : 'border-[#C29C41]/40 bg-white/5 text-[#E8C96A] hover:bg-white/15'))}
                 >
                   <LuSearch size={21} />
                 </button>
@@ -1025,7 +1027,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
                   aria-haspopup="menu"
                   aria-expanded={compactAccountVisible}
                   aria-controls="compact-account-menu"
-                  className={cn('relative flex h-12 min-w-[74px] items-center justify-center gap-1 rounded-full border px-1 text-[#E8C96A] transition-colors hover:border-[#E8C96A] hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#E8C96A] motion-reduce:transition-none max-[359px]:h-10 max-[359px]:min-w-16', compactAccountVisible ? 'border-[#E8C96A] bg-white/15' : 'border-[#C29C41]/40 bg-white/5')}
+                  className={cn('relative flex h-12 min-w-[74px] items-center justify-center gap-1 rounded-full border px-1 transition-colors focus:outline-none focus:ring-2 focus:ring-[#C29C41] motion-reduce:transition-none max-[359px]:h-10 max-[359px]:min-w-16', isHomePage ? (compactAccountVisible ? 'border-[#A9BAC8] bg-[#E8EEF2] text-[#082F50]' : 'border-[#D7E1E9] bg-white text-[#334155] hover:bg-[#E8EEF2]') : (compactAccountVisible ? 'border-[#E8C96A] bg-white/15 text-[#E8C96A]' : 'border-[#C29C41]/40 bg-white/5 text-[#E8C96A] hover:border-[#E8C96A] hover:bg-white/15'))}
                 >
                   {user ? <UserAvatar user={user} className="size-10 max-[359px]:size-9" /> : <LuUser size={21} />}
                   <LuChevronDown aria-hidden="true" size={15} className={cn('shrink-0 transition-transform duration-200 motion-reduce:transition-none', compactAccountVisible && 'rotate-180')} />
@@ -1083,7 +1085,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
               </div>
 
             <button ref={mobileMenuButtonRef} type="button"
-              className={cn('flex shrink-0 items-center justify-center rounded-full border border-[#C29C41]/60 bg-white/10 text-[#E8C96A] transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-[#C29C41] max-[359px]:size-10 2xl:hidden', isCompact ? 'size-12' : 'size-11')}
+              className={cn('flex shrink-0 items-center justify-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-[#C29C41] max-[359px]:size-10 2xl:hidden', isHomePage ? 'border-[#D7E1E9] bg-white text-[#082F50] hover:bg-[#E8EEF2]' : 'border-[#C29C41]/60 bg-white/10 text-[#E8C96A] hover:bg-white/20', isCompact ? 'size-12' : 'size-11')}
               onClick={() => { setAccountMenuOpen(false); setCompactAccountOpen(false); setCompactSearchOpen(false); setMobileMenuOpen(true); }}
               aria-label={t('openMenu')} aria-expanded={mobileMenuOpen} aria-controls="mobile-site-menu">
               <LuMenu size={isCompact ? 24 : 22} />

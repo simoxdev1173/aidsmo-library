@@ -67,10 +67,7 @@ const fragmentShaderSource = `
   const float WAVE_SPEED = 1.62;
   const float WAVE_WIDTH = 0.15;
   const float WAVE_FREQ = 30.0;
-  const float PUSH_AMOUNT = 0.12;
-  const float CA_STRENGTH = 0.018;
-  const float GLOW_AMOUNT = 0.58;
-  const float NOISE_WARP = 0.34;
+  const float PUSH_AMOUNT = 0.11;
 
   vec2 coverUv(vec2 uv, vec2 imageResolution) {
     vec2 scale = u_resolution / imageResolution;
@@ -79,37 +76,6 @@ const fragmentShaderSource = `
     vec2 offset = (displaySize - u_resolution) / (2.0 * displaySize);
     vec2 ratio = u_resolution / displaySize;
     return uv * ratio + offset;
-  }
-
-  float hash21(vec2 p) {
-    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
-    p3 += dot(p3, p3.yzx + 33.33);
-    return fract((p3.x + p3.y) * p3.z);
-  }
-
-  float vnoise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    float a = hash21(i);
-    float b = hash21(i + vec2(1.0, 0.0));
-    float c = hash21(i + vec2(0.0, 1.0));
-    float d = hash21(i + vec2(1.0, 1.0));
-    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
-  }
-
-  float fbm(vec2 p) {
-    float value = 0.0;
-    float amplitude = 0.5;
-    float frequency = 1.0;
-
-    for (int i = 0; i < 4; i++) {
-      value += amplitude * vnoise(p * frequency);
-      frequency *= 2.0;
-      amplitude *= 0.5;
-    }
-
-    return value;
   }
 
   void main() {
@@ -122,16 +88,13 @@ const fragmentShaderSource = `
     float maxDistance = length(vec2(max(u_center.x, 1.0 - u_center.x) * aspect, max(u_center.y, 1.0 - u_center.y)));
     float normalizedDistance = clamp(distanceFromCenter / maxDistance, 0.0, 1.0);
 
-    float noiseLarge = fbm(p * 4.0 + vec2(u_progress, u_progress * 0.5));
-    float noiseSmall = fbm(p * 13.0 + vec2(u_progress * 2.0, -u_progress * 1.45));
-    float warpScale = smoothstep(0.0, 0.06, u_progress);
-    float warpedDistance = normalizedDistance
-      + (noiseLarge - 0.5) * NOISE_WARP * warpScale
-      + (noiseSmall - 0.5) * NOISE_WARP * 0.72 * warpScale;
+    // A pair of broad waves keeps the organic edge without 32 noise hashes per pixel.
+    float organicWave = sin(p.x * 17.0 + u_progress * 4.0) * sin(p.y * 13.0 - u_progress * 3.0);
+    float warpedDistance = normalizedDistance + organicWave * 0.027 * smoothstep(0.0, 0.08, u_progress);
 
     float waveFront = u_progress * WAVE_SPEED;
     float delta = warpedDistance - waveFront;
-    float baseEnvelope = exp(-(delta * delta) / (2.0 * WAVE_WIDTH * WAVE_WIDTH));
+    float baseEnvelope = 1.0 - smoothstep(0.0, WAVE_WIDTH * 2.0, abs(delta));
     float rippleBands = 0.62 + 0.38 * max(0.0, cos(delta * WAVE_FREQ));
     float envelope = baseEnvelope * rippleBands;
     envelope *= smoothstep(0.0, 0.07, u_progress) * (1.0 - smoothstep(0.84, 1.0, u_progress));
@@ -140,37 +103,15 @@ const fragmentShaderSource = `
     vec2 offset = direction * envelope * PUSH_AMOUNT;
     offset.x /= aspect;
 
-    vec2 chromaOffset = direction * envelope * CA_STRENGTH;
-    chromaOffset.x /= aspect;
+    vec4 fromColor = texture2D(u_from, coverUv(uv - offset * 0.45, u_fromResolution));
+    vec4 toColor = texture2D(u_to, coverUv(uv - offset, u_toResolution));
 
-    vec2 fromUvR = coverUv(uv - offset * 0.45 - chromaOffset * 0.32, u_fromResolution);
-    vec2 fromUvG = coverUv(uv - offset * 0.45, u_fromResolution);
-    vec2 fromUvB = coverUv(uv - offset * 0.45 + chromaOffset * 0.32, u_fromResolution);
-    vec2 toUvR = coverUv(uv - offset - chromaOffset, u_toResolution);
-    vec2 toUvG = coverUv(uv - offset, u_toResolution);
-    vec2 toUvB = coverUv(uv - offset + chromaOffset, u_toResolution);
-
-    vec4 fromColor = vec4(
-      texture2D(u_from, fromUvR).r,
-      texture2D(u_from, fromUvG).g,
-      texture2D(u_from, fromUvB).b,
-      1.0
-    );
-    vec4 toColor = vec4(
-      texture2D(u_to, toUvR).r,
-      texture2D(u_to, toUvG).g,
-      texture2D(u_to, toUvB).b,
-      1.0
-    );
-
-    float feather = 0.045 + 0.045 * noiseLarge;
+    float feather = 0.065;
     float reveal = 1.0 - smoothstep(waveFront - feather, waveFront + feather, warpedDistance);
     reveal *= smoothstep(0.0, 0.05, u_progress);
 
     vec4 color = mix(fromColor, toColor, reveal);
-    float glow = envelope * GLOW_AMOUNT;
-    color.rgb = clamp(color.rgb / max(1.0 - glow, 0.01), 0.0, 1.0);
-    color.rgb += vec3(0.92, 0.76, 0.34) * envelope * 0.08;
+    color.rgb += vec3(0.92, 0.76, 0.34) * envelope * 0.12;
     gl_FragColor = vec4(clamp(color.rgb, 0.0, 1.0), 1.0);
   }
 `;
@@ -202,18 +143,24 @@ function createProgram(gl: WebGLRenderingContext) {
   const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
   if (!vertexShader || !fragmentShader) {
+    if (vertexShader) gl.deleteShader(vertexShader);
+    if (fragmentShader) gl.deleteShader(fragmentShader);
     return null;
   }
 
   const program = gl.createProgram();
 
   if (!program) {
+    gl.deleteShader(vertexShader);
+    gl.deleteShader(fragmentShader);
     return null;
   }
 
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
+  gl.deleteShader(vertexShader);
+  gl.deleteShader(fragmentShader);
 
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     gl.deleteProgram(program);
@@ -253,7 +200,6 @@ const WebGlHeroSlider = ({
 }: WebGlHeroSliderProps) => {
   const tHero = useTranslations('hero');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const glRef = useRef<WebGLRenderingContext | null>(null);
   const renderRef = useRef<((progress: number, from: number, to: number, center: RippleCenter) => void) | null>(null);
   const animationFrame = useRef<number | null>(null);
   const latestIndices = useRef({ from: fromIndex, to: toIndex });
@@ -294,6 +240,7 @@ const WebGlHeroSlider = ({
     const buffer = gl.createBuffer();
 
     if (!buffer) {
+      gl.deleteProgram(program);
       return undefined;
     }
 
@@ -312,9 +259,12 @@ const WebGlHeroSlider = ({
           image.decoding = 'async';
           image.onload = () => resolve(image);
           image.onerror = reject;
-          image.src = slide.image;
+          image.src = `/${slide.image}`;
         }),
     );
+
+    let textures: WebGLTexture[] = [];
+    let resizeObserver: ResizeObserver | undefined;
 
     Promise.all(imagePromises)
       .then((loadedImages) => {
@@ -322,27 +272,31 @@ const WebGlHeroSlider = ({
           return;
         }
 
-        const textures = loadedImages.map((image) => createTexture(gl, image));
+        const uploadedTextures = loadedImages.map((image) => createTexture(gl, image));
 
-        if (textures.some((texture) => !texture)) {
+        if (uploadedTextures.some((texture) => !texture)) {
+          uploadedTextures.forEach((texture) => { if (texture) gl.deleteTexture(texture); });
           return;
         }
+        textures = uploadedTextures as WebGLTexture[];
 
         const resize = () => {
-          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+          const dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 640 ? 0.85 : 1);
           const width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
           const height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
 
           if (canvas.width !== width || canvas.height !== height) {
             canvas.width = width;
             canvas.height = height;
+            gl.viewport(0, 0, width, height);
+            renderRef.current?.(1, latestIndices.current.to, latestIndices.current.to, latestRippleCenter.current);
           }
-
-          gl.viewport(0, 0, width, height);
         };
+        resize();
+        resizeObserver = new ResizeObserver(resize);
+        resizeObserver.observe(canvas);
 
         renderRef.current = (progress, from, to, center) => {
-          resize();
           gl.useProgram(program);
           gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
           gl.enableVertexAttribArray(positionLocation);
@@ -361,7 +315,6 @@ const WebGlHeroSlider = ({
           gl.drawArrays(gl.TRIANGLES, 0, 6);
         };
 
-        glRef.current = gl;
         renderRef.current(1, latestIndices.current.to, latestIndices.current.to, latestRippleCenter.current);
         setWebGlReady(true);
       })
@@ -377,11 +330,22 @@ const WebGlHeroSlider = ({
       if (animationFrame.current) {
         cancelAnimationFrame(animationFrame.current);
       }
+      resizeObserver?.disconnect();
+      renderRef.current = null;
+      textures.forEach((texture) => gl.deleteTexture(texture));
+      gl.deleteBuffer(buffer);
+      gl.deleteProgram(program);
+      setWebGlReady(false);
     };
   }, [enabled, images, reducedMotion]);
 
   useEffect(() => {
-    if (!renderRef.current || reducedMotion || !visible) {
+    if (!renderRef.current || reducedMotion) {
+      return undefined;
+    }
+
+    if (!visible || transitionId === 0) {
+      renderRef.current(1, toIndex, toIndex, rippleCenter);
       return undefined;
     }
 
@@ -412,7 +376,7 @@ const WebGlHeroSlider = ({
         className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${
           webGlReady && !reducedMotion ? 'opacity-0' : 'opacity-100'
         }`}
-        style={{ backgroundImage: `url(${images[toIndex].image})` }}
+        style={{ backgroundImage: `url(/${images[toIndex].image})` }}
         role="img"
         aria-label={tHero(images[toIndex].altKey)}
       />
@@ -436,6 +400,7 @@ const Hero = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [effectsEnabled, setEffectsEnabled] = useState(false);
   const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const [isPageVisible, setIsPageVisible] = useState(true);
 
   const goToSlide = useCallback(
     (targetIndex: number, center?: RippleCenter) => {
@@ -482,7 +447,16 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    if (prefersReducedMotion || !effectsEnabled || !isHeroVisible) {
+    const updateVisibility = () => setIsPageVisible(document.visibilityState === 'visible');
+    updateVisibility();
+    document.addEventListener('visibilitychange', updateVisibility);
+    return () => document.removeEventListener('visibilitychange', updateVisibility);
+  }, []);
+
+  const autoAdvance = !prefersReducedMotion && effectsEnabled && isHeroVisible && isPageVisible;
+
+  useEffect(() => {
+    if (!autoAdvance) {
       return undefined;
     }
 
@@ -491,7 +465,7 @@ const Hero = () => {
     }, AUTO_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [activeIndex, effectsEnabled, goToSlide, isHeroVisible, prefersReducedMotion]);
+  }, [activeIndex, autoAdvance, goToSlide]);
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden bg-[#082F50]" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
@@ -499,7 +473,7 @@ const Hero = () => {
         <WebGlHeroSlider
           images={heroImages}
           enabled={effectsEnabled}
-          visible={isHeroVisible}
+          visible={isHeroVisible && isPageVisible}
           fromIndex={fromIndex}
           toIndex={activeIndex}
           transitionId={transitionId}
@@ -507,34 +481,30 @@ const Hero = () => {
           reducedMotion={prefersReducedMotion}
         />
 
-        <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#082F50]/90 via-[#082F50]/55 to-[#082F50]/15 sm:bg-[linear-gradient(90deg,rgba(8,47,80,0.04)_0%,rgba(8,47,80,0.42)_44%,rgba(8,47,80,0.78)_100%)]" aria-hidden />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(232,201,106,0.2),transparent_28%),radial-gradient(circle_at_76%_82%,rgba(14,165,233,0.1),transparent_30%)]" aria-hidden />
+        <div className="hero-image-overlay pointer-events-none absolute inset-0 z-[1]" aria-hidden="true" />
         <div className="absolute inset-x-0 top-0 h-1.5 brass-gradient" aria-hidden />
 
-        <div className="relative z-10 mx-auto grid min-h-[clamp(34rem,72dvh,46rem)] max-w-6xl items-end gap-8 px-5 pb-20 pt-6 sm:items-center sm:px-8 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
-     
-          <div className="w-full max-w-[28rem] justify-self-start text-right text-white sm:w-auto sm:max-w-2xl sm:justify-self-end sm:text-start">
+        <div className="relative z-10 mx-auto grid min-h-[clamp(34rem,72dvh,46rem)] max-w-6xl items-end gap-8 px-5 pb-20 pt-6 sm:items-center sm:px-8 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:px-10">
+
+          <div className="hero-copy w-full max-w-[38rem] justify-self-start text-start text-white">
             <div className="mb-2 flex items-center gap-3 sm:mb-6">
               <Image
                 src="/logo-3d-3d.png"
                 alt={t('logoAlt')}
                 width={420}
                 height={420}
-                className="h-12 w-12 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)] sm:h-20 sm:w-24"
+                className="h-12 w-12 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)] sm:h-20 sm:w-24"
                 priority
               />
-
-
             </div>
 
-            <div className="w-full max-w-full sm:w-fit">
-              <h1 className="text-balance font-academic text-[clamp(1.65rem,4.4vw,3.5rem)] font-bold leading-[1.15] text-white sm:whitespace-nowrap">
-                <span className="text-[#E8C96A]">{t('titleAccent')}</span>
-                <span className="ms-2 text-white">{t('titleRest')}</span>
+            <div className="w-full max-w-full">
+              <h1 className="font-academic text-[clamp(1.5rem,3.3vw,3rem)] font-bold leading-[1.2] whitespace-nowrap text-white">
+                <span className="text-[#F2D37A]">{t('titleAccent')}</span>
+                <span className="ms-2">{t('titleRest')}</span>
               </h1>
 
-              <p className="mt-2 max-w-[29ch] text-pretty font-academic text-sm leading-6 text-white/90 sm:mt-6 sm:w-0 sm:min-w-full sm:max-w-[58ch] sm:text-lg sm:leading-[1.75] sm:text-white/86 lg:text-xl">
+              <p className="mt-2 max-w-[58ch] text-pretty font-academic text-sm leading-6 text-white/95 sm:mt-5 sm:text-lg sm:leading-[1.65] lg:text-xl">
                 {t('subtitle')}
               </p>
             </div>
@@ -550,7 +520,7 @@ const Hero = () => {
 
               <Link
                 href="#projects"
-                className="inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border-2 border-white/42 bg-white/12 px-5 text-center text-sm font-bold text-white backdrop-blur-md transition duration-300 hover:border-[#C29C41] hover:bg-white/22 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#082F50] sm:w-auto sm:max-w-none sm:px-7"
+                className="inline-flex h-12 w-full max-w-[15rem] cursor-pointer items-center justify-center gap-3 rounded-full border border-white/65 bg-[#082F50]/35 px-5 text-center text-sm font-bold text-white transition duration-300 hover:border-[#E8C96A] hover:bg-[#082F50]/60 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2 focus:ring-offset-[#082F50] sm:w-auto sm:max-w-none sm:px-7"
               >
                 {t('searchBySector')}
                 <LuSearch className="h-4 w-4" />
@@ -603,7 +573,7 @@ const Hero = () => {
               >
                 <span
                   key={`${transitionId}-${index}`}
-                  className={index === activeIndex ? 'hero-progress-fill is-active' : 'hero-progress-fill'}
+                  className={index === activeIndex ? (autoAdvance ? 'hero-progress-fill is-active' : 'hero-progress-fill is-selected') : 'hero-progress-fill'}
                   style={{ animationDuration: `${AUTO_INTERVAL}ms` }}
                 />
               </button>

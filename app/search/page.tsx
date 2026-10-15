@@ -79,8 +79,10 @@ export default async function SearchPage({
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#F8FAFC] pb-20 text-[#082F50]">
-      <section className="border-b border-white/10 bg-gradient-to-br from-[#032C4B] to-[#0B5688] px-4 pb-10 pt-36 sm:px-6 sm:pb-14 sm:pt-40">
-        <div className="mx-auto max-w-7xl">
+      <section className="relative isolate overflow-hidden border-b border-white/10 bg-[#032C4B] px-4 pb-10 pt-36 sm:px-6 sm:pb-14 sm:pt-40">
+        <Image src="/hero0cover-2.webp" alt="" fill priority sizes="100vw" className="object-cover object-center" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-[#032C4B]/95 via-[#032C4B]/82 to-[#032C4B]/50" aria-hidden="true" />
+        <div className="relative mx-auto max-w-7xl">
           <p className="text-xs font-bold tracking-[0.18em] text-[#E8C96A]">فهرس المكتبة</p>
           <h1 className="mt-2 font-academic text-3xl font-bold text-white sm:text-4xl">ابحث في المعرفة العربية</h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-[#B9DDF5] sm:text-base">

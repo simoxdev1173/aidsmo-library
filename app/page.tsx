@@ -5,6 +5,7 @@ import Courses from "./ebook/components/Courses"
 import LatestPublications from "./ebook/components/LatestPublications"
 import LibraryStats from "./ebook/components/LibraryStats"
 import ChatbotCTA from "./ebook/components/ChatbotCta"
+import MagazineBanner from "@/components/MagazineBanner"
 import LazyVideoCarousel from "@/components/LazyVideoCarousel"
 import { getLibraryStats } from "@/lib/library-data"
 import { prisma } from "@/lib/prisma"
@@ -31,6 +32,7 @@ export default function Home() {
         <section id="home">
           <Hero />
         </section>
+        <MagazineBanner />
         
         <section>
           <Suspense fallback={<div aria-hidden="true" className="h-[28rem] animate-pulse bg-[#f1f1f1] motion-reduce:animate-none" />}>

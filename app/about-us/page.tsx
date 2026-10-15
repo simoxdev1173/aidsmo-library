@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ChatbotPromptButton from '@/components/ChatbotPromptButton';
 import OptimizedHeroVideo from '@/components/OptimizedHeroVideo';
+import MagazineBanner from '@/components/MagazineBanner';
 import {
   HiOutlineArchiveBox,
   HiOutlineArrowLeft,
@@ -49,7 +50,7 @@ export default function AboutPage() {
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden bg-[#F8FAFC] text-[#082F50]">
       {/* ─── Hero ─── */}
-      <section className="relative flex min-h-[calc(100svh-11rem)] w-full overflow-hidden bg-[#082F50] text-white sm:min-h-[calc(100svh-9rem)]">
+      <section className="relative flex min-h-[clamp(34rem,72dvh,46rem)] w-full overflow-hidden bg-[#082F50] text-white">
         <OptimizedHeroVideo />
 
         {/* Light, localized wash — just enough to seat the panel, video stays visible */}
@@ -83,6 +84,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      <MagazineBanner />
       {/* test deployement  */}
       {/* ─── Mission ─── */}
       <section className="relative bg-white py-12 md:py-28">

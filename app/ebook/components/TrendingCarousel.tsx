@@ -147,9 +147,30 @@ function LibraryCard({ item }: { item: TrendingItem }) {
   const t = useTranslations('trendingRow');
   const [failedCover, setFailedCover] = useState<string | null>(null);
   const [loadedCover, setLoadedCover] = useState<string | null>(null);
+  const [titleTruncated, setTitleTruncated] = useState(false);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const metadata = Array.from(new Set([item.meta.trim(), item.type.trim()].filter(Boolean)));
   const showCover = Boolean(item.cover && failedCover !== item.cover);
   const coverReady = loadedCover === item.cover;
+
+  useEffect(() => {
+    const title = titleRef.current;
+    if (!title) return;
+
+    let active = true;
+    const update = () => {
+      if (active) setTitleTruncated(title.scrollHeight > title.clientHeight + 1);
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(title);
+    update();
+    void document.fonts.ready.then(update);
+
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
+  }, [item.title]);
 
   return (
     <Link href={item.href} prefetch={false} className={styles.book}>
@@ -172,7 +193,10 @@ function LibraryCard({ item }: { item: TrendingItem }) {
         <p className={styles.metadata}>{metadata.map((part, index) => (
           <span key={part}>{index > 0 && <span className={styles.dot} aria-hidden="true">·</span>}<bdi>{part}</bdi></span>
         ))}</p>
-        <h4 className={styles.bookTitle}>{item.title}</h4>
+        <div className={styles.titleWrap}>
+          <h4 ref={titleRef} className={styles.bookTitle}>{item.title}</h4>
+          {titleTruncated && <span className={styles.fullTitle} aria-hidden="true">{item.title}</span>}
+        </div>
         <span className={styles.openBook}>{t('openPublication')}<span aria-hidden="true">↗</span></span>
       </div>
     </Link>
@@ -288,8 +312,9 @@ export default function LibraryCarouselRow({ row }: { row: TrendingRow }) {
             {displayDescription && <p className={styles.shelfDescription}>{displayDescription}</p>}
           </div>
         </div>
-        <Link href={row.href} className={`${styles.viewAll} engraved brass-gradient`} aria-label={`${t('viewMoreAria')}: ${displayTitle}`}>
-          {t('viewMore')}<ViewMoreIcon aria-hidden="true" />
+        <Link href={row.href} className={styles.viewAll} aria-label={`${t('viewMoreAria')}: ${displayTitle}`}>
+          <span>{t('viewMore')}</span>
+          <span className={styles.viewAllIcon}><ViewMoreIcon aria-hidden="true" /></span>
         </Link>
       </header>
       <div ref={scrollerRef} id={`${row.id}-books`} className={styles.scroller}

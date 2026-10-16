@@ -239,29 +239,39 @@ export async function getEntries(filters: {
   q?: string;
   categoryId?: string;
   status?: string;
-}) {
+}, requestedPage = 1) {
+  const pageSize = 15;
   const q = filters.q?.trim();
   const categoryIds = await getCategoryFilterIds(filters.categoryId);
-
-  return prisma.libraryEntry.findMany({
-    where: {
-      ...(categoryIds ? { categoryId: { in: categoryIds } } : {}),
-      ...(filters.status ? { status: filters.status as "DRAFT" | "PUBLISHED" | "ARCHIVED" } : {}),
-      ...(q
-        ? {
-            OR: [
-              { title: { contains: q, mode: "insensitive" } },
-              { description: { contains: q, mode: "insensitive" } },
-              { tag: { contains: q, mode: "insensitive" } },
-              { author: { contains: q, mode: "insensitive" } },
-              { publisher: { contains: q, mode: "insensitive" } },
-            ],
-          }
-        : {}),
-    },
+  const where = {
+    ...(categoryIds ? { categoryId: { in: categoryIds } } : {}),
+    ...(filters.status ? { status: filters.status as "DRAFT" | "PUBLISHED" | "ARCHIVED" } : {}),
+    ...(q
+      ? {
+          OR: [
+            { title: { contains: q, mode: "insensitive" as const } },
+            { description: { contains: q, mode: "insensitive" as const } },
+            { tag: { contains: q, mode: "insensitive" as const } },
+            { author: { contains: q, mode: "insensitive" as const } },
+            { publisher: { contains: q, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  };
+  const total = await prisma.libraryEntry.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = Number.isSafeInteger(requestedPage)
+    ? Math.min(Math.max(requestedPage, 1), totalPages)
+    : 1;
+  const entries = await prisma.libraryEntry.findMany({
+    where,
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    skip: (page - 1) * pageSize,
+    take: pageSize,
     include: { category: { include: { parent: { include: { parent: true } } } } },
   });
+
+  return { entries, page, pageSize, total, totalPages };
 }
 
 export async function getPublishedEntryBySlug(slug: string) {

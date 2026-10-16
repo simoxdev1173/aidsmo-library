@@ -10,13 +10,27 @@ export const dynamic = 'force-dynamic';
 export default async function EntriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; categoryId?: string; status?: string; saved?: string; cover?: string }>;
+  searchParams: Promise<{ q?: string; categoryId?: string; status?: string; page?: string; saved?: string; cover?: string }>;
 }) {
   const filters = await searchParams;
-  const [entries, categories] = await Promise.all([
-    getEntries(filters),
+  const requestedPage = filters.page && /^[1-9]\d*$/.test(filters.page) ? Number(filters.page) : 1;
+  const [{ entries, page, pageSize, total, totalPages }, categories] = await Promise.all([
+    getEntries(filters, requestedPage),
     getCategoryOptions(),
   ]);
+  const pageHref = (targetPage: number) => {
+    const params = new URLSearchParams();
+    if (filters.q) params.set('q', filters.q);
+    if (filters.categoryId) params.set('categoryId', filters.categoryId);
+    if (filters.status) params.set('status', filters.status);
+    if (targetPage > 1) params.set('page', String(targetPage));
+    const query = params.toString();
+    return `/dashboard/entries${query ? `?${query}` : ''}`;
+  };
+  const visiblePages = Array.from(
+    { length: Math.min(totalPages, 5) },
+    (_, index) => Math.max(1, Math.min(page - 2, totalPages - 4)) + index,
+  );
 
   return (
     <div className="space-y-6">
@@ -142,6 +156,36 @@ export default async function EntriesPage({
             </tbody>
           </table>
         </div>
+        {total > 0 && (
+          <nav aria-label="صفحات الإصدارات" className="flex flex-wrap items-center justify-between gap-4 border-t border-[#E2E8F0] px-4 py-4">
+            <p className="text-sm text-[#64748B]">
+              عرض {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} من {total}
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              {page > 1 ? (
+                <Link href={pageHref(page - 1)} className="rounded-md border border-[#D9E3EE] px-3 py-2 text-sm font-semibold text-[#0B5688] hover:bg-[#EFF5F9]">السابق</Link>
+              ) : (
+                <span className="rounded-md border border-[#E2E8F0] px-3 py-2 text-sm text-[#94A3B8]">السابق</span>
+              )}
+              {visiblePages.map((pageNumber) => (
+                <Link
+                  key={pageNumber}
+                  href={pageHref(pageNumber)}
+                  aria-label={`الصفحة ${pageNumber}`}
+                  aria-current={pageNumber === page ? 'page' : undefined}
+                  className={`min-w-9 rounded-md border px-3 py-2 text-center text-sm font-semibold ${pageNumber === page ? 'border-[#0B5688] bg-[#0B5688] text-white' : 'border-[#D9E3EE] text-[#0B5688] hover:bg-[#EFF5F9]'}`}
+                >
+                  {pageNumber}
+                </Link>
+              ))}
+              {page < totalPages ? (
+                <Link href={pageHref(page + 1)} className="rounded-md border border-[#D9E3EE] px-3 py-2 text-sm font-semibold text-[#0B5688] hover:bg-[#EFF5F9]">التالي</Link>
+              ) : (
+                <span className="rounded-md border border-[#E2E8F0] px-3 py-2 text-sm text-[#94A3B8]">التالي</span>
+              )}
+            </div>
+          </nav>
+        )}
       </section>
     </div>
   );

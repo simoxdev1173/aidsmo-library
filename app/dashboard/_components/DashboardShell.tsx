@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-  HiOutlineAdjustmentsHorizontal,
   HiOutlineArrowLeftOnRectangle,
   HiOutlineBookOpen,
   HiOutlineHome,
@@ -15,9 +14,8 @@ import { cn } from '@/utils';
 const navItems = [
   { href: '/dashboard', label: 'لوحة التحكم', icon: HiOutlineSquares2X2 },
   { href: '/dashboard/entries', label: 'المداخل', icon: HiOutlineBookOpen },
-  { href: '/dashboard/events', label: 'الأخبار والإعلانات', icon: HiOutlineMegaphone },
   { href: '/dashboard/archive', label: 'إدارة الأرشيف', icon: HiOutlineArchiveBox },
-  { href: '/dashboard/other', label: 'إعدادات أخرى', icon: HiOutlineAdjustmentsHorizontal },
+  { href: '/dashboard/events', label: 'الأخبار والإعلانات', icon: HiOutlineMegaphone },
   { href: '/', label: 'عرض الموقع', icon: HiOutlineHome },
 ];
 

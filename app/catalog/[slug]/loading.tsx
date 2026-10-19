@@ -1,6 +1,6 @@
 export default function CatalogLoading() {
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] pt-32 text-[#082F50]">
+    <main data-route-loading dir="rtl" className="min-h-screen bg-[#F8FAFC] pt-32 text-[#082F50]">
       <section role="status" aria-label="جارٍ تحميل الفهرس" className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div aria-hidden="true" className="mb-10 border-b border-[#D9E3EE] pb-8">
           <div className="h-4 w-32 rounded bg-[#E5EDF4]" />

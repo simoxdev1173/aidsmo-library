@@ -642,6 +642,23 @@ select {
   display: none;
 }
 
+.navigation-snapshot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #fafbfc;
+  pointer-events: none;
+  user-select: none;
+}
+
+.navigation-snapshot *,
+.navigation-snapshot *::before,
+.navigation-snapshot *::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+  caret-color: transparent !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

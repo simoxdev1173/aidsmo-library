@@ -35,6 +35,15 @@ const isMenuActive = (item: MenuItem, pathname: string, activeSection: string) =
   return pathname === root || pathname.startsWith(`${root}/`);
 };
 
+let lastMousePosition: { x: number; y: number } | null = null;
+
+const containsMouse = (element: Element | null) => {
+  if (!element || !lastMousePosition) return false;
+  const bounds = element.getBoundingClientRect();
+  return lastMousePosition.x >= bounds.left && lastMousePosition.x <= bounds.right
+    && lastMousePosition.y >= bounds.top && lastMousePosition.y <= bounds.bottom;
+};
+
 const menuItemsData: MenuItem[] = [
   { id: 'about', label: 'من نحن', labelEn: 'About Us', href: '/about-us' },
   {
@@ -360,47 +369,47 @@ const LanguageSwitcher = ({ tone = 'light', className, compact = false }: { tone
   );
 };
 
-const NavItem = ({ item, isActive, pathname, tone = 'light', collapsed = false, enlarged = false }: { item: MenuItem; isActive: boolean; pathname: string; tone?: 'light' | 'dark'; collapsed?: boolean; enlarged?: boolean }) => {
-  const [openPath, setOpenPath] = useState<string | null>(null);
-  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const navigating = useRef(false);
-  const open = openPath === pathname;
+const NavItem = ({ item, isActive, pathname, tone = 'light', collapsed = false, enlarged = false, open, switchDelay, onOpen, onClose, onNavigate }: { item: MenuItem; isActive: boolean; pathname: string; tone?: 'light' | 'dark'; collapsed?: boolean; enlarged?: boolean; open: boolean; switchDelay: number; onOpen: () => void; onClose: () => void; onNavigate: () => void }) => {
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const switchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hasDropdown = item.children || item.groups;
   const href = menuHref(item);
   const { locale } = useAppLocale();
 
   const enter = () => {
-    if (navigating.current) return;
-    clearTimeout(timeout.current);
-    setOpenPath(pathname);
+    clearTimeout(closeTimeout.current);
+    clearTimeout(switchTimeout.current);
+    if (switchDelay) switchTimeout.current = setTimeout(onOpen, switchDelay);
+    else onOpen();
   };
   const leave = () => {
-    navigating.current = false;
-    timeout.current = setTimeout(() => setOpenPath(null), 150);
+    clearTimeout(switchTimeout.current);
+    closeTimeout.current = setTimeout(onClose, 150);
   };
 
   useEffect(() => {
-    clearTimeout(timeout.current);
-    const frame = window.requestAnimationFrame(() => setOpenPath(null));
+    clearTimeout(closeTimeout.current);
+    clearTimeout(switchTimeout.current);
     return () => {
-      window.cancelAnimationFrame(frame);
-      clearTimeout(timeout.current);
+      clearTimeout(closeTimeout.current);
+      clearTimeout(switchTimeout.current);
     };
   }, [pathname]);
 
   return (
     <li
+      data-nav-menu={item.id}
       aria-hidden={collapsed}
       inert={collapsed}
-      className={cn('relative', collapsed ? 'max-w-0 overflow-hidden opacity-0' : 'max-w-72 overflow-visible opacity-100')}
+      className={cn('relative', open && 'z-[60]', collapsed ? 'max-w-0 overflow-hidden opacity-0' : 'max-w-72 overflow-visible opacity-100')}
       onMouseEnter={hasDropdown ? enter : undefined}
       onMouseLeave={hasDropdown ? leave : undefined}
-      onFocusCapture={hasDropdown ? enter : undefined}
+      onFocusCapture={hasDropdown ? () => { clearTimeout(closeTimeout.current); clearTimeout(switchTimeout.current); onOpen(); } : undefined}
       onClickCapture={(event) => {
         if (!(event.target instanceof Element) || !event.target.closest('a[href]')) return;
-        navigating.current = true;
-        clearTimeout(timeout.current);
-        setOpenPath(null);
+        clearTimeout(closeTimeout.current);
+        clearTimeout(switchTimeout.current);
+        onNavigate();
       }}
       onBlurCapture={
         hasDropdown
@@ -414,10 +423,10 @@ const NavItem = ({ item, isActive, pathname, tone = 'light', collapsed = false, 
         href={href}
         {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         className={cn(
-          'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-3 text-[0.78rem] font-bold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#C29C41] focus:ring-offset-2',
+          'relative flex min-h-11 items-center gap-1 text-nowrap rounded-full px-3 text-[0.78rem] font-bold transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41] focus-visible:ring-offset-2',
           tone === 'dark'
-            ? cn('xl:px-4 xl:text-sm focus:ring-offset-[#082F50]', isActive ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')
-            : cn('2xl:px-2 2xl:text-[0.82rem] focus:ring-offset-white', isActive ? 'bg-[#F7F2E8] text-[#082F50] shadow-[inset_0_-2px_0_#C29C41]' : 'text-[#334155] hover:bg-[#F7F2E8] hover:text-[#082F50]'),
+            ? cn('xl:px-4 xl:text-sm focus-visible:ring-offset-[#082F50]', isActive ? 'bg-white/10 text-[#F2D982]' : 'text-white/90 hover:bg-white/10 hover:text-[#F2D982]')
+            : cn('2xl:px-2 2xl:text-[0.82rem] focus-visible:ring-offset-white', isActive ? 'bg-[#F7F2E8] text-[#082F50] shadow-[inset_0_-2px_0_#C29C41]' : 'text-[#334155] hover:bg-[#F7F2E8] hover:text-[#082F50]'),
           enlarged && 'min-h-12 px-4 text-[0.95rem]',
         )}
       >
@@ -427,6 +436,7 @@ const NavItem = ({ item, isActive, pathname, tone = 'light', collapsed = false, 
 
       {hasDropdown && (
         <div
+          data-nav-dropdown
           className={cn(
             'absolute top-full z-50 pt-3 transition duration-300',
             item.id === 'archive' ? 'end-0' : 'start-0',
@@ -596,6 +606,8 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
   const [compactAccountOpen, setCompactAccountOpen] = useState(false);
   const [compactAccountPath, setCompactAccountPath] = useState(pathname);
   const [activeSection, setActiveSection] = useState('home');
+  const [openMenu, setOpenMenu] = useState<{ id: string; path: string } | null>(null);
+  const lastNavigatedMenuRef = useRef<string | null>(null);
   const pendingHomeScrollRef = useRef(false);
   const mobileMenuRef = useRef<HTMLElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
@@ -613,6 +625,32 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
   const tFooter = useTranslations('footer');
   const compactSearchVisible = isCompact && compactSearchOpen && compactSearchPath === pathname;
   const compactAccountVisible = isCompact && compactAccountOpen && compactAccountPath === pathname;
+  const openMenuId = openMenu?.path === pathname ? openMenu.id : null;
+
+  useEffect(() => {
+    const trackPointer = (event: PointerEvent) => {
+      lastMousePosition = event.pointerType === 'mouse' ? { x: event.clientX, y: event.clientY } : null;
+    };
+    document.addEventListener('pointermove', trackPointer, { passive: true });
+    return () => {
+      document.removeEventListener('pointermove', trackPointer);
+      lastMousePosition = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const menuId = lastNavigatedMenuRef.current;
+      lastNavigatedMenuRef.current = null;
+      const item = menuId ? document.querySelector(`[data-nav-menu="${menuId}"]`) : null;
+      const pointerOrFocusInside = item && (
+        containsMouse(item) || containsMouse(item.querySelector('[data-nav-dropdown]'))
+        || item.contains(document.activeElement)
+      );
+      setOpenMenu(pointerOrFocusInside && menuId ? { id: menuId, path: pathname ?? '/' } : null);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [pathname]);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -959,7 +997,20 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
             <div data-nav-zone="links" className={cn('min-w-0 flex-1', isCompact && 'hidden lg:block lg:w-full')}>
             <ul className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex">
               {menuItemsData.map((item) => (
-                <NavItem key={item.id} item={item} isActive={isMenuActive(item, pathname ?? '/', activeSection)} pathname={pathname ?? '/'} tone="light" collapsed={isCompact && item.id === 'about'} enlarged={isCompact} />
+                <NavItem
+                  key={item.id}
+                  item={item}
+                  isActive={isMenuActive(item, pathname ?? '/', activeSection)}
+                  pathname={pathname ?? '/'}
+                  tone="light"
+                  collapsed={isCompact && item.id === 'about'}
+                  enlarged={isCompact}
+                  open={openMenuId === item.id}
+                  switchDelay={openMenuId && openMenuId !== item.id ? 120 : 0}
+                  onOpen={() => setOpenMenu({ id: item.id, path: pathname ?? '/' })}
+                  onClose={() => setOpenMenu((current) => current?.id === item.id ? null : current)}
+                  onNavigate={() => { lastNavigatedMenuRef.current = item.id; setOpenMenu(null); }}
+                />
               ))}
             </ul>
 
@@ -969,7 +1020,7 @@ const TopNavBar = ({ user, unreadCount }: { user: SiteUser; unreadCount: number 
                 const active = isMenuActive(item, pathname ?? '/', activeSection);
                 return (
                   <Link key={item.id} href={href} aria-hidden={isCompact && item.id === 'about'} inert={isCompact && item.id === 'about'} {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className={cn('flex shrink-0 items-center overflow-hidden whitespace-nowrap rounded-full font-bold focus:outline-none focus:ring-2 focus:ring-[#C29C41]', isCompact ? 'min-h-12 text-sm' : 'min-h-11 text-xs', isCompact && item.id === 'about' ? 'max-w-0 px-0 opacity-0' : 'max-w-72 px-3 opacity-100', active ? 'bg-[#F7F2E8] text-[#082F50] shadow-[inset_0_-2px_0_#C29C41]' : 'text-[#334155] hover:bg-[#F7F2E8] hover:text-[#082F50]')}>
+                    className={cn('flex shrink-0 items-center overflow-hidden whitespace-nowrap rounded-full font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C29C41]', isCompact ? 'min-h-12 text-sm' : 'min-h-11 text-xs', isCompact && item.id === 'about' ? 'max-w-0 px-0 opacity-0' : 'max-w-72 px-3 opacity-100', active ? 'bg-[#F7F2E8] text-[#082F50] shadow-[inset_0_-2px_0_#C29C41]' : 'text-[#334155] hover:bg-[#F7F2E8] hover:text-[#082F50]')}>
                     {pickLabel(item.label, item.labelEn, locale)}
                   </Link>
                 );

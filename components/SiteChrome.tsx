@@ -1,10 +1,12 @@
 'use client';
 
+import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import LazyChatbotWidget from '@/components/LazyChatbotWidget';
 import LazyWebsiteFeedbackWidget from '@/components/LazyWebsiteFeedbackWidget';
 import Footer from '@/components/Footer';
 import TopNavBar from '@/components/TopNavBar';
+import NavigationLoadingOverlay from '@/components/NavigationLoadingOverlay';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 
 type SiteUser = { id: string; email: string; name: string; image: string | null } | null;
@@ -62,6 +64,9 @@ export default function SiteChrome({
           <Footer />
         </>
       )}
+      <Suspense fallback={null}>
+        <NavigationLoadingOverlay enabled={!isDashboard} />
+      </Suspense>
     </>
   );
 }

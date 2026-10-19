@@ -1,12 +1,12 @@
 import Image from 'next/image';
 
-export default function PageLoading() {
+export default function PageLoading({ fadedBackground = false }: { fadedBackground?: boolean }) {
   return (
     <div
       role="status"
       aria-live="polite"
       aria-label="جاري تحميل الصفحة"
-      className="fixed inset-0 z-[200] flex min-h-dvh items-center justify-center bg-white/85 text-[#082F50] backdrop-blur-sm"
+      className={`fixed inset-0 z-[200] flex min-h-dvh items-center justify-center text-[#082F50] ${fadedBackground ? 'bg-white/90 backdrop-blur-[3px]' : 'bg-[#FAFBFC]'}`}
     >
       <div className="flex flex-col items-center gap-5">
         <span className="relative grid size-60 place-items-center rounded-full bg-white/70 shadow-[0_16px_45px_rgba(8,47,80,0.08)]" aria-hidden="true">

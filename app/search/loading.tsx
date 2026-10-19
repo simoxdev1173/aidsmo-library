@@ -1,6 +1,6 @@
 export default function SearchLoading() {
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] pb-20 text-[#082F50]">
+    <main data-route-loading dir="rtl" className="min-h-screen bg-[#F8FAFC] pb-20 text-[#082F50]">
       <section className="border-b border-white/10 bg-gradient-to-br from-[#032C4B] to-[#0B5688] px-4 pb-10 pt-36 sm:px-6 sm:pb-14 sm:pt-40">
         <div className="mx-auto max-w-7xl">
           <p className="text-xs font-bold tracking-[0.18em] text-[#E8C96A]">فهرس المكتبة</p>

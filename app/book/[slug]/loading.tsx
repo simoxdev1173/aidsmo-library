@@ -1,6 +1,6 @@
 export default function BookLoading() {
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8FAFC] px-4 pb-20 pt-32 text-[#082F50] sm:px-6">
+    <main data-route-loading dir="rtl" className="min-h-screen bg-[#F8FAFC] px-4 pb-20 pt-32 text-[#082F50] sm:px-6">
       <div role="status" aria-label="جارٍ تحميل تفاصيل الإصدار" className="mx-auto max-w-7xl">
         <div aria-hidden="true" className="mb-10 h-5 w-64 max-w-full rounded bg-[#E5EDF4]" />
         <div aria-hidden="true" className="grid gap-8 rounded-2xl border border-[#D9E3EE] bg-white p-5 sm:p-8 lg:grid-cols-[minmax(220px,320px)_1fr]">

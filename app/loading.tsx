@@ -1,5 +1,5 @@
 import PageLoading from '@/components/PageLoading';
 
 export default function Loading() {
-  return <PageLoading />;
+  return <div data-route-loading><PageLoading /></div>;
 }

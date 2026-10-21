@@ -15,18 +15,12 @@ type ChatRequest = {
   conversationHistory?: unknown;
 };
 
-function getStreamEndpoint(apiKey?: string) {
+function getStreamEndpoint() {
   const configured = (process.env.LIGHTRAG_API_URL || DEFAULT_LIGHTRAG_URL).trim();
   const baseUrl = configured.replace(/\/+$/, '');
-  const endpoint = new URL(
+  return new URL(
     baseUrl.endsWith('/query/stream') ? baseUrl : `${baseUrl}/query/stream`,
   );
-
-  // This LightRAG deployment exposes the API key dependency as a query
-  // parameter in Swagger. Also sending X-API-Key below preserves compatibility
-  // with standard LightRAG server deployments.
-  if (apiKey) endpoint.searchParams.set('api_key_header_value', apiKey);
-  return endpoint;
 }
 
 function isConversationHistory(value: unknown): value is ConversationMessage[] {
@@ -96,7 +90,7 @@ export async function POST(request: NextRequest) {
   let upstream: Response;
 
   try {
-    upstream = await fetch(getStreamEndpoint(apiKey), {
+    upstream = await fetch(getStreamEndpoint(), {
       method: 'POST',
       headers,
       body: JSON.stringify({

@@ -100,9 +100,19 @@ function planEntrySummary(entry: PlanEntry) {
  * thumbnail card. `loading="lazy"` keeps this from loading every embed at
  * once on years with 30+ entries.
  */
-export function PlanEntryRow({ entry }: { entry: PlanEntry }) {
+export function PlanEntryRow({ entry, compact = false }: { entry: PlanEntry; compact?: boolean }) {
   const documentFiles = documentFilesValue(entry.documentFiles, entry.filePath);
   const primaryDocument = documentFiles[0] ?? null;
+  if (compact) {
+    return (
+      <Link href={`/book/${entry.slug}`} className="group flex min-w-0 flex-col rounded-xl border border-[#D9E3EE] bg-white p-3 transition hover:border-[#C29C41] hover:shadow-lg">
+        <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#EAF3F8]">
+          {entry.coverImagePath ? <Image src={entry.coverImagePath} alt={entry.title} fill className="object-cover" unoptimized /> : <div className="flex h-full items-center justify-center bg-[#053D69] p-4 text-center text-sm font-bold text-white">{entry.title}</div>}
+        </div>
+        <h2 className="mt-3 line-clamp-3 text-sm font-bold leading-6 text-[#053D69]">{entry.title}</h2>
+      </Link>
+    );
+  }
   // The plan document itself is an overview, not a course with its own
   // identity — it reads better as full-width text and preview, no thumbnail.
   const showCover = !isPlanDocument(entry.title);

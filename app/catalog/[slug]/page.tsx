@@ -7,6 +7,7 @@ import RatingBadge from '@/components/book/RatingBadge';
 import CategoryFollowButton from '@/components/CategoryFollowButton';
 import { getUserSession } from '@/lib/user-auth';
 import { prisma } from '@/lib/prisma';
+import PaginatedDocumentGrid from '@/components/PaginatedDocumentGrid';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +52,7 @@ export default async function CatalogPage({
         </div>
 
         {data.entries.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
+          <PaginatedDocumentGrid key={slug} className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
             {data.entries.map((entry) => (
               <Link key={entry.id} href={`/book/${entry.slug}`} prefetch={false} className="group min-w-0 overflow-hidden rounded-lg border border-[#D9E3EE] bg-white transition duration-200 hover:border-[#C29C41]/60 hover:shadow-[0_16px_42px_rgba(8,47,80,0.10)]">
                 <div className="flex flex-col gap-2 p-2 sm:grid sm:grid-cols-[120px_1fr] sm:gap-4 sm:p-4">
@@ -78,7 +79,7 @@ export default async function CatalogPage({
                 </div>
               </Link>
             ))}
-          </div>
+          </PaginatedDocumentGrid>
         ) : (
           <div className="rounded-lg border border-[#D9E3EE] bg-white px-6 py-12 text-center text-sm font-semibold text-[#64748B]">
             لا توجد مداخل منشورة في هذا التصنيف.

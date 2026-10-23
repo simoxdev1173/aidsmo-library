@@ -13,6 +13,7 @@ import AiAssistantPanel from '@/components/AiAssistantPanel';
 import FilterSelect from '@/components/library/FilterSelect';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import PaginatedDocumentGrid from '@/components/PaginatedDocumentGrid';
 
 type StandardizationPageConfig = {
   slug: string | string[];
@@ -222,7 +223,7 @@ export default async function StandardizationInternalPage({
         </div>
 
         {data.entries.length > 0 ? (
-          <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-9 lg:grid-cols-3 xl:grid-cols-4">
+          <PaginatedDocumentGrid key={JSON.stringify(filters)} className="mt-8 grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-9 xl:grid-cols-4">
             {data.entries.map((entry, index) => {
               const metaLine = [fieldValue(entry.year), entry.pageCount ? `${entry.pageCount} صفحة` : null].filter(
                 (part): part is string => Boolean(part),
@@ -263,7 +264,7 @@ export default async function StandardizationInternalPage({
                 </Link>
               );
             })}
-          </div>
+          </PaginatedDocumentGrid>
         ) : (
           <div className="mt-8 grid overflow-hidden rounded-[18px] border border-[#D9E3EE] bg-white lg:grid-cols-[1fr_360px]">
             <div className="p-8">

@@ -5,6 +5,7 @@ import { HiOutlineArchiveBox, HiOutlineArrowLeft, HiOutlineBookOpen, HiOutlineCh
 import { archivePages, type ArchivePagePath } from '@/lib/archive-pages';
 import { getCategoryWithEntries } from '@/lib/library-data';
 import { documentFilesValue } from '@/lib/document-files';
+import PaginatedDocumentGrid from '@/components/PaginatedDocumentGrid';
 
 export default async function ArchiveEmptyPage({ path }: { path: ArchivePagePath }) {
   const page = archivePages[path];
@@ -66,7 +67,7 @@ export default async function ArchiveEmptyPage({ path }: { path: ArchivePagePath
                   {entries.length} {isAgreementsPage ? 'اتفاقية ووثيقة' : 'كتاب'}
                 </span>
               </div>
-              <div className={isAgreementsPage ? 'grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4' : 'grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-9 xl:grid-cols-4'}>
+              <PaginatedDocumentGrid key={path} className={isAgreementsPage ? 'grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-10 xl:grid-cols-4' : 'grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-9 xl:grid-cols-4'}>
                 {entries.map((entry) => (
                   <article key={entry.id} className={`group min-w-0 ${isAgreementsPage ? '' : 'text-center'}`}>
                     {isAgreementsPage ? (
@@ -110,7 +111,7 @@ export default async function ArchiveEmptyPage({ path }: { path: ArchivePagePath
                     )}
                   </article>
                 ))}
-              </div>
+              </PaginatedDocumentGrid>
             </div>
           ) : (
             <div className="flex min-h-80 flex-col items-center justify-center px-6 py-16 text-center sm:min-h-96">

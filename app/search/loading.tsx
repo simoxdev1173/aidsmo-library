@@ -10,8 +10,8 @@ export default function SearchLoading() {
       </section>
       <section role="status" aria-label="جارٍ تحميل نتائج البحث" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
         <div aria-hidden="true" className="mb-7 h-6 w-56 animate-pulse rounded bg-[#DCE7F0] motion-reduce:animate-none" />
-        <div aria-hidden="true" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
-          {Array.from({ length: 6 }, (_, index) => (
+        <div aria-hidden="true" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+          {Array.from({ length: 8 }, (_, index) => (
             <div key={index} className="flex min-w-0 flex-col gap-2 rounded-2xl border border-[#D9E3EE] bg-white p-2 sm:min-h-48 sm:flex-row sm:gap-4 sm:p-4">
               <div className="aspect-[3/4] w-full shrink-0 animate-pulse rounded-xl bg-[#E9F2F8] motion-reduce:animate-none sm:h-36 sm:w-24" />
               <div className="flex min-w-0 flex-1 flex-col gap-3 py-2">

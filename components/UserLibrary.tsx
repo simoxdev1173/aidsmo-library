@@ -27,6 +27,7 @@ import {
 } from '@/lib/user-library-actions';
 import { cn } from '@/utils/cn';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import PaginatedDocumentGrid from '@/components/PaginatedDocumentGrid';
 
 type ReadingStatus = 'SAVED' | 'READING' | 'COMPLETED';
 
@@ -271,7 +272,7 @@ export default function UserLibrary({
                 <p className="mt-1 text-sm text-[#64748B]">{filteredItems.length.toLocaleString('ar')} {filteredItems.length === 1 ? 'إصدار' : 'إصدارات'}</p>
               </div>
             </div>
-            <div className="grid w-full max-w-[800px] grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+            <PaginatedDocumentGrid key={`${activeTab}-${activeShelfId ?? 'all'}-${searchQuery}`} className="grid w-full grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
               {filteredItems.map((book) => {
                 const siblingItems = initialItems.filter((item) => item.shelfId === book.shelfId);
                 const siblingIndex = siblingItems.findIndex((item) => item.id === book.id);
@@ -306,7 +307,7 @@ export default function UserLibrary({
                   </article>
                 );
               })}
-            </div>
+            </PaginatedDocumentGrid>
 
             {!filteredItems.length && (
               <EmptyState

@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { publicEntryWhere } from '@/lib/public-entry-where';
 
-export const SEARCH_PAGE_SIZE = 9;
+export const SEARCH_PAGE_SIZE = 8;
 
 export function normalizeSearchQuery(value?: string) {
   return (value ?? '').trim().replace(/\s+/g, ' ').slice(0, 120);

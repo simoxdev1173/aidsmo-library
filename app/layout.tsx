@@ -54,6 +54,21 @@ export default async function RootLayout({
   const locale = savedLocale === 'en' ? 'en' : 'ar';
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            var nav = performance.getEntriesByType('navigation')[0];
+            if (nav && nav.type === 'reload') {
+              history.scrollRestoration = 'manual';
+              if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
+              var resetScroll = function () { window.scrollTo(0, 0); };
+              resetScroll();
+              document.addEventListener('DOMContentLoaded', resetScroll, { once: true });
+              window.addEventListener('load', resetScroll, { once: true });
+            }
+          } catch (_) {}
+        ` }} />
+      </head>
       <body className={`${manrope.variable} ${readexPro.variable} ${amiri.variable} ${cinzel.variable} font-arabic`}>
         <LocaleProvider initialLocale={locale}>
           <SiteChrome navigation={

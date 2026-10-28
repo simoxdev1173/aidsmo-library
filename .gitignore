@@ -68,3 +68,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local project documentation
+PROJECT_OVERVIEW.md
+TASKS_COMPLETED.md

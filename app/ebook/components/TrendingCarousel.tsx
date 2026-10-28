@@ -19,6 +19,7 @@ import type { TrendingItem, TrendingRow } from '@/lib/library-data';
 import RatingBadge from '@/components/book/RatingBadge';
 import { useAppLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './TrendingShelves.module.css';
+import PaginatedDocumentGrid from '@/components/PaginatedDocumentGrid';
 
 const ROW_ICONS: Record<string, IconType> = {
   trending: FaBookOpen,
@@ -221,10 +222,12 @@ export function TrendingTitlesGrid({ items }: { items: TrendingItem[] }) {
   }, [locale, items]);
 
   return (
-    <div className={styles.trendingGrid} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      {(locale === 'ar' ? items : items.map(translateItem)).map((item) => (
-        <article key={item.id} className="min-w-0"><LibraryCard item={item} /></article>
-      ))}
+    <div dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <PaginatedDocumentGrid className={styles.trendingGrid}>
+        {(locale === 'ar' ? items : items.map(translateItem)).map((item) => (
+          <article key={item.id} className="min-w-0"><LibraryCard item={item} /></article>
+        ))}
+      </PaginatedDocumentGrid>
     </div>
   );
 }

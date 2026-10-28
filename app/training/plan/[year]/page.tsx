@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getCategoryWithEntries } from '@/lib/library-data';
 import { PlanEntryRow, TrainingHero } from '@/app/training/_components/TrainingShared';
+import PaginatedDocumentGrid from '@/components/PaginatedDocumentGrid';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,11 +33,11 @@ export default async function TrainingPlanYearPage({
 
       <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
         {data.entries.length > 0 ? (
-          <div className="flex flex-col gap-10">
+          <PaginatedDocumentGrid key={year} className="grid grid-cols-2 gap-4 xl:grid-cols-4">
             {data.entries.map((entry) => (
-              <PlanEntryRow key={entry.id} entry={entry} />
+              <PlanEntryRow key={entry.id} entry={entry} compact />
             ))}
-          </div>
+          </PaginatedDocumentGrid>
         ) : (
           <div className="grid overflow-hidden rounded-[18px] border border-[#D9E3EE] bg-white lg:grid-cols-[1fr_360px]">
             <div className="p-8">

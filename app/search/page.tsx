@@ -136,7 +136,7 @@ export default async function SearchPage({
             </div>
 
             {result.entries.length ? (
-              <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 xl:grid-cols-3">
+              <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 xl:grid-cols-4">
                 {result.entries.map((entry) => {
                   const description = entry.description?.replace(/\s+/g, ' ').trim();
                   return (

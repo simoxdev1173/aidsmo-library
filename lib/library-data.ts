@@ -640,10 +640,10 @@ export async function getTrendingLibraryRows(trendingLimit = TRENDING_ROW_LIMIT)
 
   const rows: TrendingRow[] = [];
 
-  // Trending is a fresh random selection from 2026 publications;
+  // Trending is a fresh random selection from 2026 publications with covers;
   // category shelves below continue to use newest-upload order.
   const trendingItems = pickDiversifiedTrending(
-    entries.filter((entry) => entry.year?.trim() === TRENDING_YEAR),
+    entries.filter((entry) => entry.year?.trim() === TRENDING_YEAR && Boolean(entry.coverImagePath?.trim())),
     trendingLimit,
   )
     .map(toItem);
